@@ -1,0 +1,55 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="查询"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[text()="班次代码" and contains(@optid,"opt_")]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[5]//input
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[text()="=" and contains(@optid,"opt_")]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[33mWARNING [0m root:base_page.py:97 ⚠️ clear() 清空失败：Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=137.0.7151.69)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff765cb6f65+78965]
+	GetHandleVerifier [0x0x7ff765cb6fc0+79056]
+	(No symbol) [0x0x7ff765a49dda]
+	(No symbol) [0x0x7ff765a220d1]
+	(No symbol) [0x0x7ff765acff4e]
+	(No symbol) [0x0x7ff765af06cd]
+	(No symbol) [0x0x7ff765ac8443]
+	(No symbol) [0x0x7ff765a91311]
+	(No symbol) [0x0x7ff765a920a3]
+	GetHandleVerifier [0x0x7ff765f6e26d+2926461]
+	GetHandleVerifier [0x0x7ff765f68993+2903715]
+	GetHandleVerifier [0x0x7ff765f86aed+3026941]
+	GetHandleVerifier [0x0x7ff765cd16fe+187406]
+	GetHandleVerifier [0x0x7ff765cd96ef+220159]
+	GetHandleVerifier [0x0x7ff765cbfaf4+114692]
+	GetHandleVerifier [0x0x7ff765cbfca9+115129]
+	GetHandleVerifier [0x0x7ff765ca64d8+10728]
+	BaseThreadInitThunk [0x0x7ff832417374+20]
+	RtlUserThreadStart [0x0x7ff833d3cc91+33]
+，尝试使用 JS 清空
+[33mWARNING [0m root:base_page.py:102 ❌ JS 清空也失败：Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=137.0.7151.69)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff765cb6f65+78965]
+	GetHandleVerifier [0x0x7ff765cb6fc0+79056]
+	(No symbol) [0x0x7ff765a49dda]
+	(No symbol) [0x0x7ff765a220d1]
+	(No symbol) [0x0x7ff765acff4e]
+	(No symbol) [0x0x7ff765af06cd]
+	(No symbol) [0x0x7ff765ac8443]
+	(No symbol) [0x0x7ff765a91311]
+	(No symbol) [0x0x7ff765a920a3]
+	GetHandleVerifier [0x0x7ff765f6e26d+2926461]
+	GetHandleVerifier [0x0x7ff765f68993+2903715]
+	GetHandleVerifier [0x0x7ff765f86aed+3026941]
+	GetHandleVerifier [0x0x7ff765cd16fe+187406]
+	GetHandleVerifier [0x0x7ff765cd96ef+220159]
+	GetHandleVerifier [0x0x7ff765cbfaf4+114692]
+	GetHandleVerifier [0x0x7ff765cbfca9+115129]
+	GetHandleVerifier [0x0x7ff765ca64d8+10728]
+	BaseThreadInitThunk [0x0x7ff832417374+20]
+	RtlUserThreadStart [0x0x7ff833d3cc91+33]

@@ -1,0 +1,15 @@
+# 编译缓存和虚拟环境
+__pycache__/
+*.pyc
+myenv/
+venv/
+
+# 日志文件
+*.log
+
+# 测试报告原始数据（Allure）
+report/allure_results/
+Tests/test_items/report/allure_results/
+
+# Pytest 缓存
+.pytest_cache/

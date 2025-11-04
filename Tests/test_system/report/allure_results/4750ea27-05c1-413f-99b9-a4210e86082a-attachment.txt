@@ -1,0 +1,52 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="ivu-select-head-flex"]/input
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()="金属（演示）"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //button[contains(@class, "ivu-btn-primary")]
+[33mWARNING [0m root:base_page.py:81 点击失败：Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=137.0.7151.69)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff6e55b6f65+78965]
+	GetHandleVerifier [0x0x7ff6e55b6fc0+79056]
+	(No symbol) [0x0x7ff6e5349dda]
+	(No symbol) [0x0x7ff6e5335bc5]
+	(No symbol) [0x0x7ff6e535ac04]
+	(No symbol) [0x0x7ff6e53d0195]
+	(No symbol) [0x0x7ff6e53f06cd]
+	(No symbol) [0x0x7ff6e53c8443]
+	(No symbol) [0x0x7ff6e5391311]
+	(No symbol) [0x0x7ff6e53920a3]
+	GetHandleVerifier [0x0x7ff6e586e26d+2926461]
+	GetHandleVerifier [0x0x7ff6e5868993+2903715]
+	GetHandleVerifier [0x0x7ff6e5886aed+3026941]
+	GetHandleVerifier [0x0x7ff6e55d16fe+187406]
+	GetHandleVerifier [0x0x7ff6e55d96ef+220159]
+	GetHandleVerifier [0x0x7ff6e55bfaf4+114692]
+	GetHandleVerifier [0x0x7ff6e55bfca9+115129]
+	GetHandleVerifier [0x0x7ff6e55a64d8+10728]
+	BaseThreadInitThunk [0x0x7ff956997374+20]
+	RtlUserThreadStart [0x0x7ff956c3cc91+33]
+
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //button[contains(@class, "ivu-btn-primary")]
+[33mWARNING [0m root:base_page.py:81 点击失败：Message: invalid session id
+Stacktrace:
+	GetHandleVerifier [0x0x7ff6e55b6f65+78965]
+	GetHandleVerifier [0x0x7ff6e55b6fc0+79056]
+	(No symbol) [0x0x7ff6e5349c0c]
+	(No symbol) [0x0x7ff6e539043f]
+	(No symbol) [0x0x7ff6e53c8532]
+	(No symbol) [0x0x7ff6e53c2f5c]
+	(No symbol) [0x0x7ff6e53c2039]
+	(No symbol) [0x0x7ff6e5315fc5]
+	GetHandleVerifier [0x0x7ff6e586e26d+2926461]
+	GetHandleVerifier [0x0x7ff6e5868993+2903715]
+	GetHandleVerifier [0x0x7ff6e5886aed+3026941]
+	GetHandleVerifier [0x0x7ff6e55d16fe+187406]
+	GetHandleVerifier [0x0x7ff6e55d96ef+220159]
+	(No symbol) [0x0x7ff6e5315036]
+	GetHandleVerifier [0x0x7ff6e59772f8+4012040]
+	BaseThreadInitThunk [0x0x7ff956997374+20]
+	RtlUserThreadStart [0x0x7ff956c3cc91+33]
+
+[32mINFO    [0m root:driver_manager.py:56 🛑 已从实例池移除并关闭 driver：2575606391968
