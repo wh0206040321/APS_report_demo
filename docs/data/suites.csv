@@ -1,4 +1,4 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","7611","test_login_pafail","Tests.test_items","Thu Dec 04 15:40:30 CST 2025","passed","Thu Dec 04 15:40:38 CST 2025","TestLoginPage","test_login","",""
-"","8711","test_login_success","Tests.test_items","Thu Dec 04 15:40:45 CST 2025","passed","Thu Dec 04 15:40:54 CST 2025","TestLoginPage","test_login","",""
-"","2552","test_login_acfail","Tests.test_items","Thu Dec 04 15:40:24 CST 2025","passed","Thu Dec 04 15:40:26 CST 2025","TestLoginPage","test_login","",""
+"","4235","test_login_pafail","Tests.test_items","Thu Dec 04 15:51:22 CST 2025","passed","Thu Dec 04 15:51:26 CST 2025","TestLoginPage","test_login","",""
+"","3037","test_login_acfail","Tests.test_items","Thu Dec 04 15:51:12 CST 2025","passed","Thu Dec 04 15:51:15 CST 2025","TestLoginPage","test_login","",""
+"","7737","test_login_success","Tests.test_items","Thu Dec 04 15:51:32 CST 2025","passed","Thu Dec 04 15:51:40 CST 2025","TestLoginPage","test_login","",""
