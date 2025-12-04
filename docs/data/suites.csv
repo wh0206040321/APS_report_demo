@@ -1,2 +1,4 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"初始化并返回 driver","42217","test_start","Tests.test_items","Tue Nov 04 16:07:34 CST 2025","passed","Tue Nov 04 16:08:16 CST 2025","TestStartPage","test_start","",""
+"","0","test_login_acfail","Tests.test_items","Thu Dec 04 15:37:59 CST 2025","broken","Thu Dec 04 15:37:59 CST 2025","TestLoginPage","test_login","",""
+"","0","test_login_success","Tests.test_items","Thu Dec 04 15:38:00 CST 2025","broken","Thu Dec 04 15:38:00 CST 2025","TestLoginPage","test_login","",""
+"","0","test_login_pafail","Tests.test_items","Thu Dec 04 15:38:00 CST 2025","broken","Thu Dec 04 15:38:00 CST 2025","TestLoginPage","test_login","",""

@@ -1,1 +1,1 @@
-{"total":1,"items":[{"uid":"1e238d9b8d5ba9a94c911d0fd844acee","name":"添加物品，添加工艺产能，添加制造订单测试用例","statistic":{"failed":0,"broken":0,"skipped":0,"passed":1,"unknown":0,"total":1}}]}
+{"total":1,"items":[{"uid":"2454c8251e9a94ef3ed7f259c32cd41a","name":"登录页面测试用例","statistic":{"failed":0,"broken":3,"skipped":0,"passed":0,"unknown":0,"total":3}}]}
