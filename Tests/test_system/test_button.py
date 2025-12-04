@@ -169,14 +169,12 @@ class TestSButtonPage:
         assert message == "记录已存在,请检查！"
         assert not button.has_fail_message()
 
-    @allure.story("修改按钮代码成功")
+    @allure.story("修改对话框按钮代码禁用")
     # @pytest.mark.run(order=1)
-    def test_button_updatesuccess1(self, login_to_button):
+    def test_button_updateenabled(self, login_to_button):
         driver = login_to_button  # WebDriver 实例
         button = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
-        add = AddsPages(driver)
         before_name = 'Abutton1'
-        after_name = 'Abutton2'
         button.wait_for_loading_to_disappear()
         button.select_input_button(before_name)
         sleep(1)
@@ -188,13 +186,9 @@ class TestSButtonPage:
             '//div[label[text()="图标"]]//i[contains(@class,"ivu-ico")]',
             '(//div[@class="flex-wrap"])[2]/div[1]',
         ]
-        add.batch_modify_input(xpath_list[:1], after_name)
-        button.click_confirm()
-        message = button.get_find_message()
-        button.select_input_button(after_name)
-        eles2 = button.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]/td[2]').text
-        assert eles2 == after_name
-        assert message == "编辑成功！"
+        sleep(1)
+        ele = button.get_find_element_xpath(xpath_list[0])
+        assert not ele.is_enabled()
         assert not button.has_fail_message()
 
     @allure.story("添加测试按钮成功")
@@ -217,6 +211,7 @@ class TestSButtonPage:
         button.click_confirm()
         message = button.get_find_message()
         button.select_input_button(name)
+        sleep(1)
         eles = button.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]/td[2]').text
         assert eles == name
         assert message == "新增成功！"
@@ -240,7 +235,7 @@ class TestSButtonPage:
             '//div[label[text()="图标"]]//i[contains(@class,"ivu-ico")]',
             '(//div[@class="flex-wrap"])[2]/div[2]',
         ]
-        add.batch_modify_input(xpath_list[0], after_name)
+        add.batch_modify_input(xpath_list[:1], after_name)
         add.click_button(xpath_list[1])
         add.click_button(xpath_list[2])
         button.click_confirm()
@@ -250,30 +245,6 @@ class TestSButtonPage:
         eles1 = button.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]/td[3]').text
         assert eles1 == after_name
         assert message == "编辑成功！"
-        assert not button.has_fail_message()
-
-    @allure.story("修改按钮代码不允许重复")
-    # @pytest.mark.run(order=1)
-    def test_button_updaterepeat1(self, login_to_button):
-        driver = login_to_button  # WebDriver 实例
-        button = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
-        add = AddsPages(driver)
-        before_name = 'Abutton1'
-        button.wait_for_loading_to_disappear()
-        button.select_input_button(before_name)
-        sleep(1)
-        button.click_button('//table[@class="vxe-table--body"]//tr[1]/td[2]')
-        button.click_all_button("编辑")
-        xpath_list = [
-            '//div[label[text()="按钮代码"]]//input',
-            '//div[label[text()="按钮名称"]]//input',
-            '//div[label[text()="图标"]]//i[contains(@class,"ivu-ico")]',
-            '(//div[@class="flex-wrap"])[2]/div[2]',
-        ]
-        add.batch_modify_input(xpath_list[:1], 'DownLoad')
-        button.click_confirm()
-        message = button.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').text
-        assert message == "记录已存在,请检查！"
         assert not button.has_fail_message()
 
     @allure.story("查询按钮代码成功")
@@ -314,18 +285,15 @@ class TestSButtonPage:
         sleep(1)
 
         # 点击确认
-        button.click_button(
-            '(//div[@class="demo-drawer-footer"])[3]/button[2]'
-        )
-        sleep(2)
+        button.click_select_button()
         # 定位第一行是否为name
         itemcode = button.get_find_element_xpath(
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]'
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
         ).text
         # 定位第二行没有数据
         itemcode2 = driver.find_elements(
             By.XPATH,
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][2]/td[2]',
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
         assert itemcode == name and len(itemcode2) == 0
         assert not button.has_fail_message()
@@ -368,13 +336,10 @@ class TestSButtonPage:
         sleep(1)
 
         # 点击确认
-        button.click_button(
-            '(//div[@class="demo-drawer-footer"])[3]/button[2]'
-        )
-        sleep(2)
+        button.click_select_button()
         itemcode = driver.find_elements(
             By.XPATH,
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]',
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
         )
         assert len(itemcode) == 0
         assert not button.has_fail_message()
@@ -418,10 +383,7 @@ class TestSButtonPage:
         sleep(1)
 
         # 点击确认
-        button.click_button(
-            '(//div[@class="demo-drawer-footer"])[3]/button[2]'
-        )
-        sleep(2)
+        button.click_select_button()
         eles = button.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
         assert len(eles) > 0
         assert all(name in ele for ele in eles)
@@ -455,6 +417,7 @@ class TestSButtonPage:
             "class")
         if eles == "ivu-checkbox ivu-checkbox-checked":
             button.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            button.click_button('//div[@class="filter-btn-bar"]/button')
         sleep(1)
         button.click_button('//div[p[text()="按钮代码"]]/following-sibling::div//input')
         eles = button.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
@@ -546,7 +509,7 @@ class TestSButtonPage:
         button = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
         layout = "测试布局A"
         button.wait_for_loading_to_disappear()
-        value = ['Abutton1','Abutton2']
+        value = ['Abutton1', 'Abutton2']
         button.del_all(xpath='//div[p[text()="按钮代码"]]/following-sibling::div//input', value=value)
         itemdata = [
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')

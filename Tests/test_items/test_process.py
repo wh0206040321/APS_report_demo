@@ -51,6 +51,7 @@ def login_to_process():
         page.click_button('(//span[text()="计划管理"])[1]')  # 点击计划管理
         page.click_button('(//span[text()="计划基础数据"])[1]')  # 点击计划基础数据
         page.click_button('(//span[text()="工序"])[1]')  # 点击工序
+        page.wait_for_loading_to_disappear()
         yield driver  # 提供给测试用例使用
     finally:
         if driver:
@@ -253,7 +254,7 @@ class TestProcessPage:
         num_ = process.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[5]'
         ).text
-        assert adddata == name and num_ == '99999999999', f"预期数据是{name}，实际得到{adddata}"
+        assert adddata == name and num_ == '9999999999', f"预期数据是{name}，实际得到{adddata}"
         assert not process.has_fail_message()
 
     @allure.story("添加测试数据成功")
@@ -286,7 +287,7 @@ class TestProcessPage:
         process.enter_texts('(//label[text()="工序代码"])[1]/parent::div//input', "111")
         # 点击确定
         process.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
-        sleep(1)
+        sleep(2)
         # 获取重复弹窗文字
         error_popup = process.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
@@ -314,6 +315,7 @@ class TestProcessPage:
         )
         # 点击确定
         process.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        process.wait_for_loading_to_disappear()
         sleep(1)
         # 定位表格内容
         processdata = process.get_find_element_xpath(
@@ -338,6 +340,7 @@ class TestProcessPage:
         )
         # 点击确定
         process.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        process.wait_for_loading_to_disappear()
         sleep(1)
         # 定位表格内容
         processdata = process.get_find_element_xpath(
@@ -380,6 +383,7 @@ class TestProcessPage:
         ).text
         # 点击确定
         process.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        process.wait_for_loading_to_disappear()
         sleep(1)
         # 定位表格内容
         processname = process.get_find_element_xpath(
@@ -446,18 +450,15 @@ class TestProcessPage:
         sleep(1)
 
         # 点击确认
-        process.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        process.click_select_button()
         # 定位第一行是否为111
         processcode = process.get_find_element_xpath(
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]'
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
         ).text
         # 定位第二行没有数据
         processcode2 = driver.find_elements(
             By.XPATH,
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][2]/td[2]',
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
         assert processcode == name and len(processcode2) == 0
         assert not process.has_fail_message()
@@ -500,14 +501,11 @@ class TestProcessPage:
         sleep(1)
 
         # 点击确认
-        process.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        process.click_select_button()
         # 定位第一行是否为
         processcode = driver.find_elements(
             By.XPATH,
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]',
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
         )
         assert len(processcode) == 0
         assert not process.has_fail_message()
@@ -550,10 +548,7 @@ class TestProcessPage:
         sleep(1)
 
         # 点击确认
-        process.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(2)
+        process.click_select_button()
         eles = process.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
         assert len(eles) > 0
         assert all(name in ele for ele in eles)
@@ -597,10 +592,7 @@ class TestProcessPage:
         sleep(1)
 
         # 点击确认
-        process.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        process.click_select_button()
         eles = process.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[5]')
         assert len(eles) > 0
         assert all(int(ele) > num for ele in eles)
@@ -727,10 +719,7 @@ class TestProcessPage:
 
         sleep(1)
         # 点击确认
-        process.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        process.click_select_button()
         eles1 = process.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[5]')
         eles2 = process.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
         assert len(eles1) > 0 and len(eles2) > 0
@@ -861,10 +850,7 @@ class TestProcessPage:
         sleep(1)
 
         # 点击确认
-        process.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        process.click_select_button()
         # 获取目标表格第2个 vxe 表格中的所有数据行
         xpath_rows = '(//table[contains(@class, "vxe-table--body")])[2]//tr[contains(@class,"vxe-body--row")]'
 

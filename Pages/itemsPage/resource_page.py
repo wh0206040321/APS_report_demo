@@ -5,7 +5,8 @@ from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
 from Pages.base_page import BasePage
-
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 class ResourcePage(BasePage):
     def __init__(self, driver):
@@ -53,12 +54,37 @@ class ResourcePage(BasePage):
         except NoSuchElementException:
             return None
 
-    def get_error_message(self, xpath):
-        """获取错误消息元素，返回该元素。如果元素未找到，返回None。"""
-        try:
-            return self.find_element(By.XPATH, xpath)
-        except NoSuchElementException:
-            return None
+    def get_find_message(self):
+        """获取正确信息"""
+        message = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(
+                (By.XPATH, '//div[@class="el-message el-message--success"]/p')
+            )
+        )
+        return message.text
+
+    def get_error_message(self):
+        """获取错误信息"""
+        message = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(
+                (By.XPATH, '//div[@class="el-message el-message--error"]/p')
+            )
+        )
+        return message.text
+
+    def wait_for_loading_to_disappear(self, timeout=10):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located(
+                (By.XPATH,
+                 "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
+            )
+        )
+
+    def click_select_button(self):
+        """点击查询确定按钮."""
+        self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]')
+        sleep(0.5)
+        self.wait_for_loading_to_disappear()
 
     def add_test_resource(self, name):
         self.click_add_button()  # 检查点击添加
@@ -138,7 +164,7 @@ class ResourcePage(BasePage):
             except Exception as e:
                 print(f"操作 {v} 时出错: {str(e)}")
 
-    def del_loyout(self, layout):
+    def del_layout(self, layout):
         # 获取目标 div 元素，这里的目标是具有特定文本的 div
         target_div = self.get_find_element_xpath(
             f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
@@ -164,3 +190,4 @@ class ResourcePage(BasePage):
         sleep(2)
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()

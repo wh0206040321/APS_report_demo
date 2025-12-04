@@ -47,6 +47,7 @@ def login_to_production():
         page.click_button('(//span[text()="计划管理"])[1]')  # 点击计划管理
         page.click_button('(//span[text()="计划业务数据"])[1]')  # 点击计划业务数据
         page.click_button('(//span[text()="生产报工"])[1]')  # 点击生产报工
+        page.wait_for_loading_to_disappear()
         yield driver  # 提供给测试用例使用
     finally:
         if driver:
@@ -54,7 +55,7 @@ def login_to_production():
 
 
 @allure.feature("生产报工测试用例")
-@pytest.mark.run(order=22)
+@pytest.mark.run(order=24)
 class TestProductionPage:
 
     @allure.story("添加布局")
@@ -177,7 +178,7 @@ class TestProductionPage:
         production.click_button(
             '//div[.//p[text()="当前选择的报工资源与资源代码不一致，是否继续？"] and @class="el-message-box__content"]/following-sibling::div/button[2]'
         )
-
+        production.wait_for_loading_to_disappear()
         color = production.get_find_element_xpath(
             '//tr[./td[9]//span[text()="1测试C订单"]]/td[4]'
         ).value_of_css_property("background-color")
@@ -195,7 +196,7 @@ class TestProductionPage:
         production.click_del_button()
 
         production.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-        sleep(1)
+        production.wait_for_loading_to_disappear()
         ele = driver.find_elements(By.XPATH, f'//tr[./td[9]//span[text()="{name}"]]')
 
         assert len(ele) == 0
@@ -222,6 +223,7 @@ class TestProductionPage:
         # 点击确认按钮
         production.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[last()]//span[text()="确定"]')
         production.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        production.wait_for_loading_to_disappear()
         ele1 = production.get_find_element_xpath(
             f'//tr[./td[2]//span[text()="{name}:1"]]/td[9]'
         )
@@ -276,11 +278,13 @@ class TestProductionPage:
             '//p[text()="当前工作报工数量加完成数量大于计划数量，是否将实绩状态改为结束"]'
         ).text
         production.click_button('//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"]//span[text()="是"]')
+        production.wait_for_loading_to_disappear()
+
         ele = production.get_find_element_xpath(
             f'//tr[./td[6]//span[text()="{num}"] and ./td[2]//span[text()="{name}:1"]]/td[6]'
         ).text
         production.click_button('(//span[text()="工作指示一览"])[1]')
-        sleep(1)
+        production.wait_for_loading_to_disappear()
         after_text = production.get_find_element_xpath(
             f'//tr[.//span[text()="{name}:1"]]/td[10]'
         )
@@ -335,10 +339,9 @@ class TestProductionPage:
             f'//tr[./td[6]//span[text()="{num}"] and ./td[2]//span[text()="{name}:1"]]/td[6]'
         )
         production.click_del_button()
-        sleep(1)
         text = production.get_find_element_xpath(
             '//p[text()="当前工作已【结束】，是否需要修改成【开始生产】？"]'
-        ).text
+        ).get_attribute('innerText')
         # 点击是
         production.click_button('//div[@class="el-message-box__btns"]/button[2]')
         sleep(1)
@@ -347,7 +350,7 @@ class TestProductionPage:
             f'//tr[./td[6]//span[text()="{num}"] and ./td[2]//span[text()="{name}:1"]]/td[6]',
         )
         production.click_button('(//span[text()="工作指示一览"])[1]')
-        sleep(1)
+        production.wait_for_loading_to_disappear()
         after_text = production.get_find_element_xpath(
             f'//tr[.//span[text()="{name}:1"]]/td[10]'
         )
@@ -400,12 +403,12 @@ class TestProductionPage:
             '//p[text()="当前工作报工数量加完成数量大于计划数量，是否将实绩状态改为结束"]'
         ).text
         production.click_button('//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"]//span[text()="是"]')
-        sleep(1)
+        production.wait_for_loading_to_disappear()
         ele = production.get_find_element_xpath(
             f'//tr[./td[6]//span[text()="{num}"] and ./td[2]//span[text()="{name}:1"]]/td[6]'
         ).text
         production.click_button('(//span[text()="工作指示一览"])[1]')
-        sleep(1)
+        production.wait_for_loading_to_disappear()
         after_text = production.get_find_element_xpath(
             f'//tr[.//span[text()="{name}:1"]]/td[10]'
         )
@@ -442,7 +445,7 @@ class TestProductionPage:
             f'//tr[./td[6]//span[text()="{num}"] and ./td[2]//span[text()="{name}:1"]]/td[6]',
         )
         production.click_button('(//span[text()="工作指示一览"])[1]')
-        sleep(1)
+        production.wait_for_loading_to_disappear()
         after_text = production.get_find_element_xpath(
             f'//tr[.//span[text()="{name}:1"]]/td[10]'
         )
@@ -492,7 +495,7 @@ class TestProductionPage:
         text_ = production.get_find_element_xpath(
             '//label[text()="异常原因"]/following-sibling::div//input'
         ).get_attribute("value")
-        assert num_ == '99999999999' and text_ == name
+        assert num_ == '9999999999' and text_ == num
         assert not production.has_fail_message()
 
     @allure.story("添加测试数据")
@@ -516,6 +519,7 @@ class TestProductionPage:
         # 点击确认按钮
         production.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[last()]//span[text()="确定"]')
         production.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        production.wait_for_loading_to_disappear()
         ele1 = production.get_find_element_xpath(
             f'//tr[./td[2]//span[text()="{name}:2"]]/td[9]'
         )
@@ -592,7 +596,7 @@ class TestProductionPage:
         )
 
         production.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
-        sleep(1)
+        production.wait_for_loading_to_disappear()
         ele1 = production.get_find_element_xpath(
             f'//tr[./td[2]//span[text()="{name}:2"]]/td[6]'
         ).text
@@ -601,7 +605,7 @@ class TestProductionPage:
         ).text
 
         production.click_button('(//span[text()="工作指示一览"])[1]')
-        sleep(1)
+        production.wait_for_loading_to_disappear()
         after_text = production.get_find_element_xpath(
             f'//tr[.//span[text()="{name}:2"]]/td[10]'
         )
@@ -644,7 +648,7 @@ class TestProductionPage:
             '//p[text()="当前工作报工数量加完成数量大于计划数量，是否将实绩状态改为结束"]'
         ).text
         production.click_button('//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"]//span[text()="否"]')
-        sleep(1)
+        production.wait_for_loading_to_disappear()
 
         ele1 = production.get_find_element_xpath(
             f'//tr[./td[2]//span[text()="{name}:2"]]/td[6]'
@@ -654,7 +658,7 @@ class TestProductionPage:
         ).text
 
         production.click_button('(//span[text()="工作指示一览"])[1]')
-        sleep(1)
+        production.wait_for_loading_to_disappear()
         after_text = production.get_find_element_xpath(
             f'//tr[.//span[text()="{name}:2"]]/td[10]'
         )
@@ -697,7 +701,7 @@ class TestProductionPage:
             '//p[text()="当前工作报工数量加完成数量大于计划数量，是否将实绩状态改为结束"]'
         ).text
         production.click_button('//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"]//span[text()="是"]')
-        sleep(1)
+        production.wait_for_loading_to_disappear()
 
         ele1 = production.get_find_element_xpath(
             f'//tr[./td[2]//span[text()="{name}:2"]]/td[6]'
@@ -707,7 +711,7 @@ class TestProductionPage:
         ).text
 
         production.click_button('(//span[text()="工作指示一览"])[1]')
-        sleep(1)
+        production.wait_for_loading_to_disappear()
         after_text = production.get_find_element_xpath(
             f'//tr[.//span[text()="{name}:2"]]/td[10]'
         )

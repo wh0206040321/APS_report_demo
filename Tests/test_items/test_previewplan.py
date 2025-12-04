@@ -48,6 +48,7 @@ def login_to_previewPlan():
         page.click_button('(//span[text()="计划管理"])[1]')  # 点击计划管理
         page.click_button('(//span[text()="计划业务数据"])[1]')  # 点击计划业务数据
         page.click_button('(//span[text()="工作指示一览"])[1]')  # 点击工作指示一览
+        page.wait_for_loading_to_disappear()
         yield driver  # 提供给测试用例使用
     finally:
         if driver:
@@ -55,7 +56,7 @@ def login_to_previewPlan():
 
 
 @allure.feature("工作指示一览表测试用例")
-@pytest.mark.run(order=21)
+@pytest.mark.run(order=23)
 class TestPreviewPlanPage:
     @allure.story("工作指示发布成功，工作指示一览显示成功")
     # @pytest.mark.run(order=1)
@@ -173,7 +174,7 @@ class TestPreviewPlanPage:
         operationPlan.click_inputbutton()
         # 选择当前日期（点击带有 today 和 focused 样式的日期单元格）
         operationPlan.click_button(
-            '//span[@class="ivu-date-picker-cells-cell ivu-date-picker-cells-cell-today ivu-date-picker-cells-focused"]'
+            '//span[contains(@class,"ivu-date-picker-cells-cell-today")]/preceding-sibling::span[1]'
         )
         # 点击下月按钮
         operationPlan.click_button(

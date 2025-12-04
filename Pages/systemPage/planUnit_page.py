@@ -58,16 +58,6 @@ class PlanUnitPage(BasePage):
         self.wait_for_loading_to_disappear()
 
     def wait_for_loading_to_disappear(self, timeout=10):
-        """
-        显式等待加载遮罩元素消失。
-
-        参数:
-        - timeout (int): 超时时间，默认为10秒。
-
-        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
-        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
-        以此判断加载遮罩是否消失。
-        """
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
@@ -78,6 +68,13 @@ class PlanUnitPage(BasePage):
     def click_confirm_button(self):
         """点击确认按钮."""
         self.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])')
+        self.wait_for_loading_to_disappear()
+
+    def click_select_button(self):
+        """点击查询确定按钮."""
+        self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]')
+        sleep(0.5)
+        self.wait_for_loading_to_disappear()
 
     def click_all_button(self, name):
         """点击按钮."""
@@ -120,16 +117,17 @@ class PlanUnitPage(BasePage):
     def del_all(self, value=[]):
         for index, v in enumerate(value, start=1):
             try:
+                self.wait_for_loading_to_disappear()
                 xpath = '//p[text()="计划单元"]/ancestor::div[2]//input'
-                ele = self.get_find_element_xpath(xpath)
-                ele.send_keys(Keys.CONTROL, "a")
-                ele.send_keys(Keys.DELETE)
                 self.enter_texts(xpath, v)
                 sleep(0.5)
                 self.click_button(f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
                 self.click_all_button("删除")  # 点击删除
                 self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-                sleep(1)
+                self.wait_for_loading_to_disappear()
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)
             except NoSuchElementException:
                 print(f"未找到元素: {v}")
             except Exception as e:
@@ -161,3 +159,4 @@ class PlanUnitPage(BasePage):
         sleep(2)
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()

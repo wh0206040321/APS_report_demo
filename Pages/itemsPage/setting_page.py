@@ -33,6 +33,12 @@ class SettingPage(BasePage):
         self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[2]//i')
         self.click_button('//li[text()="添加新布局"]')
 
+    def loop_judgment(self, xpath):
+        """循环判断"""
+        eles = self.finds_elements(By.XPATH, xpath)
+        code = [ele.text for ele in eles]
+        return code
+
     def wait_for_loading_to_disappear(self, timeout=10):
         """
         显式等待加载遮罩元素消失。
@@ -58,28 +64,20 @@ class SettingPage(BasePage):
         sleep(1)
 
     def wait_for_el_loading_mask(self, timeout=10):
-        """
-        显式等待加载遮罩元素消失。
-
-        参数:
-        - timeout (int): 超时时间，默认为10秒。
-
-        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
-        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
-        以此判断加载遮罩是否消失。
-        """
         WebDriverWait(self.driver, timeout).until(
-            lambda d: (
-                d.find_element(By.CLASS_NAME, "el-loading-mask").value_of_css_property("display") == "none"
-                if d.find_elements(By.CLASS_NAME, "el-loading-mask") else True
-            )
+            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
         )
         sleep(1)
 
     def click_confirm_button(self):
         """点击确认按钮."""
-        self.click_button('(//div[@class="demo-drawer-footer"])[3]/button[2]')
+        try:
+            self.click_button('(//div[@class="demo-drawer-footer"])[3]//span[text()="确定"]')
+        except Exception:
+            # 如果第一个点不了，就点另一个
+            self.click_button('(//div[@class="demo-drawer-footer"])[2]//span[text()="确定"]')
         self.wait_for_loading_to_disappear()
+        self.wait_for_el_loading_mask()
 
     def add_layout_ok(self, layout):
         """添加布局."""
@@ -116,6 +114,7 @@ class SettingPage(BasePage):
             self.click_button('(//div[@class="demo-drawer-footer"])[3]/button[2]')
 
     def del_layout(self, layout):
+        self.wait_for_loading_to_disappear()
         # 获取目标 div 元素，这里的目标是具有特定文本的 div
         target_div = self.get_find_element_xpath(
             f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
@@ -149,7 +148,7 @@ class SettingPage(BasePage):
         sleep(2)
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-        sleep(1)
+        self.wait_for_loading_to_disappear()
 
     def add_pivot_table(self):
         """添加透视表."""
@@ -159,6 +158,7 @@ class SettingPage(BasePage):
     def click_setting_button(self):
         """点击设置按钮."""
         self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[3]//i')
+        sleep(3)
 
     def get_find_message(self):
         """获取错误信息"""

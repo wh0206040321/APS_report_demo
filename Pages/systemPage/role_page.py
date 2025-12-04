@@ -32,7 +32,7 @@ class RolePage(BasePage):
 
     def get_find_message(self):
         """获取错误信息"""
-        message = WebDriverWait(self.driver, 15).until(
+        message = WebDriverWait(self.driver, 30).until(
             EC.visibility_of_element_located(
                 (By.XPATH, '//div[@class="el-message el-message--success"]/p')
             )
@@ -55,25 +55,12 @@ class RolePage(BasePage):
         # 右键点击
         ActionChains(self.driver).context_click(but).perform()
         self.click_button('//li[text()=" 刷新"]')
-        self.wait_for_loading_to_disappear()
+        self.wait_for_el_loading_mask()
 
     # 等待加载遮罩消失
-    def wait_for_loading_to_disappear(self, timeout=10):
-        """
-        显式等待加载遮罩元素消失。
-
-        参数:
-        - timeout (int): 超时时间，默认为10秒。
-
-        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
-        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
-        以此判断加载遮罩是否消失。
-        """
+    def wait_for_el_loading_mask(self, timeout=10):
         WebDriverWait(self.driver, timeout).until(
-            lambda d: (
-                d.find_element(By.CLASS_NAME, "el-loading-mask").value_of_css_property("display") == "none"
-                if d.find_elements(By.CLASS_NAME, "el-loading-mask") else True
-            )
+            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
         )
         sleep(1)
 
@@ -93,7 +80,7 @@ class RolePage(BasePage):
 
         list_sel = [
             {"select": '//div[label[text()="计划单元名称"]]//div[@class="ivu-select-selection"]',
-             "value": f'//li[text()="{module}"]'},
+             "value": f'//div[label[text()="计划单元名称"]]//li[text()="{module}"]'},
         ]
         add.batch_modify_select_input(list_sel)
 
@@ -101,14 +88,15 @@ class RolePage(BasePage):
         """修改角色管理."""
         add = AddsPages(self.driver)
         self.select_input(before_name)
-        sleep(1)
+        sleep(2)
         self.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{before_name}"]')
         self.click_all_button("编辑")
+        sleep(1)
         list_ = [
             '//div[label[text()="角色名称"]]//input',
         ]
         add.batch_modify_input(list_, after_name)
-
+        sleep(1)
         list_sel = [
             {"select": '//div[label[text()="计划单元名称"]]//div[@class="ivu-select-selection"]',
              "value": f'//ul[@class="ivu-select-dropdown-list"]/li[text()="{module}"]'},
@@ -155,15 +143,15 @@ class RolePage(BasePage):
         for index, v in enumerate(value, start=1):
             try:
                 xpath = '//div[div[p[text()="角色代码"]]]//input'
-                ele = self.get_find_element_xpath(xpath)
-                ele.send_keys(Keys.CONTROL, "a")
-                ele.send_keys(Keys.DELETE)
                 self.enter_texts(xpath, v)
                 sleep(0.5)
                 self.click_button(f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
                 self.click_all_button("删除")  # 点击删除
                 self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-                sleep(1)
+                self.wait_for_el_loading_mask()
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)
             except NoSuchElementException:
                 print(f"未找到元素: {v}")
             except Exception as e:

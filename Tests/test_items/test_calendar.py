@@ -1,5 +1,6 @@
 import logging
 import random
+import re
 from time import sleep
 
 import allure
@@ -51,6 +52,7 @@ def login_to_calendar():
         page.click_button('(//span[text()="计划管理"])[1]')  # 点击计划管理
         page.click_button('(//span[text()="计划基础数据"])[1]')  # 点击计划基础数据
         page.click_button('(//span[text()="生产日历"])[1]')  # 点击生产日历
+        page.wait_for_loading_to_disappear()
         yield driver
     finally:
         if driver:
@@ -112,7 +114,7 @@ class TestCalendarPage:
         calendar.click_button(f'(//span[@class="vxe-cell--checkbox"])[{random_int}]')
         sleep(1)
         calendar.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 班次
@@ -149,7 +151,7 @@ class TestCalendarPage:
         calendar.click_button(f'(//span[@class="vxe-cell--checkbox"])[{random_int1}]')
         sleep(1)
         calendar.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         calendar.click_confirm_button()
@@ -175,7 +177,7 @@ class TestCalendarPage:
         random_int = random.randint(1, 6)
         calendar.click_button(f'//table[@class="vxe-table--body"]//tr[{random_int}]/td[2]/div/span/span')
         calendar.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击班次
@@ -187,10 +189,10 @@ class TestCalendarPage:
         random_int1 = random.randint(2, 10)
         calendar.click_button(f'(//span[@class="vxe-cell--checkbox"])[{random_int1}]')
         calendar.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         calendar.click_confirm_button()
-        message = calendar.get_find_message()
+        message = calendar.get_error_message()
         assert message == "请先填写表单"
         assert not calendar.has_fail_message()
 
@@ -231,9 +233,9 @@ class TestCalendarPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
         )
         calendar.click_button('//table[@class="vxe-table--header"]//th[2]//span[@class="vxe-cell--checkbox"]')
-        sleep(1)
+        calendar.wait_for_loading_to_disappear()
         calendar.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         sleep(1.5)
         # 获取勾选的资源代码
@@ -247,11 +249,11 @@ class TestCalendarPage:
         )
         # 勾选框
         random_int1 = random.randint(1, 2)
-        sleep(1)
+        calendar.wait_for_loading_to_disappear()
         calendar.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]//span[@class="vxe-cell--checkbox"])[{random_int1}]')
         sleep(1)
         calendar.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         sleep(1)
         # 获取勾选的班次
@@ -296,11 +298,11 @@ class TestCalendarPage:
         )
         # 勾选框
         random_int = random.randint(1, 5)
-        sleep(1)
+        calendar.wait_for_loading_to_disappear()
         calendar.click_button(f'//table[@class="vxe-table--body"]//tr[{random_int}]/td[2]/div/span/span')
 
         calendar.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         sleep(1)
         # 获取勾选的资源代码
@@ -314,11 +316,11 @@ class TestCalendarPage:
         )
         # 勾选框
         random_int1 = random.randint(1, 2)
-        sleep(1)
+        calendar.wait_for_loading_to_disappear()
         calendar.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]//span[@class="vxe-cell--checkbox"])[{random_int1}]')
 
         calendar.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         sleep(1)
         # 获取勾选的班次
@@ -369,11 +371,11 @@ class TestCalendarPage:
         )
         # 勾选框
         random_int = random.randint(1, 5)
-        sleep(1)
+        calendar.wait_for_loading_to_disappear()
         calendar.click_button(f'//table[@class="vxe-table--body"]//tr[{random_int}]/td[2]/div/span/span')
 
         calendar.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         sleep(1)
         # 获取勾选的资源代码
@@ -387,12 +389,12 @@ class TestCalendarPage:
         )
         # 勾选框
         random_int1 = random.randint(1, 2)
-        sleep(1)
+        calendar.wait_for_loading_to_disappear()
         calendar.click_button(
             f'(//table[@class="vxe-table--body"]//tr/td[2]//span[@class="vxe-cell--checkbox"])[{random_int1}]')
 
         calendar.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         sleep(1)
         # 获取勾选的班次
@@ -434,7 +436,7 @@ class TestCalendarPage:
         addtext = calendar.get_find_element_xpath(
             f'(//span[text()="{resource}"])[1]/ancestor::tr[1]/td[7]'
         ).text
-        assert adddata == resource and addshift == resource1 and addnum == '99999999999' and addtext == num
+        assert adddata == resource and addshift == resource1 and addnum == '100000' and addtext == num
         assert not calendar.has_fail_message()
 
     @allure.story("输入全部数据，添加保存成功")
@@ -585,32 +587,6 @@ class TestCalendarPage:
         ), f"删除后的数据{calendardata}，删除前的数据{calendardata1}"
         assert not calendar.has_fail_message()
 
-    @allure.story("删除数据成功")
-    # @pytest.mark.run(order=1)
-    def test_calendar_delsuccess(self, login_to_calendar):
-        driver = login_to_calendar  # WebDriver 实例
-        calendar = Calendar(driver)  # 用 driver 初始化 Calendar
-        calendar.click_button(
-            '//p[text()="更新时间"]/following-sibling::div'
-        )
-        # 定位第一行
-        calendar.click_button(
-            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]/td[2]'
-        )
-        calendardata1 = calendar.get_find_element_xpath(
-            '(//span[contains(text(),"条记录")])[1]'
-        ).text
-        calendar.click_del_button()  # 点击删除
-        calendar.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-        sleep(1)
-        calendardata = calendar.get_find_element_xpath(
-            '(//span[contains(text(),"条记录")])[1]'
-        ).text
-        assert (
-            calendardata != calendardata1
-        ), f"删除后的数据{calendardata}，删除前的数据{calendardata1}"
-        assert not calendar.has_fail_message()
-
     @allure.story("修改生产日历资源成功")
     # @pytest.mark.run(order=1)
     def test_calendar_editcodesuccess(self, login_to_calendar):
@@ -635,7 +611,7 @@ class TestCalendarPage:
         sleep(1)
 
         calendar.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         sleep(1)
         # 获取勾选的资源代码
@@ -689,7 +665,7 @@ class TestCalendarPage:
         sleep(1)
 
         calendar.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         sleep(1)
         # 获取勾选的班次代码
@@ -770,13 +746,10 @@ class TestCalendarPage:
         sleep(1)
 
         # 点击确认
-        calendar.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(2)
+        calendar.click_select_button()
         # 定位第一行
         calendarcode = calendar.get_find_element_xpath(
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]'
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
         ).text
         assert calendarcode == ele
         assert not calendar.has_fail_message()
@@ -787,6 +760,26 @@ class TestCalendarPage:
         driver = login_to_calendar  # WebDriver 实例
         calendar = Calendar(driver)  # 用 driver 初始化 Calendar
         layout = "测试布局A"
+
+        calendar.wait_for_loading_to_disappear()
+        sleep(2)
+        before_data = calendar.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+
+        for i in range(4):
+            calendar.click_flagdata()
+            calendar.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+            calendar.click_del_button()
+            calendar.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+            calendar.get_find_message()
+            calendar.right_refresh("生产日历")
+            calendar.wait_for_loading_to_disappear()
+            sleep(1)
+        sleep(1)
+        after_data = calendar.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        after_count = int(re.search(r'\d+', after_data).group())
+        assert before_count - after_count == 4, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
+
         calendar.del_layout(layout)
         sleep(2)
         # 再次查找页面上是否有目标 div，以验证是否删除成功

@@ -52,6 +52,7 @@ def login_to_coverage():
         page.click_button('(//span[text()="计划管理"])[1]')  # 点击计划管理
         page.click_button('(//span[text()="计划基础数据"])[1]')  # 点击计划基础数据
         page.click_button('(//span[text()="覆盖日历"])[1]')  # 点击覆盖日历
+        page.wait_for_loading_to_disappear()
         yield driver  # 提供给测试用例使用
     finally:
         if driver:
@@ -408,8 +409,8 @@ class TestCoveragePage:
                 and end == addend
                 and chronology == addchronology
                 and resources == addresources
-                and text_ == name
-                and num_ == '10000'
+                and text_ == name[:100]
+                and num_ == '9999999999'
         )
         assert not coverage.has_fail_message()
 
@@ -644,12 +645,12 @@ class TestCoveragePage:
     def test_coverage_delall(self, login_to_coverage):
         driver = login_to_coverage  # WebDriver 实例
         coverage = Coverage(driver)  # 用 driver 初始化 Coverage
-        coverage.wait_for_loading_to_disappear(coverage)
+        coverage.wait_for_loading_to_disappear()
         coverage.click_button('//span[text()=" 更新时间"]/following-sibling::div')
         sleep(1)
         coverage.click_button('//span[text()=" 更新时间"]/following-sibling::div')
         sleep(1)
-        coveragedata1 = coverage.get_find_element_xpath(
+        before_data = coverage.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         coverage.click_button('(//div[@id="canvasGird0"]//table[@class="vxe-table--body"])[1]//tr[1]/td[2]')
@@ -657,12 +658,12 @@ class TestCoveragePage:
         coverage.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         coverage.get_find_message()
         sleep(1)
-        coveragerdata = coverage.get_find_element_xpath(
+        after_data = coverage.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         assert (
-                coveragerdata != coveragedata1
-        ), f"删除后的数据{coveragerdata}，删除前的数据{coveragedata1}"
+                before_data != after_data
+        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
         assert not coverage.has_fail_message()
 
     @allure.story("添加测试数据")
@@ -906,8 +907,7 @@ class TestCoveragePage:
         sleep(3)
 
         # 点击确认
-        coverage.click_button('(//div[@class="demo-drawer-footer"])[2]/button[2]')
-        sleep(2)
+        coverage.click_select_button()
         # 定位第一行
         coveragecode = coverage.get_find_element_xpath(
             '(//div[@id="canvasGird0"]//table[@class="vxe-table--body"])[1]//tr[1]/td[2]'
@@ -972,14 +972,14 @@ class TestCoveragePage:
         coverage.click_button(
             '(//div[@id="canvasGird0"]//table[@class="vxe-table--body"])[1]//tr[1]/td[2]'
         )
-        coveragedata1 = coverage.get_find_element_xpath(
+        before_data = coverage.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         coverage.click_del_button()  # 点击删除
         coverage.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         coverage.get_find_message()
         sleep(1)
-        coveragedata = coverage.get_find_element_xpath(
+        after_data = coverage.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         # 获取目标 div 元素，这里的目标是具有特定文本的 div
@@ -1007,6 +1007,7 @@ class TestCoveragePage:
         sleep(2)
         # 点击确认删除的按钮
         coverage.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        coverage.wait_for_loading_to_disappear()
         # 等待一段时间，确保删除操作完成
         sleep(1)
 
@@ -1015,6 +1016,6 @@ class TestCoveragePage:
             By.XPATH, f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
         )
         assert (
-            coveragedata != coveragedata1 and 0 == len(after_layout)
-        ), f"删除后的数据{coveragedata}，删除前的数据{coveragedata1}"
+                before_data != after_data and 0 == len(after_layout)
+        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
         assert not coverage.has_fail_message()

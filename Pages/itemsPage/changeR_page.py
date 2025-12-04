@@ -1,6 +1,7 @@
 from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -88,23 +89,28 @@ class ChangeR(BasePage):
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         self.wait_for_loading_to_disappear()
 
+    def click_flagdata(self):
+        self.click_button(
+            '//div[p[text()="更新时间"]]/div[1]'
+        )
+        sleep(1)
+        self.click_button(
+            '//div[p[text()="更新时间"]]/div[1]'
+        )
+
     def wait_for_loading_to_disappear(self, timeout=10):
-        """
-        显式等待加载遮罩元素消失。
-
-        参数:
-        - timeout (int): 超时时间，默认为10秒。
-
-        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
-        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
-        以此判断加载遮罩是否消失。
-        """
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
                  "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
             )
         )
+
+    def click_select_button(self):
+        """点击查询确定按钮."""
+        self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]')
+        sleep(0.5)
+        self.wait_for_loading_to_disappear()
 
     def add_layout(self, layout):
         """添加布局."""
@@ -174,3 +180,77 @@ class ChangeR(BasePage):
         sleep(2)
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
+
+    def click_changespec_num(self, num):
+        """点击指定生产特征数字"""
+        self.click_button(f'(//span[text()="生产特征{num}切换"])[1]')
+        self.wait_for_loading_to_disappear()
+
+    def click_all_button(self, name):
+        """点击按钮."""
+        self.click_button(
+            f'//div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//p[text()="{name}"]')
+
+    def add_changespec_data(self, name):
+        """添加数据."""
+        self.click_add_button()  # 检查点击添加
+        # 输入代码
+        self.enter_texts('(//label[text()="资源"])[1]/parent::div//input', name)
+        self.enter_texts('(//label[text()="前生产特征"])[1]/parent::div//input', name)
+        self.enter_texts('(//label[text()="后生产特征"])[1]/parent::div//input', name)
+        self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
+
+    def edit_changespec_data(self, before_name, after_name):
+        """编辑数据."""
+        self.click_button(f'//tr[./td[2][.//span[text()="{before_name}"]]]/td[2]')
+        self.click_edi_button()  # 检查点击编辑
+        # 输入代码
+        self.enter_texts('(//label[text()="资源"])[1]/parent::div//input', after_name)
+        self.enter_texts('(//label[text()="前生产特征"])[1]/parent::div//input', after_name)
+        self.enter_texts('(//label[text()="后生产特征"])[1]/parent::div//input', after_name)
+        self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
+
+    def del_changespec_data(self, name):
+        """删除数据."""
+        self.click_button(f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]')
+        self.click_del_button()  # 检查点击删除
+        self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
+
+    def select_changespec_data(self, name):
+        """查询数据."""
+        self.click_sel_button()
+        sleep(1)
+        # 定位名称输入框
+        element_to_double_click = self.driver.find_element(
+            By.XPATH,
+            '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[4]',
+        )
+        # 创建一个 ActionChains 对象
+        actions = ActionChains(self.driver)
+        # 双击命令
+        actions.double_click(element_to_double_click).perform()
+        sleep(1)
+        # 点击物料代码
+        self.click_button('//div[text()="资源" and contains(@optid,"opt_")]')
+        sleep(1)
+        # 点击比较关系框
+        self.click_button(
+            '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[5]//input'
+        )
+        sleep(1)
+        # 点击=
+        self.click_button('//div[text()="=" and contains(@optid,"opt_")]')
+        sleep(1)
+        # 点击输入数值
+        self.enter_texts(
+            '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[6]//input',
+            name,
+        )
+        sleep(1)
+
+        # 点击确认
+        self.click_select_button()

@@ -52,6 +52,7 @@ def login_to_changespec():
         page.click_button('(//span[text()="计划管理"])[1]')  # 点击计划管理
         page.click_button('(//span[text()="计划切换定义"])[1]')  # 点击计划切换定义
         page.click_button('(//span[text()="生产特征1切换"])[1]')  # 点击生产特征1切换
+        page.wait_for_loading_to_disappear()
         yield driver  # 提供给测试用例使用
     finally:
         if driver:
@@ -76,7 +77,7 @@ class TestChangeSpecPage:
 
         change.click_add_button()
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         # 资源
         inputresource_box = change.get_find_element_xpath(
@@ -126,7 +127,7 @@ class TestChangeSpecPage:
         change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 前生产特征
@@ -139,7 +140,7 @@ class TestChangeSpecPage:
         )
 
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         sleep(1)
@@ -172,7 +173,7 @@ class TestChangeSpecPage:
         change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击后生产特征
@@ -185,12 +186,12 @@ class TestChangeSpecPage:
         change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int1}]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击确定
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         sleep(1)
@@ -214,7 +215,7 @@ class TestChangeSpecPage:
         random_int = random.randint(1, 6)
         change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击前生产特征
@@ -227,7 +228,7 @@ class TestChangeSpecPage:
         change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击后生产特征
@@ -240,7 +241,7 @@ class TestChangeSpecPage:
         change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int1}]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         sleep(1)
@@ -253,7 +254,7 @@ class TestChangeSpecPage:
 
         # 点击确定
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         sleep(1)
         time = change.get_find_element_xpath(
@@ -279,7 +280,7 @@ class TestChangeSpecPage:
         random_int = random.randint(1, 6)
         change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击前生产特征
@@ -292,7 +293,7 @@ class TestChangeSpecPage:
         change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击后生产特征
@@ -305,7 +306,7 @@ class TestChangeSpecPage:
         change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int1}]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         sleep(1)
@@ -318,7 +319,7 @@ class TestChangeSpecPage:
 
         # 点击确定
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         sleep(1)
         time = change.get_find_element_xpath(
@@ -368,9 +369,10 @@ class TestChangeSpecPage:
         )
         # 勾选框
         random_int = random.randint(1, 6)
+        change.wait_for_loading_to_disappear()
         change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击前品目
@@ -379,11 +381,11 @@ class TestChangeSpecPage:
         )
         # 勾选框
         random_int = random.randint(1, 2)
-        sleep(1)
+        change.wait_for_loading_to_disappear()
         change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击后品目
@@ -392,13 +394,13 @@ class TestChangeSpecPage:
         )
         # 勾选框
         random_int1 = random.randint(1, 2)
-        sleep(1)
+        change.wait_for_loading_to_disappear()
         change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int1}]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
-
+        sleep(1)
         # 获取勾选的资源
         resource = change.get_find_element_xpath(
             '(//label[text()="资源"])[1]/parent::div//input'
@@ -418,8 +420,9 @@ class TestChangeSpecPage:
         change.enter_texts('(//label[text()="备注"])[1]/parent::div//input', num)
 
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
+        change.wait_for_loading_to_disappear()
         sleep(1)
         change.click_button(
             '//div[p[text()="更新时间"]]/div[1]'
@@ -444,7 +447,7 @@ class TestChangeSpecPage:
         text_ = change.get_find_element_xpath(
             f'(//span[text()="{resource}"])[1]/ancestor::tr[1]/td[7]'
         ).text
-        assert addresource == resource and additem1 == item1 and additem2 == item2 and '99999999999' == num_ and text_ == num
+        assert addresource == resource and additem1 == item1 and additem2 == item2 and '9999999999' == num_ and text_ == num
         assert not change.has_fail_message()
 
     @allure.story("删除数据成功")
@@ -452,16 +455,16 @@ class TestChangeSpecPage:
     def test_changespec_delsuccess1(self, login_to_changespec):
         driver = login_to_changespec  # WebDriver 实例
         change = ChangeR(driver)  # 用 driver 初始化 ChangeR
-        changedata1 = change.get_find_element_xpath(
+        before_data = change.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         change.del_data()
-        changedata = change.get_find_element_xpath(
+        after_data = change.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         assert (
-                changedata != changedata1
-        ), f"删除后的数据{changedata}，删除前的数据{changedata1}"
+                before_data != after_data
+        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
         assert not change.has_fail_message()
 
     @allure.story("添加数据成功")
@@ -477,9 +480,10 @@ class TestChangeSpecPage:
         )
         # 勾选框
         random_int = random.randint(1, 6)
+        change.wait_for_loading_to_disappear()
         change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击前品目
@@ -488,11 +492,11 @@ class TestChangeSpecPage:
         )
         # 勾选框
         random_int = random.randint(1, 2)
-        sleep(1)
+        change.wait_for_loading_to_disappear()
         change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击后品目
@@ -501,13 +505,13 @@ class TestChangeSpecPage:
         )
         # 勾选框
         random_int1 = random.randint(1, 2)
-        sleep(1)
+        change.wait_for_loading_to_disappear()
         change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int1}]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
-
+        sleep(1)
         # 获取勾选的资源
         resource = change.get_find_element_xpath(
             '(//label[text()="资源"])[1]/parent::div//input'
@@ -524,9 +528,9 @@ class TestChangeSpecPage:
         sleep(1)
 
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
-        sleep(1)
+        change.wait_for_loading_to_disappear()
         change.click_button(
             '//div[p[text()="更新时间"]]/div[1]'
         )
@@ -581,7 +585,7 @@ class TestChangeSpecPage:
                 target_element.click()
                 break  # 如果只处理第一个匹配行，可以 break
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击前生产特征
@@ -609,7 +613,7 @@ class TestChangeSpecPage:
                     target_element.click()
 
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击后生产特征
@@ -637,10 +641,10 @@ class TestChangeSpecPage:
                     target_element.click()
 
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         sleep(1)
         eles = driver.find_elements(By.XPATH, '//div[text()=" 记录已存在,请检查！ "]')
@@ -654,28 +658,29 @@ class TestChangeSpecPage:
         change = ChangeR(driver)  # 用 driver 初始化 ChangeR
         code1 = SharedDataUtil.load_data().get("resource")
         code2 = SharedDataUtil.load_data().get("item1")
+        change.click_flagdata()
         # 定位第一行
         change.click_button(
-            f'//table[@xid="2" and @class="vxe-table--body"]//tr[td[2]//span[text()="{code1}"] and td[3]//span[text()="{code2}"]]//td[2]'
+            f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{code1}"] and td[3]//span[text()="{code2}"]]//td[2]'
         )
-        changedata1 = change.get_find_element_xpath(
+        before_data = change.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         change.click_del_button()  # 点击删除
         change.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-        sleep(1)
+        change.wait_for_loading_to_disappear()
         ele = driver.find_elements(
             By.XPATH,
-            f'//table[@xid="2" and @class="vxe-table--body"]//tr[td[2]//span[text()="{code1}"] and td[3]//span[text()="{code2}"]]//td[2]'
+            f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{code1}"] and td[3]//span[text()="{code2}"]]//td[2]'
         )
         # 定位
-        changedata = change.get_find_element_xpath(
+        after_data = change.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         assert (
-                changedata != changedata1 and
+                before_data != after_data and
                 len(ele) == 0
-        ), f"删除后的数据{changedata}，删除前的数据{changedata1}"
+        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
         assert not change.has_fail_message()
 
     @allure.story("取消删除数据")
@@ -727,10 +732,10 @@ class TestChangeSpecPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
         )
         # 勾选框
-        random_int = random.randint(1, 6)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        change.wait_for_loading_to_disappear()
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击前资源
@@ -738,12 +743,11 @@ class TestChangeSpecPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[2]'
         )
         # 勾选框
-        random_int = random.randint(1, 2)
-        sleep(1)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        change.wait_for_loading_to_disappear()
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击后资源
@@ -751,15 +755,14 @@ class TestChangeSpecPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[3]'
         )
         # 勾选框
-        random_int1 = random.randint(1, 2)
-        sleep(1)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int1}]')
+        change.wait_for_loading_to_disappear()
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
 
         change.click_add_button()
@@ -768,10 +771,9 @@ class TestChangeSpecPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
         )
         # 勾选框
-        random_int = random.randint(1, 6)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[2]')
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击前资源
@@ -779,12 +781,11 @@ class TestChangeSpecPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[2]'
         )
         # 勾选框
-        random_int = random.randint(1, 2)
-        sleep(1)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        change.wait_for_loading_to_disappear()
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击后资源
@@ -792,17 +793,15 @@ class TestChangeSpecPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[3]'
         )
         # 勾选框
-        random_int1 = random.randint(1, 2)
-        sleep(1)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int1}]')
+        change.wait_for_loading_to_disappear()
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
-
         assert not change.has_fail_message()
 
     @allure.story("修改资源切换资源成功")
@@ -810,6 +809,8 @@ class TestChangeSpecPage:
     def test_changespec_editcodesuccess(self, login_to_changespec):
         driver = login_to_changespec  # WebDriver 实例
         change = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        change.click_flagdata()
+        sleep(1)
         # 定位第一行
         change.click_button(
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
@@ -822,17 +823,16 @@ class TestChangeSpecPage:
         )
 
         # 勾选框
-        random_int = random.randint(1, 6)
         change.click_button(
             '(//span[@class="vxe-checkbox--icon iconfont icon-fuxuankuangdaiding"])[2]'
         )
         change.click_button(
             '(//span[@class="vxe-checkbox--icon vxe-icon-checkbox-checked-fill"])[2]'
         )
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[3]')
 
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         sleep(1)
         # 获取勾选的资源代码
@@ -841,9 +841,9 @@ class TestChangeSpecPage:
         ).get_attribute("value")
 
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
-        sleep(1)
+        change.wait_for_loading_to_disappear()
         change.click_button(
             '//div[p[text()="更新时间"]]/div[1]'
         )
@@ -862,6 +862,8 @@ class TestChangeSpecPage:
     def test_changespec_editprioritizationsuccess(self, login_to_changespec):
         driver = login_to_changespec  # WebDriver 实例
         change = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        change.click_flagdata()
+        sleep(1)
         # 定位第一行
         change.click_button(
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
@@ -885,9 +887,9 @@ class TestChangeSpecPage:
         ).get_attribute("value")
 
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
-        sleep(1)
+        change.wait_for_loading_to_disappear()
         change.click_button(
             '//div[p[text()="更新时间"]]/div[1]'
         )
@@ -908,7 +910,7 @@ class TestChangeSpecPage:
         change = ChangeR(driver)  # 用 driver 初始化 ChangeR
         sleep(2)
         after = change.get_find_element_xpath(
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][2]/td[2]'
+            '(//table[@class="vxe-table--body"])[2]//tr[2]/td[2]'
         ).text
         # 点击查询
         change.click_sel_button()
@@ -941,15 +943,46 @@ class TestChangeSpecPage:
         sleep(1)
 
         # 点击确认
-        change.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        change.click_select_button()
         # 定位第一行是否为开料
         changeRcode = change.get_find_element_xpath(
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]'
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
         )
         assert changeRcode.text == after
+        assert not change.has_fail_message()
+
+    @allure.story("删除数据成功")
+    # @pytest.mark.run(order=1)
+    def test_changespec_delsuccess3(self, login_to_changespec):
+        driver = login_to_changespec  # WebDriver 实例
+        change = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        before_data = change.get_find_element_xpath(
+            '(//span[contains(text(),"条记录")])[1]'
+        ).text
+        change.del_data()
+        after_data = change.get_find_element_xpath(
+            '(//span[contains(text(),"条记录")])[1]'
+        ).text
+        assert (
+                before_data != after_data
+        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
+        assert not change.has_fail_message()
+
+    @allure.story("删除数据成功")
+    # @pytest.mark.run(order=1)
+    def test_changespec_delsuccess4(self, login_to_changespec):
+        driver = login_to_changespec  # WebDriver 实例
+        change = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        before_data = change.get_find_element_xpath(
+            '(//span[contains(text(),"条记录")])[1]'
+        ).text
+        change.del_data()
+        after_data = change.get_find_element_xpath(
+            '(//span[contains(text(),"条记录")])[1]'
+        ).text
+        assert (
+                before_data != after_data
+        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
         assert not change.has_fail_message()
 
     @allure.story("输入全部数据，添加保存成功")
@@ -993,19 +1026,13 @@ class TestChangeSpecPage:
         len_num = len(all_value)
         before_all_value = adds.batch_acquisition_input(all_value)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]//span[text()="确定"]')
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         change.get_find_message()
         driver.refresh()
         change.wait_for_loading_to_disappear()
         num = adds.go_settings_page()
         change.wait_for_loading_to_disappear()
-        change.click_button(
-            '//div[p[text()="更新时间"]]/div[1]'
-        )
-        sleep(1)
-        change.click_button(
-            '//div[p[text()="更新时间"]]/div[1]'
-        )
+        change.click_flagdata()
         change.click_button(
             f'(//div[@class="vxe-table--main-wrapper"])[2]//table[@class="vxe-table--body"]//tr/td[2][.//span[text()="{resource_value}"]]')
         sleep(1)
@@ -1027,29 +1054,23 @@ class TestChangeSpecPage:
     def test_changespec_deleteall(self, login_to_changespec):
         driver = login_to_changespec  # WebDriver 实例
         change = ChangeR(driver)  # 用 driver 初始化 ChangeR
-        change.click_button(
-            '//div[p[text()="更新时间"]]/div[1]'
-        )
-        sleep(1)
-        change.click_button(
-            '//div[p[text()="更新时间"]]/div[1]'
-        )
-        sleep(1)
-        changedata1 = change.get_find_element_xpath(
+        change.click_flagdata()
+        before_data = change.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
+        change.wait_for_loading_to_disappear()
         change.click_button(
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]')
         change.click_del_button()  # 点击删除
         change.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-        sleep(1)
+        change.wait_for_loading_to_disappear()
         # 定位
-        changedata = change.get_find_element_xpath(
+        after_data = change.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         assert (
-                changedata != changedata1
-        ), f"删除后的数据{changedata}，删除前的数据{changedata1}"
+                before_data != after_data
+        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
         assert not change.has_fail_message()
 
     @allure.story("删除布局成功")
@@ -1066,4 +1087,427 @@ class TestChangeSpecPage:
         )
         assert 0 == len(after_layout)
         assert not change.has_fail_message()
+
+    @allure.story("生产特征2切换增删查改")
+    # @pytest.mark.run(order=1)
+    def test_changespec_changespec2(self, login_to_changespec):
+        driver = login_to_changespec  # WebDriver 实例
+        spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        list_name = ['1测试生产特征22', '1测试生产特征2']
+        after_name = '1修改生产特征22'
+        spec.click_button('//div[text()=" 生产特征1切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_changespec_num(2)
+        add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+        add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        add3 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(add2) == 0:
+            spec.add_changespec_data(list_name[1])
+        if len(add1) == 0 and len(add3) == 0:
+            spec.add_changespec_data(list_name[0])
+            ele0 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+            assert len(ele0) == 1
+        ele1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        assert len(ele1) == 1
+
+        edit = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(edit) == 0:
+            spec.edit_changespec_data(list_name[0], after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 1
+
+        spec.select_changespec_data(after_name)
+        speccode = spec.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"])[2]//tr[1]/td[2]'
+        ).text
+        # 定位第二行没有数据
+        speccode2 = driver.find_elements(
+            By.XPATH,
+            '(//table[@class="vxe-table--body"])[2]//tr[2]/td[2]',
+        )
+        assert speccode == after_name and len(speccode2) == 0
+
+        spec.del_changespec_data(after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 0
+
+        ele = spec.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        assert len(ele) == 0
+        assert not spec.has_fail_message()
+
+    @allure.story("生产特征3切换增删查改")
+    # @pytest.mark.run(order=1)
+    def test_changespec_changespec3(self, login_to_changespec):
+        driver = login_to_changespec  # WebDriver 实例
+        spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        list_name = ['1测试生产特征33', '1测试生产特征3']
+        after_name = '1修改生产特征33'
+        spec.click_button('//div[text()=" 生产特征1切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_changespec_num(3)
+        add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+        add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        add3 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(add2) == 0:
+            spec.add_changespec_data(list_name[1])
+        if len(add1) == 0 and len(add3) == 0:
+            spec.add_changespec_data(list_name[0])
+            ele0 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+            assert len(ele0) == 1
+        ele1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        assert len(ele1) == 1
+
+        edit = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(edit) == 0:
+            spec.edit_changespec_data(list_name[0], after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 1
+
+        spec.select_changespec_data(after_name)
+        speccode = spec.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"])[2]//tr[1]/td[2]'
+        ).text
+        # 定位第二行没有数据
+        speccode2 = driver.find_elements(
+            By.XPATH,
+            '(//table[@class="vxe-table--body"])[2]//tr[2]/td[2]',
+        )
+        assert speccode == after_name and len(speccode2) == 0
+
+        spec.del_changespec_data(after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 0
+
+        ele = spec.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        assert len(ele) == 0
+        assert not spec.has_fail_message()
+
+    @allure.story("生产特征4切换增删查改")
+    # @pytest.mark.run(order=1)
+    def test_changespec_changespec4(self, login_to_changespec):
+        driver = login_to_changespec  # WebDriver 实例
+        spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        list_name = ['1测试生产特征44', '1测试生产特征4']
+        after_name = '1修改生产特征44'
+        spec.click_button('//div[text()=" 生产特征1切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_changespec_num(4)
+        add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+        add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        add3 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(add2) == 0:
+            spec.add_changespec_data(list_name[1])
+        if len(add1) == 0 and len(add3) == 0:
+            spec.add_changespec_data(list_name[0])
+            ele0 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+            assert len(ele0) == 1
+        ele1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        assert len(ele1) == 1
+
+        edit = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(edit) == 0:
+            spec.edit_changespec_data(list_name[0], after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 1
+
+        spec.select_changespec_data(after_name)
+        speccode = spec.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"])[2]//tr[1]/td[2]'
+        ).text
+        # 定位第二行没有数据
+        speccode2 = driver.find_elements(
+            By.XPATH,
+            '(//table[@class="vxe-table--body"])[2]//tr[2]/td[2]',
+        )
+        assert speccode == after_name and len(speccode2) == 0
+
+        spec.del_changespec_data(after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 0
+
+        ele = spec.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        assert len(ele) == 0
+        assert not spec.has_fail_message()
+
+    @allure.story("生产特征5切换增删查改")
+    # @pytest.mark.run(order=1)
+    def test_changespec_changespec5(self, login_to_changespec):
+        driver = login_to_changespec  # WebDriver 实例
+        spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        list_name = ['1测试生产特征55', '1测试生产特征5']
+        after_name = '1修改生产特征55'
+        spec.click_button('//div[text()=" 生产特征1切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_changespec_num(5)
+        add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+        add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        add3 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(add2) == 0:
+            spec.add_changespec_data(list_name[1])
+        if len(add1) == 0 and len(add3) == 0:
+            spec.add_changespec_data(list_name[0])
+            ele0 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+            assert len(ele0) == 1
+        ele1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        assert len(ele1) == 1
+
+        edit = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(edit) == 0:
+            spec.edit_changespec_data(list_name[0], after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 1
+
+        spec.select_changespec_data(after_name)
+        speccode = spec.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"])[2]//tr[1]/td[2]'
+        ).text
+        # 定位第二行没有数据
+        speccode2 = driver.find_elements(
+            By.XPATH,
+            '(//table[@class="vxe-table--body"])[2]//tr[2]/td[2]',
+        )
+        assert speccode == after_name and len(speccode2) == 0
+
+        spec.del_changespec_data(after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 0
+
+        ele = spec.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        assert len(ele) == 0
+        assert not spec.has_fail_message()
+
+    @allure.story("生产特征6切换增删查改")
+    # @pytest.mark.run(order=1)
+    def test_changespec_changespec6(self, login_to_changespec):
+        driver = login_to_changespec  # WebDriver 实例
+        spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        list_name = ['1测试生产特征66', '1测试生产特征6']
+        after_name = '1修改生产特征66'
+        spec.click_button('//div[text()=" 生产特征1切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_changespec_num(6)
+        add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+        add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        add3 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(add2) == 0:
+            spec.add_changespec_data(list_name[1])
+        if len(add1) == 0 and len(add3) == 0:
+            spec.add_changespec_data(list_name[0])
+            ele0 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+            assert len(ele0) == 1
+        ele1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        assert len(ele1) == 1
+
+        edit = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(edit) == 0:
+            spec.edit_changespec_data(list_name[0], after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 1
+
+        spec.select_changespec_data(after_name)
+        speccode = spec.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"])[2]//tr[1]/td[2]'
+        ).text
+        # 定位第二行没有数据
+        speccode2 = driver.find_elements(
+            By.XPATH,
+            '(//table[@class="vxe-table--body"])[2]//tr[2]/td[2]',
+        )
+        assert speccode == after_name and len(speccode2) == 0
+
+        spec.del_changespec_data(after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 0
+
+        ele = spec.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        assert len(ele) == 0
+        assert not spec.has_fail_message()
+
+    @allure.story("生产特征7切换增删查改")
+    # @pytest.mark.run(order=1)
+    def test_changespec_changespec7(self, login_to_changespec):
+        driver = login_to_changespec  # WebDriver 实例
+        spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        list_name = ['1测试生产特征77', '1测试生产特征7']
+        after_name = '1修改生产特征77'
+        spec.click_button('//div[text()=" 生产特征1切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_changespec_num(7)
+        add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+        add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        add3 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(add2) == 0:
+            spec.add_changespec_data(list_name[1])
+        if len(add1) == 0 and len(add3) == 0:
+            spec.add_changespec_data(list_name[0])
+            ele0 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+            assert len(ele0) == 1
+        ele1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        assert len(ele1) == 1
+
+        edit = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(edit) == 0:
+            spec.edit_changespec_data(list_name[0], after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 1
+
+        spec.select_changespec_data(after_name)
+        speccode = spec.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"])[2]//tr[1]/td[2]'
+        ).text
+        # 定位第二行没有数据
+        speccode2 = driver.find_elements(
+            By.XPATH,
+            '(//table[@class="vxe-table--body"])[2]//tr[2]/td[2]',
+        )
+        assert speccode == after_name and len(speccode2) == 0
+
+        spec.del_changespec_data(after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 0
+
+        ele = spec.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        assert len(ele) == 0
+        assert not spec.has_fail_message()
+
+    @allure.story("生产特征8切换增删查改")
+    # @pytest.mark.run(order=1)
+    def test_changespec_changespec8(self, login_to_changespec):
+        driver = login_to_changespec  # WebDriver 实例
+        spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        list_name = ['1测试生产特征88', '1测试生产特征8']
+        after_name = '1修改生产特征88'
+        spec.click_button('//div[text()=" 生产特征1切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_changespec_num(8)
+        add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+        add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        add3 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(add2) == 0:
+            spec.add_changespec_data(list_name[1])
+        if len(add1) == 0 and len(add3) == 0:
+            spec.add_changespec_data(list_name[0])
+            ele0 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+            assert len(ele0) == 1
+        ele1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        assert len(ele1) == 1
+
+        edit = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(edit) == 0:
+            spec.edit_changespec_data(list_name[0], after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 1
+
+        spec.select_changespec_data(after_name)
+        speccode = spec.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"])[2]//tr[1]/td[2]'
+        ).text
+        # 定位第二行没有数据
+        speccode2 = driver.find_elements(
+            By.XPATH,
+            '(//table[@class="vxe-table--body"])[2]//tr[2]/td[2]',
+        )
+        assert speccode == after_name and len(speccode2) == 0
+
+        spec.del_changespec_data(after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 0
+
+        ele = spec.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        assert len(ele) == 0
+        assert not spec.has_fail_message()
+
+    @allure.story("生产特征9切换增删查改")
+    # @pytest.mark.run(order=1)
+    def test_changespec_changespec9(self, login_to_changespec):
+        driver = login_to_changespec  # WebDriver 实例
+        spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        list_name = ['1测试生产特征99', '1测试生产特征9']
+        after_name = '1修改生产特征99'
+        spec.click_button('//div[text()=" 生产特征1切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_changespec_num(9)
+        add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+        add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        add3 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(add2) == 0:
+            spec.add_changespec_data(list_name[1])
+        if len(add1) == 0 and len(add3) == 0:
+            spec.add_changespec_data(list_name[0])
+            ele0 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+            assert len(ele0) == 1
+        ele1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        assert len(ele1) == 1
+
+        edit = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(edit) == 0:
+            spec.edit_changespec_data(list_name[0], after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 1
+
+        spec.select_changespec_data(after_name)
+        speccode = spec.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"])[2]//tr[1]/td[2]'
+        ).text
+        # 定位第二行没有数据
+        speccode2 = driver.find_elements(
+            By.XPATH,
+            '(//table[@class="vxe-table--body"])[2]//tr[2]/td[2]',
+        )
+        assert speccode == after_name and len(speccode2) == 0
+
+        spec.del_changespec_data(after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 0
+
+        ele = spec.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        assert len(ele) == 0
+        assert not spec.has_fail_message()
+
+    @allure.story("生产特征10切换增删查改")
+    # @pytest.mark.run(order=1)
+    def test_changespec_changespec10(self, login_to_changespec):
+        driver = login_to_changespec  # WebDriver 实例
+        spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        list_name = ['1测试生产特征100', '1测试生产特征10']
+        after_name = '1修改生产特征10'
+        spec.click_button('//div[text()=" 生产特征1切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_changespec_num(10)
+        add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+        add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        add3 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(add2) == 0:
+            spec.add_changespec_data(list_name[1])
+        if len(add1) == 0 and len(add3) == 0:
+            spec.add_changespec_data(list_name[0])
+            ele0 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
+            assert len(ele0) == 1
+        ele1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
+        assert len(ele1) == 1
+
+        edit = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        if len(edit) == 0:
+            spec.edit_changespec_data(list_name[0], after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 1
+
+        spec.select_changespec_data(after_name)
+        speccode = spec.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"])[2]//tr[1]/td[2]'
+        ).text
+        # 定位第二行没有数据
+        speccode2 = driver.find_elements(
+            By.XPATH,
+            '(//table[@class="vxe-table--body"])[2]//tr[2]/td[2]',
+        )
+        assert speccode == after_name and len(speccode2) == 0
+
+        spec.del_changespec_data(after_name)
+        ele = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{after_name}"]]]/td[2]')
+        assert len(ele) == 0
+
+        ele = spec.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        assert len(ele) == 0
+        assert not spec.has_fail_message()
 

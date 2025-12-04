@@ -102,16 +102,6 @@ class ChangeI(BasePage):
         return message.text
 
     def wait_for_loading_to_disappear(self, timeout=10):
-        """
-        显式等待加载遮罩元素消失。
-
-        参数:
-        - timeout (int): 超时时间，默认为10秒。
-
-        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
-        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
-        以此判断加载遮罩是否消失。
-        """
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
@@ -119,7 +109,13 @@ class ChangeI(BasePage):
             )
         )
 
-    def del_data(self):
+    def click_select_button(self):
+        """点击查询确定按钮."""
+        self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]')
+        sleep(0.5)
+        self.wait_for_loading_to_disappear()
+
+    def click_flagdata(self):
         self.click_button(
             '//div[p[text()="更新时间"]]/div[1]'
         )
@@ -127,13 +123,17 @@ class ChangeI(BasePage):
         self.click_button(
             '//div[p[text()="更新时间"]]/div[1]'
         )
+        sleep(2)
+
+    def del_data(self):
+        self.click_flagdata()
         # 定位第一行
         self.click_button(
             '//table[@class="vxe-table--body"]//tr[1]/td[2]'
         )
         self.click_del_button()  # 点击删除
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-        sleep(1)
+        self.wait_for_loading_to_disappear()
 
     def add_input_all(self, num):
         """输入框全部输入保存"""
@@ -254,3 +254,4 @@ class ChangeI(BasePage):
         sleep(2)
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()

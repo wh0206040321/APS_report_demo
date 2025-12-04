@@ -75,16 +75,6 @@ class MasterPage(BasePage):
         self.click(By.XPATH, '(//button[@class="m-b-10 ivu-btn ivu-btn-default"])[8]')
 
     def wait_for_loading_to_disappear(self, timeout=10):
-        """
-        显式等待加载遮罩元素消失。
-
-        参数:
-        - timeout (int): 超时时间，默认为10秒。
-
-        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
-        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
-        以此判断加载遮罩是否消失。
-        """
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
@@ -143,6 +133,12 @@ class MasterPage(BasePage):
             return self.find_element(By.CLASS_NAME, classname)
         except NoSuchElementException:
             return None
+
+    def click_select_button(self):
+        """点击查询确定按钮."""
+        self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]')
+        sleep(0.5)
+        self.wait_for_loading_to_disappear()
 
     def go_item_dialog(self, test_item):
         """选择物料代码"""
@@ -272,3 +268,4 @@ class MasterPage(BasePage):
         sleep(2)
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()

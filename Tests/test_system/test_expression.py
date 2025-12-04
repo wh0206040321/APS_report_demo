@@ -256,6 +256,7 @@ class TestSExpressionPage:
             "class")
         if eles == "ivu-checkbox ivu-checkbox-checked":
             expression.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            expression.click_button('//div[@class="filter-btn-bar"]/button')
         sleep(1)
         expression.click_button('//div[p[text()="名称"]]/following-sibling::div//input')
         eles = expression.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')

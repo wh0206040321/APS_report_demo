@@ -83,6 +83,12 @@ class PersonalPage(BasePage):
         # 确认密码修改
         self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
 
+    def wait_for_el_loading_mask(self, timeout=10):
+        sleep(1)
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
+        )
+
     def go_setting_page(self):
         """
         进入个人设置页面。
@@ -96,6 +102,7 @@ class PersonalPage(BasePage):
 
         # 点击文本为"个人设置"的div，进入个人设置页面。
         self.click_button('//div[text()=" 个人设置 "]')
+        self.wait_for_el_loading_mask()
 
     def switch_language(self, language):
         """
@@ -138,16 +145,20 @@ class PersonalPage(BasePage):
         self.click_button('(//span[text()="系统管理"])[1]')  # 点击系统管理
         self.click_button('(//span[text()="单元设置"])[1]')  # 点击单元设置
         self.click_button('(//span[text()="环境设置"])[1]')  # 点击环境设置
+        sleep(2)
         radio = self.get_find_element('//label[text()=" 服务器"]/span')
         sleep(1)
         if name == 'web' or name == 'ip':
             # 选择服务器类型并保存
-            if radio.get_attribute('class') == 'ivu-radio':
-                radio.click()
+            if 'ivu-radio-checked' in radio.get_attribute('class'):
+                sleep(1)
+                self.click_button('//label[text()=" 本地"]/span')
+                sleep(1)
             self.click_button('//p[text()="保存"]')
         elif name == 'system_webip':
             # 选择本地并设置web服务，然后保存
             if radio.get_attribute('class') != 'ivu-radio':
+                sleep(2)
                 self.click_button('//label[text()=" 本地"]/span')
             self.click_button('//input[@placeholder="请选择"]')
             self.click_button('//span[text()="web服务"]')
@@ -155,6 +166,7 @@ class PersonalPage(BasePage):
         elif name == 'system_ip':
             # 选择本地并设置IP，然后保存
             if radio.get_attribute('class') != 'ivu-radio':
+                sleep(2)
                 self.click_button('//label[text()=" 本地"]/span')
             self.click_button('//input[@placeholder="请选择"]')
             self.click_button('//span[text()="IP"]')
@@ -162,6 +174,7 @@ class PersonalPage(BasePage):
         elif name == 'system_web':
             # 直接保存当前配置，适用于web服务配置
             if radio.get_attribute('class') == 'ivu-radio':
+                sleep(2)
                 radio.click()
             self.click_button('//p[text()="保存"]')
         self.get_find_message()
@@ -169,6 +182,7 @@ class PersonalPage(BasePage):
         self.click_button('(//span[text()="计划运行"])[1]')  # 点击计划运行
         self.click_button('(//span[text()="计算工作台"])[1]')  # 点击计算工作台
         self.click_button('(//span[text()="计划计算"])[1]')  # 点击计划计算
+        sleep(3)
 
     def go_exit(self, num=""):
         """

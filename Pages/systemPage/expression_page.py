@@ -57,24 +57,32 @@ class ExpressionPage(BasePage):
         self.click_button('//li[text()=" 刷新"]')
         self.wait_for_loading_to_disappear()
 
-    # 等待加载遮罩消失
     def wait_for_loading_to_disappear(self, timeout=10):
-        """
-        显式等待加载遮罩元素消失。
-
-        参数:
-        - timeout (int): 超时时间，默认为10秒。
-
-        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
-        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
-        以此判断加载遮罩是否消失。
-        """
+        sleep(1)
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
-                (By.XPATH, '//div[contains(@class, "el-loading-mask") and not(contains(@style, "display: none"))]')
+                (By.XPATH,
+                 "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
             )
         )
+
+    def click_select_button2(self):
+        """点击查询确定按钮."""
+        self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[2]')
+        self.wait_for_loading_to_disappear()
+
+    # 等待加载遮罩消失
+    def wait_for_el_loading_mask(self, timeout=10):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
+        )
         sleep(1)
+
+    def click_select_button(self):
+        """点击查询确定按钮."""
+        self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]')
+        sleep(0.5)
+        self.wait_for_loading_to_disappear()
 
     def click_all_button(self, name):
         """点击按钮."""
@@ -100,12 +108,13 @@ class ExpressionPage(BasePage):
 
     def select_input_module(self, name):
         """选择输入框."""
-        xpath = '//div[p[text()="模块代码"]]/following-sibling::div//input'
+        xpath = '//div[div[span[text()=" 模块代码"]]]//input'
         ele = self.get_find_element_xpath(xpath)
         ele.send_keys(Keys.CONTROL, "a")
         ele.send_keys(Keys.DELETE)
         sleep(0.5)
         self.enter_texts(xpath, name)
+        sleep(1)
 
     def select_input_language(self, name):
         """选择输入框."""
@@ -212,6 +221,7 @@ class ExpressionPage(BasePage):
             self.click_button('(//div[@class="demo-drawer-footer"])[2]/button[2]')
         except:
             self.click_button('(//div[@class="demo-drawer-footer"])[3]/button[2]')
+        self.wait_for_loading_to_disappear()
 
     def del_layout(self, layout):
         # 获取目标 div 元素，这里的目标是具有特定文本的 div
@@ -239,3 +249,4 @@ class ExpressionPage(BasePage):
         sleep(2)
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()

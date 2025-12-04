@@ -52,6 +52,7 @@ def login_to_itemgroup():
         page.click_button('(//span[text()="计划管理"])[1]')  # 点击计划管理
         page.click_button('(//span[text()="计划基础数据"])[1]')  # 点击计划基础数据
         page.click_button('(//span[text()="物品组"])[1]')  # 点击物品组
+        page.wait_for_loading_to_disappear()
         yield driver  # 提供给测试用例使用
     finally:
         if driver:
@@ -234,7 +235,7 @@ class TestItemGroupPage:
         num_ = item.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[6]'
         ).text
-        assert adddata == name and num_ == "99999999999", f"预期数据是111，实际得到{adddata}"
+        assert adddata == name and num_ == "9999999999", f"预期数据是111，实际得到{adddata}"
         assert not item.has_fail_message()
 
     @allure.story("添加数据成功")
@@ -432,7 +433,7 @@ class TestItemGroupPage:
         actions.double_click(element_to_double_click).perform()
         # 点击确认
         item.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         # 获取代码设计器文本框
         sleep(1)
@@ -515,18 +516,16 @@ class TestItemGroupPage:
         sleep(1)
 
         # 点击确认
-        item.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        item.click_select_button()
+
         # 定位第一行是否为1测试A
         itemcode = item.get_find_element_xpath(
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]'
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
         ).text
         # 定位第二行没有数据
         itemcode2 = driver.find_elements(
             By.XPATH,
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][2]/td[2]',
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
         assert itemcode == name and len(itemcode2) == 0
         assert not item.has_fail_message()
@@ -569,13 +568,10 @@ class TestItemGroupPage:
         sleep(1)
 
         # 点击确认
-        item.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        item.click_select_button()
         itemcode = driver.find_elements(
             By.XPATH,
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]',
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
         )
         assert len(itemcode) == 0
         assert not item.has_fail_message()
@@ -618,10 +614,7 @@ class TestItemGroupPage:
         sleep(1)
 
         # 点击确认
-        item.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        item.click_select_button()
         eles = item.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
         assert len(eles) > 0
         assert all(name in ele for ele in eles)
@@ -665,10 +658,7 @@ class TestItemGroupPage:
         sleep(1)
 
         # 点击确认
-        item.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        item.click_select_button()
         eles = item.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[6]')
         assert len(eles) > 0
         assert all(int(ele) > num for ele in eles)
@@ -795,10 +785,7 @@ class TestItemGroupPage:
         sleep(1)
 
         # 点击确认
-        item.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        item.click_select_button()
         eles1 = item.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[6]')
         eles2 = item.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
         assert len(eles1) > 0 and len(eles2) > 0
@@ -928,10 +915,7 @@ class TestItemGroupPage:
         sleep(1)
 
         # 点击确认
-        item.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        item.click_select_button()
         # 获取目标表格第2个 vxe 表格中的所有数据行
         xpath_rows = '(//table[contains(@class, "vxe-table--body")])[2]//tr[contains(@class,"vxe-body--row")]'
 

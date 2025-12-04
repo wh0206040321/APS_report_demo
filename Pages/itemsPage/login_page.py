@@ -3,7 +3,8 @@ from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
-
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from Pages.base_page import BasePage
 
 
@@ -27,13 +28,19 @@ class LoginPage(BasePage):
         self.click_button('//div[@class="ivu-select-head-flex"]/input')
         self.click_button(f'//li[text()="{planning_unit}"]')
 
-    def login(self, username, password, planning_unit):
+    def login(self, username, password, planning_unit, timeout=60):
         """完整的登录流程"""
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located(
+                (By.XPATH, '//div[@class="loadingbox"]')
+            )
+        )
         self.enter_username(username)
         self.enter_password(password)
         self.select_planning_unit(planning_unit)
-        sleep(1.7)
+        sleep(0.2)
         self.click_login_button()
+        sleep(1)
 
     def click_login_button(self):
         self.click_button('//button[contains(@class, "ivu-btn-primary")]')
@@ -51,3 +58,17 @@ class LoginPage(BasePage):
             return self.find_element(By.XPATH, xpath)
         except NoSuchElementException:
             return None
+
+    def wait_for_loading_to_disappear(self, timeout=10):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located(
+                (By.XPATH,
+                 "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
+            )
+        )
+
+    def wait_for_el_loading_mask(self, timeout=15):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
+        )
+        sleep(1)

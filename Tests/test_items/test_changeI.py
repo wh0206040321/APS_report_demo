@@ -52,6 +52,7 @@ def login_to_changeI():
         page.click_button('(//span[text()="计划管理"])[1]')  # 点击计划管理
         page.click_button('(//span[text()="计划切换定义"])[1]')  # 点击计划切换定义
         page.click_button('(//span[text()="物品切换"])[1]')  # 点击物品切换
+        page.wait_for_loading_to_disappear()
         yield driver  # 提供给测试用例使用
     finally:
         if driver:
@@ -76,7 +77,7 @@ class TestChangeIPage:
 
         changeI.click_add_button()
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         # 资源
         inputresource_box = changeI.get_find_element_xpath(
@@ -126,7 +127,7 @@ class TestChangeIPage:
         changeI.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         sleep(1)
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 前品目
@@ -139,7 +140,7 @@ class TestChangeIPage:
         )
 
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         sleep(1)
@@ -172,7 +173,7 @@ class TestChangeIPage:
         changeI.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         sleep(1)
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击后品目
@@ -185,12 +186,12 @@ class TestChangeIPage:
         changeI.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int1}]')
         sleep(1)
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击确定
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         sleep(1)
@@ -214,7 +215,7 @@ class TestChangeIPage:
         random_int = random.randint(1, 6)
         changeI.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击前品目
@@ -227,7 +228,7 @@ class TestChangeIPage:
         changeI.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         sleep(1)
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击后品目
@@ -240,7 +241,7 @@ class TestChangeIPage:
         changeI.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int1}]')
         sleep(1)
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         sleep(1)
@@ -253,7 +254,7 @@ class TestChangeIPage:
 
         # 点击确定
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         sleep(1)
         time = changeI.get_find_element_xpath(
@@ -279,7 +280,7 @@ class TestChangeIPage:
         random_int = random.randint(1, 6)
         changeI.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击前品目
@@ -292,7 +293,7 @@ class TestChangeIPage:
         changeI.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
         sleep(1)
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击后品目
@@ -305,7 +306,7 @@ class TestChangeIPage:
         changeI.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int1}]')
         sleep(1)
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         sleep(1)
@@ -318,7 +319,7 @@ class TestChangeIPage:
 
         # 点击确定
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         sleep(1)
         time = changeI.get_find_element_xpath(
@@ -366,11 +367,11 @@ class TestChangeIPage:
         change.click_button(
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
         )
+        change.wait_for_loading_to_disappear()
         # 勾选框
-        random_int = random.randint(1, 6)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击前品目
@@ -378,12 +379,11 @@ class TestChangeIPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[2]'
         )
         # 勾选框
-        random_int = random.randint(1, 4)
-        sleep(1)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        change.wait_for_loading_to_disappear()
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击后品目
@@ -391,14 +391,13 @@ class TestChangeIPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[3]'
         )
         # 勾选框
-        random_int1 = random.randint(1, 4)
-        sleep(1)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int1}]')
+        change.wait_for_loading_to_disappear()
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
-
+        sleep(1)
         # 获取勾选的资源
         resource = change.get_find_element_xpath(
             '(//label[text()="资源"])[1]/parent::div//input'
@@ -407,7 +406,6 @@ class TestChangeIPage:
         item1 = change.get_find_element_xpath(
             '(//label[text()="前品目"])[1]/parent::div//input'
         ).get_attribute("value")
-        sleep(1)
         # 获取后目录
         item2 = change.get_find_element_xpath(
             '(//label[text()="后品目"])[1]/parent::div//input'
@@ -418,16 +416,10 @@ class TestChangeIPage:
         change.enter_texts('(//label[text()="备注"])[1]/parent::div//input', num)
 
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
-        sleep(1)
-        change.click_button(
-            '//div[p[text()="更新时间"]]/div[1]'
-        )
-        sleep(1)
-        change.click_button(
-            '//div[p[text()="更新时间"]]/div[1]'
-        )
+        change.wait_for_loading_to_disappear()
+        change.click_flagdata()
 
         addresource = change.get_find_element_xpath(
             f'(//span[text()="{resource}"])[1]/ancestor::tr[1]/td[2]'
@@ -444,7 +436,7 @@ class TestChangeIPage:
         text_ = change.get_find_element_xpath(
             f'(//span[text()="{resource}"])[1]/ancestor::tr[1]/td[7]'
         ).text
-        assert addresource == resource and additem1 == item1 and additem2 == item2 and '99999999999' == num_ and text_ == num
+        assert addresource == resource and additem1 == item1 and additem2 == item2 and '9999999999' == num_ and text_ == num
         assert not change.has_fail_message()
 
     @allure.story("删除数据成功")
@@ -452,16 +444,17 @@ class TestChangeIPage:
     def test_changeI_delsuccess1(self, login_to_changeI):
         driver = login_to_changeI  # WebDriver 实例
         change = ChangeI(driver)  # 用 driver 初始化 changeI
-        changedata1 = change.get_find_element_xpath(
+        change.wait_for_loading_to_disappear()
+        before_data = change.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         change.del_data()
-        changedata = change.get_find_element_xpath(
+        after_data = change.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         assert (
-                changedata != changedata1
-        ), f"删除后的数据{changedata}，删除前的数据{changedata1}"
+                before_data != after_data
+        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
         assert not change.has_fail_message()
 
     @allure.story("添加数据成功")
@@ -475,11 +468,11 @@ class TestChangeIPage:
         change.click_button(
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
         )
+        change.wait_for_loading_to_disappear()
         # 勾选框
-        random_int = random.randint(1, 6)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击前品目
@@ -487,27 +480,23 @@ class TestChangeIPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[2]'
         )
         # 勾选框
-        random_int = random.randint(1, 4)
-        sleep(1)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        change.wait_for_loading_to_disappear()
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击后品目
         change.click_button(
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[3]'
         )
-        # 勾选框
-        random_int1 = random.randint(1, 4)
-        sleep(1)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int1}]')
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
-
+        sleep(1)
         # 获取勾选的资源
         resource = change.get_find_element_xpath(
             '(//label[text()="资源"])[1]/parent::div//input'
@@ -524,16 +513,10 @@ class TestChangeIPage:
         sleep(1)
 
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
-        sleep(1)
-        change.click_button(
-            '//div[p[text()="更新时间"]]/div[1]'
-        )
-        sleep(1)
-        change.click_button(
-            '//div[p[text()="更新时间"]]/div[1]'
-        )
+        change.wait_for_loading_to_disappear()
+        change.click_flagdata()
         # 保存数据
         SharedDataUtil.save_data(
             {"resource": resource, "item1": item1, "item2": item2}
@@ -564,6 +547,7 @@ class TestChangeIPage:
         change.click_button(
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
         )
+        change.wait_for_loading_to_disappear()
         # 勾选框
         rows = driver.find_elements(By.XPATH, f"//table[.//tr[td[3]//span[text()='{code1}']]]//tr")
         for index, row in enumerate(rows, start=1):
@@ -579,14 +563,14 @@ class TestChangeIPage:
                 target_element.click()
                 break  # 如果只处理第一个匹配行，可以 break
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击前目录
         change.click_button(
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[2]'
         )
-        sleep(3)
+        change.wait_for_loading_to_disappear()
         # 勾选框
         rows = driver.find_elements(By.XPATH,
                                     '(//div[@class="vxe-table--body-wrapper body--wrapper"])[last()]//table//tr')
@@ -607,13 +591,13 @@ class TestChangeIPage:
                     target_element.click()
 
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         # 点击后目录
         change.click_button(
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[3]'
         )
-        sleep(3)
+        change.wait_for_loading_to_disappear()
         # 勾选框
         rows = driver.find_elements(By.XPATH,
                                     '(//div[@class="vxe-table--body-wrapper body--wrapper"])[last()]//table//tr')
@@ -633,11 +617,11 @@ class TestChangeIPage:
                     target_element = change.get_find_element_xpath(target_xpath)
                     target_element.click()
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         sleep(1)
         eles = driver.find_elements(By.XPATH, '//div[text()=" 记录已存在,请检查！ "]')
@@ -651,28 +635,29 @@ class TestChangeIPage:
         change = ChangeI(driver)  # 用 driver 初始化 changeI
         code1 = SharedDataUtil.load_data().get("resource")
         code2 = SharedDataUtil.load_data().get("item1")
-        changedata1 = change.get_find_element_xpath(
+        change.click_flagdata()
+        before_data = change.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         # 定位第一行
         change.click_button(
-            f'//table[@xid="2" and @class="vxe-table--body"]//tr[td[2]//span[text()="{code1}"] and td[3]//span[text()="{code2}"]]//td[2]'
+            f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{code1}"] and td[3]//span[text()="{code2}"]]//td[2]'
         )
         change.click_del_button()  # 点击删除
         change.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-        sleep(1)
+        change.wait_for_loading_to_disappear()
         ele = driver.find_elements(
             By.XPATH,
-             f'//table[@xid="2" and @class="vxe-table--body"]//tr[td[2]//span[text()="{code1}"] and td[3]//span[text()="{code2}"]]//td[2]'
+             f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{code1}"] and td[3]//span[text()="{code2}"]]//td[2]'
         )
         # 定位
-        changedata = change.get_find_element_xpath(
+        after_data = change.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         assert (
-                changedata != changedata1 and
-                len(ele) == 0
-        ), f"删除后的数据{changedata}，删除前的数据{changedata1}"
+                len(ele) == 0 and
+                before_data != after_data
+        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
         assert not change.has_fail_message()
 
     @allure.story("取消删除数据")
@@ -724,10 +709,10 @@ class TestChangeIPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
         )
         # 勾选框
-        random_int = random.randint(1, 6)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        change.wait_for_loading_to_disappear()
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击前品目
@@ -735,12 +720,11 @@ class TestChangeIPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[2]'
         )
         # 勾选框
-        random_int = random.randint(1, 4)
-        sleep(1)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        change.wait_for_loading_to_disappear()
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击后品目
@@ -748,27 +732,26 @@ class TestChangeIPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[3]'
         )
         # 勾选框
-        random_int1 = random.randint(1, 4)
-        sleep(1)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int1}]')
+        change.wait_for_loading_to_disappear()
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
-
+        change.wait_for_loading_to_disappear()
         change.click_add_button()
         # 点击资源
         change.click_button(
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
         )
         # 勾选框
-        random_int = random.randint(1, 6)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        change.wait_for_loading_to_disappear()
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[2]')
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击前品目
@@ -776,12 +759,11 @@ class TestChangeIPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[2]'
         )
         # 勾选框
-        random_int = random.randint(1, 4)
-        sleep(1)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        change.wait_for_loading_to_disappear()
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         # 点击后品目
@@ -789,17 +771,15 @@ class TestChangeIPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[3]'
         )
         # 勾选框
-        random_int1 = random.randint(1, 4)
-        sleep(1)
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int1}]')
+        change.wait_for_loading_to_disappear()
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         sleep(1)
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         change.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
-
         assert not change.has_fail_message()
 
     @allure.story("修改物品切换资源成功")
@@ -808,6 +788,7 @@ class TestChangeIPage:
         driver = login_to_changeI  # WebDriver 实例
         changeI = ChangeI(driver)  # 用 driver 初始化 ChangeI
         # 定位第一行
+        changeI.click_flagdata()
         changeI.click_button(
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
         )
@@ -819,17 +800,17 @@ class TestChangeIPage:
         )
 
         # 勾选框
-        random_int = random.randint(1, 6)
         changeI.click_button(
             '(//span[@class="vxe-checkbox--icon iconfont icon-fuxuankuangdaiding"])[2]'
         )
+        changeI.wait_for_loading_to_disappear()
         changeI.click_button(
             '(//span[@class="vxe-checkbox--icon vxe-icon-checkbox-checked-fill"])[2]'
         )
-        changeI.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        changeI.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[3]')
 
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         sleep(1)
         # 获取勾选的资源代码
@@ -838,16 +819,10 @@ class TestChangeIPage:
         ).get_attribute("value")
 
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
-        sleep(1)
-        changeI.click_button(
-            '//div[p[text()="更新时间"]]/div[1]'
-        )
-        sleep(1)
-        changeI.click_button(
-            '//div[p[text()="更新时间"]]/div[1]'
-        )
+        changeI.wait_for_loading_to_disappear()
+        changeI.click_flagdata()
         adddata = changeI.get_find_element_xpath(
             f'(//span[text()="{resource}"])[1]/ancestor::tr[1]/td[2]'
         ).text
@@ -860,6 +835,7 @@ class TestChangeIPage:
         driver = login_to_changeI  # WebDriver 实例
         changeI = ChangeI(driver)  # 用 driver 初始化 ChangeI
         # 定位第一行
+        changeI.click_flagdata()
         changeI.click_button(
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
         )
@@ -882,16 +858,10 @@ class TestChangeIPage:
         ).get_attribute("value")
 
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
-        sleep(1)
-        changeI.click_button(
-            '//div[p[text()="更新时间"]]/div[1]'
-        )
-        sleep(1)
-        changeI.click_button(
-            '//div[p[text()="更新时间"]]/div[1]'
-        )
+        changeI.wait_for_loading_to_disappear()
+        changeI.click_flagdata()
         adddata = changeI.get_find_element_xpath(
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[6]'
         ).text
@@ -938,13 +908,10 @@ class TestChangeIPage:
         sleep(1)
 
         # 点击确认
-        changeI.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        changeI.click_select_button()
         # 定位第一行
         changeIcode = changeI.get_find_element_xpath(
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]'
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
         ).text
         assert changeIcode == ele
         assert not changeI.has_fail_message()
@@ -955,18 +922,20 @@ class TestChangeIPage:
         driver = login_to_changeI  # WebDriver 实例
         changeI = ChangeI(driver)  # 用 driver 初始化 ChangeI
         sleep(1)
-        changedata1 = changeI.get_find_element_xpath(
+        before_data = changeI.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         changeI.del_data()
+        changeI.click_ref_button()
+        changeI.wait_for_loading_to_disappear()
         changeI.del_data()
         # 定位
-        changedata = changeI.get_find_element_xpath(
+        after_data = changeI.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         assert (
-                changedata != changedata1
-        ), f"删除后的数据{changedata}，删除前的数据{changedata1}"
+                before_data != after_data
+        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
         assert not changeI.has_fail_message()
 
     @allure.story("输入全部数据，添加保存成功")
@@ -1011,19 +980,13 @@ class TestChangeIPage:
         len_num = len(all_value)
         before_all_value = adds.batch_acquisition_input(all_value)
         changeI.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]')
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         changeI.get_find_message()
         driver.refresh()
         changeI.wait_for_loading_to_disappear()
         num = adds.go_settings_page()
         changeI.wait_for_loading_to_disappear()
-        changeI.click_button(
-            '//div[p[text()="更新时间"]]/div[1]'
-        )
-        sleep(1)
-        changeI.click_button(
-            '//div[p[text()="更新时间"]]/div[1]'
-        )
+        changeI.click_flagdata()
         changeI.click_button(
             f'(//div[@class="vxe-table--main-wrapper"])[2]//table[@class="vxe-table--body"]//tr/td[2][.//span[text()="{resource_value}"]]')
         sleep(1)
@@ -1045,17 +1008,18 @@ class TestChangeIPage:
     def test_changeI_deleteall(self, login_to_changeI):
         driver = login_to_changeI  # WebDriver 实例
         changeI = ChangeI(driver)  # 用 driver 初始化 ChangeI
-        changedata1 = changeI.get_find_element_xpath(
+        changeI.click_flagdata()
+        before_data = changeI.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         changeI.del_data()
         # 定位
-        changedata = changeI.get_find_element_xpath(
+        after_data = changeI.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         assert (
-                changedata != changedata1
-        ), f"删除后的数据{changedata}，删除前的数据{changedata1}"
+                before_data != after_data
+        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
         assert not changeI.has_fail_message()
 
     @allure.story("删除布局成功")

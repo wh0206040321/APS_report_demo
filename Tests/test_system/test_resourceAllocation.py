@@ -179,6 +179,7 @@ class TestResourceAllocationPage:
             "class")
         if eles == "ivu-checkbox ivu-checkbox-checked":
             allocation.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            allocation.click_button('//div[@class="filter-btn-bar"]/button')
         sleep(1)
         allocation.click_button('//div[p[text()="资源代码"]]/following-sibling::div//input')
         eles = allocation.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[2]//tr//td[3]')
@@ -291,6 +292,7 @@ class TestResourceAllocationPage:
         for v in role_list:
             allocation.click_button(f'(//span[text()="{v}"])[1]')
         role.del_all(role_name)
+        role.get_find_message()
 
         unit_list = ["计划单元"]
         unit_name = [

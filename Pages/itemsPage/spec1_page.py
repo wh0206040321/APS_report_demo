@@ -1,7 +1,7 @@
 from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver import Keys
+from selenium.webdriver import Keys, ActionChains
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.support import expected_conditions as EC
@@ -55,6 +55,14 @@ class Spec1Page(BasePage):
         except NoSuchElementException:
             return None
 
+    def wait_for_loading_to_disappear(self, timeout=10):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located(
+                (By.XPATH,
+                 "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
+            )
+        )
+
     def get_find_message(self):
         """获取错误信息"""
         message = WebDriverWait(self.driver, 10).until(
@@ -64,26 +72,26 @@ class Spec1Page(BasePage):
         )
         return message.text
 
-    def get_message(self):
-        """获取信息"""
+    def get_error_message(self):
+        """获取错误信息"""
         message = WebDriverWait(self.driver, 10).until(
             EC.visibility_of_element_located(
-                (By.XPATH, '//div[@class="el-message el-message--success"]/p')
+                (By.XPATH, '//div[@class="el-message el-message--error"]/p')
             )
         )
         return message.text
-
-    def add_test_data(self, name):
-        self.click_add_button()  # 检查点击添加
-        # 输入代码
-        self.enter_texts('(//label[text()="代码"])[1]/parent::div//input', name)
-        self.enter_texts('(//label[text()="名称"])[1]/parent::div//input', name)
 
     def loop_judgment(self, xpath):
         """循环判断"""
         eles = self.finds_elements(By.XPATH, xpath)
         code = [ele.text for ele in eles]
         return code
+
+    def click_select_button(self):
+        """点击查询确定按钮."""
+        self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]')
+        sleep(0.5)
+        self.wait_for_loading_to_disappear()
 
     def add_layout(self, layout):
         """添加布局."""
@@ -123,14 +131,14 @@ class Spec1Page(BasePage):
         for index, v in enumerate(value, start=1):
             try:
                 xpath = '//p[text()="代码"]/ancestor::div[2]//input'
-                ele = self.get_find_element_xpath(xpath)
-                ele.send_keys(Keys.CONTROL, "a")
-                ele.send_keys(Keys.DELETE)
                 self.enter_texts(xpath, v)
                 self.click_button(f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
                 self.click_del_button()  # 点击删除
                 self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-                sleep(1)
+                self.wait_for_loading_to_disappear()
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)
             except NoSuchElementException:
                 print(f"未找到元素: {v}")
             except Exception as e:
@@ -162,6 +170,7 @@ class Spec1Page(BasePage):
         sleep(2)
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
 
     def add_input_all(self, name, num):
         """输入框全部输入保存"""
@@ -191,3 +200,74 @@ class Spec1Page(BasePage):
                     self.enter_texts(xpath, str(num))
             self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
 
+    def click_spec_num(self, num):
+        """点击指定生产特征数字"""
+        self.click_button(f'(//span[text()="生产特征{num}"])[1]')
+
+    def click_all_button(self, name):
+        """点击按钮."""
+        self.click_button(
+            f'//div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//p[text()="{name}"]')
+
+    def add_spec_data(self, name):
+        """添加数据."""
+        self.click_add_button()  # 检查点击添加
+        # 输入代码
+        self.enter_texts('(//label[text()="代码"])[1]/parent::div//input', name)
+        self.enter_texts('(//label[text()="名称"])[1]/parent::div//input', name)
+        self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
+
+    def edit_spec_data(self, before_name, after_name):
+        """编辑数据."""
+        self.click_button(f'//tr[./td[2][.//span[text()="{before_name}"]]]/td[2]')
+        self.click_edi_button()  # 检查点击编辑
+        # 输入代码
+        self.enter_texts('(//label[text()="代码"])[1]/parent::div//input', after_name)
+        self.enter_texts('(//label[text()="名称"])[1]/parent::div//input', after_name)
+        self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
+
+    def del_spec_data(self, name):
+        """删除数据."""
+        eles = self.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]')
+        if len(eles) == 1:
+            self.click_button(f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]')
+            self.click_del_button()  # 检查点击删除
+            self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+            self.wait_for_loading_to_disappear()
+
+    def select_spec_data(self, name):
+        """查询数据."""
+        self.click_sel_button()
+        sleep(1)
+        # 定位名称输入框
+        element_to_double_click = self.driver.find_element(
+            By.XPATH,
+            '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[4]',
+        )
+        # 创建一个 ActionChains 对象
+        actions = ActionChains(self.driver)
+        # 双击命令
+        actions.double_click(element_to_double_click).perform()
+        sleep(1)
+        # 点击物料代码
+        self.click_button('//div[text()="代码" and contains(@optid,"opt_")]')
+        sleep(1)
+        # 点击比较关系框
+        self.click_button(
+            '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[5]//input'
+        )
+        sleep(1)
+        # 点击=
+        self.click_button('//div[text()="=" and contains(@optid,"opt_")]')
+        sleep(1)
+        # 点击输入数值
+        self.enter_texts(
+            '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[6]//input',
+            name,
+        )
+        sleep(1)
+
+        # 点击确认
+        self.click_select_button()

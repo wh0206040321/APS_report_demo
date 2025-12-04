@@ -8,7 +8,6 @@ from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
 from Pages.itemsPage.item_page import ItemPage
 from Pages.itemsPage.login_page import LoginPage
 from Pages.itemsPage.master_page import MasterPage
@@ -20,7 +19,7 @@ from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
 @allure.feature("添加物品，添加工艺产能，添加制造订单测试用例")
-@pytest.mark.run(order=19)
+@pytest.mark.run(order=21)
 class TestStartPage:
     @allure.story("添加物品，添加工艺产能，添加制造订单进行排产")
     # @pytest.mark.run(order=1)
@@ -169,7 +168,7 @@ class TestStartPage:
             try:
                 master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[3]/button[1]')
             except:
-                master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+                master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
 
             # 获取物料数量
             random_num2 = random.randint(1, 100)
@@ -214,8 +213,8 @@ class TestStartPage:
             )
 
             # 点击确定
-            confirm_xpath = '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
-            backup_xpath = '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            confirm_xpath = '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
+            backup_xpath = '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
 
             if master.is_clickable(confirm_xpath):
                 master.click_button(confirm_xpath)
@@ -295,7 +294,7 @@ class TestStartPage:
             EC.element_to_be_clickable(
                 (
                     By.XPATH,
-                    '//div[@class="vue-treeselect__list"]/div[.]//label[text()="均衡排产"]',
+                    '//div[@class="vue-treeselect__list"]/div[1]',
                 )
             )
         )
@@ -313,3 +312,4 @@ class TestStartPage:
 
         assert success_element.text == "完成"
         assert not item.has_fail_message()
+        safe_quit(driver)

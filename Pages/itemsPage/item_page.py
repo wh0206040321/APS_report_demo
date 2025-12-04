@@ -46,6 +46,7 @@ class ItemPage(BasePage):
         self.click_button('(//span[text()="计划管理"])[1]')  # 点击计划管理
         self.click_button('(//span[text()="计划基础数据"])[1]')  # 点击计划基础数据
         self.click_button('(//span[text()="物品"])[1]')  # 点击物品
+        self.wait_for_loading_to_disappear()
 
     def add_item(self, material_code, material_name):
         """添加物料信息.start.py页面使用"""
@@ -65,16 +66,8 @@ class ItemPage(BasePage):
             f'(//span[text()="{material_code}"])[1]/ancestor::tr[1]/td[2]'
         )
         self.click_del_button()  # 点击删除
-        # 点击确定
-        # 找到共同的父元素
-        parent = self.get_find_element_class("ivu-modal-confirm-footer")
-
-        # 获取所有button子元素
-        all_buttons = parent.find_elements(By.TAG_NAME, "button")
-
-        # 选择需要的button 第二个确定按钮
-        second_button = all_buttons[1]
-        second_button.click()
+        self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.get_find_message()
 
     def check_item_exists(self, item_name):
         """检查物料是否存在."""
@@ -91,23 +84,37 @@ class ItemPage(BasePage):
         except NoSuchElementException:
             return None
 
+    def get_find_message(self):
+        """获取正确信息"""
+        message = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(
+                (By.XPATH, '//div[@class="el-message el-message--success"]/p')
+            )
+        )
+        return message.text
+
+    def get_error_message(self):
+        """获取错误信息"""
+        message = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(
+                (By.XPATH, '//div[@class="el-message el-message--error"]/p')
+            )
+        )
+        return message.text
+
     def wait_for_loading_to_disappear(self, timeout=10):
-        """
-        显式等待加载遮罩元素消失。
-
-        参数:
-        - timeout (int): 超时时间，默认为10秒。
-
-        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
-        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
-        以此判断加载遮罩是否消失。
-        """
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
                  "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
             )
         )
+
+    def click_select_button(self):
+        """点击查询确定按钮."""
+        self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]')
+        sleep(0.5)
+        self.wait_for_loading_to_disappear()
 
     def click_confirm(self):
         """点击确定"""
@@ -121,15 +128,6 @@ class ItemPage(BasePage):
             return self.find_element(By.CLASS_NAME, classname)
         except NoSuchElementException:
             return None
-
-    def get_find_message(self):
-        """获取信息"""
-        message = WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located(
-                (By.XPATH, '//div[@class="el-message el-message--success"]/p')
-            )
-        )
-        return message.text
 
     def add_test_item(self, name):
         self.click_add_button()  # 检查点击添加
@@ -233,3 +231,4 @@ class ItemPage(BasePage):
         sleep(2)
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()

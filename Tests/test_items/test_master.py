@@ -52,6 +52,7 @@ def login_to_master():
         page.click_button('(//span[text()="计划管理"])[1]')  # 点击计划管理
         page.click_button('(//span[text()="计划基础数据"])[1]')  # 点击计划基础数据
         page.click_button('(//span[text()="工艺产能"])[1]')  # 点击工艺产能
+        page.wait_for_loading_to_disappear()
         yield driver  # 提供给测试用例使用
     finally:
         if driver:
@@ -84,7 +85,7 @@ class TestMasterPage:
         master.click_add_button()
 
         master.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         message = master.get_error_message()
         # 检查元素是否包含子节点
@@ -104,11 +105,11 @@ class TestMasterPage:
         master.click_button(
             '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         sleep(1)
 
         # 点击确定
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]')
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         message = master.get_error_message()
         # 检查元素是否包含子节点
         assert message == "请根据必填项填写信息"
@@ -127,7 +128,7 @@ class TestMasterPage:
         master.click_button(
             '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
 
         # 填写工序编号
         master.enter_texts(
@@ -145,7 +146,7 @@ class TestMasterPage:
         )
 
         # 点击确定
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]')
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         message = master.get_error_message()
         # 检查元素是否包含子节点
         assert message == "请根据必填项填写信息"
@@ -158,7 +159,7 @@ class TestMasterPage:
     def test_master_addserial2(self, login_to_master):
         driver = login_to_master  # WebDriver 实例
         master = MasterPage(driver)  # 用 driver 初始化 MasterPage
-        name = "111111111111111133331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111"
+        name = "11111111111111113evf饿。+/.3.331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111"
         # 清空之前的共享数据
         SharedDataUtil.clear_data()
         master.click_add_button()
@@ -169,7 +170,7 @@ class TestMasterPage:
         master.click_button(
             '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         sleep(1)
         item = master.get_find_element_xpath(
             '//span[text()=" 物料代码： "]/parent::div//input'
@@ -200,7 +201,7 @@ class TestMasterPage:
         master.click_button(
             f'(//table[.//span[@class="vxe-cell--label"]])[2]//tr[{random_int}]/td[2]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         # 获取物料数量
         random_int = random.randint(1, 100)
         master.enter_texts(
@@ -236,7 +237,7 @@ class TestMasterPage:
         SharedDataUtil.save_data(
             {"item": item}
         )
-        assert text_ == name
+        assert text_ == '999999999'
         assert item == adddata and addtext == "输入指令" and len(error_popup) == 0
         assert not master.has_fail_message()
 
@@ -271,7 +272,7 @@ class TestMasterPage:
         master.click_button(
             '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         sleep(1)
         item = master.get_find_element_xpath(
             '//span[text()=" 物料代码： "]/parent::div//input'
@@ -351,7 +352,7 @@ class TestMasterPage:
         master.click_button(
             '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         sleep(1)
 
         # 填写工序编号
@@ -379,7 +380,7 @@ class TestMasterPage:
         master.click_button(
             f'(//table[.//span[@class="vxe-cell--label"]])[2]//tr[{random_int}]/td[2]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         # 获取物料数量
         random_int = random.randint(1, 100)
         master.enter_texts(
@@ -450,7 +451,7 @@ class TestMasterPage:
         master.click_button(
             '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         sleep(1)
         item = master.get_find_element_xpath(
             '//span[text()=" 物料代码： "]/parent::div//input'
@@ -480,7 +481,7 @@ class TestMasterPage:
         master.click_button(
             f'(//table[.//span[@class="vxe-cell--label"]])[2]//tr[{random_int}]/td[2]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         # 获取物料数量
         random_int = random.randint(1, 100)
         master.enter_texts(
@@ -553,7 +554,7 @@ class TestMasterPage:
         master.click_button(
             '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
 
         # 点击工序选定器
         master.add_serial1()
@@ -591,7 +592,7 @@ class TestMasterPage:
         master.click_button(
             '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
 
         # 填写工序编号
         master.enter_texts(
@@ -631,7 +632,7 @@ class TestMasterPage:
         master.click_button(
             '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
 
         # 填写工序编号
         master.enter_texts(
@@ -688,7 +689,7 @@ class TestMasterPage:
         master.click_button(
             '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         sleep(1)
         item = master.get_find_element_xpath(
             '//span[text()=" 物料代码： "]/parent::div//input'
@@ -750,7 +751,7 @@ class TestMasterPage:
         master.click_button(
             '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         sleep(1)
         item = master.get_find_element_xpath(
             '//span[text()=" 物料代码： "]/parent::div//input'
@@ -781,7 +782,7 @@ class TestMasterPage:
         master.click_button(
             f'(//table[.//span[@class="vxe-cell--label"]])[2]//tr[{random_int}]/td[2]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         # 获取物料数量
         random_int = random.randint(1, 100)
         master.enter_texts(
@@ -877,7 +878,7 @@ class TestMasterPage:
         master.click_button(
             f'(//table[.//span[@class="vxe-cell--label"]])[2]//tr[{random_int}]/td[2]'
         )
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         sleep(1.5)
         # 获取物料代码
         item_input = master.get_find_element_xpath(
@@ -923,7 +924,7 @@ class TestMasterPage:
             f'//tr[{random_int}]/td//span[@class="vxe-cell--checkbox"]'
         )
         # 点击对话框按钮
-        master.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]')
+        master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         # 获取资源代码
         sleep(1)
         resource_input = master.get_find_element_xpath(
@@ -991,18 +992,15 @@ class TestMasterPage:
         sleep(1)
 
         # 点击确认
-        master.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        master.click_select_button()
         # 定位第一行是
         ordercode = master.get_find_element_xpath(
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]'
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
         ).text
-        # 第二行数据
+        # 第3行数据
         notext = driver.find_elements(
             By.XPATH,
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][2]/td[2]',
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[3]/td[2]',
         )
         assert ordercode == item and len(notext) == 0
         assert not master.has_fail_message()

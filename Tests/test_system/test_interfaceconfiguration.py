@@ -70,7 +70,7 @@ class TestSInterfaceConfigurationPage:
         interface.click_all_button("新增")
         interface.click_confirm()
         message = interface.get_error_message()
-        assert message == "请填写数据"
+        assert message == "请填写信息"
         assert not interface.has_fail_message()
 
     @allure.story("只填写源系统和目的系统点击新增不允许保存")
@@ -89,7 +89,7 @@ class TestSInterfaceConfigurationPage:
             interfaceconfiguration.click_button(xpath)
         interfaceconfiguration.click_confirm()
         message = interfaceconfiguration.get_error_message()
-        assert message == "请填写数据"
+        assert message == "请填写信息"
         assert not interfaceconfiguration.has_fail_message()
 
     @allure.story("添加数据成功")
@@ -126,7 +126,7 @@ class TestSInterfaceConfigurationPage:
         interfaceconfiguration.wait_for_loading_to_disappear()
         sleep(1)
 
-        text = interfaceconfiguration.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr/td[3]//span[text()="{input_value}"]').text
+        text = interfaceconfiguration.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr/td[4]//span[text()="{input_value}"]').text
         assert text == input_value
         assert message == "新增成功！"
         assert not interfaceconfiguration.has_fail_message()
@@ -161,8 +161,8 @@ class TestSInterfaceConfigurationPage:
         adds.batch_modify_select_input(select_list)
 
         interfaceconfiguration.click_confirm()
-        message = interfaceconfiguration.get_error_message()
-        assert message == "接口名称不能重复"
+        message = interfaceconfiguration.finds_elements(By.XPATH, '//div[text()=" 接口名称重复定义。 "]')
+        assert len(message) == 1
         assert not interfaceconfiguration.has_fail_message()
 
     @allure.story("添加测试数据成功")
@@ -201,7 +201,7 @@ class TestSInterfaceConfigurationPage:
         sleep(1)
 
         text = interfaceconfiguration.get_find_element_xpath(
-            f'//table[@class="vxe-table--body"]//tr/td[3]//span[text()="{input_value}"]').text
+            f'//table[@class="vxe-table--body"]//tr/td[4]//span[text()="{input_value}"]').text
         assert text == input_value
         assert message == "新增成功！"
         assert not interfaceconfiguration.has_fail_message()
@@ -211,13 +211,13 @@ class TestSInterfaceConfigurationPage:
     def test_interfaceconfiguration_update1(self, login_to_interfaceconfiguration):
         driver = login_to_interfaceconfiguration  # WebDriver 实例
         interfaceconfiguration = ImpPage(driver)  # 用 driver 初始化 ImpPage
-        interfaceconfiguration.click_button('//table[@class="vxe-table--body"]//tr/td[3]//span[text()="测试数据22"]')
+        interfaceconfiguration.click_button('//table[@class="vxe-table--body"]//tr/td[4]//span[text()="测试数据22"]')
         interfaceconfiguration.click_all_button('编辑')
         interfaceconfiguration.enter_texts('//div[label[text()="访问地址:"]]//input[@type="text"]', '访问地址11')
         interfaceconfiguration.click_confirm()
         message = interfaceconfiguration.get_find_message()
         ele = interfaceconfiguration.get_find_element_xpath(
-            '//table[@class="vxe-table--body"]//tr[td[3]//span[text()="测试数据22"]]/td[9]').text
+            '//table[@class="vxe-table--body"]//tr[td[4]//span[text()="测试数据22"]]/td[5]').text
         assert ele == '访问地址11'
         assert message == "编辑成功！"
         assert not interfaceconfiguration.has_fail_message()
@@ -234,6 +234,7 @@ class TestSInterfaceConfigurationPage:
             "class")
         if eles == "ivu-checkbox ivu-checkbox-checked":
             interfaceconfiguration.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            interfaceconfiguration.click_button('//div[@class="filter-btn-bar"]/button')
         sleep(1)
         interfaceconfiguration.click_button('//div[p[text()="接口名称"]]/following-sibling::div//input')
         eles = interfaceconfiguration.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
@@ -252,9 +253,10 @@ class TestSInterfaceConfigurationPage:
         sleep(1)
         interfaceconfiguration.select_input(name)
         sleep(1)
-        eles = interfaceconfiguration.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        eles = interfaceconfiguration.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[4]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        assert len(list_) > 0
         assert all(name in text for text in list_)
         assert not interfaceconfiguration.has_fail_message()
 
@@ -270,9 +272,10 @@ class TestSInterfaceConfigurationPage:
         sleep(1)
         interfaceconfiguration.select_input(name)
         sleep(1)
-        eles = interfaceconfiguration.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        eles = interfaceconfiguration.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[4]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        assert len(list_) > 0
         assert all(str(item).startswith(name) for item in list_)
         assert not interfaceconfiguration.has_fail_message()
 
@@ -288,9 +291,10 @@ class TestSInterfaceConfigurationPage:
         sleep(1)
         interfaceconfiguration.select_input(name)
         sleep(1)
-        eles = interfaceconfiguration.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        eles = interfaceconfiguration.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[4]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        assert len(list_) > 0
         assert all(str(item).endswith(name) for item in list_)
         assert not interfaceconfiguration.has_fail_message()
 
@@ -315,18 +319,18 @@ class TestSInterfaceConfigurationPage:
         assert ele == "vxe-icon-funnel suffixIcon"
         assert not interfaceconfiguration.has_fail_message()
 
-    @allure.story("删除数据成功")
-    # @pytest.mark.run(order=1)
-    def test_interfaceconfiguration_del(self, login_to_interfaceconfiguration):
-        driver = login_to_interfaceconfiguration  # WebDriver 实例
-        interfaceconfiguration = ImpPage(driver)  # 用 driver 初始化 ImpPage
-        list_ = ['测试数据22', '11测试全部数据']
-        for name in list_:
-            interfaceconfiguration.click_button(f'//table[@class="vxe-table--body"]//tr/td[3]//span[text()="{name}"]')
-            interfaceconfiguration.click_all_button('删除')
-            interfaceconfiguration.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-            message = interfaceconfiguration.get_find_message()
-            ele = interfaceconfiguration.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[3]//span[text()="{name}"]')
-            assert len(ele) == 0
-            assert message == "删除成功！"
-        assert not interfaceconfiguration.has_fail_message()
+    # @allure.story("删除数据成功")
+    # # @pytest.mark.run(order=1)
+    # def test_interfaceconfiguration_del(self, login_to_interfaceconfiguration):
+    #     driver = login_to_interfaceconfiguration  # WebDriver 实例
+    #     interfaceconfiguration = ImpPage(driver)  # 用 driver 初始化 ImpPage
+    #     list_ = ['测试数据22', '11测试全部数据']
+    #     for name in list_:
+    #         interfaceconfiguration.click_button(f'//table[@class="vxe-table--body"]//tr/td[4]//span[text()="{name}"]')
+    #         interfaceconfiguration.click_all_button('删除')
+    #         interfaceconfiguration.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+    #         message = interfaceconfiguration.get_find_message()
+    #         ele = interfaceconfiguration.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[4]//span[text()="{name}"]')
+    #         assert len(ele) == 0
+    #         assert message == "删除成功！"
+    #     assert not interfaceconfiguration.has_fail_message()

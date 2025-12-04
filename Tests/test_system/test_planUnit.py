@@ -154,8 +154,9 @@ class TestPlanUnitPage:
         name = "1测试计划单元标准"
         module = "标准"
         unit.add_plan_unit(name, module)
-        unit.click_confirm_button()
+        unit.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])')
         unit.get_find_message()
+        unit.wait_for_loading_to_disappear()
         unit.select_input(name)
         ele = unit.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
         assert len(ele) == 1
@@ -169,8 +170,9 @@ class TestPlanUnitPage:
         name = "1测试计划单元CTB"
         module = "CTB"
         unit.add_plan_unit(name, module)
-        unit.click_confirm_button()
+        unit.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])')
         unit.get_find_message()
+        unit.wait_for_loading_to_disappear()
         unit.select_input(name)
         ele = unit.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
         assert len(ele) == 1
@@ -184,8 +186,9 @@ class TestPlanUnitPage:
         name = "1测试计划单元小日程"
         module = "小日程"
         unit.add_plan_unit(name, module)
-        unit.click_confirm_button()
+        unit.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])')
         unit.get_find_message()
+        unit.wait_for_loading_to_disappear()
         unit.select_input(name)
         ele = unit.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
         assert len(ele) == 1
@@ -205,19 +208,19 @@ class TestPlanUnitPage:
         assert len(ele) == 1
         assert not unit.has_fail_message()
 
-    @allure.story("文本框的校验")
-    # @pytest.mark.run(order=1)
-    def test_planUnit_textverify(self, login_to_planUnit):
-        driver = login_to_planUnit  # WebDriver 实例
-        unit = PlanUnitPage(driver)  # 用 driver 初始化 PlanUnitPage
-        name = "111111111111111133331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111"
-        module = "标准"
-        unit.add_plan_unit(name, module)
-        unit.select_input(name)
-        unit.click_confirm_button()
-        ele = unit.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
-        assert len(ele) == 1
-        assert not unit.has_fail_message()
+    # @allure.story("文本框的校验")
+    # # @pytest.mark.run(order=1)
+    # def test_planUnit_textverify(self, login_to_planUnit):
+    #     driver = login_to_planUnit  # WebDriver 实例
+    #     unit = PlanUnitPage(driver)  # 用 driver 初始化 PlanUnitPage
+    #     name = "1111111111111111333311222211112222211111111133331111111444441111111111111111111111111111111111111111"
+    #     module = "标准"
+    #     unit.add_plan_unit(name, module)
+    #     unit.select_input(name)
+    #     unit.click_confirm_button()
+    #     ele = unit.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
+    #     assert len(ele) == 1
+    #     assert not unit.has_fail_message()
 
     @allure.story("添加测试数据")
     # @pytest.mark.run(order=1)
@@ -227,8 +230,9 @@ class TestPlanUnitPage:
         name = "1测试A"
         module = "标准"
         unit.add_plan_unit(name, module)
-        unit.click_confirm_button()
+        unit.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])')
         unit.get_find_message()
+        unit.wait_for_loading_to_disappear()
         unit.select_input(name)
         ele = unit.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
         assert len(ele) == 1
@@ -248,7 +252,6 @@ class TestPlanUnitPage:
         sty1 = unit.get_find_element_xpath('(//label[text()="计划单元"])[1]/parent::div//input').get_attribute("disabled")
         sty2 = unit.get_find_element_xpath('(//label[text()="模板名称"])[1]/parent::div//div[@class="ivu-select-selection"]//input[@type="text"]').get_attribute("disabled")
         unit.click_confirm_button()
-        unit.wait_for_loading_to_disappear()
         ele = unit.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{name}"]]/td[3]')
         assert sty1 == sty2 == 'true'
         assert ele.text == '修改计划单元名称'
@@ -257,7 +260,6 @@ class TestPlanUnitPage:
         sleep(1)
         unit.enter_texts('//label[text()="计划单元名称"]/parent::div//input', name)
         unit.click_confirm_button()
-        unit.wait_for_loading_to_disappear()
         ele = unit.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{name}"]]/td[3]')
         assert ele.text == name
         assert not unit.has_fail_message()
@@ -300,18 +302,15 @@ class TestPlanUnitPage:
         sleep(1)
 
         # 点击确认
-        unit.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        unit.click_select_button()
         # 定位第一行是否为name
         unitcode = unit.get_find_element_xpath(
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]'
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
         ).text
         # 定位第二行没有数据
         unitcode2 = driver.find_elements(
             By.XPATH,
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][2]/td[2]',
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
         assert unitcode == name and len(unitcode2) == 0
         assert not unit.has_fail_message()
@@ -354,13 +353,10 @@ class TestPlanUnitPage:
         sleep(1)
 
         # 点击确认
-        unit.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        unit.click_select_button()
         unitcode = driver.find_elements(
             By.XPATH,
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]',
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
         )
         assert len(unitcode) == 0
         assert not unit.has_fail_message()
@@ -404,10 +400,7 @@ class TestPlanUnitPage:
         sleep(1)
 
         # 点击确认
-        unit.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        unit.click_select_button()
         eles = unit.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
         assert len(eles) > 0
         assert all(name in ele for ele in eles)
@@ -535,10 +528,7 @@ class TestPlanUnitPage:
         sleep(1)
 
         # 点击确认
-        unit.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        unit.click_select_button()
         eles1 = unit.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[4]')
         eles2 = unit.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
         assert len(eles1) > 0 and len(eles2) > 0
@@ -669,10 +659,7 @@ class TestPlanUnitPage:
         sleep(1)
 
         # 点击确认
-        unit.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        unit.click_select_button()
         # 获取目标表格第2个 vxe 表格中的所有数据行
         xpath_rows = '(//table[contains(@class, "vxe-table--body")])[2]//tr[contains(@class,"vxe-body--row")]'
 

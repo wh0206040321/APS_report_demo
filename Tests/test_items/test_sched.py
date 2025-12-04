@@ -28,6 +28,7 @@ def login_to_sched():
 
         # 初始化登录页面
         page = LoginPage(driver)  # 初始化登录页面
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
         url = date_driver.url
         print(f"[INFO] 正在导航到 URL: {url}")
         # 尝试访问 URL，捕获连接错误
@@ -49,6 +50,8 @@ def login_to_sched():
         page.click_button('(//span[text()="计划运行"])[1]')  # 点击计划运行
         page.click_button('(//span[text()="方案管理"])[1]')  # 点击方案管理
         page.click_button('(//span[text()="计划方案管理"])[1]')  # 点击计划方案管理
+        sched.wait_for_el_loading_mask()
+        sleep(3)
         yield driver  # 提供给测试用例使用
     finally:
         if driver:
@@ -439,7 +442,9 @@ class TestSchedPage:
             '//label[text()="选择复制的方案"]/following-sibling::div/div'
         )  # 点击下拉框
         sched.click_button('//li[text()="排产方案(订单级)"]')
+        sleep(1)
         sched.click_ok_schedbutton()  # 点击确定
+        sleep(1)
         sched.click_save_button()  # 点击保存
         sleep(1)
 

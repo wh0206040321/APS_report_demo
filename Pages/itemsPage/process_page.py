@@ -2,7 +2,8 @@ from time import sleep
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
-
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from Pages.base_page import BasePage
 
 
@@ -25,6 +26,7 @@ class ProcessPage(BasePage):
     def click_sel_button(self):
         """点击查询按钮."""
         self.click(By.XPATH, '//p[text()="查询"]')
+
 
     def click_ref_button(self):
         """点击刷新按钮."""
@@ -65,6 +67,20 @@ class ProcessPage(BasePage):
         code = [ele.text for ele in eles]
         return code
 
+    def wait_for_loading_to_disappear(self, timeout=10):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located(
+                (By.XPATH,
+                 "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
+            )
+        )
+
+    def click_select_button(self):
+        """点击查询确定按钮."""
+        self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]')
+        sleep(0.5)
+        self.wait_for_loading_to_disappear()
+
     def adds_process(self, name, number):
         self.click_add_button()  # 检查点击添加
         # 输入工序代码
@@ -83,6 +99,7 @@ class ProcessPage(BasePage):
         )
         # 点击确定
         self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
 
     def add_layout(self, layout):
         """添加布局."""
@@ -122,20 +139,21 @@ class ProcessPage(BasePage):
         for index, v in enumerate(value, start=1):
             try:
                 xpath = '//p[text()="工序代码"]/ancestor::div[2]//input'
-                ele = self.get_find_element_xpath(xpath)
-                ele.send_keys(Keys.CONTROL, "a")
-                ele.send_keys(Keys.DELETE)
                 self.enter_texts(xpath, v)
                 self.click_button(f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
                 self.click_del_button()  # 点击删除
                 self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-                sleep(1)
+                self.wait_for_loading_to_disappear()
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)
             except NoSuchElementException:
                 print(f"未找到元素: {v}")
             except Exception as e:
                 print(f"操作 {v} 时出错: {str(e)}")
 
     def del_layout(self, layout):
+        sleep(2)
         # 获取目标 div 元素，这里的目标是具有特定文本的 div
         target_div = self.get_find_element_xpath(
             f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
@@ -161,6 +179,7 @@ class ProcessPage(BasePage):
         sleep(2)
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
 
     def add_input_all(self, name, num):
         """输入框全部输入保存"""

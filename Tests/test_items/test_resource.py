@@ -51,6 +51,7 @@ def login_to_resource():
         page.click_button('(//span[text()="计划管理"])[1]')  # 点击计划管理
         page.click_button('(//span[text()="计划基础数据"])[1]')  # 点击计划基础数据
         page.click_button('(//span[text()="资源"])[1]')  # 点击资源
+        page.wait_for_loading_to_disappear()
         yield driver  # 提供给测试用例使用
     finally:
         if driver:
@@ -225,6 +226,7 @@ class TestResourcePage:
         # 点击确定
         resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
+        resource.wait_for_loading_to_disappear()
         adddata = resource.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[2]'
         ).text
@@ -281,13 +283,14 @@ class TestResourcePage:
         resource.click_button(
             '//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
+        resource.wait_for_loading_to_disappear()
         adddata = resource.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[2]'
         ).text
         num_ = resource.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[9]'
         ).text
-        assert adddata == name and num_ == '99999999999', f"预期数据是{name}，实际得到{adddata}"
+        assert adddata == name and num_ == '9999999999', f"预期数据是{name}，实际得到{adddata}"
         assert not resource.has_fail_message()
 
     @allure.story("添加测试数据成功")
@@ -300,6 +303,7 @@ class TestResourcePage:
         # 点击确定
         resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
+        resource.wait_for_loading_to_disappear()
         adddata = resource.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[2]'
         ).text
@@ -350,6 +354,7 @@ class TestResourcePage:
         # 点击确定
         resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
+        resource.wait_for_loading_to_disappear()
         # 定位表格内容
         resourcedata = resource.get_find_element_xpath(
             f'(//span[contains(text(),"{name}")])[1]'
@@ -374,6 +379,7 @@ class TestResourcePage:
         # 点击确定
         resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
+        resource.wait_for_loading_to_disappear()
         # 定位表格内容
         resourcedata = resource.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]'
@@ -418,6 +424,7 @@ class TestResourcePage:
         # 点击确定
         resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
+        resource.wait_for_loading_to_disappear()
         # 定位表格内容
         resourcename = resource.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr/td[3]/div'
@@ -483,18 +490,15 @@ class TestResourcePage:
         sleep(1)
 
         # 点击确认
-        resource.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        resource.click_select_button()
         # 定位第一行是否为111
         resourcecode = resource.get_find_element_xpath(
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]'
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
         ).text
         # 定位第二行没有数据
         resourcecode2 = driver.find_elements(
             By.XPATH,
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][2]/td[2]',
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
         assert resourcecode == "111" and len(resourcecode2) == 0
         assert not resource.has_fail_message()
@@ -537,13 +541,10 @@ class TestResourcePage:
         sleep(1)
 
         # 点击确认
-        resource.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        resource.click_select_button()
         resourcecode = driver.find_elements(
             By.XPATH,
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]',
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
         )
         assert len(resourcecode) == 0
         assert not resource.has_fail_message()
@@ -586,10 +587,7 @@ class TestResourcePage:
         sleep(1)
 
         # 点击确认
-        resource.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        resource.click_select_button()
         eles = resource.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
         assert len(eles) > 0
         assert all(name == ele for ele in eles)
@@ -635,10 +633,7 @@ class TestResourcePage:
         sleep(1)
 
         # 点击确认
-        resource.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        resource.click_select_button()
         eles = resource.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[9]')
         assert len(eles) > 0
         assert all(int(ele) > 5 for ele in eles)
@@ -767,10 +762,7 @@ class TestResourcePage:
         sleep(1)
 
         # 点击确认
-        resource.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        resource.click_select_button()
         ele1 = resource.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[9]')
         ele2 = resource.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[4]')
         assert len(ele1) > 0 and len(ele2) > 0
@@ -902,10 +894,7 @@ class TestResourcePage:
         sleep(1)
 
         # 点击确认
-        resource.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        resource.click_select_button()
         # 获取目标表格第2个 vxe 表格中的所有数据行
         xpath_rows = '(//table[contains(@class, "vxe-table--body")])[2]//tr[contains(@class,"vxe-body--row")]'
 
@@ -1072,12 +1061,12 @@ class TestResourcePage:
         len_num = len(all_value)
         before_all_value = adds.batch_acquisition_input(all_value)
         resource.click_button(
-            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]//span[text()="确定"]')
-        sleep(3)
+            '//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        resource.get_find_message()
         driver.refresh()
-        sleep(5)
+        resource.wait_for_loading_to_disappear()
         num = adds.go_settings_page()
-        sleep(2)
+        resource.wait_for_loading_to_disappear()
         resource.enter_texts(
             '//p[text()="资源代码"]/ancestor::div[2]//input', input_value
         )
@@ -1112,7 +1101,7 @@ class TestResourcePage:
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
             for v in value[:4]
         ]
-        resource.del_loyout(layout)
+        resource.del_layout(layout)
         sleep(2)
         # 再次查找页面上是否有目标 div，以验证是否删除成功
         after_layout = driver.find_elements(

@@ -51,6 +51,7 @@ def login_to_database():
         list_ = ["系统管理", "系统设置", "数据库维护"]
         for v in list_:
             page.click_button(f'(//span[text()="{v}"])[1]')
+        page.wait_for_loading_to_disappear()
         yield driver  # 提供给测试用例使用
     finally:
         if driver:
@@ -94,13 +95,14 @@ class TestSDateBasePage:
         data = DateBasePage(driver)  # 用 driver 初始化 DateBasePage
         name = 'AAtest1'
         data.add_table_code(button_name='新增', code=name, field_code=name, fieldbutton_name='添加')
+        sleep(2)
         message = data.get_find_element_xpath('//div[text()=" 表已存在 "]').text
         assert message == "表已存在"
         assert not data.has_fail_message()
 
     @allure.story("添加字段代码成功")
     # @pytest.mark.run(order=1)
-    def test_database_addfield(self, login_to_database):
+    def test_database_addcodesuccess(self, login_to_database):
         driver = login_to_database  # WebDriver 实例
         data = DateBasePage(driver)  # 用 driver 初始化 DateBasePage
         code = 'AAtest1'
@@ -114,6 +116,18 @@ class TestSDateBasePage:
         eles = data.finds_elements(By.XPATH, f'(//table[@class="vxe-table--body"])[3]//tr/td[2]')
         assert len(eles) == 2
         assert message == "保存成功"
+        assert not data.has_fail_message()
+
+    @allure.story("添加重复字段代码不允许添加")
+    # @pytest.mark.run(order=1)
+    def test_database_addcoderepeat(self, login_to_database):
+        driver = login_to_database  # WebDriver 实例
+        data = DateBasePage(driver)  # 用 driver 初始化 DateBasePage
+        code = 'AAtest1'
+        name = 'AAtest2'
+        data.add_table_code(button_name='编辑', code=code, field_code=name, fieldbutton_name='添加')
+        message = data.get_error_message()
+        assert message == '字段代码或者字段名称已经存在，不能再次创建！'
         assert not data.has_fail_message()
 
     @allure.story("编辑字段代码不允许重复")
@@ -133,18 +147,8 @@ class TestSDateBasePage:
         data.add_table_code(button_name='编辑', code=code, field_code=name, fieldbutton_name='编辑')
         add.batch_modify_input(xpath_list[:2], code)
         data.click_confirm()
-        data.click_all_button("保存")
-        message = data.get_find_message()
-        data.select_input_database("表代码", code)
-        data.click_button(f'(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]//span[text()="{code}"]')
-        data.click_all_button("编辑")
-        sleep(2)
-        eles = data.get_find_element_xpath(
-            f'(//table[@class="vxe-table--body"])[3]//tr/td[2]//span[text()="{code + name}"]').text
-        elesint = data.get_find_element_xpath(
-            f'(//table[@class="vxe-table--body"])[3]//tr[td[3][//span[text()="{code + name}"]]]/td[4]').text
-        assert eles == code + name and elesint == 'int'
-        assert message == "保存成功"
+        message = data.get_error_message()
+        assert message == "字段代码或者字段名称已经存在，不能再次创建！"
         assert not data.has_fail_message()
 
     @allure.story("编辑字段代码成功")
@@ -192,6 +196,7 @@ class TestSDateBasePage:
         data.select_input_database("表代码", code)
         sleep(1)
         data.click_button(f'(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]//span[text()="{code}"]')
+        sleep(3)
         data.click_all_button("编辑")
         sleep(2)
         eles = data.finds_elements(By.XPATH, f'(//table[@class="vxe-table--body"])[3]//tr/td[2]')
@@ -278,6 +283,7 @@ class TestSDateBasePage:
             "class")
         if eles == "ivu-checkbox ivu-checkbox-checked":
             database.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            database.click_button('//div[@class="filter-btn-bar"]/button')
         sleep(1)
         database.click_button('//div[p[text()="表代码"]]/following-sibling::div//i')
         eles = database.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr//td[2]')
@@ -364,7 +370,7 @@ class TestSDateBasePage:
         driver = login_to_database  # WebDriver 实例
         data = DateBasePage(driver)  # 用 driver 初始化 DateBasePage
         code = 'AAtest1'
-        sleep(2)
+        data.wait_for_loading_to_disappear()
         data.select_input_database("表代码", code)
         sleep(1.5)
         data.click_button(f'(//table[@class="vxe-table--body"])[1]//tr[1]/td[2]//span[text()="{code}"]')
@@ -375,5 +381,5 @@ class TestSDateBasePage:
         sleep(1)
         eles = data.finds_elements(By.XPATH, f'(//table[@class="vxe-table--body"])[1]//tr//td[2]')
         assert len(eles) == 0
-        assert message == "删除成功"
+        assert message == "删除成功！"
         assert not data.has_fail_message()

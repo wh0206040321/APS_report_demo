@@ -70,7 +70,7 @@ class TestSModelDesignPage:
         model.click_modeldesign_button("新增模型")
         model.click_confirm()
         message = model.get_error_message()
-        assert message == "请填写名称"
+        assert message == "名称不能为空"
         assert not model.has_fail_message()
 
     @allure.story("新增模型成功")
@@ -127,8 +127,8 @@ class TestSModelDesignPage:
         model.click_modeldesign_button("新增模型")
         model.enter_texts('//div[label[text()="模型名称"]]//input', name)
         model.click_confirm()
-        message = model.get_find_message()
-        assert message == "重复命名"
+        message = model.get_error_message()
+        assert message == "名称不能重复"
         assert not model.has_fail_message()
 
     @allure.story("查询模型成功")

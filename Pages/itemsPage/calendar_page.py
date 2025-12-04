@@ -2,7 +2,7 @@ import random
 from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver import Keys
+from selenium.webdriver import Keys, ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -59,27 +59,49 @@ class Calendar(BasePage):
         """获取正确信息"""
         message = WebDriverWait(self.driver, 10).until(
             EC.visibility_of_element_located(
+                (By.XPATH, '//div[@class="el-message el-message--success"]/p')
+            )
+        )
+        return message.text
+
+    def get_error_message(self):
+        """获取错误信息"""
+        message = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(
                 (By.XPATH, '//div[@class="el-message el-message--error"]/p')
             )
         )
         return message.text
 
+    def click_flagdata(self):
+        """点击更新时间."""
+        self.wait_for_loading_to_disappear()
+        self.click_button('//p[text()="更新时间"]/following-sibling::div')
+        sleep(1)
+        self.click_button('//p[text()="更新时间"]/following-sibling::div')
+        sleep(1)
+
+    def right_refresh(self, name):
+        """右键刷新."""
+        but = self.get_find_element_xpath(f'//div[@class="scroll-body"]/div[.//div[text()=" {name} "]]')
+        but.click()
+        # 右键点击
+        ActionChains(self.driver).context_click(but).perform()
+        self.click_button('//li[text()=" 刷新"]')
+        self.wait_for_loading_to_disappear()
+
     def click_confirm_button(self):
         """点击确定按钮."""
-        self.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]')
+        self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
+
+    def click_select_button(self):
+        """点击查询确定按钮."""
+        self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]')
+        sleep(0.5)
         self.wait_for_loading_to_disappear()
 
     def wait_for_loading_to_disappear(self, timeout=10):
-        """
-        显式等待加载遮罩元素消失。
-
-        参数:
-        - timeout (int): 超时时间，默认为10秒。
-
-        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
-        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
-        以此判断加载遮罩是否消失。
-        """
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
@@ -132,7 +154,7 @@ class Calendar(BasePage):
             random_int = random.randint(1, 5)
             sleep(1)
             self.click_button(f'//table[@class="vxe-table--body"]//tr[{random_int}]/td[2]/div/span/span')
-
+            self.wait_for_loading_to_disappear()
             self.click_button(
                 '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
             )
@@ -146,6 +168,7 @@ class Calendar(BasePage):
             # 勾选框
             random_int1 = random.randint(1, 2)
             sleep(1)
+            self.wait_for_loading_to_disappear()
             self.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]//span[@class="vxe-cell--checkbox"])[{random_int1}]')
             self.click_button(
                 '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
@@ -203,4 +226,5 @@ class Calendar(BasePage):
         sleep(2)
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
 

@@ -1,5 +1,7 @@
 import random
 from time import sleep
+from datetime import date, datetime
+from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
@@ -56,7 +58,14 @@ class OrderPage(BasePage):
 
     def click_confirm_button(self):
         """点击确定按钮."""
-        self.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]')
+        self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        sleep(1)
+        self.wait_for_loading_to_disappear()
+
+    def click_select_button(self):
+        """点击查询确定按钮."""
+        self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]')
+        sleep(0.5)
         self.wait_for_loading_to_disappear()
 
     def wait_for_loading_to_disappear(self, timeout=10):
@@ -160,12 +169,23 @@ class OrderPage(BasePage):
         except NoSuchElementException:
             return None
 
-    def get_error_message(self, xpath):
-        """获取错误消息元素，返回该元素。如果元素未找到，返回None。"""
-        try:
-            return self.find_element(By.XPATH, xpath)
-        except NoSuchElementException:
-            return None
+    def get_find_message(self):
+        """获取错误信息"""
+        message = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(
+                (By.XPATH, '//div[@class="el-message el-message--success"]/p')
+            )
+        )
+        return message.text
+
+    def get_error_message(self):
+        """获取错误信息"""
+        message = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(
+                (By.XPATH, '//div[@class="el-message el-message--error"]/p')
+            )
+        )
+        return message.text
 
     def is_clickable(self, xpath, timeout=5):
         """
@@ -243,7 +263,7 @@ class OrderPage(BasePage):
             except Exception as e:
                 print(f"操作 {xpath} 时出错: {str(e)}")
 
-    def del_loyout(self, layout):
+    def del_layout(self, layout):
         # 获取目标 div 元素，这里的目标是具有特定文本的 div
         target_div = self.get_find_element_xpath(
             f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
@@ -269,3 +289,77 @@ class OrderPage(BasePage):
         sleep(1)
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
+
+    def click_order_page(self, name):
+        """点击不同订单页"""
+        self.click_button(f'(//span[text()="{name}"])[1]')
+
+    def add_order_data(self, name):
+        """添加数据."""
+
+        self.click_add_button()  # 检查点击添加
+        # 输入代码
+        self.enter_texts('(//label[text()="订单代码"])[1]/parent::div//input', name)
+        self.enter_texts('(//label[text()="物料"])[1]/parent::div//input', name)
+        self.click_button('(//label[text()="交货期"])[1]/parent::div//input')
+        self.click_button('(//div[@class="ivu-date-picker-cells"])[3]/span[19]')
+        self.click_button(
+            '(//button[@class="ivu-btn ivu-btn-primary ivu-btn-small"])[3]'
+        )
+        self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
+
+    def edit_order_data(self, before_name, after_name):
+        """编辑数据."""
+        self.click_button(f'//tr[./td[2][.//span[text()="{before_name}"]]]/td[2]')
+        self.click_edi_button()  # 检查点击编辑
+        # 输入代码
+        self.enter_texts('(//label[text()="订单代码"])[1]/parent::div//input', after_name)
+        self.enter_texts('(//label[text()="物料"])[1]/parent::div//input', after_name)
+        self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
+
+    def del_order_data(self, name):
+        """删除数据."""
+        eles = self.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]')
+        if len(eles) == 1:
+            self.click_button(f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]')
+            self.click_del_button()  # 检查点击删除
+            self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+            self.wait_for_loading_to_disappear()
+
+    def select_order_data(self, name):
+        """查询数据."""
+        self.click_sel_button()
+        sleep(1)
+        # 定位名称输入框
+        element_to_double_click = self.driver.find_element(
+            By.XPATH,
+            '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[4]',
+        )
+        # 创建一个 ActionChains 对象
+        actions = ActionChains(self.driver)
+        # 双击命令
+        actions.double_click(element_to_double_click).perform()
+        sleep(1)
+        # 点击物料代码
+        self.click_button('//div[text()="订单代码" and contains(@optid,"opt_")]')
+        sleep(1)
+        # 点击比较关系框
+        self.click_button(
+            '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[5]//input'
+        )
+        sleep(1)
+        # 点击=
+        self.click_button('//div[text()="=" and contains(@optid,"opt_")]')
+        sleep(1)
+        # 点击输入数值
+        self.enter_texts(
+            '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[6]//input',
+            name,
+        )
+        sleep(1)
+
+        # 点击确认
+        self.click_select_button()

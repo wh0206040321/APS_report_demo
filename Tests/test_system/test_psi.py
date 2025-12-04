@@ -349,6 +349,7 @@ class TestPSIPage:
         eles = psi.get_find_element_xpath('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute("class")
         if eles == "ivu-checkbox ivu-checkbox-checked":
             psi.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            psi.click_button('//div[@class="filter-btn-bar"]/button')
         sleep(1)
         psi.click_button('//div[p[text()="PSI名称"]]/following-sibling::div//input')
         eles = psi.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')

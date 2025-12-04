@@ -59,6 +59,8 @@ class SchedPage(BasePage):
     def click_save_button(self):
         """点击保存按钮."""
         self.click_button('//button[./span[text()="保存设置"]]')
+        self.get_find_message()
+        sleep(1)
 
     def enter_texts(self, xpath, text):
         """输入文字."""
@@ -104,11 +106,16 @@ class SchedPage(BasePage):
         )
         return message.text
 
+    def wait_for_el_loading_mask(self, timeout=15):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
+        )
+        sleep(1)
+
     def get_after_value(self, name):
         """获取保存之后的值"""
         self.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[1]')
         self.click_save_button()
-        self.get_find_message()
         self.driver.refresh()
         sleep(1)
         self.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
@@ -126,6 +133,21 @@ class SchedPage(BasePage):
             self.click_ok_schedbutton()  # 点击确定
             self.click_save_button()  # 点击保存
 
+    def add_copy_materialsched(self, name=[]):
+        """添加复制方案"""
+        ele = self.get_find_element_xpath(
+            '//div[@class="h-69 background-ffffff"]//label[1]'
+        ).text
+        for v in name:
+            self.click_add_schedbutton()
+            self.enter_texts('//label[text()="名称"]/following-sibling::div//input', v)
+            self.click_button(
+                '//label[text()="选择复制的方案"]/following-sibling::div/div'
+            )  # 点击下拉框
+            self.click_button(f'//li[text()="{ele}"]')
+            self.click_ok_schedbutton()  # 点击确定
+            self.click_save_button()  # 点击保存
+
     def del_all_sched(self, name=[]):
         """删除所有方案"""
         for v in name:
@@ -134,3 +156,18 @@ class SchedPage(BasePage):
             self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
             # 点击保存
             self.click_save_button()
+
+    def batch_sched_dialog_box(self, xpath_list=[], new_value=""):
+        """选择对话框选择表格"""
+        for index, xpath in enumerate(xpath_list, start=1):
+            try:
+                self.click_button(xpath)
+                sleep(3)
+                ele = self.get_find_element_xpath(f'(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span)[1]').get_attribute('class')
+                if 'is--checked'not in ele:
+                    self.click_button(f'(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span)[1]')
+                self.click_button(f'(//button[@class="ivu-btn ivu-btn-primary"])[3]')
+            except NoSuchElementException:
+                print(f"未找到元素: {xpath}")
+            except Exception as e:
+                print(f"操作 {xpath} 时出错: {str(e)}")

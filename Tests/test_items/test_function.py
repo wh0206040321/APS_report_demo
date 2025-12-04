@@ -43,6 +43,7 @@ def login_to_function():
             raise RuntimeError("无法连接到登录页面")
 
         page.login(date_driver.username, date_driver.password, date_driver.planning)
+        page.wait_for_loading_to_disappear()
         yield driver  # 提供给测试用例使用
     finally:
         if driver:
@@ -50,7 +51,7 @@ def login_to_function():
 
 
 @allure.feature("导航栏测试用例")
-@pytest.mark.run(order=26)
+@pytest.mark.run(order=28)
 class TestFunctionPage:
     @allure.story("关闭导航栏页面成功")
     # @pytest.mark.run(order=1)

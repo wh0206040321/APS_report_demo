@@ -74,19 +74,10 @@ class ImpPage(BasePage):
 
     # 等待加载遮罩消失
     def wait_for_loading_to_disappear(self, timeout=10):
-        """
-        显式等待加载遮罩元素消失。
-
-        参数:
-        - timeout (int): 超时时间，默认为10秒。
-
-        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
-        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
-        以此判断加载遮罩是否消失。
-        """
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
-                (By.XPATH, '//div[contains(@class, "el-loading-mask") and not(contains(@style, "display: none"))]')
+                (By.XPATH,
+                 "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
             )
         )
         sleep(1)
@@ -139,3 +130,10 @@ class ImpPage(BasePage):
         if copy_name != '':
             self.enter_texts('//div[label[text()="目的方案"]]//input[@type="text"]', copy_name)
         self.click_button('(//div[@class="ivu-modal-footer"]//span[text()="确定"])[2]')
+
+    def mover_right(self):
+        """右移"""
+        element = self.get_find_element_xpath('(//div[@class="vxe-table--body-wrapper body--wrapper"])[2]')
+        # 滚动到最右边
+        self.driver.execute_script("arguments[0].scrollLeft = arguments[0].scrollWidth;", element)
+        sleep(1)

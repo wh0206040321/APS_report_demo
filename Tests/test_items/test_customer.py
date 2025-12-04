@@ -51,6 +51,7 @@ def login_to_customer():
         page.click_button('(//span[text()="计划管理"])[1]')  # 点击计划管理
         page.click_button('(//span[text()="计划基础数据"])[1]')  # 点击计划基础数据
         page.click_button('(//span[text()="客户"])[1]')  # 点击客户
+        page.wait_for_loading_to_disappear()
         yield driver  # 提供给测试用例使用
     finally:
         if driver:
@@ -202,7 +203,7 @@ class TestCustomerPage:
         num_ = customer.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[5]'
         ).text
-        assert adddata == name and num_ == '99999999999', f"预期数据是{name}，实际得到{adddata}"
+        assert adddata == name and num_ == '9999999999', f"预期数据是{name}，实际得到{adddata}"
         assert not customer.has_fail_message()
 
     @allure.story("添加数据成功")
@@ -316,7 +317,7 @@ class TestCustomerPage:
         )
         # 点击确定
         customer.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
-        sleep(1)
+        customer.wait_for_loading_to_disappear()
         # 定位表格内容
         customerdata = customer.get_find_element_xpath(
             f'//tr[./td[2][.//span[contains(text(),"{name}")]]]/td[2]'
@@ -470,18 +471,15 @@ class TestCustomerPage:
         sleep(1)
 
         # 点击确认
-        customer.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        customer.click_select_button()
         # 定位第一行是否为111
         customercode = customer.get_find_element_xpath(
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]'
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
         ).text
         # 定位第二行没有数据
         customercode2 = driver.find_elements(
             By.XPATH,
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][2]/td[2]',
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
         assert customercode == name and len(customercode2) == 0
         assert not customer.has_fail_message()
@@ -524,13 +522,10 @@ class TestCustomerPage:
         sleep(1)
 
         # 点击确认
-        customer.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        customer.click_select_button()
         customercode = driver.find_elements(
             By.XPATH,
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]',
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
         )
         assert len(customercode) == 0
         assert not customer.has_fail_message()
@@ -573,10 +568,7 @@ class TestCustomerPage:
         sleep(1)
 
         # 点击确认
-        customer.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        customer.click_select_button()
         eles = customer.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
         # 定位第一行是否为111
         assert len(eles) > 0
@@ -620,10 +612,7 @@ class TestCustomerPage:
         sleep(1)
 
         # 点击确认
-        customer.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        customer.click_select_button()
         eles = customer.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[5]')
         assert len(eles) > 0
         assert all(int(v) < 10 for v in eles)
@@ -749,10 +738,7 @@ class TestCustomerPage:
         sleep(1)
 
         # 点击确认
-        customer.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        customer.click_select_button()
         name = customer.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
         code = customer.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[5]')
         assert len(code) > 0 and len(name) > 0
@@ -883,10 +869,7 @@ class TestCustomerPage:
         sleep(1)
 
         # 点击确认
-        customer.click_button(
-            '(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]'
-        )
-        sleep(1)
+        customer.click_select_button()
         # 获取目标表格第2个 vxe 表格中的所有数据行
         xpath_rows = '(//table[contains(@class, "vxe-table--body")])[2]//tr[contains(@class,"vxe-body--row")]'
 

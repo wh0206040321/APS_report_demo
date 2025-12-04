@@ -58,23 +58,19 @@ class AppsPage(BasePage):
         self.wait_for_loading_to_disappear()
 
     # 等待加载遮罩消失
-    def wait_for_loading_to_disappear(self, timeout=10):
-        """
-        显式等待加载遮罩元素消失。
-
-        参数:
-        - timeout (int): 超时时间，默认为10秒。
-
-        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
-        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
-        以此判断加载遮罩是否消失。
-        """
+    def wait_for_el_loading_mask(self, timeout=10):
         WebDriverWait(self.driver, timeout).until(
-            EC.invisibility_of_element_located(
-                (By.XPATH, '//div[contains(@class, "el-loading-mask") and not(contains(@style, "display: none"))]')
-            )
+            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
         )
         sleep(1)
+
+    def wait_for_loading_to_disappear(self, timeout=10):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located(
+                (By.XPATH,
+                 "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
+            )
+        )
 
     def click_all_button(self, name):
         """点击按钮."""
@@ -118,7 +114,7 @@ class AppsPage(BasePage):
 
     def click_save_button(self):
         """点击保存按钮."""
-        self.click_button('//div[@class="d-flex m-l--7 "]/div[1]')
+        self.click_button('//div[@class="d-flex background-color-fff"]/div[1]')
 
     def click_apps_button(self):
         """点击应用管理"""
@@ -127,7 +123,7 @@ class AppsPage(BasePage):
 
     def click_save_template_button(self, name, button: bool = True):
         """点击保存模版按钮."""
-        self.click_button('//div[@class="d-flex m-l--7 "]/div[2]')
+        self.click_button('//div[@class="d-flex background-color-fff"]/div[2]')
         self.enter_texts('//div[label[text()="名称"]]//input[@placeholder="请输入"]', name)
         if button:
             self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
@@ -250,3 +246,4 @@ class AppsPage(BasePage):
         sleep(2)
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()

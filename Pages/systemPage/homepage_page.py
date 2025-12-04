@@ -53,31 +53,19 @@ class HomePage(BasePage):
         # 右键点击
         ActionChains(self.driver).context_click(but).perform()
         self.click_button('//li[text()=" 刷新"]')
-        self.wait_for_loading_to_disappear()
+        self.wait_for_el_loading_mask()
 
     # 等待加载遮罩消失
-    def wait_for_loading_to_disappear(self, timeout=10):
-        """
-        显式等待加载遮罩元素消失。
-
-        参数:
-        - timeout (int): 超时时间，默认为10秒。
-
-        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
-        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
-        以此判断加载遮罩是否消失。
-        """
-        WebDriverWait(self.driver, 30).until(
-            lambda d: (
-                d.find_element(By.CLASS_NAME, "el-loading-mask").value_of_css_property("display") == "none"
-                if d.find_elements(By.CLASS_NAME, "el-loading-mask") else True
-            )
-        )
+    def wait_for_el_loading_mask(self, timeout=10):
         sleep(1)
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
+        )
 
     def click_save_button(self):
         """点击保存按钮."""
         self.click_button('(//div[@class="d-flex m-b-7 toolBar"]//button)[1]')
+        self.wait_for_el_loading_mask()
 
     def click_template(self):
         self.click_button('//div[text()=" 模板 "]')
@@ -87,7 +75,8 @@ class HomePage(BasePage):
         self.click_button('(//div[@class="d-flex m-b-7 toolBar"]//button)[2]')
         if name == "":
             self.click_button(
-                f'//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"]//span[text()="{button}"]')
+                f'//div[@class="vxe-modal--footer"]//span[text()="{button}"]')
+            self.wait_for_el_loading_mask()
             message = WebDriverWait(self.driver, 10).until(
                 EC.visibility_of_element_located(
                     (By.XPATH, '//div[@class="el-message el-message--error"]//p')
@@ -97,7 +86,8 @@ class HomePage(BasePage):
         else:
             self.enter_texts('//div[text()=" 名称 "]/following-sibling::div//input', name)
             self.click_button(
-                f'//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"]//span[text()="{button}"]')
+                f'//div[@class="vxe-modal--footer"]//span[text()="{button}"]')
+            self.wait_for_el_loading_mask()
             self.click_template()
             eles = self.finds_elements(By.XPATH,
                                        f'//div[@class="flex-column flex-align-items-center overflow-auto b-r-s-dcdee2 flex-1"]//div[@class="flex-j-c-between"]/span[1][text()=" {name} "]')
@@ -105,10 +95,11 @@ class HomePage(BasePage):
 
     def clear_all_button(self, span_text):
         """点击清除所有按钮."""
-        self.wait_for_loading_to_disappear()
+        self.wait_for_el_loading_mask()
         self.click_button('(//div[@class="d-flex m-b-7 toolBar"]//button)[3]')
         self.click_button(
             f'//div[./div[text()="确定要删除所有的组件吗？"]]/following-sibling::div//span[text()="{span_text}"]')
+        sleep(1)
 
     def clear_button(self, span_text):
         """点击清除按钮."""
@@ -140,7 +131,7 @@ class HomePage(BasePage):
             int: 删除操作后仍存在的同名模板数量，正常情况下应为0
         """
         self.click_template()
-        self.wait_for_loading_to_disappear()
+        self.wait_for_el_loading_mask()
 
         # 1️⃣ 悬停模版容器触发图标显示
         container = self.get_find_element_xpath(
@@ -159,9 +150,8 @@ class HomePage(BasePage):
         # 3️⃣ 点击删除图标并确认删除操作
         delete_icon.click()
         self.click_button('(//div[@class="ivu-modal-confirm-footer"])[2]//span[text()="确定"]')
-        self.wait_for_loading_to_disappear()
+        self.wait_for_el_loading_mask()
         self.click_save_button()
-        self.wait_for_loading_to_disappear()
         self.get_find_message()
         self.right_refresh()
         self.click_template()

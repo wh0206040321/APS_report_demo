@@ -29,21 +29,16 @@ class AddsPages(BasePage):
             return None
 
     def wait_for_loading_to_disappear(self, timeout=10):
-        """
-        显式等待加载遮罩元素消失。
-
-        参数:
-        - timeout (int): 超时时间，默认为10秒。
-
-        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
-        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
-        以此判断加载遮罩是否消失。
-        """
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
                  "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
             )
+        )
+
+    def wait_for_el_loading_mask(self, timeout=15):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
         )
 
     def batch_modify_input(self, xpath_list=[], new_value=""):
@@ -223,7 +218,9 @@ class AddsPages(BasePage):
         进入设置页面
         """
         self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[3]//i')
+        self.wait_for_el_loading_mask()
         self.click_button('//div[text()=" 显示设置 "]')
+        sleep(5)
         ele = self.get_find_element_xpath('(//div[@class="vxe-table--body-wrapper body--wrapper"])[4]')
         self.driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", ele)
         sleep(1)
@@ -235,7 +232,12 @@ class AddsPages(BasePage):
             num = self.get_find_element_xpath(
                 '(//div[@class="vxe-table--fixed-left-wrapper"])[2]//table[@class="vxe-table--body"]//tr[last()]//div').text
         sleep(0.5)
-        self.click_button('(//div[@class="demo-drawer-footer"])[2]//span[text()="确定"]')
+        try:
+            self.click_button('(//div[@class="demo-drawer-footer"])[2]//span[text()="确定"]')
+        except Exception:
+            # 如果第一个点不了，就点另一个
+            self.click_button('(//div[@class="demo-drawer-footer"])[3]//span[text()="确定"]')
+
         self.wait_for_loading_to_disappear()
         return num
 

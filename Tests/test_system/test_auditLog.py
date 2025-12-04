@@ -200,6 +200,7 @@ class TestAuditLogPage:
             "class")
         if eles == "ivu-checkbox ivu-checkbox-checked":
             audit.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            audit.click_button('//div[@class="filter-btn-bar"]/button')
         sleep(1)
         audit.click_button('//div[p[text()="用户代码"]]/following-sibling::div//input')
         eles = audit.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')

@@ -269,7 +269,7 @@ class TestPlanPage:
             EC.element_to_be_clickable(
                 (
                     By.XPATH,
-                    '//div[@class="vue-treeselect__list"]/div[.]//label[text()="均衡排产"]',
+                    '//div[@class="vue-treeselect__list"]/div[1]',
                 )
             )
         )

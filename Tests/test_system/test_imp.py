@@ -194,6 +194,7 @@ class TestImpPage:
         message = imp.get_find_message()
         imp.click_button('//span[text()=" 执行方案"]')
         imp.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        sleep(3)
         eles1 = imp.finds_elements(By.XPATH,
                                    f'//ul[@class="ivu-tree-children"]//span[@class="valueSpan" and text()="{kh}"]')
         eles2 = imp.finds_elements(By.XPATH,
@@ -254,10 +255,9 @@ class TestImpPage:
         driver = login_to_imp  # WebDriver 实例
         imp = ImpPage(driver)  # 用 driver 初始化 ImpPage
         name = "1导入设置方案"
-        copyname = '1同步导入1'
         imp.copy_(name=name, copy_name=name)
         message = imp.get_error_message()
-        assert message == '请输入方案且不能与其他方案相同'
+        assert message == '名称不能重复'
         assert not imp.has_fail_message()
 
     @allure.story("复制名称成功")

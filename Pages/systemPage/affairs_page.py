@@ -54,30 +54,17 @@ class AffairsPage(BasePage):
         # 右键点击
         ActionChains(self.driver).context_click(but).perform()
         self.click_button('//li[text()=" 刷新"]')
-        self.wait_for_loading_to_disappear()
+        self.wait_for_el_loading_mask()
 
     def click_confirm_button(self):
         """点击确认按钮."""
         self.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]//span[text()="确定"]')
-        self.wait_for_loading_to_disappear()
+        self.wait_for_el_loading_mask()
 
     # 等待加载遮罩消失
-    def wait_for_loading_to_disappear(self, timeout=10):
-        """
-        显式等待加载遮罩元素消失。
-
-        参数:
-        - timeout (int): 超时时间，默认为10秒。
-
-        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
-        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
-        以此判断加载遮罩是否消失。
-        """
+    def wait_for_el_loading_mask(self, timeout=10):
         WebDriverWait(self.driver, timeout).until(
-            lambda d: (
-                d.find_element(By.CLASS_NAME, "el-loading-mask").value_of_css_property("display") == "none"
-                if d.find_elements(By.CLASS_NAME, "el-loading-mask") else True
-            )
+            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
         )
         sleep(1)
 
@@ -146,6 +133,7 @@ class AffairsPage(BasePage):
             ele.click()
             sleep(1)
             self.click_button('//div[@class="el-message-box__btns"]/button[2]')
+            self.wait_for_el_loading_mask()
 
     def hover(self, name="", edi=""):
         # 悬停模版容器触发图标显示
@@ -172,10 +160,12 @@ class AffairsPage(BasePage):
     def click_process(self):
         """点击流程"""
         self.click_button('//div[@id="tab-flow"]')
+        sleep(2)
 
     def click_process_log(self):
         """点击流程日志"""
         self.click_button('//div[@id="tab-log"]')
+        self.wait_for_el_loading_mask()
 
     def click_process_update(self, name):
         """点击编辑流程"""
@@ -210,6 +200,7 @@ class AffairsPage(BasePage):
     def click_add_affairs(self, name="", type="", button: bool = True):
         """点击新增事务"""
         self.click_button('//div[@id="pane-air"]//span[text()="新建事务"]')
+        sleep(3)
         if name:
             self.enter_texts('//div[label[text()="事务名称"]]//input', name)
         if type:
@@ -353,6 +344,7 @@ class AffairsPage(BasePage):
         """点击分页."""
         self.click_button('//div[@class="el-select el-select--mini"]//input')
         self.click_button(f'//ul[@class="el-scrollbar__view el-select-dropdown__list"]//span[text()="{num}条/页"]')
+        self.wait_for_el_loading_mask()
 
     def get_log_time(self):
         """获取日志时间."""
@@ -397,4 +389,5 @@ class AffairsPage(BasePage):
             self.click_button(f'(//button[span[text()="筛选"]])[2]')
         else:
             self.click_button(f'(//button[span[text()="重置筛选条件"]])[2]')
-        sleep(3)
+        sleep(1)
+        self.wait_for_el_loading_mask()
