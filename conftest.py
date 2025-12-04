@@ -113,9 +113,8 @@ def pytest_runtest_makereport(item, call):
                 logger.info(f"✅ 重试后成功，不记录失败: {test_name}")
                 if test_id in first_time_failures:
                     del first_time_failures[test_id]
-
     # 原有的截图逻辑
-    if report.when == "call" and report.failed:
+    if report.failed and report.when in ("setup", "call"):
         for driver in list(all_driver_instances.values()):
             # 检查实例是否为WebDriver类型
             if isinstance(driver, WebDriver):
@@ -131,6 +130,25 @@ def pytest_runtest_makereport(item, call):
                 except Exception as e:
                     # 如果截图失败，记录警告信息
                     logger.warning(f"自动截图失败：{e}")
+
+
+    # # 原有的截图逻辑
+    # if report.when == "call" and report.failed:
+    #     for driver in list(all_driver_instances.values()):
+    #         # 检查实例是否为WebDriver类型
+    #         if isinstance(driver, WebDriver):
+    #             # debug信息：判断driver是否存活
+    #             logging.debug(f"[{test_name}] 正在判断 driver: {id(driver)} 是否存活")
+    #             # 如果driver已退出，则记录警告并跳过截图操作
+    #             if not is_driver_alive(driver):
+    #                 logging.warning(f"[{test_name}] driver {id(driver)} 已退出，跳过截图")
+    #                 continue
+    #             try:
+    #                 # 尝试执行截图并附加到报告中，同时指定邮件接收方
+    #                 capture_and_attach(driver, test_name, recipient="1121470915@qq.com")
+    #             except Exception as e:
+    #                 # 如果截图失败，记录警告信息
+    #                 logger.warning(f"自动截图失败：{e}")
 
 
 @pytest.fixture(scope="class")
@@ -194,7 +212,7 @@ def pytest_sessionfinish(session, exitstatus):
     allure_output_dir = Path("report/allure_report")
     docs_dir = Path("docs")
     # ✅ 链接用于邮件
-    report_link = "https://wh0206040321.github.io/APS_report/"
+    report_link = "https://wh0206040321.github.io/APS_report_demo/"
 
     # ✅ 生成 Allure 静态报告
     os.system(f"allure generate report/allure_results -o {str(allure_output_dir)} --clean")
@@ -221,7 +239,7 @@ def pytest_sessionfinish(session, exitstatus):
         </body>
         </html>
         """
-        subject = "✅ 自动化测试执行完毕 - 失败汇总"
+        subject = "✅ 自动化测试演示环境执行完毕 - 失败汇总"
     else:
         total_count = session.testscollected
         pass_rate = 100.0
@@ -237,7 +255,7 @@ def pytest_sessionfinish(session, exitstatus):
         </body>
         </html>
         """
-        subject = "✅ 自动化测试全部通过"
+        subject = "✅ 自动化测试演示环境全部通过"
 
     # ✅ 发送 HTML 邮件
     send_test_failure_email(
@@ -284,7 +302,7 @@ def pytest_sessionfinish(session, exitstatus):
         subprocess.run(["git", "commit", "--allow-empty", "-m", "强制触发 GitHub Pages 构建"], check=False)
 
         # ✅ 推送到远程
-        result = subprocess.run(["git", "push", "origin", "main"], capture_output=True, text=True)
+        result = subprocess.run(["git", "push", "demo", "main"], capture_output=True, text=True)
         if result.returncode != 0:
             logging.warning(f"🚨 Git push 失败：{result.stderr}")
         else:
