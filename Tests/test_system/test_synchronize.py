@@ -687,7 +687,7 @@ class TestSynchronizePage:
         synchronize.click_button('(//span[text()="PSI设置"])[1]')
         sleep(1)
         psi_name = ["1测试psi1", "1测试psi2", "1测试psi3"]
-        psi.del_all(psi_name)
+        psi.del_all(psi_name, '//p[text()="PSI名称"]/ancestor::div[2]//input')
         for v in psi_name:
             eles = synchronize.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{v}"]')
             assert len(eles) == 0, f"未删除{v}"
@@ -768,7 +768,7 @@ class TestSynchronizePage:
         ]
         for v in role_list:
             synchronize.click_button(f'(//span[text()="{v}"])[1]')
-        role.del_all(role_name)
+        role.del_all(role_name, '//div[div[p[text()="角色代码"]]]//input')
         role.get_find_message()
 
         unit_list = ["计划单元"]
@@ -779,7 +779,7 @@ class TestSynchronizePage:
         for v in unit_list:
             synchronize.click_button(f'(//span[text()="{v}"])[1]')
         unit.right_refresh()
-        unit.del_all(unit_name)
+        unit.del_all(unit_name, '//p[text()="计划单元"]/ancestor::div[2]//input')
         ele = synchronize.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
         assert len(ele) == 0
         assert not synchronize.has_fail_message()

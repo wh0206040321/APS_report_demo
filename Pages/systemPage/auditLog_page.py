@@ -74,6 +74,7 @@ class AuditLogPage(BasePage):
     def select_input(self, name):
         """选择输入框."""
         self.enter_texts('//div[div[p[text()="用户代码"]]]//input', name)
+        sleep(0.5)
 
     def loop_judgment(self, xpath):
         """循环判断"""

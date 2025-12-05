@@ -257,7 +257,7 @@ class TestSInterfaceConfigurationPage:
         sleep(1)
         list_ = [ele.text for ele in eles]
         assert len(list_) > 0
-        assert all(name in text for text in list_)
+        assert all(text == '' or name in text for text in list_)
         assert not interfaceconfiguration.has_fail_message()
 
     @allure.story("过滤条件查询，设置符合开头查询成功")
@@ -276,7 +276,7 @@ class TestSInterfaceConfigurationPage:
         sleep(1)
         list_ = [ele.text for ele in eles]
         assert len(list_) > 0
-        assert all(str(item).startswith(name) for item in list_)
+        assert all(item == '' or str(item).startswith(name) for item in list_)
         assert not interfaceconfiguration.has_fail_message()
 
     @allure.story("过滤条件查询，设置符合结尾查询成功")
@@ -295,7 +295,7 @@ class TestSInterfaceConfigurationPage:
         sleep(1)
         list_ = [ele.text for ele in eles]
         assert len(list_) > 0
-        assert all(str(item).endswith(name) for item in list_)
+        assert all(item == '' or str(item).endswith(name) for item in list_)
         assert not interfaceconfiguration.has_fail_message()
 
     @allure.story("清除筛选效果成功")

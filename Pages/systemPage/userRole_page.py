@@ -94,6 +94,7 @@ class UserRolePage(BasePage):
         """修改用户管理."""
         add = AddsPages(self.driver)
         self.select_input(before_name)
+        sleep(0.5)
         self.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{before_name}"]')
         sleep(1)
         self.click_all_button("编辑")

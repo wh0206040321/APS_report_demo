@@ -62,6 +62,7 @@ class ImpPage(BasePage):
         ele.send_keys(Keys.CONTROL + "a")
         ele.send_keys(Keys.DELETE)
         self.enter_texts('//div[p[text()="接口名称"]]/following-sibling::div//input', name)
+        sleep(0.5)
 
     def right_refresh(self, name="导入设置"):
         """右键刷新."""
@@ -107,8 +108,11 @@ class ImpPage(BasePage):
     def del_all(self, value=[]):
         """批量删除"""
         for v in value:
+            sleep(1)
             self.click_button('//div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//input[@class="ivu-select-input"]')
+            sleep(1)
             self.click_button(f'(//li[text()="{v}"])[1]')
+            sleep(1)
             self.click_impall_button("删除")
             self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
             self.get_find_message()

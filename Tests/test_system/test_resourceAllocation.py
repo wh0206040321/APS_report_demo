@@ -291,7 +291,7 @@ class TestResourceAllocationPage:
         ]
         for v in role_list:
             allocation.click_button(f'(//span[text()="{v}"])[1]')
-        role.del_all(role_name)
+        role.del_all(role_name, '//div[div[p[text()="角色代码"]]]//input')
         role.get_find_message()
 
         unit_list = ["计划单元"]
@@ -301,6 +301,6 @@ class TestResourceAllocationPage:
         for v in unit_list:
             allocation.click_button(f'(//span[text()="{v}"])[1]')
         unit.right_refresh()
-        unit.del_all(unit_name)
+        unit.del_all(unit_name, '//p[text()="计划单元"]/ancestor::div[2]//input')
         ele = allocation.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
         assert len(ele) == 0

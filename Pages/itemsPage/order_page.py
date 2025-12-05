@@ -241,27 +241,28 @@ class OrderPage(BasePage):
             # 如果已选中，直接点击确定按钮保存设置
             self.click_button('(//div[@class="demo-drawer-footer"])[3]/button[2]')
 
-    def del_all(self, value=[]):
-        for index, xpath in enumerate(value, start=1):
+    def del_all(self, value=[], xpath=''):
+        for index, v in enumerate(value, start=1):
             try:
-                self.click_button(f'//tr[./td[2][.//span[text()="{xpath}"]]]/td[2]')
+                self.enter_texts(xpath, v)
+                sleep(0.5)
+                self.click_button(f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
                 self.click_del_button()  # 点击删除
-                sleep(1)
-                # 点击确定
-                # 找到共同的父元素
-                parent = self.get_find_element_class("ivu-modal-confirm-footer")
-
-                # 获取所有button子元素
-                all_buttons = parent.find_elements(By.TAG_NAME, "button")
-
-                # 选择需要的button 第二个确定按钮
-                second_button = all_buttons[1]
-                second_button.click()
-                sleep(2)
+                self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+                self.wait_for_loading_to_disappear()
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)
             except NoSuchElementException:
                 print(f"未找到元素: {xpath}")
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)
             except Exception as e:
                 print(f"操作 {xpath} 时出错: {str(e)}")
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)
 
     def del_layout(self, layout):
         # 获取目标 div 元素，这里的目标是具有特定文本的 div

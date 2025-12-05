@@ -79,6 +79,7 @@ class OtherPage(BasePage):
         ele.send_keys(Keys.DELETE)
         sleep(0.5)
         self.enter_texts(xpath, name)
+        sleep(0.5)
 
     def select_input_online(self, name):
         """选择输入框."""
@@ -88,6 +89,7 @@ class OtherPage(BasePage):
         ele.send_keys(Keys.DELETE)
         sleep(0.5)
         self.enter_texts(xpath, name)
+        sleep(0.5)
 
     def loop_judgment(self, xpath):
         """循环判断"""
@@ -143,24 +145,6 @@ class OtherPage(BasePage):
     def click_modeldesign_button(self, name):
         """点击模型设计按钮"""
         self.click_button(f'//header[@class="el-header"]//p[text()="{name}"]')
-
-    def del_all(self, xpath, value=[]):
-        for index, v in enumerate(value, start=1):
-            try:
-                sleep(1)
-                ele = self.get_find_element_xpath(xpath)
-                ele.send_keys(Keys.CONTROL, "a")
-                ele.send_keys(Keys.DELETE)
-                self.enter_texts(xpath, v)
-                sleep(0.5)
-                self.click_button(f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
-                self.click_all_button("删除")  # 点击删除
-                self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-                sleep(1)
-            except NoSuchElementException:
-                print(f"未找到元素: {v}")
-            except Exception as e:
-                print(f"操作 {v} 时出错: {str(e)}")
 
     def add_layout(self, layout):
         """添加布局."""

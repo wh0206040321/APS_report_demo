@@ -1201,13 +1201,13 @@ class TestOrderPage:
         layout = "测试布局A"
 
         value = ['111', '1测试A', '11测试全部数据', '111111111111111133331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111']
-        order.del_all(value)
+        order.del_all(value, '//p[text()="订单代码"]/ancestor::div[2]//input')
         orderdata = [
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
             for v in value[:4]
         ]
         order.del_layout(layout)
-        sleep(5)
+        sleep(1)
         # 再次查找页面上是否有目标 div，以验证是否删除成功
         after_layout = driver.find_elements(
             By.XPATH, f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'

@@ -907,7 +907,7 @@ class TestSpecPage:
         layout = "测试布局A"
 
         value = ['全部数据', '111', '1测试A', '1111111111111111333311222211112222211111111133331111111444441111111111111111111111111111111111111111']
-        spec.del_all(value)
+        spec.del_all(value, '//p[text()="代码"]/ancestor::div[2]//input')
         data = [
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
             for v in value[:4]

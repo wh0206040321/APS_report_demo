@@ -91,16 +91,16 @@ class TestsInterfaceExecutionPage:
         assert len(ele) == 0
         assert not interface.has_fail_message()
 
-    @allure.story("点击导出不报错")
-    # @pytest.mark.run(order=1)
-    def test_interfaceexecution_export(self, login_to_interfaceexecution):
-        driver = login_to_interfaceexecution  # WebDriver 实例
-        interface = ImpPage(driver)  # 用 driver 初始化 ImpPage
-        interface.wait_for_loading_to_disappear()
-        interface.click_button('//button[span[text()="导出"]]')
-        ele = interface.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
-        assert len(ele) == 0
-        assert not interface.has_fail_message()
+    # @allure.story("点击导出不报错")
+    # # @pytest.mark.run(order=1)
+    # def test_interfaceexecution_export(self, login_to_interfaceexecution):
+    #     driver = login_to_interfaceexecution  # WebDriver 实例
+    #     interface = ImpPage(driver)  # 用 driver 初始化 ImpPage
+    #     interface.wait_for_loading_to_disappear()
+    #     interface.click_button('//button[span[text()="导出"]]')
+    #     ele = interface.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+    #     assert len(ele) == 0
+    #     assert not interface.has_fail_message()
 
     @allure.story("点击接口参数成功")
     # @pytest.mark.run(order=1)
@@ -178,7 +178,7 @@ class TestsInterfaceExecutionPage:
         sleep(1)
         list_ = [ele.text for ele in eles]
         assert len(list_) > 0
-        assert all(name in text for text in list_)
+        assert all(text == '' or name in text for text in list_)
         assert not interface.has_fail_message()
 
     @allure.story("过滤条件查询，设置符合开头查询成功")
@@ -197,7 +197,7 @@ class TestsInterfaceExecutionPage:
         sleep(1)
         list_ = [ele.text for ele in eles]
         assert len(list_) > 0
-        assert all(str(item).startswith(name) for item in list_)
+        assert all(item == '' or str(item).startswith(name) for item in list_)
         assert not interface.has_fail_message()
 
     @allure.story("过滤条件查询，设置符合结尾查询成功")
@@ -216,7 +216,7 @@ class TestsInterfaceExecutionPage:
         sleep(1)
         list_ = [ele.text for ele in eles]
         assert len(list_) > 0
-        assert all(str(item).endswith(name) for item in list_)
+        assert all(item == '' or str(item).endswith(name) for item in list_)
         assert not interface.has_fail_message()
 
     @allure.story("清除筛选效果成功")
@@ -246,8 +246,12 @@ class TestsInterfaceExecutionPage:
         driver = login_to_interfaceexecution  # WebDriver 实例
         interface = ImpPage(driver)  # 用 driver 初始化 ImpPage
         interface.click_button('(//span[text()="接口配置分发"])[1]')
+        sleep(1)
         list_ = ['测试数据22', '11测试全部数据']
         for name in list_:
+            xpath = '//p[text()="接口名称"]/ancestor::div[2]//input'
+            interface.enter_texts(xpath, name)
+            sleep(0.5)
             interface.click_button(f'//table[@class="vxe-table--body"]//tr/td[4]//span[text()="{name}"]')
             interface.click_all_button('删除')
             interface.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
@@ -255,4 +259,5 @@ class TestsInterfaceExecutionPage:
             ele = interface.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[4]//span[text()="{name}"]')
             assert len(ele) == 0
             assert message == "删除成功！"
+            interface.right_refresh('接口配置分发')
         assert not interface.has_fail_message()

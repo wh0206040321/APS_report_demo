@@ -232,7 +232,7 @@ class TestSystemSettingsPage:
         ele = settings.finds_elements(By.XPATH, '//div[p[text()=" 登录背景图: "]]/div//img')
 
         settings.log_out()
-        img = settings.finds_elements(By.XPATH,'//div[@id="app"]/div/div[@class="view-left"]/div[1]/div')
+        img = settings.finds_elements(By.XPATH, '//div[@id="app"]/div/div[@class="view-left"]/div[1]/div')
 
         assert maeessage == "保存成功" and len(ele) == 1
         assert len(img) == 1

@@ -110,6 +110,7 @@ class RolePage(BasePage):
         ele.send_keys(Keys.CONTROL + "a")
         ele.send_keys(Keys.DELETE)
         self.enter_texts('//div[div[p[text()="角色代码"]]]//input', name)
+        sleep(0.5)
 
     def click_sel_button(self):
         """点击查询按钮."""
@@ -139,10 +140,9 @@ class RolePage(BasePage):
         # 3️⃣ 再点击图标
         delete_icon.click()
 
-    def del_all(self, value=[]):
+    def del_all(self, value=[], xpath=''):
         for index, v in enumerate(value, start=1):
             try:
-                xpath = '//div[div[p[text()="角色代码"]]]//input'
                 self.enter_texts(xpath, v)
                 sleep(0.5)
                 self.click_button(f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
@@ -154,5 +154,11 @@ class RolePage(BasePage):
                 ele.send_keys(Keys.DELETE)
             except NoSuchElementException:
                 print(f"未找到元素: {v}")
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)
             except Exception as e:
                 print(f"操作 {v} 时出错: {str(e)}")
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)

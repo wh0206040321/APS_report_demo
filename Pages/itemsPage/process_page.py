@@ -135,11 +135,11 @@ class ProcessPage(BasePage):
             # 如果已选中，直接点击确定按钮保存设置
             self.click_button('(//div[@class="demo-drawer-footer"])[3]/button[2]')
 
-    def del_all(self, value=[]):
+    def del_all(self, value=[], xpath=''):
         for index, v in enumerate(value, start=1):
             try:
-                xpath = '//p[text()="工序代码"]/ancestor::div[2]//input'
                 self.enter_texts(xpath, v)
+                sleep(0.5)
                 self.click_button(f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
                 self.click_del_button()  # 点击删除
                 self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
@@ -149,8 +149,14 @@ class ProcessPage(BasePage):
                 ele.send_keys(Keys.DELETE)
             except NoSuchElementException:
                 print(f"未找到元素: {v}")
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)
             except Exception as e:
                 print(f"操作 {v} 时出错: {str(e)}")
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)
 
     def del_layout(self, layout):
         sleep(2)

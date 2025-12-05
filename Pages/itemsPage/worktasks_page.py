@@ -88,6 +88,7 @@ class WorkTasksPage(BasePage):
         ele.send_keys(Keys.DELETE)
         sleep(0.5)
         self.enter_texts(xpath, name)
+        sleep(0.5)
 
     def loop_judgment(self, xpath):
         """循环判断"""

@@ -288,7 +288,7 @@ class TestSAppsPage:
 
     @allure.story("修改排序成功")
     # @pytest.mark.run(order=1)
-    def test_apps_update2(self, login_to_apps):
+    def test_apps_update3(self, login_to_apps):
         driver = login_to_apps  # WebDriver 实例
         apps = AppsPage(driver)  # 用 driver 初始化 ExpressionPage
         name = "appstest1"

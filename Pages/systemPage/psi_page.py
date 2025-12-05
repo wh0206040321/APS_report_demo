@@ -220,10 +220,9 @@ class PsiPage(BasePage):
             except Exception as e:
                 print(f"操作 {xpath} 时出错: {str(e)}")
 
-    def del_all(self, value=[]):
+    def del_all(self, value=[], xpath=''):
         for index, v in enumerate(value, start=0):
             try:
-                xpath = '//p[text()="PSI名称"]/ancestor::div[2]//input'
                 self.enter_texts(xpath, v)
                 sleep(1)
                 self.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{v}"]')
@@ -234,5 +233,11 @@ class PsiPage(BasePage):
                 ele.send_keys(Keys.DELETE)
             except NoSuchElementException:
                 print(f"未找到元素: {v}")
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)
             except Exception as e:
                 print(f"操作 {v} 时出错: {str(e)}")
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)

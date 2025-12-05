@@ -97,11 +97,13 @@ class TestProductionPage:
         name = "1测试C订单"
         # 点击工作代码对话框
         production.click_button('//label[text()="工作代码"]/following-sibling::div//i')
+        production.wait_for_loading_to_disappear()
         # 在订单代码输入框中输入“1测试C订单”
         production.enter_texts(
             '(//div[./p[text()="订单代码"]])[2]/parent::div//input',
             name,
         )
+        sleep(1)
         # 选择搜索到的第一个订单“1测试C订单”
         production.click_button(
             f'//table[.//tr[./td[3]//span[text()="{name}:1"]]]//td[3]//span[text()="{name}:1"]'
@@ -136,11 +138,13 @@ class TestProductionPage:
 
         # 点击工作代码对话框
         production.click_button('//label[text()="工作代码"]/following-sibling::div//i')
+        production.wait_for_loading_to_disappear()
         # 在订单代码输入框中输入“1测试C订单”
         production.enter_texts(
             '(//div[./p[text()="订单代码"]])[2]/parent::div//input',
             name,
         )
+        sleep(1)
         # 选择搜索到的第一个订单“1测试C订单”
         production.click_button(
             f'//table[.//tr[./td[3]//span[text()="{name}:1"]]]//td[3]//span[text()="{name}:1"]'
@@ -211,11 +215,13 @@ class TestProductionPage:
         name = "1测试C订单"
         # 点击工作代码对话框
         production.click_button('//label[text()="工作代码"]/following-sibling::div//i')
+        production.wait_for_loading_to_disappear()
         # 在订单代码输入框中输入“1测试C订单”
         production.enter_texts(
             '(//div[./p[text()="订单代码"]])[2]/parent::div//input',
             name,
         )
+        sleep(1)
         # 选择搜索到的第一个订单“1测试C订单”
         production.click_button(
             f'//table[.//tr[./td[3]//span[text()="{name}:1"]]]//td[3]//span[text()="{name}:1"]'
@@ -246,6 +252,7 @@ class TestProductionPage:
         num = "100"
         # 点击工作代码对话框
         production.click_button('//label[text()="工作代码"]/following-sibling::div//i')
+        production.wait_for_loading_to_disappear()
         # 在订单代码输入框中输入“1测试C订单”
         production.enter_texts(
             '(//div[./p[text()="订单代码"]])[2]/parent::div//input',
@@ -371,6 +378,7 @@ class TestProductionPage:
         num = "100"
         # 点击工作代码对话框
         production.click_button('//label[text()="工作代码"]/following-sibling::div//i')
+        production.wait_for_loading_to_disappear()
         # 在订单代码输入框中输入“1测试C订单”
         production.enter_texts(
             '(//div[./p[text()="订单代码"]])[2]/parent::div//input',
@@ -466,12 +474,13 @@ class TestProductionPage:
         name = "1测试C订单"
         # 点击工作代码对话框
         production.click_button('//label[text()="工作代码"]/following-sibling::div//i')
+        production.wait_for_loading_to_disappear()
         # 在订单代码输入框中输入“1测试C订单”
         production.enter_texts(
             '(//div[./p[text()="订单代码"]])[2]/parent::div//input',
             name,
         )
-
+        sleep(1)
         production.click_button(
             f'//table[.//tr[./td[3]//span[text()="{name}:2"]]]//td[3]//span[text()="{name}:2"]'
         )
@@ -507,12 +516,13 @@ class TestProductionPage:
         name = "1测试C订单"
         # 点击工作代码对话框
         production.click_button('//label[text()="工作代码"]/following-sibling::div//i')
+        production.wait_for_loading_to_disappear()
         # 在订单代码输入框中输入“1测试C订单”
         production.enter_texts(
             '(//div[./p[text()="订单代码"]])[2]/parent::div//input',
             name,
         )
-
+        sleep(1)
         production.click_button(
             f'//table[.//tr[./td[3]//span[text()="{name}:2"]]]//td[3]//span[text()="{name}:2"]'
         )
@@ -801,13 +811,16 @@ class TestProductionPage:
         driver = login_to_production  # WebDriver 实例
         production = ProductionPage(driver)  # 用 driver 初始化 ProductionPage
         name = "1测试C订单"
-
+        production.enter_texts('//p[text()="订单代码"]/ancestor::div[2]//input', name)
+        sleep(1)
         ele = driver.find_elements(By.XPATH, f'//tr[./td[9]//span[text()="{name}"]]')
         while len(ele) > 0:
             production.click_button(f'//tr[./td[9]//span[text()="{name}"]]/td[4]')
             production.click_del_button()
 
             production.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+            production.wait_for_loading_to_disappear()
+            production.enter_texts('//p[text()="订单代码"]/ancestor::div[2]//input', name)
             sleep(1)
             ele = driver.find_elements(
                 By.XPATH, f'//tr[./td[9]//span[text()="{name}"]]'

@@ -64,10 +64,15 @@ class SystemSettingsPage(BasePage):
         )
         sleep(1)
 
-    def log_out (self):
+    def log_out (self, timeout=10):
         """退出登录"""
         self.click_button('//div[@class="flex-alignItems-center"]')
         self.click_button('//ul/li/div[text()=" 注销 "]')
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located(
+                (By.XPATH, '//div[@class="loadingbox"]')
+            )
+        )
 
     def click_save_button(self):
         """点击保存按钮."""

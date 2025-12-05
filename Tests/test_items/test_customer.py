@@ -1014,7 +1014,7 @@ class TestCustomerPage:
         layout = "测试布局A"
 
         value = ['全部数据', '111', '1测试A','111111111111111133331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111']
-        customer.del_all(value)
+        customer.del_all(value, '//p[text()="客户代码"]/ancestor::div[2]//input')
         data = [
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
             for v in value[:4]

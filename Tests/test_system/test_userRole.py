@@ -664,6 +664,7 @@ class TestUserRolePage:
         user.click_button('//div[@class="flex-alignItems-center"]')
         user.click_button('//ul/li/div[text()=" 注销 "]')
         page.login(name, password, module)
+        sleep(3)
         num_ = len(user.finds_elements(By.XPATH, f'//div[@class="listDivCon"]/div'))
         swich_name = user.get_find_element_xpath(f'//div[@class="ivu-dropdown-rel"]/div').text
         assert message == "保存成功" and num_ >= 7 and swich_name == module
@@ -1001,7 +1002,7 @@ class TestUserRolePage:
 
         value = ['1测试计划单元CTB', '1测试计划单元小日程',
                  '111111111111111133331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111']
-        plan.del_all(value)
+        plan.del_all(value, '//p[text()="计划单元"]/ancestor::div[2]//input')
         sleep(2)
         data = [
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')

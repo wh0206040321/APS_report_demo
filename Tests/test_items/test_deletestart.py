@@ -2,6 +2,7 @@ from time import sleep
 
 import allure
 import pytest
+from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
 from Pages.itemsPage.item_page import ItemPage
@@ -39,6 +40,9 @@ class TestDeleteStart:
         # 批量删除物品并等待
         for item_name in ITEMS_TO_DELETE:
             try:
+                xpath = '//p[text()="物料代码"]/ancestor::div[2]//input'
+                item.enter_texts(xpath, item_name)
+                sleep(1)
                 # 先判断是否存在该物品
                 elements = driver.find_elements(
                     By.XPATH, f'//span[text()="{item_name}"]'

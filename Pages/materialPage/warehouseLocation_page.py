@@ -382,22 +382,6 @@ class WarehouseLocationPage(BasePage):
                 )
         return True
 
-    def del_all(self, value=[], xpath=""):
-        for index, v in enumerate(value, start=1):
-            try:
-                ele = self.get_find_element_xpath(xpath)
-                ele.send_keys(Keys.CONTROL, "a")
-                ele.send_keys(Keys.DELETE)
-                self.enter_texts(xpath, v)
-                self.click_button(f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
-                self.click_del_button()  # 点击删除
-                self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-                self.wait_for_loading_to_disappear()
-            except NoSuchElementException:
-                print(f"未找到元素: {v}")
-            except Exception as e:
-                print(f"操作 {v} 时出错: {str(e)}")
-
     def wait_for_loading_to_disappear(self, timeout=10):
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
