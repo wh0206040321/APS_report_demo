@@ -49,11 +49,17 @@ class TestDeleteStart:
                 )
                 if not elements:
                     print(f"物品 {item_name} 不存在，跳过删除。")
+                    ele = item.get_find_element_xpath('//p[text()="物料代码"]/ancestor::div[2]//input')
+                    ele.send_keys(Keys.CONTROL, "a")
+                    ele.send_keys(Keys.DELETE)
                     continue
 
                 item.delete_item(item_name)  # 确认存在后再调用删除方法
                 sleep(1)
             except Exception as e:
+                ele = item.get_find_element_xpath('//p[text()="物料代码"]/ancestor::div[2]//input')
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)
                 print(f"删除物品 {item_name} 时发生异常: {e}")
 
         page.click_button('(//span[text()="工艺产能"])[1]')  # 点击工艺产能
@@ -95,14 +101,14 @@ class TestDeleteStart:
             # 获取表格中订单代码为"1测试C订单"的第一行和第二行的资源信息
             ele_resource1 = previewPlan.get_find_element_xpath(
                 '//table[.//td[4]//span[text()="1测试C订单"]]//tr[1]/td[7]'
-            ).text
+            ).get_attribute("innerText")
             ele_resource2 = previewPlan.get_find_element_xpath(
                 '//table[.//td[4]//span[text()="1测试C订单"]]//tr[2]/td[7]'
-            ).text
+            ).get_attribute("innerText")
 
             # 检查获取到的资源信息是否与共享数据中的资源信息一致
             if ele_resource1 == resource1 and ele_resource2 == resource2:
-                sleep(2)
+                sleep(3)
                 previewPlan.click_button(
                     '//table[@class="vxe-table--header"]//th[2]/div/span/span'
                 )

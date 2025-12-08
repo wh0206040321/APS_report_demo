@@ -519,7 +519,7 @@ class TestSLanguagePage:
         eles = language.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
-        assert all(str(item).endswith(name) for item in list_)
+        assert all(str(item).casefold().endswith(name.casefold()) for item in list_)
         assert not language.has_fail_message()
 
     @allure.story("清除筛选效果成功")

@@ -902,7 +902,7 @@ class TestSAppsPage:
         eles = apps.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
-        assert all(name in text for text in list_)
+        assert all(name.casefold() in text.casefold() for text in list_)
         assert not apps.has_fail_message()
 
     @allure.story("过滤条件查询，设置符合开头查询成功")

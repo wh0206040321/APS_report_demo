@@ -262,7 +262,7 @@ class TestItemPage:
         # 获取重复弹窗文字
         error_popup = item.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
-        ).text
+        ).get_attribute("innerText")
         assert (
             error_popup == "记录已存在,请检查！"
         ), f"预期数据是记录已存在,请检查，实际得到{error_popup}"
@@ -322,7 +322,7 @@ class TestItemPage:
         # 获取重复弹窗文字
         error_popup = item.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
-        ).text
+        ).get_attribute("innerText")
         assert error_popup == "记录已存在,请检查！", f"预期数据{error_popup}"
         assert not item.has_fail_message()
 
@@ -966,6 +966,9 @@ class TestItemPage:
             f'//label[text()="生产特征{i}"]/following-sibling::div//i'
             for i in range(1, 11)
         ]
+        # 替换第一个元素
+        spe_xpath_list[0] = '//label[text()="颜色"]/following-sibling::div//i'
+
         box_list = [
             '//label[text()="物料组代码"]/following-sibling::div//i',
             '//label[text()="BASE物料"]/following-sibling::div//i',

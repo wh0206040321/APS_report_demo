@@ -129,7 +129,7 @@ class TestMasterPage:
             '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]'
         )
         master.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
-
+        sleep(1)
         # 填写工序编号
         master.enter_texts(
             '//table[.//div[@class="vxe-input type--number size--mini"]]//tr[1]/td[2]//input',
@@ -139,10 +139,9 @@ class TestMasterPage:
         master.click_button(
             '//table[@class="vxe-table--body"]//tr[1]/td[3]//input[@placeholder="请选择"]'
         )
-        random_int = random.randint(1, 4)
         # 输入工序代码
         master.click_button(
-            f'(//div[@class="vxe-select-option--wrapper"])[1]/div[{random_int}]'
+            f'(//div[@class="vxe-select-option--wrapper"])[1]/div[1]'
         )
 
         # 点击确定
@@ -416,7 +415,7 @@ class TestMasterPage:
         # 获取重复弹窗文字
         error_popup = master.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
-        ).text
+        ).get_attribute("innerText")
         assert (
             error_popup == "记录已存在,请检查！"
         ), f"预期数据是记录已存在,请检查，实际得到{error_popup}"

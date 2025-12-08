@@ -647,8 +647,30 @@ class TestChangeSpecPage:
             '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         sleep(1)
-        eles = driver.find_elements(By.XPATH, '//div[text()=" 记录已存在,请检查！ "]')
-        assert len(eles) == 1
+        error_popup = change.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        assert error_popup == "记录已存在,请检查！"
+        assert not change.has_fail_message()
+
+    @allure.story("取消删除数据")
+    # @pytest.mark.run(order=1)
+    def test_changespec_delcancel(self, login_to_changespec):
+        driver = login_to_changespec  # WebDriver 实例
+        change = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        # 定位第一行
+        change.click_button(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
+        )
+        changedata1 = change.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
+        ).text
+        change.click_del_button()  # 点击删除
+        # 点击取消
+        change.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="取消"]')
+        # 定位第一行
+        changedata = change.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
+        ).text
+        assert changedata1 == changedata, f"预期{changedata}"
         assert not change.has_fail_message()
 
     @allure.story("删除数据成功")
@@ -681,28 +703,6 @@ class TestChangeSpecPage:
                 before_data != after_data and
                 len(ele) == 0
         ), f"删除后的数据{after_data}，删除前的数据{before_data}"
-        assert not change.has_fail_message()
-
-    @allure.story("取消删除数据")
-    # @pytest.mark.run(order=1)
-    def test_changespec_delcancel(self, login_to_changespec):
-        driver = login_to_changespec  # WebDriver 实例
-        change = ChangeR(driver)  # 用 driver 初始化 ChangeR
-        # 定位第一行
-        change.click_button(
-            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
-        )
-        changedata1 = change.get_find_element_xpath(
-            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
-        ).text
-        change.click_del_button()  # 点击删除
-        # 点击取消
-        change.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="取消"]')
-        # 定位第一行
-        changedata = change.get_find_element_xpath(
-            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
-        ).text
-        assert changedata1 == changedata, f"预期{changedata}"
         assert not change.has_fail_message()
 
     @allure.story("刷新成功")
@@ -1009,7 +1009,7 @@ class TestChangeSpecPage:
 
         code_value = '//span[text()="AdvanceAlongResourceWorkingTime"]'
         code_list = [
-            '//label[text()="切换时间调整表达式"]/following-sibling::div//i',
+            '//label[text()="前设置时间调整表达式"]/following-sibling::div//i',
         ]
         adds.batch_modify_code_box(code_list, code_value)
 

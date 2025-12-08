@@ -234,7 +234,7 @@ class TestCustomerPage:
         # 获取重复弹窗文字
         error_popup = customer.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
-        ).text
+        ).get_attribute("innerText")
         assert (
             error_popup == "记录已存在,请检查！"
         ), f"预期数据是记录已存在,请检查，实际得到{error_popup}"
@@ -293,7 +293,7 @@ class TestCustomerPage:
         # 获取重复弹窗文字
         error_popup = customer.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
-        ).text
+        ).get_attribute("innerText")
         assert error_popup == "记录已存在,请检查！", f"预期数据{error_popup}"
         assert not customer.has_fail_message()
 

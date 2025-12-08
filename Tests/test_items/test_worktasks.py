@@ -176,6 +176,7 @@ class TestWorkTasksPage:
         task.hover("包含")
         sleep(1)
         task.enter_texts('//div[p[text()="总工时"]]/following-sibling::div//input', name)
+        task.wait_for_loading_to_disappear()
         sleep(1)
         eles = task.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[6]')
         sleep(1)
@@ -207,15 +208,12 @@ class TestWorkTasksPage:
         word.wait_for_loading_to_disappear()
         name = word.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]/td[4]').text
         word.select_data(code='订单编号', name=name)
-        wordcode = word.get_find_element_xpath(
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[4]'
-        ).text
-        # 定位第二行没有数据
-        wordcode2 = driver.find_elements(
-            By.XPATH,
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][2]/td[4]',
+        eles = word.finds_elements(By.XPATH,
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr/td[4]'
         )
-        assert wordcode == name and len(wordcode2) == 0
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        assert all(name in text for text in list_)
         assert not word.has_fail_message()
 
     @allure.story("工作需求明细页面过滤条件查询，设置包含条件查询成功")

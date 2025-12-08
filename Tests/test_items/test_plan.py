@@ -194,7 +194,7 @@ class TestPlanPage:
         sleep(1)
         # 选择第一个方案
         sched_text = sched.get_find_element_xpath(
-            '//div[@class="ivu-tree"]//li/ul[1]'
+            '//div[@class="ivu-tree"]/ul/li/ul[1]/li/span[@class="ivu-tree-title"]'
         ).text
         sched.click_button('//div[@class="ivu-tree"]//li/ul[1]')
         sched.click_attribute_button()

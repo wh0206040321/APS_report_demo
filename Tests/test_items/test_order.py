@@ -399,7 +399,7 @@ class TestOrderPage:
         # 获取重复弹窗文字
         error_popup = order.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
-        ).text
+        ).get_attribute("innerText")
         assert (
             error_popup == "记录已存在,请检查！"
         ), f"预期数据是记录已存在,请检查，实际得到{error_popup}"
@@ -478,7 +478,7 @@ class TestOrderPage:
         # 获取重复弹窗文字
         error_popup = order.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
-        ).text
+        ).get_attribute("innerText")
         assert error_popup == "记录已存在,请检查！", f"预期数据{error_popup}"
         assert not order.has_fail_message()
 
@@ -1125,6 +1125,8 @@ class TestOrderPage:
             f'//label[text()="自定义数字{i}"]/following-sibling::div//input'
             for i in range(1, 51)
         ]
+        # 替换第 2 个元素（索引 1）
+        num_xpath_list2[1] = '//label[text()="前回PO数量"]/following-sibling::div//input'
 
         num_list = [
             '//label[text()="计划数量"]/following-sibling::div//input',

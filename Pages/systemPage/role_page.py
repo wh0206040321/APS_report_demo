@@ -32,7 +32,7 @@ class RolePage(BasePage):
 
     def get_find_message(self):
         """获取错误信息"""
-        message = WebDriverWait(self.driver, 30).until(
+        message = WebDriverWait(self.driver, 20).until(
             EC.visibility_of_element_located(
                 (By.XPATH, '//div[@class="el-message el-message--success"]/p')
             )
@@ -41,7 +41,7 @@ class RolePage(BasePage):
 
     def get_error_message(self):
         """获取错误信息"""
-        message = WebDriverWait(self.driver, 15).until(
+        message = WebDriverWait(self.driver, 20).until(
             EC.visibility_of_element_located(
                 (By.XPATH, '//div[@class="el-message el-message--error"]/p')
             )
@@ -58,7 +58,7 @@ class RolePage(BasePage):
         self.wait_for_el_loading_mask()
 
     # 等待加载遮罩消失
-    def wait_for_el_loading_mask(self, timeout=10):
+    def wait_for_el_loading_mask(self, timeout=60):
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
         )

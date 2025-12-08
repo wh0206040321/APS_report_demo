@@ -620,9 +620,31 @@ class TestChangeRPage:
             '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         sleep(1)
-        eles = driver.find_elements(By.XPATH, '//div[text()=" 记录已存在,请检查！ "]')
-        assert len(eles) == 1
+        error_popup = change.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        assert error_popup == "记录已存在,请检查！"
         assert not change.has_fail_message()
+
+    @allure.story("取消删除数据")
+    # @pytest.mark.run(order=1)
+    def test_changer_delcancel(self, login_to_changeR):
+        driver = login_to_changeR  # WebDriver 实例
+        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        # 定位第一行
+        changeR.click_button(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
+        )
+        changeRdata1 = changeR.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
+        ).text
+        changeR.click_del_button()  # 点击删除
+        # 点击取消
+        changeR.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="取消"]')
+        # 定位第一行
+        changeRdata = changeR.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
+        ).text
+        assert changeRdata1 == changeRdata, f"预期{changeRdata}"
+        assert not changeR.has_fail_message()
 
     @allure.story("删除数据成功")
     # @pytest.mark.run(order=1)
@@ -656,28 +678,6 @@ class TestChangeRPage:
                 len(ele) == 0
         ), f"删除后的数据{after_data}，删除前的数据{before_data}"
         assert not change.has_fail_message()
-
-    @allure.story("取消删除数据")
-    # @pytest.mark.run(order=1)
-    def test_changer_delcancel(self, login_to_changeR):
-        driver = login_to_changeR  # WebDriver 实例
-        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
-        # 定位第一行
-        changeR.click_button(
-            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
-        )
-        changeRdata1 = changeR.get_find_element_xpath(
-            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
-        ).text
-        changeR.click_del_button()  # 点击删除
-        # 点击取消
-        changeR.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="取消"]')
-        # 定位第一行
-        changeRdata = changeR.get_find_element_xpath(
-            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]'
-        ).text
-        assert changeRdata1 == changeRdata, f"预期{changeRdata}"
-        assert not changeR.has_fail_message()
 
     @allure.story("刷新成功")
     # @pytest.mark.run(order=1)

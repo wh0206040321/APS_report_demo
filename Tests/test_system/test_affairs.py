@@ -253,7 +253,7 @@ class TestAffairsPage:
         affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
         affairs.click_add_affairs(type="存储过程", button=False)
         affairs.click_button('//div[p[text()="存储过程列表:"]]//i')
-        affairs.click_button('//li[text()="APS_MP_Holiday"]')
+        affairs.click_button('//div[p[text()="存储过程列表:"]]//ul[@class="ivu-select-dropdown-list"]/li[1]')
         affairs.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         mes = affairs.get_error_message()
@@ -269,7 +269,7 @@ class TestAffairsPage:
         type = "存储过程"
         affairs.click_add_affairs(name=name, type=type, button=False)
         affairs.click_button('//div[p[text()="存储过程列表:"]]//i')
-        affairs.click_button('//li[text()="APS_MP_Holiday"]')
+        affairs.click_button('//div[p[text()="存储过程列表:"]]//ul[@class="ivu-select-dropdown-list"]/li[1]')
         num = len(driver.find_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr'))
         for i in range(1, 1+num):
             affairs.enter_texts(f'//table[@class="vxe-table--body"]//tr[{i}]/td[3]//input', "1")
@@ -477,7 +477,8 @@ class TestAffairsPage:
         sleep(1)
         affairs.click_button('//div[label[text()="配置参数"]]//i[@class="ivu-icon ivu-icon-md-albums paramIcon"]')
         affairs.click_button('//div[p[text()="存储过程列表:"]]//i')
-        affairs.click_button('//li[text()="APS_MP_Holiday"]')
+        affairs.click_button('//div[p[text()="存储过程列表:"]]//ul[@class="ivu-select-dropdown-list"]/li[1]')
+        text_ = affairs.get_find_element_xpath('//div[p[text()="存储过程列表:"]]//input').get_attribute("value")
         num = len(driver.find_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr'))
         for i in range(1, 1 + num):
             affairs.enter_texts(f'//table[@class="vxe-table--body"]//tr[{i}]/td[3]//input', "1")
@@ -492,7 +493,7 @@ class TestAffairsPage:
         affairs.get_find_message()
         ele = driver.find_elements(By.XPATH, f'//div[@class="template-card__title"]/div[text()="{name}"]')
         value = ele[0].find_element(By.XPATH, './ancestor::div[3]/div[3]/div').text
-        assert len(ele) == 1 and value == type_ and 'APS_MP_Holiday' in before_parameter
+        assert len(ele) == 1 and value == type_ and text_ in before_parameter
         assert not affairs.has_fail_message()
 
     @allure.story("事务模版-切换事务类型，配置参数刷新")

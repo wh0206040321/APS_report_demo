@@ -444,7 +444,7 @@ class TestProductionPage:
         sleep(1)
         text = production.get_find_element_xpath(
             '//p[text()="当前工作已【结束】，是否需要修改成【开始生产】？"]'
-        ).text
+        ).get_attribute("innerText")
         # 点击否
         production.click_button('//div[@class="el-message-box__btns"]/button[1]')
         production.wait_for_loading_to_disappear()
@@ -746,10 +746,10 @@ class TestProductionPage:
         )
         production.click_button(f'//li[text()="{name}:2"]')
         production.click_button('//span[text()="查询"]')
-        sleep(1)
+        production.wait_for_loading_to_disappear()
         ele1 = production.get_find_element_xpath(
             '(//table[@class="vxe-table--body"])[2]/tbody/tr[1]/td[2]'
-        ).text
+        ).get_attribute('innerText')
         ele2 = driver.find_elements(
             By.XPATH, '(//table[@class="vxe-table--body"])[2]/tbody/tr[2]/td[3]'
         )
@@ -769,13 +769,13 @@ class TestProductionPage:
         )
         production.click_button(f'//li[text()="{resource2}"]')
         production.click_button('//span[text()="查询"]')
-        sleep(1)
+        production.wait_for_loading_to_disappear()
         ele1 = production.get_find_element_xpath(
             '(//table[@class="vxe-table--body"])[2]/tbody/tr[1]/td[2]'
-        ).text
+        ).get_attribute('innerText')
         ele2 = production.get_find_element_xpath(
             '(//table[@class="vxe-table--body"])[2]/tbody/tr[1]/td[4]'
-        ).text
+        ).get_attribute('innerText')
         ele3 = driver.find_elements(
             By.XPATH, '(//table[@class="vxe-table--body"])[2]/tbody/tr[2]/td[3]'
         )
@@ -792,13 +792,13 @@ class TestProductionPage:
         )
         production.click_button('//li[text()="1测试B"]')
         production.click_button('//span[text()="查询"]')
-        sleep(1)
+        production.wait_for_loading_to_disappear()
         ele1 = production.get_find_element_xpath(
             '(//table[@class="vxe-table--body"])[2]/tbody/tr[1]/td[2]'
-        ).text
+        ).get_attribute('innerText')
         ele2 = production.get_find_element_xpath(
             '(//table[@class="vxe-table--body"])[2]/tbody/tr[1]/td[3]'
-        ).text
+        ).get_attribute('innerText')
         ele3 = driver.find_elements(
             By.XPATH, '(//table[@class="vxe-table--body"])[2]/tbody/tr[2]/td[3]'
         )

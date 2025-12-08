@@ -117,7 +117,7 @@ class TestSInterfaceConfigurationPage:
         ]
         adds.batch_modify_select_input(select_list)
         interfaceconfiguration.click_button('//div[label[text()="授权计划单元:"]]//input[@type="text"]')
-        select_list = [{"select": '//div[label[text()="接口环境:"]]//span', "value": f'(//li[text()="测试"])[2]'}]
+        select_list = [{"select": '//div[label[text()="接口环境:"]]//span', "value": f'(//li[text()="测试"])[last()]'}]
         adds.batch_modify_select_input(select_list)
 
         interfaceconfiguration.click_confirm()
@@ -157,7 +157,7 @@ class TestSInterfaceConfigurationPage:
         ]
         adds.batch_modify_select_input(select_list)
         interfaceconfiguration.click_button('//div[label[text()="授权计划单元:"]]//input[@type="text"]')
-        select_list = [{"select": '//div[label[text()="接口环境:"]]//span', "value": f'(//li[text()="测试"])[2]'}]
+        select_list = [{"select": '//div[label[text()="接口环境:"]]//span', "value": f'(//li[text()="测试"])[last()]'}]
         adds.batch_modify_select_input(select_list)
 
         interfaceconfiguration.click_confirm()
@@ -191,7 +191,7 @@ class TestSInterfaceConfigurationPage:
         ]
         adds.batch_modify_select_input(select_list)
         interfaceconfiguration.click_button('//div[label[text()="授权计划单元:"]]//input[@type="text"]')
-        select_list = [{"select": '//div[label[text()="接口环境:"]]//span', "value": f'(//li[text()="测试"])[2]'}]
+        select_list = [{"select": '//div[label[text()="接口环境:"]]//span', "value": f'(//li[text()="测试"])[last()]'}]
         adds.batch_modify_select_input(select_list)
 
         interfaceconfiguration.click_confirm()

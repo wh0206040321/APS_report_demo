@@ -159,15 +159,14 @@ class Coverage(BasePage):
         if num != "":
             # 点击资源
             self.click_button(
-                '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
+                '//div[@id="2ssy7pog-1nb7"]//i'
             )
             # 勾选框
-            random_int = random.randint(2, 10)
-            sleep(1)
-            self.click_button(f'(//span[@class="vxe-cell--checkbox"])[{random_int}]')
+            self.wait_for_loading_to_disappear()
+            self.click_button(f'//table[@class="vxe-table--body"]//tr[3]/td[2]//span[@class="vxe-cell--checkbox"]')
             sleep(1)
             self.click_button(
-                '(//div[@class="h-40px flex-justify-end vxe-modal-footer1 flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+                '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
             )
             sleep(1)
             # 获取勾选的资源代码

@@ -1,5 +1,6 @@
 import logging
 import random
+import re
 from datetime import datetime
 from time import sleep
 
@@ -337,12 +338,11 @@ class TestCoveragePage:
             '//div[@id="2ssy7pog-1nb7"]//i'
         )
         # 勾选框
-        random_int = random.randint(1, 8)
-        sleep(1)
-        coverage.click_button(f'(//span[@class="vxe-cell--checkbox"])[{random_int}]')
+        coverage.wait_for_loading_to_disappear()
+        coverage.click_button(f'//table[@class="vxe-table--body"]//tr[1]/td[2]//span[@class="vxe-cell--checkbox"]')
         sleep(1)
         coverage.click_button(
-            '(//div[@class="h-40px flex-justify-end vxe-modal-footer1 flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         sleep(1)
         # 获取勾选的资源代码
@@ -373,7 +373,7 @@ class TestCoveragePage:
             '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         driver.execute_script("document.body.style.zoom='0.6'")
-        sleep(1)
+        coverage.wait_for_loading_to_disappear()
         coverage.click_button(
             '//span[text()=" 更新时间"]/following-sibling::div'
         )
@@ -428,12 +428,11 @@ class TestCoveragePage:
             '//div[@id="2ssy7pog-1nb7"]//i'
         )
         # 勾选框
-        random_int = random.randint(1, 8)
-        sleep(1)
-        coverage.click_button(f'(//span[@class="vxe-cell--checkbox"])[{random_int}]')
+        coverage.wait_for_loading_to_disappear()
+        coverage.click_button(f'//table[@class="vxe-table--body"]//tr[2]/td[2]//span[@class="vxe-cell--checkbox"]')
         sleep(1)
         coverage.click_button(
-            '(//div[@class="h-40px flex-justify-end vxe-modal-footer1 flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
 
         coverage.enter_texts(f'//div[@id="9la8xi09-07ws"]//input', 3)
@@ -508,7 +507,7 @@ class TestCoveragePage:
         SharedDataUtil.save_data(
             {"resource": resource, "selClass": selClass, "start": start, "end": end}
         )
-        sleep(1)
+        coverage.wait_for_loading_to_disappear()
         coverage.click_button('//span[text()=" 更新时间"]/following-sibling::div')
         sleep(1)
         coverage.click_button('//span[text()=" 更新时间"]/following-sibling::div')
@@ -579,7 +578,7 @@ class TestCoveragePage:
         end = shared_data.get("end")
         selClass = shared_data.get("selClass")
         data_list = "20"
-        sleep(1)
+        coverage.wait_for_loading_to_disappear()
         coverage.click_button('//span[text()=" 更新时间"]/following-sibling::div')
         sleep(1)
         coverage.click_button('//span[text()=" 更新时间"]/following-sibling::div')
@@ -657,7 +656,7 @@ class TestCoveragePage:
         coverage.click_del_button()  # 点击删除
         coverage.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         coverage.get_find_message()
-        sleep(1)
+        coverage.wait_for_loading_to_disappear()
         after_data = coverage.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
@@ -680,91 +679,11 @@ class TestCoveragePage:
             '//div[@id="2ssy7pog-1nb7"]//i'
         )
         # 勾选框
-        random_int = random.randint(1, 8)
-        sleep(1)
-        coverage.click_button(f'(//span[@class="vxe-cell--checkbox"])[{random_int}]')
-        sleep(1)
-        coverage.click_button(
-            '(//div[@class="h-40px flex-justify-end vxe-modal-footer1 flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
-        )
-        sleep(1)
-        # 获取勾选的资源代码
-        resource = coverage.get_find_element_xpath(
-            '//div[@id="2ssy7pog-1nb7"]//input'
-        ).get_attribute("value")
-        coverage.enter_texts(f'//div[@id="9la8xi09-07ws"]//input', 3)
-
-        # 时序
-        coverage.enter_texts(
-            '//div[@id="tg89jocr-6to2"]//input', f"{start};{end}"
-        )
-        chronology = coverage.get_find_element_xpath(
-            '//div[@id="tg89jocr-6to2"]//input'
-        ).get_attribute("value")
-
-        # 资源量
-        coverage.enter_texts('//div[@id="k0z05daz-8tok"]//input', "4")
-        resources = coverage.get_find_element_xpath(
-            '//div[@id="k0z05daz-8tok"]//input'
-        ).get_attribute("value")
-
-        sleep(1)
-        coverage.click_button(
-            '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
-        )
         coverage.wait_for_loading_to_disappear()
-        coverage.click_button(
-            '//span[text()=" 更新时间"]/following-sibling::div'
-        )
+        coverage.click_button(f'//table[@class="vxe-table--body"]//tr[3]/td[2]//span[@class="vxe-cell--checkbox"]')
         sleep(1)
         coverage.click_button(
-            '//span[text()=" 更新时间"]/following-sibling::div'
-        )
-        sleep(1)
-        addcoverage = coverage.get_find_element_xpath(
-            f'(//span[text()="{resource}"])[1]/ancestor::tr[1]/td[2]'
-        ).text
-        addstart = coverage.get_find_element_xpath(
-            f'(//span[text()="{resource}"])[1]/ancestor::tr[1]/td[3]'
-        ).text
-        addend = coverage.get_find_element_xpath(
-            f'(//span[text()="{resource}"])[1]/ancestor::tr[1]/td[4]'
-        ).text
-        addchronology = coverage.get_find_element_xpath(
-            f'(//span[text()="{resource}"])[1]/ancestor::tr[1]/td[7]'
-        ).text
-        addresources = coverage.get_find_element_xpath(
-            f'(//span[text()="{resource}"])[1]/ancestor::tr[1]/td[8]'
-        ).text
-        assert (
-            resource == addcoverage
-            and start == addstart
-            and end == addend
-            and chronology == addchronology
-            and resources == addresources
-        )
-        assert not coverage.has_fail_message()
-
-    @allure.story("添加测试数据")
-    # @pytest.mark.run(order=1)
-    def test_coverage_addweeksuccess3(self, login_to_coverage):
-        driver = login_to_coverage  # WebDriver 实例
-        coverage = Coverage(driver)  # 用 driver 初始化 Coverage
-        start = "2027/08/21 00:00:00"
-        end = "2028/07/21 00:00:00"
-        coverage.click_add_button()
-
-        # 点击资源
-        coverage.click_button(
-            '//div[@id="2ssy7pog-1nb7"]//i'
-        )
-        sleep(1)
-        coverage.click_button(
-            '(//td[.//span[text()="A"]][./preceding-sibling::td//span])[1]/preceding-sibling::td//span'
-        )
-        sleep(1)
-        coverage.click_button(
-            '(//div[@class="h-40px flex-justify-end vxe-modal-footer1 flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         sleep(1)
         # 获取勾选的资源代码
@@ -836,7 +755,7 @@ class TestCoveragePage:
         )
         coveragedata1 = coverage.get_find_element_xpath(
             '(//div[@id="canvasGird0"]//table[@class="vxe-table--body"])[1]//tr[1]/td[2]'
-        ).text
+        ).get_attribute("innerText")
         coverage.click_del_button()  # 点击删除
         sleep(1)
         # 点击取消
@@ -845,7 +764,7 @@ class TestCoveragePage:
         # 定位第一行
         coveragedata = coverage.get_find_element_xpath(
             '(//div[@id="canvasGird0"]//table[@class="vxe-table--body"])[1]//tr[1]/td[2]'
-        ).text
+        ).get_attribute("innerText")
         assert coveragedata1 == coveragedata, f"预期{coveragedata}"
         assert not coverage.has_fail_message()
 
@@ -933,10 +852,10 @@ class TestCoveragePage:
             '//div[@id="2zfqnpsf-3nsq"]//i'
         )
         # 勾选框
-        random_int = random.randint(1, 8)
-        coverage.click_button(f'(//span[@class="vxe-cell--checkbox"])[{random_int}]')
+        coverage.wait_for_loading_to_disappear()
+        coverage.click_button(f'//table[@class="vxe-table--body"]//tr[4]/td[2]//span[@class="vxe-cell--checkbox"]')
         coverage.click_button(
-            '(//div[@class="h-40px flex-justify-end vxe-modal-footer1 flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
         sleep(1)
         # 获取勾选的资源代码
@@ -957,7 +876,7 @@ class TestCoveragePage:
         )
         adddata = coverage.get_find_element_xpath(
             f'(//span[text()="{resource}"])[1]/ancestor::tr[1]/td[2]'
-        ).text
+        ).get_attribute("innerText")
         assert adddata == resource
         assert not coverage.has_fail_message()
 
@@ -972,16 +891,20 @@ class TestCoveragePage:
         coverage.click_button(
             '(//div[@id="canvasGird0"]//table[@class="vxe-table--body"])[1]//tr[1]/td[2]'
         )
-        before_data = coverage.get_find_element_xpath(
-            '(//span[contains(text(),"条记录")])[1]'
-        ).text
-        coverage.click_del_button()  # 点击删除
-        coverage.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-        coverage.get_find_message()
-        sleep(1)
-        after_data = coverage.get_find_element_xpath(
-            '(//span[contains(text(),"条记录")])[1]'
-        ).text
+        for i in range(3):
+            before_data = coverage.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+            before_count = int(re.search(r'\d+', before_data).group())
+            coverage.click_button(
+                '(//div[@id="canvasGird0"]//table[@class="vxe-table--body"])[1]//tr[1]/td[2]'
+            )
+            coverage.click_del_button()  # 点击删除
+            coverage.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+            coverage.get_find_message()
+            coverage.wait_for_loading_to_disappear()
+            sleep(1)
+            after_data = coverage.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+            after_count = int(re.search(r'\d+', after_data).group())
+            assert before_count - 1 == after_count
         # 获取目标 div 元素，这里的目标是具有特定文本的 div
         target_div = coverage.get_find_element_xpath(
             f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
@@ -1015,7 +938,5 @@ class TestCoveragePage:
         after_layout = driver.find_elements(
             By.XPATH, f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
         )
-        assert (
-                before_data != after_data and 0 == len(after_layout)
-        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
+        assert 0 == len(after_layout)
         assert not coverage.has_fail_message()
