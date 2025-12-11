@@ -1,4 +1,6 @@
 import subprocess
+import allure
+from allure_commons.types import AttachmentType
 
 import pytest
 import os
@@ -50,47 +52,92 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)  # 创建一个日志记录器，用于记录当前模块的日志
 
 
+def capture_and_attach(driver, test_name: str, recipient: str = None):
+    """
+       截图并保存到指定目录，同时附加到 Allure 报告，返回文件路径。
+    """
+    screenshot_dir = os.path.abspath("report/screenshots")
+    os.makedirs(screenshot_dir, exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"{test_name}_{id(driver)}_{timestamp}.png"
+    file_path = os.path.join(screenshot_dir, filename)
+
+    # 保存截图到文件
+    driver.save_screenshot(file_path)
+    logger.info(f"[{test_name}] 截图已保存：{file_path}")
+
+    # ✅ 附加到 Allure 报告
+    with open(file_path, "rb") as f:
+        allure.attach(f.read(), name=test_name, attachment_type=AttachmentType.PNG)
+
+    # 如果需要，可以在这里调用邮件发送逻辑
+    if recipient:
+        # send_test_failure_email(...) 或者其他逻辑
+        pass
+
+    # 返回文件路径，方便外部调用打印
+    return file_path
+
+# 公共截图函数
+def try_capture(test_name: str):
+    for driver in list(all_driver_instances.values()):
+        alive = isinstance(driver, WebDriver) and is_driver_alive(driver)
+        logger.info(f"[DEBUG] try_capture for {test_name}, driver_id={id(driver)}, alive={alive}")
+        if alive:
+            try:
+                file_path = capture_and_attach(driver, test_name, recipient="1121470915@qq.com")
+                logger.info(f"[DEBUG] 截图成功: {test_name}, 文件路径: {file_path}")
+            except Exception as e:
+                logger.warning(f"[DEBUG] 截图失败: {test_name}, error={e}")
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_fixture_setup(fixturedef, request):
+    """
+    fixture 初始化阶段报错时截图
+    """
+    outcome = yield
+    if outcome.excinfo is not None:
+        test_name = sanitize_filename(request.node.nodeid)
+        logger.warning(f"[DEBUG] fixture_setup failed: {fixturedef.argname}")
+        try_capture(test_name)
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_fixture_post_finalizer(fixturedef, request):
+    """
+    fixture 结束阶段报错时截图（比如 scope="module" 的 yield 后出错）
+    """
+    outcome = yield
+    if outcome.excinfo is not None:
+        test_name = sanitize_filename(request.node.nodeid)
+        logger.warning(f"[DEBUG] fixture_teardown failed: {fixturedef.argname}")
+        try_capture(test_name)
+
 def sanitize_filename(name: str) -> str:
-    """
-    清理文件名中的非法字符
-
-    参数:
-    name: str - 原始文件名
-
-    返回:
-    str - 替换非法字符后的文件名
-    """
+    """清理文件名中的非法字符"""
     return re.sub(r'[\\/*?:"<>|]', "_", name)
-
 
 @pytest.hookimpl(tryfirst=True)
 def pytest_sessionstart(session):
-    """
-    在测试会话开始前清除并创建截图目录
-
-    参数:
-    session - 当前测试会话对象
-    """
+    """测试会话开始前清理截图目录"""
     if os.path.exists(SCREENSHOT_DIR):
         shutil.rmtree(SCREENSHOT_DIR)
     os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
-
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """
-    在每个测试项执行后生成报告，记录第一次失败
+    在每个测试项执行后生成报告，记录第一次失败并截图
     """
     outcome = yield
     report = outcome.get_result()
 
     test_name = sanitize_filename(item.nodeid.split("::")[-1])
-    test_id = item.nodeid  # 使用完整nodeid作为唯一标识
+    test_id = item.nodeid
 
-    # 记录第一次执行的结果
     if report.when == "call":
         if report.failed:
-            # 如果是第一次失败，记录下来
             if test_id not in first_time_failures:
                 first_time_failures[test_id] = {
                     'name': test_name,
@@ -98,38 +145,20 @@ def pytest_runtest_makereport(item, call):
                     'rerun': False
                 }
                 logger.info(f"📝 记录第一次失败: {test_name}")
-
-            # 如果是重运行时仍然失败
             elif hasattr(item, 'execution_count') and item.execution_count > 1:
                 first_time_failures[test_id]['rerun'] = True
-                # 只有重运行时也失败才添加到最终失败列表
                 if test_name not in test_failures:
                     test_failures.append(test_name)
-                    logger.info(f"❌ 重试后仍然失败，记录到最终失败列表: {test_name}")
+                    logger.info(f"❌ 重试后仍然失败: {test_name}")
         else:
-            # 如果测试通过
             if test_id in first_time_failures and hasattr(item, 'execution_count') and item.execution_count > 1:
-                # 重试后成功，从第一次失败记录中移除
-                logger.info(f"✅ 重试后成功，不记录失败: {test_name}")
-                if test_id in first_time_failures:
-                    del first_time_failures[test_id]
-    # 原有的截图逻辑
-    if report.failed and report.when in ("setup", "call"):
-        for driver in list(all_driver_instances.values()):
-            # 检查实例是否为WebDriver类型
-            if isinstance(driver, WebDriver):
-                # debug信息：判断driver是否存活
-                logging.debug(f"[{test_name}] 正在判断 driver: {id(driver)} 是否存活")
-                # 如果driver已退出，则记录警告并跳过截图操作
-                if not is_driver_alive(driver):
-                    logging.warning(f"[{test_name}] driver {id(driver)} 已退出，跳过截图")
-                    continue
-                try:
-                    # 尝试执行截图并附加到报告中，同时指定邮件接收方
-                    capture_and_attach(driver, test_name, recipient="1121470915@qq.com")
-                except Exception as e:
-                    # 如果截图失败，记录警告信息
-                    logger.warning(f"自动截图失败：{e}")
+                logger.info(f"✅ 重试后成功: {test_name}")
+                del first_time_failures[test_id]
+
+    # 覆盖 setup/call/teardown 阶段失败
+    if report.failed and report.when in ("setup", "call", "teardown"):
+        logger.info(f"[DEBUG] {test_name} failed at {report.when}")
+        try_capture(test_name)
 
 
     # # 原有的截图逻辑
@@ -181,13 +210,18 @@ def function_driver():
     safe_quit(driver)
 
 
-@pytest.fixture(scope="module")  # 模块级别
+@pytest.fixture(scope="module")
 def module_driver():
     driver_path = DateDriver().driver_path
     driver = create_driver(driver_path)
     driver.set_window_size(1920, 1080)
-    yield driver
-    safe_quit(driver)
+    try:
+        yield driver
+    except Exception:
+        try_capture("module_driver_teardown_failed")
+        raise
+    finally:
+        safe_quit(driver)
 
 
 def pytest_sessionfinish(session, exitstatus):

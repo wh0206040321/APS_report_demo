@@ -20,7 +20,7 @@ from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 from Utils.shared_data_util import SharedDataUtil
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_coverage():
     driver = None
     try:
@@ -97,6 +97,8 @@ class TestCoveragePage:
         chronology_box_color = chronology_box.value_of_css_property("border-color")
         resources_box_color = resources_box.value_of_css_property("border-color")
         expected_color = "rgb(255, 0, 0)"  # 红色的 rgb 值
+        coverage.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        coverage.right_refresh('覆盖日历')
         assert resource_box_color == expected_color
         assert chronology_box_color == expected_color
         assert resources_box_color == expected_color
@@ -120,6 +122,8 @@ class TestCoveragePage:
         coveragenum = coverage.get_find_element_xpath(
             '//div[@id="9la8xi09-07ws"]//input'
         ).get_attribute("value")
+        coverage.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        coverage.right_refresh('覆盖日历')
         assert coveragenum == "1138", f"预期{coveragenum}"
         assert not coverage.has_fail_message()
 
@@ -140,6 +144,8 @@ class TestCoveragePage:
         # 获取表示顺序数字框
         key_list = list(xpath_value_map.keys())
         sequence_box_color = add.get_border_color(key_list)
+        coverage.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        coverage.right_refresh('覆盖日历')
         assert all(color == "rgb(255, 0, 0)" for color in sequence_box_color), f"预期{sequence_box_color}"
         assert not coverage.has_fail_message()
 
@@ -161,6 +167,8 @@ class TestCoveragePage:
         # 获取表示顺序数字框
         key_list = list(xpath_value_map.keys())
         sequence_box_color = add.get_border_color(key_list)
+        coverage.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        coverage.right_refresh('覆盖日历')
         assert all(color == "rgb(255, 0, 0)" for color in sequence_box_color), f"预期{sequence_box_color}"
         assert not coverage.has_fail_message()
 
@@ -182,6 +190,8 @@ class TestCoveragePage:
         # 获取表示顺序数字框
         key_list = list(xpath_value_map.keys())
         sequence_box_color = add.get_border_color(key_list)
+        coverage.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        coverage.right_refresh('覆盖日历')
         assert all(color == "rgb(255, 0, 0)" for color in sequence_box_color), f"预期{sequence_box_color}"
         assert not coverage.has_fail_message()
 
@@ -203,6 +213,8 @@ class TestCoveragePage:
         # 获取表示顺序数字框
         key_list = list(xpath_value_map.keys())
         sequence_box_color = add.get_border_color(key_list)
+        coverage.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        coverage.right_refresh('覆盖日历')
         assert all(color == "rgb(255, 0, 0)" for color in sequence_box_color), f"预期{sequence_box_color}"
         assert not coverage.has_fail_message()
 
@@ -224,6 +236,8 @@ class TestCoveragePage:
         # 获取表示顺序数字框
         key_list = list(xpath_value_map.keys())
         sequence_box_color = add.get_border_color(key_list)
+        coverage.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        coverage.right_refresh('覆盖日历')
         assert all(color == "rgb(220, 222, 226)" for color in sequence_box_color), f"预期{sequence_box_color}"
         assert not coverage.has_fail_message()
 
@@ -584,7 +598,7 @@ class TestCoveragePage:
         coverage.click_button('//span[text()=" 更新时间"]/following-sibling::div')
         sleep(1)
         # 缩放到最小（例如 25%）
-        driver.execute_script("document.body.style.zoom='0.25'")
+        driver.execute_script("document.body.style.zoom='0.8'")
         sleep(1)
 
         row_xpath = '(//div[@id="canvasGird0"]//table[@class="vxe-table--body"])[1]//tr[1]'
@@ -839,6 +853,7 @@ class TestCoveragePage:
     def test_coverage_editcodesuccess(self, login_to_coverage):
         driver = login_to_coverage  # WebDriver 实例
         coverage = Coverage(driver)  # 用 driver 初始化 Coverage
+        coverage.right_refresh('覆盖日历')
         coverage.wait_for_loading_to_disappear()
         # 定位第一行
         coverage.click_button(

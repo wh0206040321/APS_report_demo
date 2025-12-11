@@ -19,7 +19,7 @@ from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 from Utils.shared_data_util import SharedDataUtil
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_changeR():
     driver = None
     try:
@@ -96,6 +96,8 @@ class TestChangeRPage:
         borderitem_color1 = inputitem_box1.value_of_css_property("border-color")
         borderitem_color2 = inputitem_box2.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        changeR.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        changeR.right_refresh('资源切换')
         assert (
             borderresource_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{borderresource_color}"
@@ -143,6 +145,8 @@ class TestChangeRPage:
         borderitem_color1 = inputitem_box1.value_of_css_property("border-color")
         borderitem_color2 = inputitem_box2.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        changeR.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        changeR.right_refresh('资源切换')
         assert borderitem_color1 == expected_color, f"预期边框颜色为{borderitem_color1}"
         assert borderitem_color2 == expected_color, f"预期边框颜色为{borderitem_color1}"
         assert not changeR.has_fail_message()
@@ -191,6 +195,8 @@ class TestChangeRPage:
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        changeR.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        changeR.right_refresh('资源切换')
         assert border_color == expected_color, f"预期边框颜色为{border_color}"
         assert not changeR.has_fail_message()
 
@@ -254,6 +260,8 @@ class TestChangeRPage:
         )
         border_color = time.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        changeR.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        changeR.right_refresh('资源切换')
         assert border_color == expected_color, f"预期边框颜色为{border_color}"
         assert not changeR.has_fail_message()
 
@@ -316,6 +324,8 @@ class TestChangeRPage:
         )
         border_color = time.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        changeR.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        changeR.right_refresh('资源切换')
         assert border_color == expected_color, f"预期边框颜色为{border_color}"
         assert not changeR.has_fail_message()
 
@@ -342,6 +352,8 @@ class TestChangeRPage:
         changeRnum = changeR.get_find_element_xpath(
             '//label[text()="切换时间(分钟)"]/ancestor::div[1]//input[1]'
         ).get_attribute("value")
+        changeR.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        changeR.right_refresh('资源切换')
         assert changeRnum == "1113", f"预期{changeRnum}"
         assert not changeR.has_fail_message()
 
@@ -621,6 +633,8 @@ class TestChangeRPage:
         )
         sleep(1)
         error_popup = change.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        change.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        change.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert error_popup == "记录已存在,请检查！"
         assert not change.has_fail_message()
 
@@ -882,10 +896,11 @@ class TestChangeRPage:
         driver = login_to_changeR  # WebDriver 实例
         changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
         ele = changeR.get_find_element_xpath(
-            '//table[@xid=2 and @class="vxe-table--body"]//tr[2]/td[2]'
+            '//table[@class="vxe-table--body"]//tr[2]/td[2]'
         ).text
         # 点击查询
         changeR.click_sel_button()
+        sleep(1)
         # 定位名称输入框
         element_to_double_click = driver.find_element(
             By.XPATH,
@@ -919,8 +934,8 @@ class TestChangeRPage:
         # 定位第一行
         changeRcode = changeR.get_find_element_xpath(
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
-        )
-        assert changeRcode.text == ele
+        ).get_attribute('innerText')
+        assert changeRcode == ele
         assert not changeR.has_fail_message()
 
     @allure.story("删除数据")
@@ -928,7 +943,7 @@ class TestChangeRPage:
     def test_changeR_del1(self, login_to_changeR):
         driver = login_to_changeR  # WebDriver 实例
         changeI = ChangeR(driver)  # 用 driver 初始化 ChangeR
-        sleep(1)
+        changeI.right_refresh('资源切换')
         before_data = changeI.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text

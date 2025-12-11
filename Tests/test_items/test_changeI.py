@@ -19,7 +19,7 @@ from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 from Utils.shared_data_util import SharedDataUtil
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")   # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_changeI():
     driver = None
     try:
@@ -98,6 +98,8 @@ class TestChangeIPage:
         borderitem_color1 = inputitem_box1.value_of_css_property("border-color")
         borderitem_color2 = inputitem_box2.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        changeI.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        changeI.right_refresh('物品切换')
         assert (
             borderresource_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{borderresource_color}"
@@ -147,6 +149,8 @@ class TestChangeIPage:
         borderitem_color1 = inputitem_box1.value_of_css_property("border-color")
         borderitem_color2 = inputitem_box2.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        changeI.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        changeI.right_refresh('物品切换')
         assert borderitem_color1 == expected_color, f"预期边框颜色为{borderitem_color1}"
         assert borderitem_color2 == expected_color, f"预期边框颜色为{borderitem_color1}"
         assert not changeI.has_fail_message()
@@ -197,6 +201,8 @@ class TestChangeIPage:
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        changeI.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        changeI.right_refresh('物品切换')
         assert border_color == expected_color, f"预期边框颜色为{border_color}"
         assert not changeI.has_fail_message()
 
@@ -262,6 +268,7 @@ class TestChangeIPage:
         )
         border_color = time.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        changeI.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert border_color == expected_color, f"预期边框颜色为{border_color}"
         assert not changeI.has_fail_message()
 
@@ -327,6 +334,8 @@ class TestChangeIPage:
         )
         border_color = time.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        changeI.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        changeI.right_refresh('物品切换')
         assert border_color == expected_color, f"预期边框颜色为{border_color}"
         assert not changeI.has_fail_message()
 
@@ -353,6 +362,7 @@ class TestChangeIPage:
         changeInum = changeI.get_find_element_xpath(
             '//label[text()="切换时间(分钟)"]/ancestor::div[1]//input[1]'
         ).get_attribute("value")
+        changeI.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert changeInum == "1113", f"预期{changeInum}"
         assert not changeI.has_fail_message()
 
@@ -625,6 +635,8 @@ class TestChangeIPage:
         )
         sleep(1)
         error_popup = change.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        change.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        change.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert error_popup == "记录已存在,请检查！"
         assert not change.has_fail_message()
 
@@ -873,12 +885,13 @@ class TestChangeIPage:
     def test_changeI_selectcodesuccess(self, login_to_changeI):
         driver = login_to_changeI  # WebDriver 实例
         changeI = ChangeI(driver)  # 用 driver 初始化 ChangeI
-        sleep(3)
+        sleep(1)
         ele = changeI.get_find_element_xpath(
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
         ).text
         # 点击查询
         changeI.click_sel_button()
+        sleep(1)
         # 定位名称输入框
         element_to_double_click = driver.find_element(
             By.XPATH,
@@ -913,6 +926,7 @@ class TestChangeIPage:
         changeIcode = changeI.get_find_element_xpath(
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
         ).text
+        changeI.right_refresh('物品切换')
         assert changeIcode == ele
         assert not changeI.has_fail_message()
 
@@ -998,6 +1012,7 @@ class TestChangeIPage:
         updatatime = changeI.get_find_element_xpath(
             '//label[text()="更新时间"]/following-sibling::div//input').get_attribute("value")
         today_str = date.today().strftime('%Y/%m/%d')
+        changeI.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert before_all_value == after_all_value and username == DateDriver().username and today_str in updatatime and int(
             num) == (int(len_num) + 2)
         assert all(before_all_value), "列表中存在为空或为假值的元素！"

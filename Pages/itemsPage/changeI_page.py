@@ -29,6 +29,7 @@ class ChangeI(BasePage):
     def click_sel_button(self):
         """点击查询按钮."""
         self.click(By.XPATH, '//p[text()="查询"]')
+        self.wait_for_el_loading_mask()
 
     def click_ref_button(self):
         """点击刷新按钮."""
@@ -46,6 +47,7 @@ class ChangeI(BasePage):
         """添加布局."""
         self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[2]//i')
         self.click_button('//li[text()="添加新布局"]')
+        self.wait_for_el_loading_mask()
         self.enter_texts(
             '//div[text()="当前布局:"]/following-sibling::div//input', f"{layout}"
         )
@@ -109,6 +111,21 @@ class ChangeI(BasePage):
             )
         )
 
+    def wait_for_el_loading_mask(self, timeout=15):
+        """
+        显式等待加载遮罩元素消失。
+
+        参数:
+        - timeout (int): 超时时间，默认为10秒。
+
+        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
+        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
+        以此判断加载遮罩是否消失。
+        """
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
+        )
+
     def click_select_button(self):
         """点击查询确定按钮."""
         self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]')
@@ -133,6 +150,15 @@ class ChangeI(BasePage):
         )
         self.click_del_button()  # 点击删除
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
+
+    def right_refresh(self, name):
+        """右键刷新."""
+        but = self.get_find_element_xpath(f'//div[@class="scroll-body"]/div[.//div[text()=" {name} "]]')
+        but.click()
+        # 右键点击
+        ActionChains(self.driver).context_click(but).perform()
+        self.click_button('//li[text()=" 刷新"]')
         self.wait_for_loading_to_disappear()
 
     def add_input_all(self, num):

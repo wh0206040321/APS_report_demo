@@ -1125,8 +1125,6 @@ class TestOrderPage:
             f'//label[text()="自定义数字{i}"]/following-sibling::div//input'
             for i in range(1, 51)
         ]
-        # 替换第 2 个元素（索引 1）
-        num_xpath_list2[1] = '//label[text()="前回PO数量"]/following-sibling::div//input'
 
         num_list = [
             '//label[text()="计划数量"]/following-sibling::div//input',

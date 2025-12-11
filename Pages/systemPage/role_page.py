@@ -32,7 +32,7 @@ class RolePage(BasePage):
 
     def get_find_message(self):
         """获取错误信息"""
-        message = WebDriverWait(self.driver, 20).until(
+        message = WebDriverWait(self.driver, 60).until(
             EC.visibility_of_element_located(
                 (By.XPATH, '//div[@class="el-message el-message--success"]/p')
             )

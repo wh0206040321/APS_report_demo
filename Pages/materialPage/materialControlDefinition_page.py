@@ -188,8 +188,8 @@ class MaterialControlDefinition(BasePage):
         self.double_click_th_dropdown_box(table_list)
 
         element = self.get_find_element_xpath('(//div[@class="d-flex"]//div[@class="vxe-table--body-wrapper body--wrapper"])[1]')
-        # self.driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", element)
-        self.driver.execute_script("arguments[0].scrollTop = arguments[0].scrollTop + 100;", element)
+        self.driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", element)
+        # self.driver.execute_script("arguments[0].scrollTop = arguments[0].scrollTop + 100;", element)
         last_ = [{
             "select": f'//div[@class="d-flex"]//table[@class="vxe-table--body"]//tr[td[3]//span[text()="ReleaseMat"]]/td[6]',
             "value": f'//div[@class="d-flex"]//table[@class="vxe-table--body"]//tr[td[3]//span[text()="ReleaseMat"]]/td[6]//li[8]'

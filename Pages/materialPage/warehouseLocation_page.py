@@ -395,3 +395,22 @@ class WarehouseLocationPage(BasePage):
         self.click_button('(//button[@class="ivu-btn ivu-btn-primary"]/span[text()="确定"])[2]')
         sleep(1)
         self.wait_for_loading_to_disappear()
+
+    def batch_modify_dialog_box(self, xpath_list=[], new_value=""):
+        """批量修改对话框"""
+        values = []
+        for xpath in xpath_list:
+            try:
+                self.click_button(xpath)
+                self.wait_for_loading_to_disappear()
+                self.click_button(new_value)
+                values.append(self.get_find_element_xpath(new_value).text)
+                sleep(0.2)
+                self.click_button(
+                    '(//div[@class="h-40px flex-justify-end vxe-modal-footer1 flex-align-items-end b-t-s-d9e3f3"])[last()]//span[text()="确定"]')
+            except NoSuchElementException:
+                print(f"未找到元素: {xpath}")
+            except Exception as e:
+                print(f"操作 {xpath} 时出错: {str(e)}")
+
+        return values

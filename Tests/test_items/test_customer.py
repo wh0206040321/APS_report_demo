@@ -18,7 +18,7 @@ from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 from selenium.webdriver.common.keys import Keys
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_customer():
     driver = None
     try:
@@ -87,7 +87,8 @@ class TestCustomerPage:
         border_color = input_box.value_of_css_property("border-color")
         bordername_color = inputname_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
-
+        customer.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        customer.right_refresh('客户')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -115,6 +116,8 @@ class TestCustomerPage:
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        customer.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        customer.right_refresh('客户')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -140,6 +143,8 @@ class TestCustomerPage:
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        customer.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        customer.right_refresh('客户')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -165,6 +170,8 @@ class TestCustomerPage:
         customernum = customer.get_find_element_xpath(
             '(//label[text()="显示顺序"])[1]/parent::div//input'
         ).get_attribute("value")
+        customer.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        customer.right_refresh('客户')
         assert customernum == "1123", f"预期{customernum}"
         assert not customer.has_fail_message()
 
@@ -184,6 +191,8 @@ class TestCustomerPage:
         customersel = customer.get_find_element_xpath(
             '//div[label[text()="显示颜色"]]/div//span[@class="ivu-select-selected-value"]'
         ).text
+        customer.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        customer.right_refresh('客户')
         assert customersel == "4", f"预期{customersel}"
         assert not customer.has_fail_message()
 
@@ -235,6 +244,8 @@ class TestCustomerPage:
         error_popup = customer.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
         ).get_attribute("innerText")
+        customer.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        customer.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             error_popup == "记录已存在,请检查！"
         ), f"预期数据是记录已存在,请检查，实际得到{error_popup}"
@@ -294,6 +305,8 @@ class TestCustomerPage:
         error_popup = customer.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
         ).get_attribute("innerText")
+        customer.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        customer.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert error_popup == "记录已存在,请检查！", f"预期数据{error_popup}"
         assert not customer.has_fail_message()
 
@@ -481,6 +494,7 @@ class TestCustomerPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
+        customer.right_refresh('客户')
         assert customercode == name and len(customercode2) == 0
         assert not customer.has_fail_message()
 
@@ -527,6 +541,7 @@ class TestCustomerPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
         )
+        customer.right_refresh('客户')
         assert len(customercode) == 0
         assert not customer.has_fail_message()
 
@@ -570,6 +585,7 @@ class TestCustomerPage:
         # 点击确认
         customer.click_select_button()
         eles = customer.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
+        customer.right_refresh('客户')
         # 定位第一行是否为111
         assert len(eles) > 0
         assert all(name == v for v in eles)
@@ -614,6 +630,7 @@ class TestCustomerPage:
         # 点击确认
         customer.click_select_button()
         eles = customer.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[5]')
+        customer.right_refresh('客户')
         assert len(eles) > 0
         assert all(int(v) < 10 for v in eles)
         assert not customer.has_fail_message()
@@ -741,6 +758,7 @@ class TestCustomerPage:
         customer.click_select_button()
         name = customer.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
         code = customer.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[5]')
+        customer.right_refresh('客户')
         assert len(code) > 0 and len(name) > 0
         assert all(int(code) < 10 for code in code) and all(
             "美" in name for name in name
@@ -900,6 +918,7 @@ class TestCustomerPage:
                 assert "美" in td3 or td5_val > 10, f"第 {idx + 1} 行不符合：td3={td3}, td5={td5_raw}"
                 valid_count += 1
         assert not customer.has_fail_message()
+        customer.right_refresh('客户')
         print(f"符合条件的行数：{valid_count}")
 
     @allure.story("输入全部数据，添加保存成功")
@@ -959,12 +978,14 @@ class TestCustomerPage:
     def test_customer_restart(self, login_to_customer):
         driver = login_to_customer  # WebDriver 实例
         customer = CustomerPage(driver)  # 用 driver 初始化 CustomerPage
+        driver.refresh()
+        customer.wait_for_loading_to_disappear()
         data_list = ["全部数据", "20"]
         customer.enter_texts(
             '//p[text()="客户代码"]/ancestor::div[2]//input', data_list[0]
         )
         # 缩放到最小（例如 25%）
-        driver.execute_script("document.body.style.zoom='0.25'")
+        driver.execute_script("document.body.style.zoom='0.5'")
         sleep(1)
 
         row_xpath = f'//tr[./td[2][.//span[text()="{data_list[0]}"]]]'
@@ -1011,6 +1032,7 @@ class TestCustomerPage:
     def test_customer_delsuccess1(self, login_to_customer):
         driver = login_to_customer  # WebDriver 实例
         customer = CustomerPage(driver)  # 用 driver 初始化 CustomerPage
+        customer.right_refresh('客户')
         layout = "测试布局A"
 
         value = ['全部数据', '111', '1测试A','111111111111111133331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111']

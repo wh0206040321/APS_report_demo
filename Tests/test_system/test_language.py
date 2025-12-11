@@ -275,7 +275,7 @@ class TestSLanguagePage:
         ]
         add.batch_modify_input(xpath_list[:1], after_name)
         language.click_confirm()
-        message = language.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').text
+        message = language.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute('innerText')
         assert message == "记录已存在,请检查！"
         assert not language.has_fail_message()
 

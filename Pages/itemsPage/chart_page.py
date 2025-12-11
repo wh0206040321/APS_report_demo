@@ -83,3 +83,4 @@ class ChartPage(BasePage):
         self.click_button('//div[div[text()=" 资源甘特图 "]]/span')
         self.click_button(f'(//span[text()="{name }"])[1]')
         self.wait_for_el_loading_mask()
+        sleep(2)

@@ -125,6 +125,7 @@ class TestSInterfaceConfigurationPage:
         driver.refresh()
         interfaceconfiguration.wait_for_loading_to_disappear()
         sleep(1)
+        interfaceconfiguration.select_input(input_value)
 
         text = interfaceconfiguration.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr/td[4]//span[text()="{input_value}"]').text
         assert text == input_value
@@ -199,6 +200,7 @@ class TestSInterfaceConfigurationPage:
         driver.refresh()
         interfaceconfiguration.wait_for_loading_to_disappear()
         sleep(1)
+        interfaceconfiguration.select_input(input_value)
 
         text = interfaceconfiguration.get_find_element_xpath(
             f'//table[@class="vxe-table--body"]//tr/td[4]//span[text()="{input_value}"]').text
@@ -211,6 +213,7 @@ class TestSInterfaceConfigurationPage:
     def test_interfaceconfiguration_update1(self, login_to_interfaceconfiguration):
         driver = login_to_interfaceconfiguration  # WebDriver 实例
         interfaceconfiguration = ImpPage(driver)  # 用 driver 初始化 ImpPage
+        interfaceconfiguration.select_input('测试数据22')
         interfaceconfiguration.click_button('//table[@class="vxe-table--body"]//tr/td[4]//span[text()="测试数据22"]')
         interfaceconfiguration.click_all_button('编辑')
         interfaceconfiguration.enter_texts('//div[label[text()="访问地址:"]]//input[@type="text"]', '访问地址11')

@@ -19,7 +19,7 @@ from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 from Utils.shared_data_util import SharedDataUtil
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")   # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_changespec():
     driver = None
     try:
@@ -98,6 +98,8 @@ class TestChangeSpecPage:
         borderitem_color1 = inputitem_box1.value_of_css_property("border-color")
         borderitem_color2 = inputitem_box2.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        change.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        change.right_refresh('生产特征1切换')
         assert (
             borderresource_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{borderresource_color}"
@@ -147,6 +149,8 @@ class TestChangeSpecPage:
         borderitem_color1 = inputitem_box1.value_of_css_property("border-color")
         borderitem_color2 = inputitem_box2.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        change.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        change.right_refresh('生产特征1切换')
         assert borderitem_color1 == expected_color, f"预期边框颜色为{borderitem_color1}"
         assert borderitem_color2 == expected_color, f"预期边框颜色为{borderitem_color1}"
         assert not change.has_fail_message()
@@ -197,6 +201,8 @@ class TestChangeSpecPage:
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        change.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        change.right_refresh('生产特征1切换')
         assert border_color == expected_color, f"预期边框颜色为{border_color}"
         assert not change.has_fail_message()
 
@@ -262,6 +268,8 @@ class TestChangeSpecPage:
         )
         border_color = time.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        change.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        change.right_refresh('生产特征1切换')
         assert border_color == expected_color, f"预期边框颜色为{border_color}"
         assert not change.has_fail_message()
 
@@ -327,6 +335,8 @@ class TestChangeSpecPage:
         )
         border_color = time.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        change.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        change.right_refresh('生产特征1切换')
         assert border_color == expected_color, f"预期边框颜色为{border_color}"
         assert not change.has_fail_message()
 
@@ -353,6 +363,8 @@ class TestChangeSpecPage:
         changeRnum = change.get_find_element_xpath(
             '//label[text()="切换时间(分钟)"]/ancestor::div[1]//input[1]'
         ).get_attribute("value")
+        change.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        change.right_refresh('生产特征1切换')
         assert changeRnum == "1113", f"预期{changeRnum}"
         assert not change.has_fail_message()
 
@@ -648,6 +660,8 @@ class TestChangeSpecPage:
         )
         sleep(1)
         error_popup = change.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        change.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        change.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert error_popup == "记录已存在,请检查！"
         assert not change.has_fail_message()
 
@@ -854,6 +868,7 @@ class TestChangeSpecPage:
         adddata = change.get_find_element_xpath(
             f'(//span[text()="{resource}"])[1]/ancestor::tr[1]/td[2]'
         ).text
+        change.right_refresh('生产特征1切换')
         assert adddata == resource
         assert not change.has_fail_message()
 
@@ -914,6 +929,7 @@ class TestChangeSpecPage:
         ).text
         # 点击查询
         change.click_sel_button()
+        sleep(1)
         # 定位名称输入框
         element_to_double_click = driver.find_element(
             By.XPATH,
@@ -949,6 +965,7 @@ class TestChangeSpecPage:
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
         )
         assert changeRcode.text == after
+        change.right_refresh('生产特征1切换')
         assert not change.has_fail_message()
 
     @allure.story("删除数据成功")
@@ -1009,7 +1026,7 @@ class TestChangeSpecPage:
 
         code_value = '//span[text()="AdvanceAlongResourceWorkingTime"]'
         code_list = [
-            '//label[text()="前设置时间调整表达式"]/following-sibling::div//i',
+            '//label[text()="切换时间调整表达式"]/following-sibling::div//i',
         ]
         adds.batch_modify_code_box(code_list, code_value)
 
@@ -1142,8 +1159,8 @@ class TestChangeSpecPage:
         spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
         list_name = ['1测试生产特征33', '1测试生产特征3']
         after_name = '1修改生产特征33'
-        spec.click_button('//div[text()=" 生产特征1切换 "]')
-        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_button('//div[text()=" 生产特征2切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征2切换 "]]/span')
         spec.click_changespec_num(3)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
@@ -1189,8 +1206,8 @@ class TestChangeSpecPage:
         spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
         list_name = ['1测试生产特征44', '1测试生产特征4']
         after_name = '1修改生产特征44'
-        spec.click_button('//div[text()=" 生产特征1切换 "]')
-        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_button('//div[text()=" 生产特征3切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征3切换 "]]/span')
         spec.click_changespec_num(4)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
@@ -1236,8 +1253,8 @@ class TestChangeSpecPage:
         spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
         list_name = ['1测试生产特征55', '1测试生产特征5']
         after_name = '1修改生产特征55'
-        spec.click_button('//div[text()=" 生产特征1切换 "]')
-        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_button('//div[text()=" 生产特征4切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征4切换 "]]/span')
         spec.click_changespec_num(5)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
@@ -1283,8 +1300,8 @@ class TestChangeSpecPage:
         spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
         list_name = ['1测试生产特征66', '1测试生产特征6']
         after_name = '1修改生产特征66'
-        spec.click_button('//div[text()=" 生产特征1切换 "]')
-        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_button('//div[text()=" 生产特征5切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征5切换 "]]/span')
         spec.click_changespec_num(6)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
@@ -1330,8 +1347,8 @@ class TestChangeSpecPage:
         spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
         list_name = ['1测试生产特征77', '1测试生产特征7']
         after_name = '1修改生产特征77'
-        spec.click_button('//div[text()=" 生产特征1切换 "]')
-        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_button('//div[text()=" 生产特征6切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征6切换 "]]/span')
         spec.click_changespec_num(7)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
@@ -1377,8 +1394,8 @@ class TestChangeSpecPage:
         spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
         list_name = ['1测试生产特征88', '1测试生产特征8']
         after_name = '1修改生产特征88'
-        spec.click_button('//div[text()=" 生产特征1切换 "]')
-        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_button('//div[text()=" 生产特征7切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征7切换 "]]/span')
         spec.click_changespec_num(8)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
@@ -1424,8 +1441,8 @@ class TestChangeSpecPage:
         spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
         list_name = ['1测试生产特征99', '1测试生产特征9']
         after_name = '1修改生产特征99'
-        spec.click_button('//div[text()=" 生产特征1切换 "]')
-        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_button('//div[text()=" 生产特征8切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征8切换 "]]/span')
         spec.click_changespec_num(9)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
@@ -1471,8 +1488,8 @@ class TestChangeSpecPage:
         spec = ChangeR(driver)  # 用 driver 初始化 ChangeR
         list_name = ['1测试生产特征100', '1测试生产特征10']
         after_name = '1修改生产特征10'
-        spec.click_button('//div[text()=" 生产特征1切换 "]')
-        spec.click_button('//div[div[text()=" 生产特征1切换 "]]/span')
+        spec.click_button('//div[text()=" 生产特征9切换 "]')
+        spec.click_button('//div[div[text()=" 生产特征9切换 "]]/span')
         spec.click_changespec_num(10)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')

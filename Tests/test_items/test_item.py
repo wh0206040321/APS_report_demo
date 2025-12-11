@@ -18,7 +18,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_item():
     driver = None
     try:
@@ -88,6 +88,8 @@ class TestItemPage:
         border_color = input_box.value_of_css_property("border-color")
         bordername_color = inputname_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        item.right_refresh('物品')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -115,6 +117,8 @@ class TestItemPage:
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        item.right_refresh('物品')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -140,6 +144,8 @@ class TestItemPage:
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        item.right_refresh('物品')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -160,6 +166,8 @@ class TestItemPage:
         itemnum = item.get_find_element_xpath(
             '(//label[text()="数值特征1"])[1]/parent::div//input'
         ).get_attribute("value")
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        item.right_refresh('物品')
         assert itemnum == "1123", f"预期{itemnum}"
         assert not item.has_fail_message()
 
@@ -180,6 +188,8 @@ class TestItemPage:
             '(//label[text()="自动补充标志"])[1]/parent::div//input['
             '@class="ivu-select-input"]'
         ).get_attribute("value")
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        item.right_refresh('物品')
         assert itemsel == "是(库存+1对1制造)", f"预期{itemsel}"
         assert not item.has_fail_message()
 
@@ -209,6 +219,8 @@ class TestItemPage:
         itemcode = item.get_find_element_xpath(
             '(//label[text()="关联条件"])[1]/parent::div//input'
         ).get_attribute("value")
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        item.right_refresh('物品')
         assert itemcode == "ME.Order.Spec1==OTHER.Order.Spec1", f"预期{itemcode}"
         assert not item.has_fail_message()
 
@@ -263,6 +275,8 @@ class TestItemPage:
         error_popup = item.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
         ).get_attribute("innerText")
+        item.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             error_popup == "记录已存在,请检查！"
         ), f"预期数据是记录已存在,请检查，实际得到{error_popup}"
@@ -318,11 +332,13 @@ class TestItemPage:
         item.enter_texts('(//label[text()="物料代码"])[1]/parent::div//input', "111")
         # 点击确定
         item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
-        sleep(2)
+        sleep(1)
         # 获取重复弹窗文字
         error_popup = item.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
         ).get_attribute("innerText")
+        item.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert error_popup == "记录已存在,请检查！", f"预期数据{error_popup}"
         assert not item.has_fail_message()
 
@@ -514,6 +530,7 @@ class TestItemPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
+        item.right_refresh('物品')
         assert itemcode == name and len(itemcode2) == 0
         assert not item.has_fail_message()
 
@@ -560,6 +577,7 @@ class TestItemPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
         )
+        item.right_refresh('物品')
         assert len(itemcode) == 0
         assert not item.has_fail_message()
 
@@ -604,6 +622,7 @@ class TestItemPage:
         # 点击确认
         item.click_select_button()
         eles = item.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
+        item.right_refresh('物品')
         assert len(eles) > 0
         assert all(name in ele for ele in eles)
         assert not item.has_fail_message()
@@ -649,6 +668,7 @@ class TestItemPage:
         # 点击确认
         item.click_select_button()
         eles = item.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[6]')
+        item.right_refresh('物品')
         assert len(eles) > 0
         assert all(int(ele) > num for ele in eles)
         assert not item.has_fail_message()
@@ -778,6 +798,7 @@ class TestItemPage:
         item.click_select_button()
         eles1 = item.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[6]')
         eles2 = item.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
+        item.right_refresh('物品')
         assert len(eles1) > 0 and len(eles2) > 0
         assert all(int(ele) > num for ele in eles1) and all(name in ele for ele in eles2)
         assert not item.has_fail_message()
@@ -937,6 +958,7 @@ class TestItemPage:
                 assert name in td3 or td6_raw >= num, f"第 {idx + 1} 行不符合：td3={td3}, td5={td6_raw}"
                 valid_count += 1
         assert not item.has_fail_message()
+        item.right_refresh('物品')
         print(f"符合条件的行数：{valid_count}")
 
     @allure.story("输入全部数据，添加保存成功")
@@ -966,9 +988,6 @@ class TestItemPage:
             f'//label[text()="生产特征{i}"]/following-sibling::div//i'
             for i in range(1, 11)
         ]
-        # 替换第一个元素
-        spe_xpath_list[0] = '//label[text()="颜色"]/following-sibling::div//i'
-
         box_list = [
             '//label[text()="物料组代码"]/following-sibling::div//i',
             '//label[text()="BASE物料"]/following-sibling::div//i',
@@ -1077,6 +1096,7 @@ class TestItemPage:
         username = item.get_find_element_xpath('//label[text()="更新者"]/following-sibling::div//input').get_attribute("value")
         updatatime = item.get_find_element_xpath('//label[text()="更新时间"]/following-sibling::div//input').get_attribute("value")
         today_str = date.today().strftime('%Y/%m/%d')
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert before_all_value == after_all_value and username == DateDriver().username and today_str in updatatime and int(num) == (int(len_num) + 2)
         assert all(before_all_value), "列表中存在为空或为假值的元素！"
         assert not item.has_fail_message()
@@ -1086,6 +1106,7 @@ class TestItemPage:
     def test_item_delsuccess(self, login_to_item):
         driver = login_to_item  # WebDriver 实例
         item = ItemPage(driver)  # 用 driver 初始化 ItemPage
+        item.right_refresh('物品')
         layout = "测试布局A"
 
         value = ['111', '11测试全部数据', '1测试A','111111111111111133331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111']

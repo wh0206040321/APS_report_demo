@@ -98,6 +98,15 @@ class ChangeR(BasePage):
             '//div[p[text()="更新时间"]]/div[1]'
         )
 
+    def right_refresh(self, name):
+        """右键刷新."""
+        but = self.get_find_element_xpath(f'//div[@class="scroll-body"]/div[.//div[text()=" {name} "]]')
+        but.click()
+        # 右键点击
+        ActionChains(self.driver).context_click(but).perform()
+        self.click_button('//li[text()=" 刷新"]')
+        self.wait_for_loading_to_disappear()
+
     def wait_for_loading_to_disappear(self, timeout=10):
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
@@ -112,10 +121,26 @@ class ChangeR(BasePage):
         sleep(0.5)
         self.wait_for_loading_to_disappear()
 
+    def wait_for_el_loading_mask(self, timeout=15):
+        """
+        显式等待加载遮罩元素消失。
+
+        参数:
+        - timeout (int): 超时时间，默认为10秒。
+
+        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
+        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
+        以此判断加载遮罩是否消失。
+        """
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
+        )
+
     def add_layout(self, layout):
         """添加布局."""
         self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[2]//i')
         self.click_button('//li[text()="添加新布局"]')
+        self.wait_for_el_loading_mask()
         self.enter_texts(
             '//div[text()="当前布局:"]/following-sibling::div//input', f"{layout}"
         )
@@ -184,7 +209,12 @@ class ChangeR(BasePage):
 
     def click_changespec_num(self, num):
         """点击指定生产特征数字"""
-        self.click_button(f'(//span[text()="生产特征{num}切换"])[1]')
+        try:
+            self.click_button(f'(//span[text()="生产特征{num}切换"])[1]')
+        except Exception as e:
+            self.click_button('(//span[text()="计划管理"])[1]')
+            self.click_button('(//span[text()="计划切换定义"])[1]')
+            self.click_button(f'(//span[text()="生产特征{num}切换"])[1]')
         self.wait_for_loading_to_disappear()
 
     def click_all_button(self, name):

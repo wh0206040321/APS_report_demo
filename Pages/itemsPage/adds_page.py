@@ -182,6 +182,7 @@ class AddsPages(BasePage):
     def add_layout(self, layout):
         """添加布局."""
         self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[2]//i')
+        self.wait_for_el_loading_mask()
         self.click_button('//li[text()="添加新布局"]')
         self.enter_texts(
             '//div[text()="当前布局:"]/following-sibling::div//input', f"{layout}"
