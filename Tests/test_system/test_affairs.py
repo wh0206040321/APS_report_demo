@@ -1418,15 +1418,16 @@ class TestAffairsPage:
         sleep(1)
         num = 1000
         affairs.click_process_log()
-        affairs_name = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[2]').text
+        sleep(1)
         affairs.click_paging(num)
+        affairs_name = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute("innerText")
         sleep(1)
         affairs.sel_log_all(affairs_name=affairs_name)
         list_ = []
         cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[2]')
         for cell in cells:
             list_.append(cell.text)
-        assert list_ and all(t in affairs_name for t in list_)
+        assert list_ and all(affairs_name in t for t in list_)
         assert not affairs.has_fail_message()
 
     @allure.story("流程日志-全部条件搜索成功，关系为and")
@@ -1434,26 +1435,37 @@ class TestAffairsPage:
         driver = login_to_affairs  # WebDriver 实例
         affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
         sleep(1)
-        num = 1000
-        time1 = "2024-11-28 "
-        time2 = "10:25:00"
-        ptype = "执行失败"
-        pid = "6009574425101246"
-        pname = "21"
-        affairs_name = "获取令牌"
-        dt = datetime.strptime(time1.strip(), "%Y-%m-%d")
-        time_slash = dt.strftime("%Y/%m/%d")
         affairs.click_process_log()
+        sleep(1)
+        affairs_name = affairs.get_find_element_xpath(
+            '(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute("innerText")
+        num = 1000
+        time = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[5]').get_attribute(
+            "innerText")
+        time_with_dash = time.replace('/', '-')
+        time1 = time_with_dash.split(' ')[0] + ' '
+        time2 = time.split(' ')[1]
+        ptype = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[1]').get_attribute(
+            "innerText")
+        pid = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[4]').get_attribute(
+            "innerText")
+        pname = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[3]').get_attribute(
+            "innerText")
         affairs.click_paging(num)
         sleep(1)
         affairs.sel_log_all(time1=time1, time2=time2, ptype=ptype, pid=pid, pname=pname, affairs_name=affairs_name)
-        td1 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[1]')
-        td2 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[2]')
-        td3 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[3]')
-        td4 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[4]')
-        td5 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[5]')
-        tr2 = affairs.finds_elements(By.XPATH,'(//table[@class="el-table__body"])[2]/tbody/tr[2]')
-        assert td1.text == ptype and td2.text == affairs_name and td3.text == pname and td4.text == pid and td5.text == time_slash+' '+time2
+        td1 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[1]').get_attribute(
+            "innerText")
+        td2 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[2]').get_attribute(
+            "innerText")
+        td3 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[3]').get_attribute(
+            "innerText")
+        td4 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[4]').get_attribute(
+            "innerText")
+        td5 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[5]').get_attribute(
+            "innerText")
+        tr2 = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[2]/tbody/tr[2]')
+        assert td1 == ptype and td2 == affairs_name and td3 == pname and td4 == pid and td5 == time
         assert len(tr2) == 0
         assert not affairs.has_fail_message()
 
@@ -1462,14 +1474,15 @@ class TestAffairsPage:
         driver = login_to_affairs  # WebDriver 实例
         affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
         sleep(1)
+        affairs.click_process_log()
+        sleep(1)
         num = 1000
         time1 = "2025-02-27 "
         time2 = "10:20:00"
         ptype = "执行失败"
         pid = "41183627842692411"
         pname = "每周"
-        affairs_name = "获取令牌"
-        affairs.click_process_log()
+        affairs_name = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute("innerText")
         affairs.click_paging(num)
         sleep(1)
         affairs.sel_log_all(time1=time1, time2=time2, ptype=ptype, pid=pid, pname=pname, affairs_name=affairs_name)
