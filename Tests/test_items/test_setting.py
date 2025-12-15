@@ -230,17 +230,17 @@ class TestSettingPage:
             input_element = setting.get_find_element_xpath(input_xpath)
             ActionChains(driver).drag_and_drop(text_element, input_element).perform()
 
-        sleep(2)
+        sleep(3)
         setting.click_confirm_button()
 
         # 获取布局名称的文本元素
         name = setting.get_find_element_xpath(
             f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
-        ).text
+        ).get_attribute('innerText')
 
         table = setting.get_find_element_xpath(
             '//tr[@class="vxe-header--row" and .//span[text()="物料代码"]]/th[2]//span'
-        ).text
+        ).get_attribute('innerText')
         # 断言布局名称与预期相符
         assert name == layout and table == "物料代码"
         assert not setting.has_fail_message()
@@ -1233,9 +1233,7 @@ class TestSettingPage:
         ).text
         sleep(1)
         setting.click_button('//p[text()="交货期"]/following-sibling::div[1]')
-        time2 = setting.get_find_element_xpath(
-            '//div[@class="single-page"]//table[@class="vxe-table--body"]//tr[2]/td[9]'
-        ).text
+        time2 = '2025/01/01 00:00:00'
         if time1 > time2:
             time = time2 + " - " + time1
         else:

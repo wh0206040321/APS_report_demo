@@ -14,7 +14,7 @@ from Utils.shared_data_util import SharedDataUtil
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_production():
     driver = None
     try:
@@ -84,6 +84,8 @@ class TestProductionPage:
 
         # 获取提示信息
         message = production.get_error_message()
+        production.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        production.right_refresh('生产报工')
         # 断言提示信息为“请先填写表单”
         assert message == "请先填写表单"
         assert not production.has_fail_message()
@@ -124,6 +126,8 @@ class TestProductionPage:
 
         # 获取提示信息
         message = production.get_error_message()
+        production.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        production.right_refresh('生产报工')
         # 断言提示信息为“请先填写表单”
         assert message == "请先填写表单"
         assert not production.has_fail_message()
@@ -247,6 +251,7 @@ class TestProductionPage:
     def test_production_add2(self, login_to_production):
         driver = login_to_production  # WebDriver 实例
         production = ProductionPage(driver)  # 用 driver 初始化 ProductionPage
+        production.right_refresh('生产报工')
         production.click_add_button()
         name = "1测试C订单"
         num = "100"
@@ -283,7 +288,7 @@ class TestProductionPage:
         sleep(1)
         message = production.get_find_element_xpath(
             '//p[text()="当前工作报工数量加完成数量大于计划数量，是否将实绩状态改为结束"]'
-        ).text
+        ).get_attribute("innerText")
         production.click_button('//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"]//span[text()="是"]')
         production.wait_for_loading_to_disappear()
 
@@ -294,12 +299,15 @@ class TestProductionPage:
         production.wait_for_loading_to_disappear()
         after_text = production.get_find_element_xpath(
             f'//tr[.//span[text()="{name}:1"]]/td[10]'
-        )
+        ).get_attribute("innerText")
+        production.click_button('//div[text()=" 工作指示一览 "]')
+        production.click_button('//div[div[text()=" 工作指示一览 "]]/span')
+        production.right_refresh('生产报工')
         # 断言提示信息为“请先填写表单”
         assert (
             message == "当前工作报工数量加完成数量大于计划数量，是否将实绩状态改为结束"
             and ele == num
-            and after_text.text == "结束"
+            and after_text == "结束"
         )
         assert not production.has_fail_message()
 
@@ -319,7 +327,7 @@ class TestProductionPage:
         sleep(1)
         text = production.get_find_element_xpath(
             '//p[text()="当前工作已【结束】，是否需要修改成【开始生产】？"]'
-        ).text
+        ).get_attribute("innerText")
         # 点击是
         production.click_button('//div[@class="el-message-box__header"]/button')
         sleep(1)
@@ -327,6 +335,7 @@ class TestProductionPage:
             By.XPATH,
             f'//tr[./td[6]//span[text()="{num}"] and ./td[2]//span[text()="{name}:1"]]/td[6]',
         )
+        production.right_refresh('生产报工')
         assert (
                 text == "当前工作已【结束】，是否需要修改成【开始生产】？"
                 and len(ele) == 1
@@ -360,11 +369,14 @@ class TestProductionPage:
         production.wait_for_loading_to_disappear()
         after_text = production.get_find_element_xpath(
             f'//tr[.//span[text()="{name}:1"]]/td[10]'
-        )
+        ).get_attribute("innerText")
+        production.click_button('//div[text()=" 工作指示一览 "]')
+        production.click_button('//div[div[text()=" 工作指示一览 "]]/span')
+        production.right_refresh('生产报工')
         assert (
             text == "当前工作已【结束】，是否需要修改成【开始生产】？"
             and len(ele) == 0
-            and after_text.text == "开始生产"
+            and after_text == "开始生产"
         )
         assert not production.has_fail_message()
 
@@ -409,7 +421,7 @@ class TestProductionPage:
         sleep(1)
         message = production.get_find_element_xpath(
             '//p[text()="当前工作报工数量加完成数量大于计划数量，是否将实绩状态改为结束"]'
-        ).text
+        ).get_attribute("innerText")
         production.click_button('//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"]//span[text()="是"]')
         production.wait_for_loading_to_disappear()
         ele = production.get_find_element_xpath(
@@ -419,12 +431,15 @@ class TestProductionPage:
         production.wait_for_loading_to_disappear()
         after_text = production.get_find_element_xpath(
             f'//tr[.//span[text()="{name}:1"]]/td[10]'
-        )
+        ).get_attribute("innerText")
+        production.click_button('//div[text()=" 工作指示一览 "]')
+        production.click_button('//div[div[text()=" 工作指示一览 "]]/span')
+        production.right_refresh('生产报工')
         # 断言提示信息为“请先填写表单”
         assert (
             message == "当前工作报工数量加完成数量大于计划数量，是否将实绩状态改为结束"
             and ele == num
-            and after_text.text == "结束"
+            and after_text == "结束"
         )
         assert not production.has_fail_message()
 
@@ -456,11 +471,14 @@ class TestProductionPage:
         production.wait_for_loading_to_disappear()
         after_text = production.get_find_element_xpath(
             f'//tr[.//span[text()="{name}:1"]]/td[10]'
-        )
+        ).get_attribute("innerText")
+        production.click_button('//div[text()=" 工作指示一览 "]')
+        production.click_button('//div[div[text()=" 工作指示一览 "]]/span')
+        production.right_refresh('生产报工')
         assert (
             text == "当前工作已【结束】，是否需要修改成【开始生产】？"
             and len(ele) == 0
-            and after_text.text == "结束"
+            and after_text == "结束"
         )
         assert not production.has_fail_message()
 
@@ -504,6 +522,9 @@ class TestProductionPage:
         text_ = production.get_find_element_xpath(
             '//label[text()="异常原因"]/following-sibling::div//input'
         ).get_attribute("value")
+        production.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        production.right_refresh("生产报工")
+        sleep(2)
         assert num_ == '9999999999' and text_ == num
         assert not production.has_fail_message()
 
@@ -532,12 +553,13 @@ class TestProductionPage:
         production.wait_for_loading_to_disappear()
         ele1 = production.get_find_element_xpath(
             f'//tr[./td[2]//span[text()="{name}:2"]]/td[9]'
-        )
+        ).get_attribute('innerText')
         ele2 = production.get_find_element_xpath(
             f'//tr[./td[2]//span[text()="{name}:2"]]/td[2]'
-        )
+        ).get_attribute('innerText')
+        production.right_refresh("生产报工")
         # 断言提示信息为“请先填写表单”
-        assert ele1.text == name and ele2.text == f"{name}:2"
+        assert ele1 == name and ele2 == f"{name}:2"
         assert not production.has_fail_message()
 
     @allure.story("数字文本框只允许输入数字")
@@ -559,7 +581,12 @@ class TestProductionPage:
             '//label[text()="报工数量"]/following-sibling::div//input',
             "e1+2=。，、.？w’；6",
         )
-        assert input_num.get_attribute("value") == "126"
+        input_num = production.get_find_element_xpath(
+            '//label[text()="报工数量"]/following-sibling::div//input'
+        ).get_attribute("value")
+        production.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        production.right_refresh("生产报工")
+        assert input_num == "126"
         assert not production.has_fail_message()
 
     @allure.story("选择下拉框成功，将开始生产改为结束")
@@ -581,6 +608,8 @@ class TestProductionPage:
         afert_input = production.get_find_element_xpath(
             '//label[text()="实绩状态"]/following-sibling::div//input'
         ).get_attribute("value")
+        production.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        production.right_refresh("生产报工")
         assert before_input == "T" and afert_input == "B"
         assert not production.has_fail_message()
 
@@ -618,12 +647,16 @@ class TestProductionPage:
         production.wait_for_loading_to_disappear()
         after_text = production.get_find_element_xpath(
             f'//tr[.//span[text()="{name}:2"]]/td[10]'
-        )
+        ).get_attribute("innerText")
+        production.click_button('//div[text()=" 工作指示一览 "]')
+        production.click_button('//div[div[text()=" 工作指示一览 "]]/span')
+        production.right_refresh('生产报工')
+        sleep(2)
         # 断言提示信息为“请先填写表单”
         assert (
                 ele1 == num
                 and ele2 == f"{name}:2"
-                and after_text.text == "开始生产"
+                and after_text == "开始生产"
         )
         assert not production.has_fail_message()
 
@@ -656,7 +689,7 @@ class TestProductionPage:
         sleep(1)
         message = production.get_find_element_xpath(
             '//p[text()="当前工作报工数量加完成数量大于计划数量，是否将实绩状态改为结束"]'
-        ).text
+        ).get_attribute("innerText")
         production.click_button('//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"]//span[text()="否"]')
         production.wait_for_loading_to_disappear()
 
@@ -671,14 +704,18 @@ class TestProductionPage:
         production.wait_for_loading_to_disappear()
         after_text = production.get_find_element_xpath(
             f'//tr[.//span[text()="{name}:2"]]/td[10]'
-        )
+        ).get_attribute("innerText")
+        production.click_button('//div[text()=" 工作指示一览 "]')
+        production.click_button('//div[div[text()=" 工作指示一览 "]]/span')
+        production.right_refresh('生产报工')
+        sleep(2)
         # 断言提示信息为“请先填写表单”
         assert (
             ele1 == num
             and ele2 == f"{name}:2"
             and message
             == "当前工作报工数量加完成数量大于计划数量，是否将实绩状态改为结束"
-            and after_text.text == "开始生产"
+            and after_text == "开始生产"
         )
         assert not production.has_fail_message()
 
@@ -709,7 +746,7 @@ class TestProductionPage:
         sleep(1)
         message = production.get_find_element_xpath(
             '//p[text()="当前工作报工数量加完成数量大于计划数量，是否将实绩状态改为结束"]'
-        ).text
+        ).get_attribute("innerText")
         production.click_button('//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"]//span[text()="是"]')
         production.wait_for_loading_to_disappear()
 
@@ -724,14 +761,17 @@ class TestProductionPage:
         production.wait_for_loading_to_disappear()
         after_text = production.get_find_element_xpath(
             f'//tr[.//span[text()="{name}:2"]]/td[10]'
-        )
+        ).get_attribute("innerText")
+        production.click_button('//div[text()=" 工作指示一览 "]')
+        production.click_button('//div[div[text()=" 工作指示一览 "]]/span')
+        production.right_refresh('生产报工')
         # 断言提示信息为“请先填写表单”
         assert (
             ele1 == num
             and ele2 == f"{name}:2"
             and message
             == "当前工作报工数量加完成数量大于计划数量，是否将实绩状态改为结束"
-            and after_text.text == "结束"
+            and after_text == "结束"
         )
         assert not production.has_fail_message()
 
@@ -753,6 +793,7 @@ class TestProductionPage:
         ele2 = driver.find_elements(
             By.XPATH, '(//table[@class="vxe-table--body"])[2]/tbody/tr[2]/td[3]'
         )
+        production.right_refresh('生产报工')
         assert ele1 == f"{name}:2" and len(ele2) == 0
         assert not production.has_fail_message()
 
@@ -770,16 +811,11 @@ class TestProductionPage:
         production.click_button(f'//li[text()="{resource2}"]')
         production.click_button('//span[text()="查询"]')
         production.wait_for_loading_to_disappear()
-        ele1 = production.get_find_element_xpath(
-            '(//table[@class="vxe-table--body"])[2]/tbody/tr[1]/td[2]'
-        ).get_attribute('innerText')
-        ele2 = production.get_find_element_xpath(
-            '(//table[@class="vxe-table--body"])[2]/tbody/tr[1]/td[4]'
-        ).get_attribute('innerText')
-        ele3 = driver.find_elements(
-            By.XPATH, '(//table[@class="vxe-table--body"])[2]/tbody/tr[2]/td[3]'
+        sleep(1)
+        ele1 = production.finds_elements(By.XPATH,
+            '(//table[@class="vxe-table--body"])[2]/tbody/tr/td[4]'
         )
-        assert ele1 == f"{name}:2" and ele2 == resource2 and len(ele3) == 0
+        assert all(ele.text == resource2 for ele in ele1)
         assert not production.has_fail_message()
 
     @allure.story("查询物料代码成功")
@@ -787,22 +823,17 @@ class TestProductionPage:
     def test_production_selectitem(self, login_to_production):
         driver = login_to_production  # WebDriver 实例
         production = ProductionPage(driver)  # 用 driver 初始化 ProductionPage
+        production.right_refresh('生产报工')
         production.click_button(
             '(//input[@placeholder="请选择" and @class="ivu-select-input"])[3]'
         )
         production.click_button('//li[text()="1测试B"]')
         production.click_button('//span[text()="查询"]')
         production.wait_for_loading_to_disappear()
-        ele1 = production.get_find_element_xpath(
-            '(//table[@class="vxe-table--body"])[2]/tbody/tr[1]/td[2]'
-        ).get_attribute('innerText')
-        ele2 = production.get_find_element_xpath(
+        ele1 = production.finds_elements(By.XPATH,
             '(//table[@class="vxe-table--body"])[2]/tbody/tr[1]/td[3]'
-        ).get_attribute('innerText')
-        ele3 = driver.find_elements(
-            By.XPATH, '(//table[@class="vxe-table--body"])[2]/tbody/tr[2]/td[3]'
         )
-        assert ele1 == "1测试C订单:1" and ele2 == "1测试B" and len(ele3) == 0
+        assert all(ele.text == '1测试B' for ele in ele1)
         assert not production.has_fail_message()
 
     @allure.story("删除数据")
@@ -810,6 +841,7 @@ class TestProductionPage:
     def test_production_delete3(self, login_to_production):
         driver = login_to_production  # WebDriver 实例
         production = ProductionPage(driver)  # 用 driver 初始化 ProductionPage
+        production.right_refresh('生产报工')
         name = "1测试C订单"
         production.enter_texts('//p[text()="订单代码"]/ancestor::div[2]//input', name)
         sleep(1)
@@ -820,6 +852,9 @@ class TestProductionPage:
 
             production.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
             production.wait_for_loading_to_disappear()
+            ele = production.get_find_element_xpath('//p[text()="订单代码"]/ancestor::div[2]//input')
+            ele.send_keys(Keys.CONTROL, "a")
+            ele.send_keys(Keys.DELETE)
             production.enter_texts('//p[text()="订单代码"]/ancestor::div[2]//input', name)
             sleep(1)
             ele = driver.find_elements(

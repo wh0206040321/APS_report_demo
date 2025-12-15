@@ -797,6 +797,7 @@ class TestSMenuPage:
         menu = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
         layout = "测试布局A"
         menu.wait_for_loading_to_disappear()
+        sleep(1)
         value = ['ABCDAA']
         menu.del_all(xpath='//div[div[span[text()=" 组件代码"]]]/div[3]//input', value=value)
         itemdata = [

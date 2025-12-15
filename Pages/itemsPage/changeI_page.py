@@ -48,6 +48,7 @@ class ChangeI(BasePage):
         self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[2]//i')
         self.click_button('//li[text()="添加新布局"]')
         self.wait_for_el_loading_mask()
+        sleep(2)
         self.enter_texts(
             '//div[text()="当前布局:"]/following-sibling::div//input', f"{layout}"
         )
@@ -64,6 +65,7 @@ class ChangeI(BasePage):
         sleep(1)
 
         self.click_button('(//div[text()=" 显示设置 "])[1]')
+        sleep(1)
         # 获取是否可见选项的复选框元素
         checkbox2 = self.get_find_element_xpath(
             '(//div[./div[text()="是否可见:"]])[1]/label/span'

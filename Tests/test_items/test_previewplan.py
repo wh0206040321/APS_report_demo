@@ -15,7 +15,7 @@ from Utils.shared_data_util import SharedDataUtil
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_previewPlan():
     driver = None
     try:
@@ -81,6 +81,7 @@ class TestPreviewPlanPage:
         ele_resource2 = previewPlan.get_find_element_xpath(
             '//table[.//td[4]//span[text()="1测试C订单"]]//tr[2]/td[7]'
         ).text
+        previewPlan.right_refresh('工作指示一览')
         assert (
             ele_code1 == "1测试C订单"
             and ele_resource1 == resource1

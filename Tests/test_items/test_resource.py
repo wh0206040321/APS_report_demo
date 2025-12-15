@@ -1064,6 +1064,7 @@ class TestResourcePage:
             '//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         resource.get_find_message()
         driver.refresh()
+        sleep(2)
         resource.wait_for_loading_to_disappear()
         num = adds.go_settings_page()
         resource.wait_for_loading_to_disappear()

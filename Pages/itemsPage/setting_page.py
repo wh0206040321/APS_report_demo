@@ -76,6 +76,7 @@ class SettingPage(BasePage):
         except Exception:
             # 如果第一个点不了，就点另一个
             self.click_button('(//div[@class="demo-drawer-footer"])[2]//span[text()="确定"]')
+        sleep(1)
         self.wait_for_loading_to_disappear()
         self.wait_for_el_loading_mask()
 
@@ -99,6 +100,7 @@ class SettingPage(BasePage):
         sleep(1)
 
         self.click_button('(//div[text()=" 显示设置 "])[1]')
+        sleep(1)
         # 获取是否可见选项的复选框元素
         checkbox2 = self.get_find_element_xpath(
             '(//div[./div[text()="是否可见:"]])[1]/label/span'

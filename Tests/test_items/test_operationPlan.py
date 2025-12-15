@@ -16,7 +16,7 @@ from Utils.shared_data_util import SharedDataUtil
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_operationPlan():
     driver = None
     try:
@@ -68,6 +68,7 @@ class TestOperationPlanPage:
         )  # 用 operationPlan 初始化 operationPlanPage
         operationPlan.click_selebutton()
         message = operationPlan.get_error_message()
+        operationPlan.right_refresh('工作指示发布')
         # 检查元素是否包含子节点
         assert message == "请选择时间段和资源"
         assert not operationPlan.has_fail_message()
@@ -87,6 +88,7 @@ class TestOperationPlanPage:
         operationPlan.click_okbutton()
         operationPlan.click_selebutton()
         message = operationPlan.get_error_message()
+        operationPlan.right_refresh('工作指示发布')
         # 检查元素是否包含子节点
         assert message == "请选择时间段和资源"
         assert not operationPlan.has_fail_message()
@@ -104,6 +106,7 @@ class TestOperationPlanPage:
         )
         operationPlan.click_selebutton()
         message = operationPlan.get_error_message()
+        operationPlan.right_refresh('工作指示发布')
         # 检查元素是否包含子节点
         assert message == "请选择时间段和资源"
         assert not operationPlan.has_fail_message()

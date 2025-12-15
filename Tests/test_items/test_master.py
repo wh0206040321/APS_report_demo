@@ -19,7 +19,7 @@ from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 from Utils.shared_data_util import SharedDataUtil
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")   # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_master():
     driver = None
     try:
@@ -73,7 +73,7 @@ class TestMasterPage:
         # 获取布局名称的文本元素
         name = master.get_find_element_xpath(
             f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
-        ).text
+        ).get_attribute("innerText")
         assert layout == name
         assert not master.has_fail_message()
 
@@ -88,6 +88,8 @@ class TestMasterPage:
             '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
         )
         message = master.get_error_message()
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        master.right_refresh('工艺产能')
         # 检查元素是否包含子节点
         assert message == "请根据必填项填写信息"
         assert not master.has_fail_message()
@@ -101,7 +103,7 @@ class TestMasterPage:
 
         # 填写订物料代码
         master.click_button('//span[text()=" 物料代码： "]/parent::div//i')
-        sleep(1)
+        master.wait_for_loading_to_disappear()
         master.click_button(
             '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]'
         )
@@ -111,6 +113,8 @@ class TestMasterPage:
         # 点击确定
         master.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         message = master.get_error_message()
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        master.right_refresh('工艺产能')
         # 检查元素是否包含子节点
         assert message == "请根据必填项填写信息"
         assert not master.has_fail_message()
@@ -124,7 +128,7 @@ class TestMasterPage:
 
         # 填写订物料代码
         master.click_button('//span[text()=" 物料代码： "]/parent::div//i')
-        sleep(1)
+        master.wait_for_loading_to_disappear()
         master.click_button(
             '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]'
         )
@@ -147,6 +151,8 @@ class TestMasterPage:
         # 点击确定
         master.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         message = master.get_error_message()
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        master.right_refresh('工艺产能')
         # 检查元素是否包含子节点
         assert message == "请根据必填项填写信息"
         assert not master.has_fail_message()
@@ -222,13 +228,13 @@ class TestMasterPage:
         master.add_ok_button()
         adddata = master.get_find_element_xpath(
             f'//tr[.//span[text()="{item}"]]/td[2]//span[text()="{item}"]'
-        ).text
+        ).get_attribute('innerText')
         addtext = master.get_find_element_xpath(
             f'//tr[.//td[2]//span[text()="{item}"]]/td[9]'
-        ).text
+        ).get_attribute('innerText')
         text_ = master.get_find_element_xpath(
             f'//tr[.//td[2]//span[text()="{item}"]]/td[5]'
-        ).text
+        ).get_attribute('innerText')
         # 获取重复弹窗文字
         error_popup = driver.find_elements(
             By.XPATH, '//div[text()=" 记录已存在,请检查！ "]'
@@ -245,6 +251,7 @@ class TestMasterPage:
     def test_master_delsuccess1(self, login_to_master):
         driver = login_to_master  # WebDriver 实例
         master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        master.right_refresh('工艺产能')
         item = SharedDataUtil.load_data().get("item")
         master.delete_material(item)
 
@@ -343,6 +350,7 @@ class TestMasterPage:
     def test_master_addrepeat(self, login_to_master):
         driver = login_to_master  # WebDriver 实例
         master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        master.right_refresh('工艺产能')
         master.click_add_button()  # 检查点击添加
 
         # 填写订物料代码
@@ -416,6 +424,8 @@ class TestMasterPage:
         error_popup = master.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
         ).get_attribute("innerText")
+        master.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             error_popup == "记录已存在,请检查！"
         ), f"预期数据是记录已存在,请检查，实际得到{error_popup}"
@@ -426,6 +436,7 @@ class TestMasterPage:
     def test_master_delsuccess2(self, login_to_master):
         driver = login_to_master  # WebDriver 实例
         master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        master.right_refresh('工艺产能')
         item = SharedDataUtil.load_data()["item"]
         master.delete_material(item)
 
@@ -530,6 +541,7 @@ class TestMasterPage:
     def test_master_delsuccess3(self, login_to_master):
         driver = login_to_master  # WebDriver 实例
         master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        master.right_refresh('工艺产能')
         item = SharedDataUtil.load_data()["item"]
         master.delete_material(item)
 
@@ -575,6 +587,8 @@ class TestMasterPage:
         input_after = master.get_find_element_xpath(
             '//table[.//div[@class="vxe-input type--text size--mini is--controls"]]//tr[1]/td[2]//input'
         ).get_attribute("value")
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        master.right_refresh('工艺产能')
         assert input_after == "2", f"实际得到{input_after}"
         assert not master.has_fail_message()
 
@@ -615,6 +629,8 @@ class TestMasterPage:
         input_after = master.get_find_element_xpath(
             '//table[.//div[@class="vxe-input type--number size--mini"]]//tr[1]/td[2]//input'
         ).get_attribute("value")
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        master.right_refresh('工艺产能')
         assert input_after == "2", f"实际得到{input_after}"
         assert not master.has_fail_message()
 
@@ -672,6 +688,8 @@ class TestMasterPage:
         input_after = master.get_find_element_xpath(
             '(//table[.//div[@class="vxe-input type--number size--mini"]])[2]//tr[1]/td[4]//input'
         ).get_attribute("value")
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        master.right_refresh('工艺产能')
         assert input_after == "In2", f"实际得到{input_after}"
         assert not master.has_fail_message()
 
@@ -733,6 +751,8 @@ class TestMasterPage:
         input_after = master.get_find_element_xpath(
             '(//table[.//div[@class="vxe-input type--text size--mini is--controls"]])[2]//tr[1]/td[2]//input'
         ).get_attribute("value")
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        master.right_refresh('工艺产能')
         assert input_after == "2", f"实际得到{input_after}"
         assert not master.has_fail_message()
 
@@ -816,7 +836,7 @@ class TestMasterPage:
 
         adddata = master.get_find_element_xpath(
             f'//tr[.//span[text()="{item}"]]/td[2]//span[text()="{item}"]'
-        ).text
+        ).get_attribute("innerText")
         # 获取重复弹窗文字
         error_popup = driver.find_elements(
             By.XPATH, '//div[text()=" 记录已存在,请检查！ "]'
@@ -831,6 +851,7 @@ class TestMasterPage:
         driver = login_to_master  # WebDriver 实例
         master = MasterPage(driver)  # 用 driver 初始化 MasterPage
         item = SharedDataUtil.load_data()["item"]
+        master.right_refresh('工艺产能')
         master.wait_for_loading_to_disappear()
         # 选中物料代码点击编辑
         master.click_button(f'//tr[.//span[text()="{item}"]]/td[2]//span[text()="{item}"]')
@@ -853,7 +874,7 @@ class TestMasterPage:
         master.add_ok_button()
         edittext = master.get_find_element_xpath(
             f'//tr[.//td[2]//span[text()="{item}"]]/td[6]'
-        ).text
+        ).get_attribute("innerText")
         assert edittext in process_input
         assert not master.has_fail_message()
 
@@ -863,6 +884,7 @@ class TestMasterPage:
         driver = login_to_master  # WebDriver 实例
         master = MasterPage(driver)  # 用 driver 初始化 MasterPage
         item = SharedDataUtil.load_data()["item"]
+        master.right_refresh('工艺产能')
         master.wait_for_loading_to_disappear()
         # 选中物料代码点击编辑
         master.click_button(f'//tr[.//span[text()="{item}"]]/td[2]//span[text()="{item}"]')
@@ -886,7 +908,7 @@ class TestMasterPage:
         master.add_ok_button()
         edittext = master.get_find_element_xpath(
             f'//tr[.//td[2]//span[text()="{item}"]]/td[11]'
-        ).text
+        ).get_attribute("innerText")
         assert item_input == edittext
         assert not master.has_fail_message()
 
@@ -896,6 +918,7 @@ class TestMasterPage:
         driver = login_to_master  # WebDriver 实例
         master = MasterPage(driver)  # 用 driver 初始化 MasterPage
         item = SharedDataUtil.load_data()["item"]
+        master.right_refresh('工艺产能')
         master.wait_for_loading_to_disappear()
         # 选中物料代码点击编辑
         master.click_button(f'//tr[.//span[text()="{item}"]]/td[2]//span[text()="{item}"]')
@@ -932,7 +955,7 @@ class TestMasterPage:
         master.add_ok_button()
         edittext = master.get_find_element_xpath(
             f'//tr[.//td[2]//span[text()="{item}"]][2]/td[11]'
-        ).text
+        ).get_attribute("innerText")
         assert resource_input == edittext
         assert not master.has_fail_message()
 
@@ -949,7 +972,7 @@ class TestMasterPage:
         master.click_ref_button()
         ordertext = master.get_find_element_xpath(
             '//p[text()="物料代码"]/ancestor::div[2]//input'
-        ).text
+        ).get_attribute("innerText")
         assert ordertext == "", f"预期{ordertext}"
         assert not master.has_fail_message()
 
@@ -1001,6 +1024,7 @@ class TestMasterPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[3]/td[2]',
         )
+        master.right_refresh('工艺产能')
         assert ordercode == item and len(notext) == 0
         assert not master.has_fail_message()
 

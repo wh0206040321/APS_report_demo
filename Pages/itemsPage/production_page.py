@@ -1,6 +1,7 @@
 from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -65,6 +66,15 @@ class ProductionPage(BasePage):
         )
         return message.text
 
+    def right_refresh(self, name):
+        """右键刷新."""
+        but = self.get_find_element_xpath(f'//div[@class="scroll-body"]/div[.//div[text()=" {name} "]]')
+        but.click()
+        # 右键点击
+        ActionChains(self.driver).context_click(but).perform()
+        self.click_button('//li[text()=" 刷新"]')
+        self.wait_for_loading_to_disappear()
+
     def wait_for_loading_to_disappear(self, timeout=10):
         """
         显式等待加载遮罩元素消失。
@@ -89,10 +99,27 @@ class ProductionPage(BasePage):
             print("找不到目标元素，但继续执行后续操作")
         sleep(1)
 
+    def wait_for_el_loading_mask(self, timeout=15):
+        """
+        显式等待加载遮罩元素消失。
+
+        参数:
+        - timeout (int): 超时时间，默认为10秒。
+
+        该方法通过WebDriverWait配合EC.invisibility_of_element_located方法，
+        检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
+        以此判断加载遮罩是否消失。
+        """
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
+        )
+
     def add_layout(self, layout):
         """添加布局."""
         self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[2]//i')
         self.click_button('//li[text()="添加新布局"]')
+        self.wait_for_el_loading_mask()
+        sleep(2)
         self.enter_texts(
             '//div[text()="当前布局:"]/following-sibling::div//input', f"{layout}"
         )
@@ -109,6 +136,7 @@ class ProductionPage(BasePage):
         sleep(1)
 
         self.click_button('(//div[text()=" 显示设置 "])[1]')
+        sleep(1)
         # 获取是否可见选项的复选框元素
         checkbox2 = self.get_find_element_xpath(
             '(//div[./div[text()="是否可见:"]])[1]/label/span'

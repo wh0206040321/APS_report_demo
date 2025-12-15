@@ -963,9 +963,9 @@ class TestChangeSpecPage:
         # 定位第一行是否为开料
         changeRcode = change.get_find_element_xpath(
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
-        )
-        assert changeRcode.text == after
+        ).get_attribute('innerText')
         change.right_refresh('生产特征1切换')
+        assert changeRcode == after
         assert not change.has_fail_message()
 
     @allure.story("删除数据成功")

@@ -178,7 +178,7 @@ class TestWorkTasksPage:
         task.enter_texts('//div[p[text()="总工时"]]/following-sibling::div//input', name)
         task.wait_for_loading_to_disappear()
         sleep(1)
-        eles = task.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[6]')
+        eles = task.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[10]')
         sleep(1)
         list_ = [ele.text for ele in eles]
         assert all(name in text for text in list_)

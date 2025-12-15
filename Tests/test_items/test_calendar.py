@@ -176,8 +176,7 @@ class TestCalendarPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
         )
         # 勾选框
-        random_int = random.randint(1, 6)
-        calendar.click_button(f'//table[@class="vxe-table--body"]//tr[{random_int}]/td[2]/div/span/span')
+        calendar.click_button(f'//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span/span')
         calendar.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
@@ -188,8 +187,7 @@ class TestCalendarPage:
         )
         # 勾选框
         sleep(1)
-        random_int1 = random.randint(2, 10)
-        calendar.click_button(f'(//span[@class="vxe-cell--checkbox"])[{random_int1}]')
+        calendar.click_button(f'(//span[@class="vxe-cell--checkbox"])[3]')
         calendar.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
@@ -303,9 +301,8 @@ class TestCalendarPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
         )
         # 勾选框
-        random_int = random.randint(1, 5)
         calendar.wait_for_loading_to_disappear()
-        calendar.click_button(f'//table[@class="vxe-table--body"]//tr[{random_int}]/td[2]/div/span/span')
+        calendar.click_button(f'//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span/span')
 
         calendar.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
@@ -376,9 +373,8 @@ class TestCalendarPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
         )
         # 勾选框
-        random_int = random.randint(1, 5)
         calendar.wait_for_loading_to_disappear()
-        calendar.click_button(f'//table[@class="vxe-table--body"]//tr[{random_int}]/td[2]/div/span/span')
+        calendar.click_button(f'//table[@class="vxe-table--body"]//tr[2]/td[2]/div/span/span')
 
         calendar.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
