@@ -68,6 +68,15 @@ class OrderPage(BasePage):
         sleep(0.5)
         self.wait_for_loading_to_disappear()
 
+    def right_refresh(self, name):
+        """右键刷新."""
+        but = self.get_find_element_xpath(f'//div[@class="scroll-body"]/div[.//div[text()=" {name} "]]')
+        but.click()
+        # 右键点击
+        ActionChains(self.driver).context_click(but).perform()
+        self.click_button('//li[text()=" 刷新"]')
+        self.wait_for_loading_to_disappear()
+
     def wait_for_loading_to_disappear(self, timeout=10):
         """
         显式等待加载遮罩元素消失。
@@ -312,7 +321,13 @@ class OrderPage(BasePage):
 
     def click_order_page(self, name):
         """点击不同订单页"""
-        self.click_button(f'(//span[text()="{name}"])[1]')
+        try:
+            self.click_button(f'(//span[text()="{name}"])[1]')
+        except Exception as e:
+            self.click_button('(//span[text()="计划管理"])[1]')
+            self.click_button('(//span[text()="计划业务数据"])[1]')
+            self.click_button(f'(//span[text()="{name}"])[1]')
+        self.wait_for_loading_to_disappear()
 
     def add_order_data(self, name):
         """添加数据."""

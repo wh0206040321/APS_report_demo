@@ -19,7 +19,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_order():
     driver = None
     try:
@@ -98,6 +98,8 @@ class TestOrderPage:
         borderitem_color = inputitem_box.value_of_css_property("border-color")
         inputdate_box = inputdate_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        order.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        order.right_refresh('制造订单')
         assert border_color == expected_color and borderitem_color == expected_color and inputdate_box == expected_color and name == layout
         assert not order.has_fail_message()
 
@@ -137,6 +139,8 @@ class TestOrderPage:
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         border_color = inputdate_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        order.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        order.right_refresh('制造订单')
         # 判断上一步默认启动该布局成功
         assert (
             border_color == expected_color and div == "tabsDivItem tabsDivActive"
@@ -174,6 +178,8 @@ class TestOrderPage:
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        order.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        order.right_refresh('制造订单')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -227,6 +233,8 @@ class TestOrderPage:
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        order.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        order.right_refresh('制造订单')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -253,6 +261,8 @@ class TestOrderPage:
         ordernum = order.get_find_element_xpath(
             '(//label[text()="计划数量"])[1]/parent::div//input'
         ).get_attribute("value")
+        order.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        order.right_refresh('制造订单')
         assert ordernum == "1123", f"预期{ordernum}"
         assert not order.has_fail_message()
 
@@ -274,6 +284,8 @@ class TestOrderPage:
             '(//label[text()="订单区分"])[1]/parent::div//input['
             '@class="ivu-select-input"]'
         ).get_attribute("value")
+        order.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        order.right_refresh('制造订单')
         assert ordersel == "补充", f"预期{ordersel}"
         assert not order.has_fail_message()
 
@@ -316,10 +328,10 @@ class TestOrderPage:
         order.click_confirm_button()
         adddata = order.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]'
-        ).text
+        ).get_attribute('innerText')
         num_ = order.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[10]'
-        ).text
+        ).get_attribute('innerText')
         assert adddata == name and num_ == '9999999999'
         assert not order.has_fail_message()
 
@@ -362,7 +374,7 @@ class TestOrderPage:
         order.click_confirm_button()
         adddata = order.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]'
-        ).text
+        ).get_attribute('innerText')
         assert adddata == name
         assert not order.has_fail_message()
 
@@ -400,6 +412,8 @@ class TestOrderPage:
         error_popup = order.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
         ).get_attribute("innerText")
+        order.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        order.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             error_popup == "记录已存在,请检查！"
         ), f"预期数据是记录已存在,请检查，实际得到{error_popup}"
@@ -456,7 +470,7 @@ class TestOrderPage:
         order.click_confirm_button()
         adddata = order.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]'
-        ).text
+        ).get_attribute('innerText')
         assert adddata == name
         assert not order.has_fail_message()
 
@@ -479,6 +493,8 @@ class TestOrderPage:
         error_popup = order.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
         ).get_attribute("innerText")
+        order.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        order.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert error_popup == "记录已存在,请检查！", f"预期数据{error_popup}"
         assert not order.has_fail_message()
 
@@ -507,7 +523,7 @@ class TestOrderPage:
         # 定位表格内容
         orderdata = order.get_find_element_xpath(
             f'//tr[./td[2][.//span[contains(text(),"{name}")]]]/td[2]'
-        ).text
+        ).get_attribute('innerText')
         assert orderdata == text, f"预期{orderdata}"
         assert not order.has_fail_message()
 
@@ -526,7 +542,7 @@ class TestOrderPage:
         # 点击确定
         order.click_confirm_button()
         # 定位表格内容
-        orderdata = order.get_find_element_xpath(f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]').text
+        orderdata = order.get_find_element_xpath(f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]').get_attribute('innerText')
         assert orderdata == name, f"预期{orderdata}"
         assert not order.has_fail_message()
 
@@ -574,10 +590,10 @@ class TestOrderPage:
         # 定位表格内容
         orderitem = order.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]/ancestor::tr/td[5]/div'
-        ).text
+        ).get_attribute('innerText')
         ordernum = order.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]/ancestor::tr/td[10]/div'
-        ).text
+        ).get_attribute('innerText')
         assert orderitem == edititem and ordernum == editnum
         assert not order.has_fail_message()
 
@@ -593,7 +609,7 @@ class TestOrderPage:
         order.click_ref_button()
         ordertext = order.get_find_element_xpath(
             '//p[text()="订单代码"]/ancestor::div[2]//input'
-        ).text
+        ).get_attribute('innerText')
         assert ordertext == "", f"预期{ordertext}"
         assert not order.has_fail_message()
 
@@ -646,6 +662,7 @@ class TestOrderPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
+        order.right_refresh('制造订单')
         assert ordercode == name and len(ordercode2) == 0
         assert not order.has_fail_message()
 
@@ -692,6 +709,7 @@ class TestOrderPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
         )
+        order.right_refresh('制造订单')
         assert len(itemcode) == 0
         assert not order.has_fail_message()
 
@@ -735,6 +753,7 @@ class TestOrderPage:
         # 点击确认
         order.click_select_button()
         eles = order.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[2]')
+        order.right_refresh('制造订单')
         assert len(eles) > 0
         assert all(name in ele for ele in eles)
         assert not order.has_fail_message()
@@ -895,6 +914,7 @@ class TestOrderPage:
                 assert name in td2 or td10_raw >= num, f"第 {idx + 1} 行不符合：td2={td2}, td8={td10_raw}"
                 valid_count += 1
         assert not order.has_fail_message()
+        order.right_refresh('制造订单')
         print(f"符合条件的行数：{valid_count}")
 
     @allure.story("查询计划数量>100")
@@ -937,6 +957,7 @@ class TestOrderPage:
         # 点击确认
         order.click_select_button()
         eles = order.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[10]')
+        order.right_refresh('制造订单')
         assert len(eles) > 0
         assert all(int(ele) > num for ele in eles)
         assert not order.has_fail_message()
@@ -1066,6 +1087,7 @@ class TestOrderPage:
         order.click_select_button()
         eles1 = order.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[10]')
         eles2 = order.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[2]')
+        order.right_refresh('制造订单')
         assert len(eles1) > 0 and len(eles2) > 0
         assert all(int(ele) > num for ele in eles1) and all(name in ele for ele in eles2)
         assert not order.has_fail_message()
@@ -1188,6 +1210,7 @@ class TestOrderPage:
         updatatime = order.get_find_element_xpath(
             '//label[text()="更新时间"]/following-sibling::div//input').get_attribute("value")
         today_str = date.today().strftime('%Y/%m/%d')
+        order.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert before_all_value == after_all_value and username == DateDriver().username and today_str in updatatime and int(
             num) == (int(len_num) + 17) and before_checked == after_checked
         assert all(before_all_value), "列表中存在为空或为假值的元素！"
@@ -1198,6 +1221,7 @@ class TestOrderPage:
     def test_order_delsuccess(self, login_to_order):
         driver = login_to_order  # WebDriver 实例
         order = OrderPage(driver)  # 用 driver 初始化 OrderPage
+        order.right_refresh('制造订单')
         layout = "测试布局A"
 
         value = ['111', '1测试A', '11测试全部数据', '111111111111111133331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111']
@@ -1276,8 +1300,8 @@ class TestOrderPage:
         order = OrderPage(driver)  # 用 driver 初始化 OrderPage
         list_name = ['11盘点库存', '11盘点库存测试']
         after_name = '11修改盘点库存'
-        order.click_button('//div[text()=" 制造订单 "]')
-        order.click_button('//div[div[text()=" 制造订单 "]]/span')
+        order.click_button('//div[text()=" 计划需求 "]')
+        order.click_button('//div[div[text()=" 计划需求 "]]/span')
         order.click_order_page('盘点库存')
         add1 = order.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = order.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
@@ -1323,8 +1347,8 @@ class TestOrderPage:
         order = OrderPage(driver)  # 用 driver 初始化 OrderPage
         list_name = ['11调整库存', '11调整库存测试']
         after_name = '11修改调整库存'
-        order.click_button('//div[text()=" 制造订单 "]')
-        order.click_button('//div[div[text()=" 制造订单 "]]/span')
+        order.click_button('//div[text()=" 盘点库存 "]')
+        order.click_button('//div[div[text()=" 盘点库存 "]]/span')
         order.click_order_page('调整库存')
         add1 = order.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = order.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
