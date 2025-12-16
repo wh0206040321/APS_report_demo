@@ -1420,8 +1420,10 @@ class TestAffairsPage:
         affairs.click_process_log()
         sleep(1)
         affairs.click_paging(num)
-        affairs_name = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute("innerText")
+        affairs_name_all = affairs.get_find_element_xpath(
+            '(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute("innerText")
         sleep(1)
+        affairs_name = affairs_name_all.split()[0]
         affairs.sel_log_all(affairs_name=affairs_name)
         list_ = []
         cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[2]')
@@ -1437,8 +1439,9 @@ class TestAffairsPage:
         sleep(1)
         affairs.click_process_log()
         sleep(1)
-        affairs_name = affairs.get_find_element_xpath(
+        affairs_name_all = affairs.get_find_element_xpath(
             '(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute("innerText")
+        affairs_name = affairs_name_all.split()[0]
         num = 1000
         time = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[5]').get_attribute(
             "innerText")
@@ -1482,7 +1485,9 @@ class TestAffairsPage:
         ptype = "执行失败"
         pid = "41183627842692411"
         pname = "每周"
-        affairs_name = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute("innerText")
+        affairs_name_all = affairs.get_find_element_xpath(
+            '(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute("innerText")
+        affairs_name = affairs_name_all.split()[0]
         affairs.click_paging(num)
         sleep(1)
         affairs.sel_log_all(time1=time1, time2=time2, ptype=ptype, pid=pid, pname=pname, affairs_name=affairs_name)
@@ -1495,14 +1500,16 @@ class TestAffairsPage:
         driver = login_to_affairs  # WebDriver 实例
         affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
         sleep(1)
+        affairs.click_process_log()
         num = 1000
         time1 = "2025-02-27 "
         time2 = "10:20:00"
         ptype = "执行失败"
         pid = "4118362784269241"
         pname = "每周"
-        affairs_name = "获取令牌"
-        affairs.click_process_log()
+        affairs_name_all = affairs.get_find_element_xpath(
+            '(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute("innerText")
+        affairs_name = affairs_name_all.split()[0]
         affairs.click_paging(num)
         sleep(1)
         affairs.sel_log_all(time1=time1, time2=time2, ptype=ptype, pid=pid, pname=pname, affairs_name=affairs_name, button=False)

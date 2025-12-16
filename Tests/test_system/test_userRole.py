@@ -937,9 +937,7 @@ class TestUserRolePage:
 
         user.click_button('(//span[text()="角色管理"])[1]')
         # 等待遮罩层消失
-        WebDriverWait(driver, 10).until(
-            EC.invisibility_of_element_located((By.XPATH, "//div[@class='el-loading-mask']"))
-        )
+        user.wait_for_el_loading_mask()
         user.enter_texts('//div[div[p[text()="角色代码"]]]//input', name1)
         sleep(1)
         user.click_button(f'(//table[@class="vxe-table--body"])[1]//tr/td[2]//span[text()="{name1}"]')
@@ -947,9 +945,7 @@ class TestUserRolePage:
         user.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         user.get_find_message()
         user.right_refresh('角色管理')
-        WebDriverWait(driver, 10).until(
-            EC.invisibility_of_element_located((By.XPATH, "//div[@class='el-loading-mask']"))
-        )
+        user.wait_for_el_loading_mask()
 
         user.enter_texts('//div[div[p[text()="角色代码"]]]//input', name2)
         sleep(1)
@@ -958,17 +954,13 @@ class TestUserRolePage:
         user.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         user.get_find_message()
         user.right_refresh('角色管理')
-        WebDriverWait(driver, 10).until(
-            EC.invisibility_of_element_located((By.XPATH, "//div[@class='el-loading-mask']"))
-        )
+        user.wait_for_el_loading_mask()
 
         user.enter_texts('//div[div[p[text()="角色代码"]]]//input', name1)
         eles1 = user.finds_elements(By.XPATH,
                                    f'(//table[@class="vxe-table--body"])[1]//tr/td[2]//span[text()="{name1}"]')
         user.right_refresh('角色管理')
-        WebDriverWait(driver, 10).until(
-            EC.invisibility_of_element_located((By.XPATH, "//div[@class='el-loading-mask']"))
-        )
+        user.wait_for_el_loading_mask()
         user.enter_texts('//div[div[p[text()="角色代码"]]]//input', name2)
         eles2 = user.finds_elements(By.XPATH,
                                    f'(//table[@class="vxe-table--body"])[1]//tr/td[2]//span[text()="{name2}"]')

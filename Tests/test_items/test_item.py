@@ -989,8 +989,12 @@ class TestItemPage:
 
 
         value_bos = '//div[@class="vxe-modal--body"]//table[@class="vxe-table--body"]//tr[1]/td[3]'
+        # spe_xpath_list = [
+        #     f'//label[text()="生产特征{i}"]/following-sibling::div//i'
+        #     for i in range(1, 11)
+        # ]
         spe_xpath_list = [
-            f'//label[text()="生产特征{i}"]/following-sibling::div//i'
+            f'//label[text()="{"颜色" if i == 1 else f"生产特征{i}"}"]/following-sibling::div//i'
             for i in range(1, 11)
         ]
         box_list = [
@@ -1111,7 +1115,8 @@ class TestItemPage:
     def test_item_delsuccess(self, login_to_item):
         driver = login_to_item  # WebDriver 实例
         item = ItemPage(driver)  # 用 driver 初始化 ItemPage
-        item.right_refresh('物品')
+        driver.refresh()
+        item.wait_for_loading_to_disappear()
         layout = "测试布局A"
 
         value = ['111', '11测试全部数据', '1测试A','111111111111111133331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111']

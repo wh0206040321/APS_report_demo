@@ -77,6 +77,7 @@ class TestResourceAllocationPage:
         list_ = ["计划管理", "计划基础数据", "资源"]
         resource_ = ['1测试资源同步数据1', '1测试资源同步数据2']
         for v in list_:
+            sleep(1)
             allocation.click_button(f'(//span[text()="{v}"])[1]')
         resource.add_test_resource(f'{resource_[0]}')
         resource.click_button(
@@ -270,6 +271,7 @@ class TestResourceAllocationPage:
         list_ = ["计划管理", "计划基础数据", "资源"]
         for v in list_:
             allocation.click_button(f'(//span[text()="{v}"])[1]')
+            sleep(1)
         resource_ = ['1测试资源同步数据1', '1测试资源同步数据2']
         sleep(1)
         resource.del_all(value=resource_, xpath='//p[text()="资源代码"]/ancestor::div[2]//input')
