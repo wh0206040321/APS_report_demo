@@ -160,7 +160,7 @@ class AffairsPage(BasePage):
     def click_process(self):
         """点击流程"""
         self.click_button('//div[@id="tab-flow"]')
-        sleep(2)
+        self.wait_for_el_loading_mask()
 
     def click_process_log(self):
         """点击流程日志"""
@@ -193,7 +193,7 @@ class AffairsPage(BasePage):
             self.click_button(f'//div[@class="application__name"]/div[@class="name" and contains(text(),"{sel}")]')
         sleep(1)
         num = len(self.finds_elements(By.XPATH, '//div[@class="application__name"]/div[@class="name"]'))
-        value = self.get_find_element_xpath('//div[@class="application__item activated"]/div[@class="application__name"]/div[@class="name"]').text
+        value = self.get_find_element_xpath('//div[@class="application__item activated"]/div[@class="application__name"]/div[@class="name"]').get_attribute('innerText')
         self.click_button('//div[@class="el-dialog__footer"]//span[text()="确定"]')
         return num, value
 
@@ -273,6 +273,7 @@ class AffairsPage(BasePage):
 
     def click_save(self):
         """点击保存"""
+        sleep(1)
         self.click_button('//div[@class="footer"]//span[text()="保存"]')
 
     def add_process(self, name="", type="", frequency="", time=""):

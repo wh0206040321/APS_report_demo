@@ -117,7 +117,7 @@ class TestItemPage:
 
         # 点击确定
         self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
-        sleep(1)
+        self.item.wait_for_loading_to_disappear()
         adddata = self.item.get_find_element_xpath(
             '//tr[./td[2][.//span[text()="111"]]]/td[2]'
         ).text
@@ -185,7 +185,7 @@ class TestItemPage:
         self.item.enter_texts("//div[@id='ol0ayk71-opoa']//input", "2025/07/22 00:00:00")
         # 点击确定
         self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
-        sleep(1)
+        self.item.wait_for_loading_to_disappear()
         adddata = self.item.get_find_element_xpath(
             '//tr[./td[2][.//span[text()="1测试A"]]]/td[2]'
         ).text
@@ -208,7 +208,7 @@ class TestItemPage:
         )
         # 点击确定
         self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
-        sleep(3)
+        self.item.wait_for_loading_to_disappear()
         # 定位表格内容
         itemdata = self.item.get_find_element_xpath(
             '//tr[./td[2][.//span[contains(text(),"1测试A")]]]/td[2]'
@@ -227,7 +227,7 @@ class TestItemPage:
         self.item.enter_texts("//div[@id='mbh7ra45-w560']//input", "1测试A")
         # 点击确定
         self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
-        sleep(1)
+        self.item.wait_for_loading_to_disappear()
         # 定位表格内容
         itemdata = self.item.get_find_element_xpath(
             '//tr[./td[2][.//span[text()="1测试A"]]]/td[2]'

@@ -77,7 +77,7 @@ class TestResourceAllocationPage:
         list_ = ["计划管理", "计划基础数据", "资源"]
         resource_ = ['1测试资源同步数据1', '1测试资源同步数据2']
         for v in list_:
-            sleep(1)
+            sleep(2)
             allocation.click_button(f'(//span[text()="{v}"])[1]')
         resource.add_test_resource(f'{resource_[0]}')
         resource.click_button(

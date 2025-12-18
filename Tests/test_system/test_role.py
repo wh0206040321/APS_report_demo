@@ -392,7 +392,8 @@ class TestRolePage:
         role.enter_texts('//input[@placeholder="请输入关键字筛选"]', '需求管理')
         sleep(2)
         role.click_button('//div[@class="ivu-tree"]/ul[1]//label/span')
-        te = role.get_find_element_xpath('//div[@class="ivu-tree"]/ul[1]//span[@class="font14"]').text
+        te = role.get_find_element_xpath('//div[@class="ivu-tree"]/ul[1]//span[@class="font14"]').get_attribute(
+            'innerText')
         role.click_all_button("保存")
         message = role.get_find_message()
         driver.refresh()
@@ -404,8 +405,10 @@ class TestRolePage:
                 (By.XPATH, '//div[@class="loadingbox"]')
             )
         )
+        sleep(2)
         num_ = len(role.finds_elements(By.XPATH, f'//div[@class="listDivCon"]/div'))
-        swich_name = role.get_find_element_xpath(f'//div[@class="ivu-dropdown-rel"]/div').text
+        swich_name = role.get_find_element_xpath(f'//div[@class="ivu-dropdown-rel"]/div').get_attribute(
+            'innerText')
         assert message == "保存成功" and num_ == 1 and swich_name == module and te == "需求管理"
         assert not role.has_fail_message()
 

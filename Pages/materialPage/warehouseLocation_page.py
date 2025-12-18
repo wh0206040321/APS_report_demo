@@ -139,6 +139,15 @@ class WarehouseLocationPage(BasePage):
         )
         sleep(1)
 
+    def wait_for_loading_to_disappear(self, timeout=10):
+        sleep(1)
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located(
+                (By.XPATH,
+                 "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
+            )
+        )
+
     def click_del_button(self):
         """点击删除按钮."""
         self.click(By.XPATH, '//p[text()="删除"]')

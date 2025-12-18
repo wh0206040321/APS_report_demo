@@ -140,7 +140,7 @@ class ExpressionPage(BasePage):
 
     def select_input_dictionary(self, name):
         """选择输入框."""
-        xpath = '//div[div[span[text()=" 枚举值"]]]//input'
+        xpath = '//div[div[span[text()=" 值"]]]//input'
         ele = self.get_find_element_xpath(xpath)
         ele.send_keys(Keys.CONTROL, "a")
         ele.send_keys(Keys.DELETE)

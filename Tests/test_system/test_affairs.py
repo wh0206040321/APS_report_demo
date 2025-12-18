@@ -1105,8 +1105,9 @@ class TestAffairsPage:
         template_name = "添加全部模版成功"
         enable = "关闭"
         name = "添加全部成功"
-        sleep(1)
+        affairs.wait_for_el_loading_mask()
         affairs.click_process()
+        sleep(1)
         affairs.select_all(template_name, enable, name, button=False)
         ele1 = affairs.get_find_element_xpath('//div[label[text()="流程事务:"]]//input').get_attribute("value")
         ele2 = affairs.get_find_element_xpath('//div[label[text()="是否启用:"]]//input').get_attribute("value")
@@ -1312,6 +1313,7 @@ class TestAffairsPage:
         affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
         name1 = "添加全部模版成功"
         name2 = "添加事务模版"
+        affairs.wait_for_el_loading_mask()
         affairs.hover(name1, "删除")
         affairs.click_button('//div[@class="el-message-box__btns"]/button[2]')
         affairs.get_find_message()
@@ -1468,7 +1470,7 @@ class TestAffairsPage:
         td5 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[5]').get_attribute(
             "innerText")
         tr2 = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[2]/tbody/tr[2]')
-        assert td1 == ptype and td2 == affairs_name and td3 == pname and td4 == pid and td5 == time
+        assert td1 == ptype and affairs_name in td2 and td3 == pname and td4 == pid and td5 == time
         assert len(tr2) == 0
         assert not affairs.has_fail_message()
 

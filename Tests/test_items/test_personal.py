@@ -135,7 +135,7 @@ class TestPersonalPage:
     def test_personal_editpassword7(self, login_to_personal):
         driver = login_to_personal  # WebDriver 实例
         personal = PersonalPage(driver)  # 用 driver 初始化 PersonalPage
-        password = [f"{DateDriver.password}", f"W1{DateDriver.username}", f"W1{DateDriver.username}"]
+        password = [f"{DateDriver.password}", f"W11{DateDriver.username}", f"W1{DateDriver.username}"]
         personal.edit_password(password[0], password[1], password[2])
         ele = driver.find_elements(By.XPATH, '//p[text()=" 不允许包含用户名 "]')
         assert len(ele) == 1

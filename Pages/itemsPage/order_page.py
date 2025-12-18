@@ -342,6 +342,7 @@ class OrderPage(BasePage):
             '(//button[@class="ivu-btn ivu-btn-primary ivu-btn-small"])[3]'
         )
         self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        sleep(1)
         self.wait_for_loading_to_disappear()
 
     def edit_order_data(self, before_name, after_name):
@@ -352,6 +353,7 @@ class OrderPage(BasePage):
         self.enter_texts('(//label[text()="订单代码"])[1]/parent::div//input', after_name)
         self.enter_texts('(//label[text()="物料"])[1]/parent::div//input', after_name)
         self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        sleep(1)
         self.wait_for_loading_to_disappear()
 
     def del_order_data(self, name):
@@ -361,6 +363,7 @@ class OrderPage(BasePage):
             self.click_button(f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]')
             self.click_del_button()  # 检查点击删除
             self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+            sleep(1)
             self.wait_for_loading_to_disappear()
 
     def select_order_data(self, name):
