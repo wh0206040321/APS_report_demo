@@ -156,6 +156,7 @@ class SettingPage(BasePage):
         """添加透视表."""
         self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[2]//i')
         self.click_button('//li[text()="添加透视表"]')
+        self.wait_for_el_loading_mask()
 
     def click_setting_button(self):
         """点击设置按钮."""

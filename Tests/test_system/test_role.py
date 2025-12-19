@@ -380,11 +380,11 @@ class TestRolePage:
         before_name = "1测试角色代码4"
         module = "1测试计划单元CTB"
         role.select_input(before_name)
-        sleep(1)
+        sleep(2)
         role.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{before_name}"]')
-        sleep(1)
+        sleep(2)
         role.click_all_button("编辑")
-        sleep(1)
+        sleep(2)
         num = len(role.finds_elements(By.XPATH, '//div[@class="ivu-tree"]//li/label/span'))
         for i in range(1, num+1):
             role.click_button(f'(//div[@class="ivu-tree"]//li/label/span)[{i}]')

@@ -23,7 +23,7 @@ from selenium.webdriver.chrome.options import Options
 import os
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_planUnit():
     driver = None
     try:
@@ -98,6 +98,8 @@ class TestPlanUnitPage:
         value_list = add.get_border_color(list_)
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        unit.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        unit.right_refresh()
         assert all(value == expected_color for value in value_list)
         assert layout == name
         assert not unit.has_fail_message()
@@ -121,6 +123,8 @@ class TestPlanUnitPage:
         value_list = add.get_border_color(list_)
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        unit.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        unit.right_refresh()
         assert all(value == expected_color for value in value_list)
         assert not unit.has_fail_message()
 
@@ -143,6 +147,8 @@ class TestPlanUnitPage:
         value_list = add.get_border_color(list_)
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        unit.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        unit.right_refresh()
         assert all(value == expected_color for value in value_list)
         assert not unit.has_fail_message()
 
@@ -204,8 +210,10 @@ class TestPlanUnitPage:
         unit.add_plan_unit(name, module)
         unit.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])')
-        ele = unit.finds_elements(By.XPATH, '//div[text()=" 记录已存在,请检查！ "]')
-        assert len(ele) == 1
+        ele = unit.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute('innerText')
+        unit.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        unit.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert ele == '记录已存在,请检查！'
         assert not unit.has_fail_message()
 
     # @allure.story("文本框的校验")
@@ -252,16 +260,17 @@ class TestPlanUnitPage:
         sty1 = unit.get_find_element_xpath('(//label[text()="计划单元"])[1]/parent::div//input').get_attribute("disabled")
         sty2 = unit.get_find_element_xpath('(//label[text()="模板名称"])[1]/parent::div//div[@class="ivu-select-selection"]//input[@type="text"]').get_attribute("disabled")
         unit.click_confirm_button()
-        ele = unit.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{name}"]]/td[3]')
+        ele = unit.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{name}"]]/td[3]').get_attribute("innerText")
         assert sty1 == sty2 == 'true'
-        assert ele.text == '修改计划单元名称'
+        assert ele == '修改计划单元名称'
         unit.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
         unit.click_all_button("编辑")
         sleep(1)
         unit.enter_texts('//label[text()="计划单元名称"]/parent::div//input', name)
         unit.click_confirm_button()
-        ele = unit.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{name}"]]/td[3]')
-        assert ele.text == name
+        ele = unit.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{name}"]]/td[3]').get_attribute("innerText")
+        unit.right_refresh()
+        assert ele == name
         assert not unit.has_fail_message()
 
     @allure.story("查询物料代码成功")
@@ -312,6 +321,7 @@ class TestPlanUnitPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
+        unit.right_refresh()
         assert unitcode == name and len(unitcode2) == 0
         assert not unit.has_fail_message()
 
@@ -358,6 +368,7 @@ class TestPlanUnitPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
         )
+        unit.right_refresh()
         assert len(unitcode) == 0
         assert not unit.has_fail_message()
 
@@ -402,6 +413,7 @@ class TestPlanUnitPage:
         # 点击确认
         unit.click_select_button()
         eles = unit.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
+        unit.right_refresh()
         assert len(eles) > 0
         assert all(name in ele for ele in eles)
         assert not unit.has_fail_message()
@@ -531,6 +543,7 @@ class TestPlanUnitPage:
         unit.click_select_button()
         eles1 = unit.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[4]')
         eles2 = unit.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
+        unit.right_refresh()
         assert len(eles1) > 0 and len(eles2) > 0
         assert all(m == ele for ele in eles1) and all(name in ele for ele in eles2)
         assert not unit.has_fail_message()
@@ -696,6 +709,7 @@ class TestPlanUnitPage:
     def test_unit_download(self, login_to_planUnit):
         driver = login_to_planUnit  # WebDriver 实例
         unit = PlanUnitPage(driver)  # 用 driver 初始化 PlanUnitPage
+        unit.right_refresh()
         name = "1测试A"
 
         unit.select_input(name)
