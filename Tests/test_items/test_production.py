@@ -68,7 +68,7 @@ class TestProductionPage:
         # 获取布局名称的文本元素
         name = production.get_find_element_xpath(
             f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
-        ).text
+        ).get_attribute("innerText")
         assert layout == name
         assert not production.has_fail_message()
 

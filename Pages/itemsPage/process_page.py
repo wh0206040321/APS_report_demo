@@ -1,4 +1,6 @@
 from time import sleep
+
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -232,3 +234,12 @@ class ProcessPage(BasePage):
                 ele.click()
 
             self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+
+    def right_refresh(self, name):
+        """右键刷新."""
+        but = self.get_find_element_xpath(f'//div[@class="scroll-body"]/div[.//div[text()=" {name} "]]')
+        but.click()
+        # 右键点击
+        ActionChains(self.driver).context_click(but).perform()
+        self.click_button('//li[text()=" 刷新"]')
+        self.wait_for_loading_to_disappear()

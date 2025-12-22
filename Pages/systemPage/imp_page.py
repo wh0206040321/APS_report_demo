@@ -83,6 +83,12 @@ class ImpPage(BasePage):
         )
         sleep(1)
 
+    def wait_for_el_loading_mask(self, timeout=15):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
+        )
+        sleep(1)
+
     def click_impall_button(self, name):
         """点击导入页面各种按钮"""
         self.click_button(f'//div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//p[text()="{name}"]')
@@ -141,3 +147,7 @@ class ImpPage(BasePage):
         # 滚动到最右边
         self.driver.execute_script("arguments[0].scrollLeft = arguments[0].scrollWidth;", element)
         sleep(1)
+
+    def upload_file(self, file_path):
+        upload_input = self.get_find_element_xpath('(//input[@type="file"])[3]')
+        upload_input.send_keys(file_path)

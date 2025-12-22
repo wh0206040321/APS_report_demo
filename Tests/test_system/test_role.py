@@ -409,6 +409,7 @@ class TestRolePage:
         num_ = len(role.finds_elements(By.XPATH, f'//div[@class="listDivCon"]/div'))
         swich_name = role.get_find_element_xpath(f'//div[@class="ivu-dropdown-rel"]/div').get_attribute(
             'innerText')
+        swich_name = swich_name.strip()
         assert message == "保存成功" and num_ == 1 and swich_name == module and te == "需求管理"
         assert not role.has_fail_message()
 

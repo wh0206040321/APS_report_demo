@@ -1,4 +1,6 @@
 import logging
+import os
+import pyautogui
 from datetime import datetime
 from time import sleep
 
@@ -173,6 +175,7 @@ class TestImpPage:
     def test_imp_update(self, login_to_imp):
         driver = login_to_imp  # WebDriver 实例
         imp = ImpPage(driver)  # 用 driver 初始化 ImpPage
+        dir_ = 'Process'
         name = "1导入设置方案"
         kh = "客户"
         gx = "工序"
@@ -187,14 +190,47 @@ class TestImpPage:
         ele = imp.get_find_element_xpath(f'//ul[@class="ivu-tree-children"]//span[text()="{gx}"]')
         ActionChains(driver).context_click(ele).perform()
         imp.click_button('//li[text()="映射编辑"]')
+        imp.click_button('//button[span[text()="浏览文件"]]')
+
+        # 清理 .crdownload 文件，避免上传未完成的文件
+        current_dir = os.path.dirname(__file__)
+        download_path = os.path.join(current_dir, "downloads")
+        for f in os.listdir(download_path):
+            if f.endswith(".crdownload"):
+                os.remove(os.path.join(download_path, f))
+
+        sleep(2)
+        # 1. 准备上传文件路径
+        upload_file = os.path.join(download_path, f"{dir_}.xls")
+        assert os.path.isfile(upload_file), f"❌ 上传文件不存在: {upload_file}"
+
+        # 2. 定位上传控件并执行上传
+        imp.get_find_element_xpath('(//input[@type="file"])[3]')
+        pyautogui.write(upload_file)
+        sleep(3)
+        pyautogui.press('enter')
         sleep(1)
+        pyautogui.press('enter')
+        sleep(1)
+        imp.click_button('//div[text()=" 字段映射 "]')
+        imp.wait_for_el_loading_mask()
+        num = len(imp.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr'))
+        for i in range(1, num + 1):
+            imp.click_button(
+                f'(//table[@class="vxe-table--body"])[1]//tr[{i}]/td[3]')
+            sleep(0.5)
+            imp.click_button(
+                f'(//div[@class="vxe-select-option--wrapper"])[{i}]/div[{i}]')
+            sleep(1)
+
         imp.click_button(
             '//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         imp.click_impall_button("保存")
         message = imp.get_find_message()
         imp.click_button('//span[text()=" 执行方案"]')
         imp.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-        sleep(3)
+        imp.get_find_message()
+        imp.wait_for_el_loading_mask()
         eles1 = imp.finds_elements(By.XPATH,
                                    f'//ul[@class="ivu-tree-children"]//span[@class="valueSpan" and text()="{kh}"]')
         eles2 = imp.finds_elements(By.XPATH,

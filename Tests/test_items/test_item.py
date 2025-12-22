@@ -969,13 +969,8 @@ class TestItemPage:
         adds = AddsPages(driver)
         input_value = '11测试全部数据'
         item.click_add_button()
-        # 演示环境别人演示修改了自定义字符1，所以这里修改
-        # custom_xpath_list = [
-        #     f'//label[text()="自定义字符{i}"]/following-sibling::div//input'
-        #     for i in range(1, 21)
-        # ]
         custom_xpath_list = [
-            f'//label[text()="{"温度" if i == 1 else f"自定义字符{i}"}"]/following-sibling::div//input'
+            f'//label[text()="自定义字符{i}"]/following-sibling::div//input'
             for i in range(1, 21)
         ]
         text_list = [

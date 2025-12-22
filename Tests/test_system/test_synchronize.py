@@ -769,7 +769,6 @@ class TestSynchronizePage:
         for v in role_list:
             synchronize.click_button(f'(//span[text()="{v}"])[1]')
         role.del_all(role_name, '//div[div[p[text()="角色代码"]]]//input')
-        role.get_find_message()
 
         unit_list = ["计划单元"]
 

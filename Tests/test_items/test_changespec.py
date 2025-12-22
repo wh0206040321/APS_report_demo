@@ -1025,12 +1025,8 @@ class TestChangeSpecPage:
         resource_value = change.get_find_element_xpath('//label[text()="资源"]/following-sibling::div//input').get_attribute("value")
 
         code_value = '//span[text()="AdvanceAlongResourceWorkingTime"]'
-        # 演示环境别人演示修改了切换时间调整表达式，所以这里修改
-        # code_list = [
-        #     '//label[text()="切换时间调整表达式"]/following-sibling::div//i',
-        # ]
         code_list = [
-            '//label[text()="前设置时间调整表达式"]/following-sibling::div//i',
+            '//label[text()="切换时间调整表达式"]/following-sibling::div//i',
         ]
         adds.batch_modify_code_box(code_list, code_value)
 

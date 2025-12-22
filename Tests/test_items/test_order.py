@@ -1143,13 +1143,8 @@ class TestOrderPage:
             f'//label[text()="数值特征{i}"]/following-sibling::div//input'
             for i in range(1, 6)
         ]
-        # 演示环境别人演示修改了数值特征2，所以这里修改，
-        # num_xpath_list2 = [
-        #     f'//label[text()="自定义数字{i}"]/following-sibling::div//input'
-        #     for i in range(1, 51)
-        # ]
         num_xpath_list2 = [
-            f'//label[text()="{"前回PO数量" if i == 2 else f"自定义数字{i}"}"]/following-sibling::div//input'
+            f'//label[text()="自定义数字{i}"]/following-sibling::div//input'
             for i in range(1, 51)
         ]
 

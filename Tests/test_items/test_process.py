@@ -18,7 +18,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_process():
     driver = None
     try:
@@ -87,7 +87,8 @@ class TestProcessPage:
         border_color = input_box.value_of_css_property("border-color")
         bordername_color = inputname_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
-
+        process.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        process.right_refresh('工序')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -115,6 +116,8 @@ class TestProcessPage:
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        process.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        process.right_refresh('工序')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -140,6 +143,8 @@ class TestProcessPage:
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        process.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        process.right_refresh('工序')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -168,6 +173,8 @@ class TestProcessPage:
         processnum = process.get_find_element_xpath(
             '(//label[text()="显示顺序"])[1]/parent::div//input'
         ).get_attribute("value")
+        process.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        process.right_refresh('工序')
         assert processnum == "1123", f"预期{processnum}"
         assert not process.has_fail_message()
 
@@ -185,7 +192,9 @@ class TestProcessPage:
         # 获取下拉框数据
         processsel = process.get_find_element_xpath(
             '//div[label[text()="显示颜色"]]/div//span[@class="ivu-select-selected-value"]'
-        ).text
+        ).get_attribute("innerText")
+        process.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        process.right_refresh('工序')
         assert processsel == "2", f"预期{processsel}"
         assert not process.has_fail_message()
 
@@ -199,7 +208,7 @@ class TestProcessPage:
         process.adds_process(name, num)
         adddata = process.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[2]'
-        ).text
+        ).get_attribute("innerText")
         assert adddata == name, f"预期数据是111，实际得到{adddata}"
         assert not process.has_fail_message()
 
@@ -215,6 +224,8 @@ class TestProcessPage:
         error_popup = process.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
         ).get_attribute("innerText")
+        process.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        process.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             error_popup == "记录已存在,请检查！"
         ), f"预期数据是记录已存在,请检查，实际得到{error_popup}"
@@ -292,6 +303,8 @@ class TestProcessPage:
         error_popup = process.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
         ).get_attribute("innerText")
+        process.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        process.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert error_popup == "记录已存在,请检查！", f"预期数据{error_popup}"
         assert not process.has_fail_message()
 
@@ -460,6 +473,7 @@ class TestProcessPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
+        process.right_refresh('工序')
         assert processcode == name and len(processcode2) == 0
         assert not process.has_fail_message()
 
@@ -507,6 +521,7 @@ class TestProcessPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
         )
+        process.right_refresh('工序')
         assert len(processcode) == 0
         assert not process.has_fail_message()
 
@@ -550,6 +565,7 @@ class TestProcessPage:
         # 点击确认
         process.click_select_button()
         eles = process.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
+        process.right_refresh('工序')
         assert len(eles) > 0
         assert all(name in ele for ele in eles)
         assert not process.has_fail_message()
@@ -594,6 +610,7 @@ class TestProcessPage:
         # 点击确认
         process.click_select_button()
         eles = process.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[5]')
+        process.right_refresh('工序')
         assert len(eles) > 0
         assert all(int(ele) > num for ele in eles)
         assert not process.has_fail_message()
@@ -722,6 +739,7 @@ class TestProcessPage:
         process.click_select_button()
         eles1 = process.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[5]')
         eles2 = process.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
+        process.right_refresh('工序')
         assert len(eles1) > 0 and len(eles2) > 0
         assert all(int(ele) > num for ele in eles1) and all(name in ele for ele in eles2)
         assert not process.has_fail_message()
@@ -880,6 +898,7 @@ class TestProcessPage:
                 td5_raw = int(td5_raw) if td5_raw else 0
                 assert name in td3 or td5_raw > num, f"第 {idx + 1} 行不符合：td3={td3}, td5={td5_raw}"
                 valid_count += 1
+        process.right_refresh('工序')
         assert not process.has_fail_message()
         print(f"符合条件的行数：{valid_count}")
 
@@ -936,6 +955,7 @@ class TestProcessPage:
 
         print(columns_text)
         bef_text = [f'{data_list[0]}', f'{data_list[0]}', '2', f'{data_list[1]}', 'is--checked', f'{data_list[0]}', f'{DateDriver.username}', '2025']
+        process.right_refresh('工序')
         assert len(columns_text) == len(bef_text), f"长度不一致：actual={len(columns_text)}, expected={len(bef_text)}"
         for i, (a, e) in enumerate(zip(columns_text, bef_text)):
             if i == 4:
@@ -996,6 +1016,7 @@ class TestProcessPage:
 
         print(columns_text)
         bef_text = [code, code, '2', '20', 'is--checked', code, f'{DateDriver.username}', '2025']
+        process.right_refresh('工序')
         assert len(columns_text) == len(bef_text), f"长度不一致：actual={len(columns_text)}, expected={len(bef_text)}"
         for i, (a, e) in enumerate(zip(columns_text, bef_text)):
             if i == 4:

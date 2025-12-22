@@ -1649,13 +1649,15 @@ class TestChartPage:
 
         chart.click_button('//div[@id="pn3920a4-o9ru"]//i')
         sleep(2)
-        ele1 = chart.get_find_element_xpath('(//div[@class="vxe-list--body"])[2]/div[2]/span').text
+        ele1 = chart.get_find_element_xpath('(//div[@class="vxe-list--body"])[2]/div[2]/span').get_attribute('innerText')
         chart.click_button('(//div[@class="vxe-list--body"])[2]/div[2]')
         chart.click_button('//span[text()="计划指标对比分析"]')
 
         chart.click_button('//button//span[text()="查询"]')
         chart.wait_for_el_loading_mask()
+        chart.click_button('//div[text()=" 数据表格 "]')
+        chart.wait_for_el_loading_mask()
         sleep(1)
-        ele2 = chart.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]/td[1]').text
+        ele2 = chart.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]/td[1]').get_attribute('innerText')
         assert ele1 == ele2
         assert not chart.has_fail_message()
