@@ -54,24 +54,35 @@ logger = logging.getLogger(__name__)  # 创建一个日志记录器，用于记�
 
 def capture_and_attach(driver, test_name: str, recipient: str = None):
     """
-       截图并保存到指定目录，同时附加到 Allure 报告，返回文件路径。
+    截图并保存到指定目录，同时附加到 Allure 报告，返回文件路径。
+    文件名包含时间戳
     """
     screenshot_dir = os.path.abspath("report/screenshots")
     os.makedirs(screenshot_dir, exist_ok=True)
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"{test_name}_{id(driver)}_{timestamp}.png"
+    # 获取当前时间
+    timestamp = datetime.now()
+    # 格式：年月日_时分秒
+    time_str = timestamp.strftime("%Y%m%d_%H%M%S")
+
+    # 清理测试名称
+    clean_name = re.sub(r'[\\/*?:"<>|]', "_", test_name)
+    # 新文件名：测试名_时间.png
+    filename = f"{clean_name}_{time_str}.png"
     file_path = os.path.join(screenshot_dir, filename)
 
-    # 保存截图到文件
+    # 保存截图
     driver.save_screenshot(file_path)
-    logger.info(f"[{test_name}] 截图已保存：{file_path}")
+    logger.info(f"[{clean_name}] 截图已保存：{file_path}")
 
-    # ✅ 附加到 Allure 报告
+    # 记录截图时间
+    logger.info(f"[{clean_name}] 截图时间：{timestamp.strftime('%Y-%m-%d %H:%M:%S')}")
+
+    # 附加到 Allure 报告
     with open(file_path, "rb") as f:
-        allure.attach(f.read(), name=test_name, attachment_type=AttachmentType.PNG)
+        allure.attach(f.read(), name=f"{clean_name}_{time_str}", attachment_type=AttachmentType.PNG)
 
-    # 如果需要，可以在这里调用邮件发送逻辑
+    # 如果需要发送邮件
     if recipient:
         # send_test_failure_email(...) 或者其他逻辑
         pass
