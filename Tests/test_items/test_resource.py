@@ -18,7 +18,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_resource():
     driver = None
     try:
@@ -87,6 +87,8 @@ class TestResourcePage:
         border_color = input_box.value_of_css_property("border-color")
         bordername_color = inputname_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        resource.right_refresh('资源')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -114,6 +116,8 @@ class TestResourcePage:
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        resource.right_refresh('资源')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -139,6 +143,8 @@ class TestResourcePage:
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        resource.right_refresh('资源')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -161,6 +167,8 @@ class TestResourcePage:
         resourcenum = resource.get_find_element_xpath(
             '(//label[text()="数值特征1MAX"])[1]/parent::div//input'
         ).get_attribute("value")
+        resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        resource.right_refresh('资源')
         assert resourcenum == "1123", f"预期{resourcenum}"
         assert not resource.has_fail_message()
 
@@ -181,6 +189,8 @@ class TestResourcePage:
         resourcesel = resource.get_find_element_xpath(
             '(//label[text()="资源量制约"])[1]/parent::div//input[@class="ivu-select-input"]'
         ).get_attribute("value")
+        resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        resource.right_refresh('资源')
         assert resourcesel == "按资源量分派", f"预期{resourcesel}"
         assert not resource.has_fail_message()
 
@@ -210,6 +220,8 @@ class TestResourcePage:
         resourcecode = resource.get_find_element_xpath(
             '(//label[text()="分割条件式"])[1]/parent::div//input'
         ).get_attribute("value")
+        resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        resource.right_refresh('资源')
         assert (
             resourcecode
             == "ME.AssignedQty>=10&&1h<ME.SuspendEndTime[0]-ME.SuspendStartTime[0]"
@@ -229,7 +241,7 @@ class TestResourcePage:
         resource.wait_for_loading_to_disappear()
         adddata = resource.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[2]'
-        ).text
+        ).get_attribute("innerText")
         assert adddata == name, f"预期数据是111，实际得到{adddata}"
         assert not resource.has_fail_message()
 
@@ -248,6 +260,8 @@ class TestResourcePage:
         error_popup = resource.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
         ).get_attribute("innerText")
+        resource.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             error_popup == "记录已存在,请检查！"
         ), f"预期数据是记录已存在,请检查，实际得到{error_popup}"
@@ -267,7 +281,7 @@ class TestResourcePage:
         # 定位内容为‘111’的行
         resourcedata = resource.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[2]'
-        ).text
+        ).get_attribute("innerText")
         assert resourcedata == name, f"预期{resourcedata}"
         assert not resource.has_fail_message()
 
@@ -286,10 +300,10 @@ class TestResourcePage:
         resource.wait_for_loading_to_disappear()
         adddata = resource.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[2]'
-        ).text
+        ).get_attribute("innerText")
         num_ = resource.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[9]'
-        ).text
+        ).get_attribute("innerText")
         assert adddata == name and num_ == '9999999999', f"预期数据是{name}，实际得到{adddata}"
         assert not resource.has_fail_message()
 
@@ -306,7 +320,7 @@ class TestResourcePage:
         resource.wait_for_loading_to_disappear()
         adddata = resource.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[2]'
-        ).text
+        ).get_attribute("innerText")
         assert adddata == name, f"预期数据是1测试A，实际得到{adddata}"
         assert not resource.has_fail_message()
 
@@ -331,6 +345,8 @@ class TestResourcePage:
         error_popup = resource.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
         ).get_attribute("innerText")
+        resource.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert error_popup == "记录已存在,请检查！", f"预期数据{error_popup}"
         assert not resource.has_fail_message()
 
@@ -358,7 +374,7 @@ class TestResourcePage:
         # 定位表格内容
         resourcedata = resource.get_find_element_xpath(
             f'(//span[contains(text(),"{name}")])[1]'
-        ).text
+        ).get_attribute("innerText")
         assert resourcedata == text, f"预期{resourcedata}"
         assert not resource.has_fail_message()
 
@@ -383,7 +399,7 @@ class TestResourcePage:
         # 定位表格内容
         resourcedata = resource.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]'
-        ).text
+        ).get_attribute("innerText")
         assert resourcedata == name, f"预期{resourcedata}"
         assert not resource.has_fail_message()
 
@@ -428,10 +444,10 @@ class TestResourcePage:
         # 定位表格内容
         resourcename = resource.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr/td[3]/div'
-        ).text
+        ).get_attribute("innerText")
         resourceautoGenerateFlag = resource.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr/td[7]/div'
-        ).text
+        ).get_attribute("innerText")
         assert resourcename == editname and resourceautoGenerateFlag == resourcesel
         assert not resource.has_fail_message()
 
@@ -494,12 +510,13 @@ class TestResourcePage:
         # 定位第一行是否为111
         resourcecode = resource.get_find_element_xpath(
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
-        ).text
+        ).get_attribute("innerText")
         # 定位第二行没有数据
         resourcecode2 = driver.find_elements(
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
+        resource.right_refresh('资源')
         assert resourcecode == "111" and len(resourcecode2) == 0
         assert not resource.has_fail_message()
 
@@ -546,6 +563,7 @@ class TestResourcePage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
         )
+        resource.right_refresh('资源')
         assert len(resourcecode) == 0
         assert not resource.has_fail_message()
 
@@ -589,6 +607,7 @@ class TestResourcePage:
         # 点击确认
         resource.click_select_button()
         eles = resource.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
+        resource.right_refresh('资源')
         assert len(eles) > 0
         assert all(name == ele for ele in eles)
         assert not resource.has_fail_message()
@@ -635,6 +654,7 @@ class TestResourcePage:
         # 点击确认
         resource.click_select_button()
         eles = resource.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[9]')
+        resource.right_refresh('资源')
         assert len(eles) > 0
         assert all(int(ele) > 5 for ele in eles)
         assert not resource.has_fail_message()
@@ -765,6 +785,7 @@ class TestResourcePage:
         resource.click_select_button()
         ele1 = resource.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[9]')
         ele2 = resource.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[4]')
+        resource.right_refresh('资源')
         assert len(ele1) > 0 and len(ele2) > 0
         assert all(int(ele) > 5 for ele in ele1) and all(
             "C" in ele for ele in ele2
@@ -924,6 +945,7 @@ class TestResourcePage:
                 td9_raw = int(td9_raw) if td9_raw else 0
                 assert name in td3 or td9_raw > num, f"第 {idx + 1} 行不符合：td3={td3}, td5={td9_raw}"
                 valid_count += 1
+        resource.right_refresh('资源')
         assert not resource.has_fail_message()
         print(f"符合条件的行数：{valid_count}")
 
@@ -1084,6 +1106,8 @@ class TestResourcePage:
         after_checked = resource.get_find_element_xpath(
             '//label[text()="无效资源"]/following-sibling::div//label/span').get_attribute("class")
         today_str = date.today().strftime('%Y/%m/%d')
+        resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        resource.right_refresh('资源')
         assert before_all_value == after_all_value and username == DateDriver().username and today_str in updatatime and int(
             num) == (int(len_num) + 3) and before_checked == after_checked
         assert all(before_all_value), "列表中存在为空或为假值的元素！"

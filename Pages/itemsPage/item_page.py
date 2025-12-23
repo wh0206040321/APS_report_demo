@@ -50,7 +50,6 @@ class ItemPage(BasePage):
         self.click_button('//li[text()=" 刷新"]')
         self.wait_for_loading_to_disappear()
 
-
     def go_item(self):
         """前往物料页面,deleteteststart.py和start.py页面使用"""
         self.click_button('(//span[text()="计划管理"])[1]')  # 点击计划管理

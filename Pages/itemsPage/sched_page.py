@@ -15,6 +15,7 @@ class SchedPage(BasePage):
     def click_add_schedbutton(self):
         """点击添加方案按钮."""
         self.click_button('//span[text()="新增方案"]')
+        sleep(1)
 
     def click_del_schedbutton(self):
         """点击删除方案按钮."""
@@ -50,7 +51,9 @@ class SchedPage(BasePage):
 
     def click_ok_schedbutton(self):
         """点击确定按钮."""
+        sleep(1)
         self.click_button('(//button[@class="ivu-btn ivu-btn-primary"])[2]')
+        sleep(1)
 
     def click_ok_button(self):
         """点击确定按钮."""

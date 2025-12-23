@@ -1,7 +1,7 @@
 from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver import Keys
+from selenium.webdriver import Keys, ActionChains
 from selenium.webdriver.common.by import By
 
 from Pages.base_page import BasePage
@@ -79,6 +79,15 @@ class ResourcePage(BasePage):
                  "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
             )
         )
+
+    def right_refresh(self, name):
+        """右键刷新."""
+        but = self.get_find_element_xpath(f'//div[@class="scroll-body"]/div[.//div[text()=" {name} "]]')
+        but.click()
+        # 右键点击
+        ActionChains(self.driver).context_click(but).perform()
+        self.click_button('//li[text()=" 刷新"]')
+        self.wait_for_loading_to_disappear()
 
     def click_select_button(self):
         """点击查询确定按钮."""

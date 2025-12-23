@@ -256,6 +256,7 @@ class TestsInterfaceExecutionPage:
             interface.click_all_button('删除')
             interface.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
             message = interface.get_find_message()
+            interface.wait_for_loading_to_disappear()
             ele = interface.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[4]//span[text()="{name}"]')
             assert len(ele) == 0
             assert message == "删除成功！"

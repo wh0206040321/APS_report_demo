@@ -164,8 +164,9 @@ class TestRolePage:
 
         role.click_button('(//span[text()="用户权限管理"])[1]')
         role.enter_texts('//div[div[p[text()="用户代码"]]]//input', date_driver.username)
-        sleep(1)
+        sleep(3)
         role.click_button(f'(//table[@class="vxe-table--body"]//span[text()="{date_driver.username}"])[1]')
+        sleep(2)
         role.click_all_button("编辑")
 
         role.select_input(name)
@@ -209,8 +210,9 @@ class TestRolePage:
 
         role.click_button('(//span[text()="用户权限管理"])[1]')
         role.enter_texts('//div[div[p[text()="用户代码"]]]//input', date_driver.username)
-        sleep(1)
+        sleep(3)
         role.click_button(f'(//table[@class="vxe-table--body"]//span[text()="{date_driver.username}"])[1]')
+        sleep(2)
         role.click_all_button("编辑")
 
         role.select_input(name)
@@ -269,8 +271,9 @@ class TestRolePage:
 
         role.click_button('(//span[text()="用户权限管理"])[1]')
         role.enter_texts('//div[div[p[text()="用户代码"]]]//input', date_driver.username)
-        sleep(1)
+        sleep(3)
         role.click_button(f'(//table[@class="vxe-table--body"]//span[text()="{date_driver.username}"])[1]')
+        sleep(2)
         role.click_all_button("编辑")
 
         role.select_input(name)
@@ -313,8 +316,9 @@ class TestRolePage:
 
         role.click_button('(//span[text()="用户权限管理"])[1]')
         role.enter_texts('//div[div[p[text()="用户代码"]]]//input', date_driver.username)
-        sleep(1)
+        sleep(3)
         role.click_button(f'(//table[@class="vxe-table--body"]//span[text()="{date_driver.username}"])[1]')
+        sleep(2)
         role.click_all_button("编辑")
 
         role.select_input(name)

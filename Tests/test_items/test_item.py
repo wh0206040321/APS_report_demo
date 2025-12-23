@@ -984,12 +984,8 @@ class TestItemPage:
 
 
         value_bos = '//div[@class="vxe-modal--body"]//table[@class="vxe-table--body"]//tr[1]/td[3]'
-        # spe_xpath_list = [
-        #     f'//label[text()="生产特征{i}"]/following-sibling::div//i'
-        #     for i in range(1, 11)
-        # ]
         spe_xpath_list = [
-            f'//label[text()="{"颜色" if i == 1 else f"生产特征{i}"}"]/following-sibling::div//i'
+            f'//label[text()="生产特征{i}"]/following-sibling::div//i'
             for i in range(1, 11)
         ]
         box_list = [

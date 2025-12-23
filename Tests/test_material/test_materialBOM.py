@@ -173,7 +173,7 @@ class TestItemPage:
             "//div[@id='p34nag46-7evf']//input",
             "//div[@id='o7c9sdve-vat3']//input",
             "//div[@id='ywz9q11i-sp3b']//input",
-            "//div[@id='u2tgl5h9-otp1']//div[1]"
+            "//div[@id='u2tgl5h9-otp1']//input"
         ], color_value)
         self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
         assert val
@@ -193,7 +193,7 @@ class TestItemPage:
         xpath_list = [
             "//div[@id='ywz9q11i-sp3b']//input",
             "//div[@id='o7c9sdve-vat3']//input",
-            "//div[@id='u2tgl5h9-otp1']//div[1]"
+            "//div[@id='u2tgl5h9-otp1']//input"
         ]
         color_value = "rgb(255, 0, 0)"
         # 获取必填项公共方法判断颜色的结果

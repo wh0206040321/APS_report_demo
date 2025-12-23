@@ -189,15 +189,15 @@ class TestSchedPage:
         sleep(1)
         addtext = sched.get_find_element_xpath(
             '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[last()]'
-        )
+        ).get_attribute('innerText')
         addtext1 = sched.get_find_element_xpath(
             '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/span[2]'
-        )
+        ).get_attribute('innerText')
         addul = driver.find_elements(
             By.XPATH,
             '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/ul',
         )
-        assert addtext.text == "33" and addtext1.text == "33" and len(addul) == 0
+        assert addtext == "33" and addtext1 == "33" and len(addul) == 0
         assert not sched.has_fail_message()
 
     @allure.story("没有选中行 添加命令 添加失败")
