@@ -394,14 +394,6 @@ class WarehouseLocationPage(BasePage):
                 )
         return True
 
-    def wait_for_loading_to_disappear(self, timeout=10):
-        WebDriverWait(self.driver, timeout).until(
-            EC.invisibility_of_element_located(
-                (By.XPATH,
-                 "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
-            )
-        )
-
     def click_select_button(self):
         """点击查询确定按钮."""
         self.click_button('(//button[@class="ivu-btn ivu-btn-primary"]/span[text()="确定"])[2]')

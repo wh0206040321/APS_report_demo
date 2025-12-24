@@ -19,7 +19,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_worktasks():
     driver = None
     try:
@@ -108,6 +108,7 @@ class TestWorkTasksPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
+        word.right_refresh('工作明细')
         assert wordcode == name and len(wordcode2) == 0
         assert not word.has_fail_message()
 
@@ -117,7 +118,6 @@ class TestWorkTasksPage:
         driver = login_to_worktasks  # WebDriver 实例
         word = WorkTasksPage(driver)  # 用 driver 初始化 WorkTasksPage
         word.click_button('(//span[text()="工作明细"])[1]')
-        word.wait_for_loading_to_disappear()
         name = "1"
         word.click_button('//div[p[text()="制造数量"]]/following-sibling::div//i')
         word.hover("包含")
@@ -127,6 +127,7 @@ class TestWorkTasksPage:
         eles = word.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[6]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        word.right_refresh('工作明细')
         assert all(name in text for text in list_)
         assert not word.has_fail_message()
 
@@ -136,11 +137,11 @@ class TestWorkTasksPage:
         driver = login_to_worktasks  # WebDriver 实例
         word = WorkTasksPage(driver)  # 用 driver 初始化 WorkTasksPage
         word.click_button('(//span[text()="工作明细"])[1]')
-        word.wait_for_loading_to_disappear()
         word.enter_texts('//div[p[text()="制造数量"]]/following-sibling::div//input', '1')
         word.click_all_button("刷新")
         word.wait_for_loading_to_disappear()
         ele = word.get_find_element_xpath('//div[p[text()="制造数量"]]/following-sibling::div//input').get_attribute('value')
+        word.click_button('//div[div[text()=" 工作明细 "]]/span')
         assert ele == ""
         assert not word.has_fail_message()
 
@@ -161,6 +162,7 @@ class TestWorkTasksPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][2]/td[6]',
         )
+        task.right_refresh('任务明细')
         assert wordcode == name and len(wordcode2) == 0
         assert not task.has_fail_message()
 
@@ -170,7 +172,6 @@ class TestWorkTasksPage:
         driver = login_to_worktasks  # WebDriver 实例
         task = WorkTasksPage(driver)  # 用 driver 初始化 WorkTasksPage
         task.click_button('(//span[text()="任务明细"])[1]')
-        task.wait_for_loading_to_disappear()
         name = "1"
         task.click_button('//div[p[text()="总工时"]]/following-sibling::div//i')
         task.hover("包含")
@@ -181,6 +182,7 @@ class TestWorkTasksPage:
         eles = task.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[10]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        task.right_refresh('任务明细')
         assert all(name in text for text in list_)
         assert not task.has_fail_message()
 
@@ -190,12 +192,12 @@ class TestWorkTasksPage:
         driver = login_to_worktasks  # WebDriver 实例
         word = WorkTasksPage(driver)  # 用 driver 初始化 WorkTasksPage
         word.click_button('(//span[text()="任务明细"])[1]')
-        word.wait_for_loading_to_disappear()
         word.enter_texts('//div[p[text()="代码"]]/following-sibling::div//input', '1')
         word.click_all_button("刷新")
         word.wait_for_loading_to_disappear()
         ele = word.get_find_element_xpath('//div[p[text()="代码"]]/following-sibling::div//input').get_attribute(
             'value')
+        word.click_button('//div[div[text()=" 任务明细 "]]/span')
         assert ele == ""
         assert not word.has_fail_message()
 
@@ -213,6 +215,7 @@ class TestWorkTasksPage:
         )
         sleep(1)
         list_ = [ele.text for ele in eles]
+        word.right_refresh('工作需求明细')
         assert all(name in text for text in list_)
         assert not word.has_fail_message()
 
@@ -222,7 +225,6 @@ class TestWorkTasksPage:
         driver = login_to_worktasks  # WebDriver 实例
         word = WorkTasksPage(driver)  # 用 driver 初始化 WorkTasksPage
         word.click_button('(//span[text()="工作需求明细"])[1]')
-        word.wait_for_loading_to_disappear()
         name = "1"
         word.click_button('//div[p[text()="订单编号"]]/following-sibling::div//i')
         word.hover("包含")
@@ -232,6 +234,7 @@ class TestWorkTasksPage:
         eles = word.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[4]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        word.right_refresh('工作需求明细')
         assert all(name in text for text in list_)
         assert not word.has_fail_message()
 
@@ -241,12 +244,12 @@ class TestWorkTasksPage:
         driver = login_to_worktasks  # WebDriver 实例
         word = WorkTasksPage(driver)  # 用 driver 初始化 WorkTasksPage
         word.click_button('(//span[text()="工作需求明细"])[1]')
-        word.wait_for_loading_to_disappear()
         word.enter_texts('//div[p[text()="订单编号"]]/following-sibling::div//input', '1')
         word.click_all_button("刷新")
         word.wait_for_loading_to_disappear()
         ele = word.get_find_element_xpath('//div[p[text()="订单编号"]]/following-sibling::div//input').get_attribute(
             'value')
+        word.click_button('//div[div[text()=" 工作需求明细 "]]/span')
         assert ele == ""
         assert not word.has_fail_message()
 
@@ -260,6 +263,7 @@ class TestWorkTasksPage:
         name = word.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]/td[5]').text
         word.select_data(code='订单(左)', name=name)
         eles = word.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[5]')
+        word.right_refresh('工作关联明细')
         assert len(eles) > 0
         assert all(name == ele for ele in eles)
         assert not word.has_fail_message()
@@ -270,7 +274,6 @@ class TestWorkTasksPage:
         driver = login_to_worktasks  # WebDriver 实例
         word = WorkTasksPage(driver)  # 用 driver 初始化 WorkTasksPage
         word.click_button('(//span[text()="工作关联明细"])[1]')
-        word.wait_for_loading_to_disappear()
         name = "1"
         word.click_button('//div[p[text()="订单(左)"]]/following-sibling::div//i')
         word.hover("包含")
@@ -280,6 +283,7 @@ class TestWorkTasksPage:
         eles = word.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[5]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        word.right_refresh('工作关联明细')
         assert all(name in text for text in list_)
         assert not word.has_fail_message()
 
@@ -289,11 +293,11 @@ class TestWorkTasksPage:
         driver = login_to_worktasks  # WebDriver 实例
         word = WorkTasksPage(driver)  # 用 driver 初始化 WorkTasksPage
         word.click_button('(//span[text()="工作关联明细"])[1]')
-        word.wait_for_loading_to_disappear()
         word.enter_texts('//div[p[text()="订单(左)"]]/following-sibling::div//input', '1')
         word.click_all_button("刷新")
         word.wait_for_loading_to_disappear()
         ele = word.get_find_element_xpath('//div[p[text()="订单(左)"]]/following-sibling::div//input').get_attribute(
             'value')
+        word.right_refresh('工作关联明细')
         assert ele == ""
         assert not word.has_fail_message()

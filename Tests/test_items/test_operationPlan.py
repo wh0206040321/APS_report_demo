@@ -192,10 +192,10 @@ class TestOperationPlanPage:
 
         input_text1 = operationPlan.get_find_element_xpath(
             f'(//table[.//span[text()="{resource1}"]])[last()]//tr[1]//td[7]'
-        ).text
+        ).get_attribute("innerText")
         input_text2 = operationPlan.get_find_element_xpath(
             f'(//table[.//span[text()="{resource2}"]])[last()]//tr[2]//td[7]'
-        ).text
+        ).get_attribute("innerText")
         input_text3 = driver.find_elements(
             By.XPATH, '(//tr[.//span[text()="1测试C订单"]])[3]'
         )
@@ -203,6 +203,7 @@ class TestOperationPlanPage:
         operationPlan.click_button('//p[text()="工作指示发布"]')
         operationPlan.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         operationPlan.get_find_message()
+        operationPlan.wait_for_loading_to_disappear()
         sleep(1)
         after_text = driver.find_elements(
             By.XPATH, '(//table[@class="vxe-table--body"])[3]/tbody//tr'

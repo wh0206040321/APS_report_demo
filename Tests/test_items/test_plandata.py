@@ -19,7 +19,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_plandata():
     driver = None
     try:
@@ -71,6 +71,7 @@ class TestPlanDataPage:
         information.select_data(code='消息内容', name='分派结果')
         eles = information.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
         sleep(1)
+        information.right_refresh('计划消息')
         assert all('分派结果' == text for text in eles)
         assert not information.has_fail_message()
 
@@ -88,6 +89,7 @@ class TestPlanDataPage:
         information.enter_texts('//div[div[span[text()=" 消息内容"]]]//input', name)
         sleep(1)
         eles = information.loop_judgment('//table[@class="vxe-table--body"]//tr//td[3]')
+        information.right_refresh('计划消息')
         assert all(str(item).startswith(name) for item in eles)
         assert not information.has_fail_message()
 
@@ -102,6 +104,7 @@ class TestPlanDataPage:
         word.click_all_button("刷新")
         word.wait_for_loading_to_disappear()
         ele = word.get_find_element_xpath('//div[div[span[text()=" 消息内容"]]]//input').get_attribute('value')
+        word.click_button('//div[div[text()=" 计划消息 "]]/span')
         assert ele == ""
         assert not word.has_fail_message()
 
@@ -119,6 +122,7 @@ class TestPlanDataPage:
         information.enter_texts('//div[div[span[text()=" 制造订单数"]]]//input', name)
         sleep(1)
         eles = information.loop_judgment('//table[@class="vxe-table--body"]//tr//td[5]')
+        information.right_refresh('计划评估')
         assert all(name in text for text in eles)
         assert not information.has_fail_message()
 
@@ -141,7 +145,8 @@ class TestPlanDataPage:
         sleep(1)
         after_data = word.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
-        ).text
+        ).get_attribute('innerText')
+        word.right_refresh('计划评估')
         assert (
                 before_data != after_data
         ), f"删除后的数据{after_data}，删除前的数据{before_data}"
@@ -158,6 +163,7 @@ class TestPlanDataPage:
         word.click_all_button("刷新")
         word.wait_for_loading_to_disappear()
         ele = word.get_find_element_xpath('//div[div[span[text()=" 代码"]]]//input').get_attribute('value')
+        word.click_button('//div[div[text()=" 计划评估 "]]/span')
         assert ele == ""
         assert not word.has_fail_message()
 
@@ -177,6 +183,7 @@ class TestPlanDataPage:
                                     '(//table[@class="vxe-table--body"])[1]//tr[position() < last()]/td[2]')
 
         values = [e.get_attribute("textContent").strip() for e in eles]
+        information.right_refresh('日计划报表')
         assert all(v == name for v in values)
         assert not information.has_fail_message()
 
@@ -196,6 +203,7 @@ class TestPlanDataPage:
 
         eles = driver.find_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr[position() < last()]/td[4]')
         values = [e.get_attribute("textContent").strip() for e in eles]
+        information.right_refresh('日计划报表')
         assert all(v == name for v in values)
         assert not information.has_fail_message()
 
@@ -215,6 +223,7 @@ class TestPlanDataPage:
 
         eles = driver.find_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr[position() < last()]/td[3]')
         values = [e.get_attribute("textContent").strip() for e in eles]
+        information.right_refresh('日计划报表')
         assert all(v == name for v in values)
         assert not information.has_fail_message()
 
@@ -243,6 +252,7 @@ class TestPlanDataPage:
         eles2 = driver.find_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr[position() < last()]/td[4]')
         values1 = [e.get_attribute("textContent").strip() for e in eles1]
         values2 = [e.get_attribute("textContent").strip() for e in eles2]
+        information.right_refresh('日计划报表')
         for v1, v2 in zip(values1, values2):
             assert v1 == name1 and v2 == name2, f"行不匹配: v1={v1}, v2={v2}, 期望=({name1}, {name2})"
         assert not information.has_fail_message()
@@ -256,11 +266,12 @@ class TestPlanDataPage:
         information.wait_for_loading_el_skeleton()
         information.click_button('//div[text()=" 按工作 "]')
         sleep(1)
-        ele1 = information.get_find_element_xpath('(//table[@class="vxe-table--header"])[3]//tr/th[2]').text
+        ele1 = information.get_find_element_xpath('(//table[@class="vxe-table--header"])[3]//tr/th[2]').get_attribute('innerText')
 
         information.click_button('//div[text()=" 按订单 "]')
         sleep(1)
-        ele2 = information.get_find_element_xpath('(//table[@class="vxe-table--header"])[5]//tr/th[2]').text
+        ele2 = information.get_find_element_xpath('(//table[@class="vxe-table--header"])[5]//tr/th[2]').get_attribute('innerText')
+        information.click_button('//div[div[text()=" 日计划报表 "]]/span')
         assert ele1 == '工作代码' and ele2 == '订单代码'
         assert not information.has_fail_message()
 

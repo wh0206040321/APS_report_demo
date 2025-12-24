@@ -18,7 +18,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_shift():
     driver = None
     try:
@@ -71,7 +71,7 @@ class TestShiftPage:
         # 获取布局名称的文本元素
         name = shift.get_find_element_xpath(
             f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
-        ).text
+        ).get_attribute('innerText')
 
         shift.click_add_button()
         # 班次代码xpath
@@ -84,6 +84,8 @@ class TestShiftPage:
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        shift.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        shift.right_refresh('班次')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -106,6 +108,8 @@ class TestShiftPage:
         shiftnum = shift.get_find_element_xpath(
             '//label[text()="时间"]/ancestor::div[1]//input[1]'
         ).get_attribute("value")
+        shift.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        shift.right_refresh('班次')
         assert shiftnum == "11", f"预期{shiftnum}"
         assert not shift.has_fail_message()
 
@@ -135,6 +139,8 @@ class TestShiftPage:
         shiftnum2 = shift.get_find_element_xpath(
             '//label[text()="时间"]/ancestor::div[1]//div[@class="left"]/div[4]//input'
         ).get_attribute("value")
+        shift.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        shift.right_refresh('班次')
         assert shiftnum1 == "23" and shiftnum2 == "24", f"预期{shiftnum1},{shiftnum2}"
         assert not shift.has_fail_message()
 
@@ -185,6 +191,8 @@ class TestShiftPage:
         shiftnum4 = shift.get_find_element_xpath(
             '//label[text()="时间"]/ancestor::div[1]//div[@class="left"]/div[6]//input'
         ).get_attribute("value")
+        shift.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        shift.right_refresh('班次')
         assert (
             shiftnum1 == "59"
             and shiftnum2 == "59"
@@ -235,6 +243,8 @@ class TestShiftPage:
             '//label[text()="时间"]/ancestor::div[1]//div[@class="left"]/parent::div/div[2]/button'
         )
         message = shift.get_error_message()
+        shift.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        shift.right_refresh('班次')
         assert message == "开始时间不能大于、等于结束时间"
         assert not shift.has_fail_message()
 
@@ -282,8 +292,10 @@ class TestShiftPage:
 
         data = shift.get_find_element_xpath(
             '//table[@class="vxe-table--body"]//tr[td[3]//button]/td[1]'
-        )
-        assert data.text == "1"
+        ).get_attribute('innerText')
+        shift.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        shift.right_refresh('班次')
+        assert data == "1"
         assert not shift.has_fail_message()
 
     @allure.story("下拉框选择成功")
@@ -300,7 +312,9 @@ class TestShiftPage:
         # 获取下拉框数据
         shiftsel = shift.get_find_element_xpath(
             '//div[label[text()="显示颜色"]]/div//span[@class="ivu-select-selected-value"]'
-        ).text
+        ).get_attribute("innerText")
+        shift.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        shift.right_refresh('班次')
         assert shiftsel == "RGB(100,255,178)", f"预期{shiftsel}"
         assert not shift.has_fail_message()
 
@@ -317,8 +331,9 @@ class TestShiftPage:
         shift.click_confirm()
         adddata = shift.get_find_element_xpath(
             f'(//span[text()="{num}"])[1]/ancestor::tr[1]/td[2]'
-        )
-        assert adddata.text == num, f"预期数据是{num}，实际得到{adddata}"
+        ).get_attribute("innerText")
+        shift.right_refresh('班次')
+        assert adddata == num, f"预期数据是{num}，实际得到{adddata}"
         assert not shift.has_fail_message()
 
     @allure.story("添加数据成功")
@@ -334,8 +349,8 @@ class TestShiftPage:
         shift.click_confirm()
         adddata = shift.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[2]'
-        )
-        assert adddata.text == name, f"预期数据是111，实际得到{adddata}"
+        ).get_attribute("innerText")
+        assert adddata == name, f"预期数据是111，实际得到{adddata}"
         assert not shift.has_fail_message()
 
     @allure.story("添加数据重复")
@@ -349,14 +364,13 @@ class TestShiftPage:
         shift.enter_texts('(//label[text()="代码"])[1]/parent::div//input', "111")
         # 点击确定
         shift.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
-        # 等待弹窗出现（最多等10秒）
-        error_popup = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(
-                ("xpath", '//div[text()=" 记录已存在,请检查！ "]')
-            )
-        )
+        error_popup = shift.get_find_element_xpath(
+            '//div[text()=" 记录已存在,请检查！ "]'
+        ).get_attribute("innerText")
+        shift.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        shift.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
-            error_popup.text == "记录已存在,请检查！"
+                error_popup == "记录已存在,请检查！"
         ), f"预期数据是记录已存在,请检查，实际得到{error_popup}"
         assert not shift.has_fail_message()
 
@@ -374,8 +388,8 @@ class TestShiftPage:
         # 定位内容为‘111’的行
         shiftdata = shift.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[2]'
-        )
-        assert shiftdata.text == name, f"预期{shiftdata}"
+        ).get_attribute("innerText")
+        assert shiftdata == name, f"预期{shiftdata}"
         assert not shift.has_fail_message()
 
     @allure.story("添加测试数据成功")
@@ -425,13 +439,12 @@ class TestShiftPage:
 
         timedata = shift.get_find_element_xpath(
             '(//span[text()="时间"])[1]/ancestor::table/parent::div/parent::div/div[2]/table//tr[1]//td[2]//span'
-        ).text
-
+        ).get_attribute("innerText")
         # 点击确定
         shift.click_confirm()
         adddata = shift.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[3]'
-        ).text
+        ).get_attribute("innerText")
         assert adddata == timedata
         assert not shift.has_fail_message()
 
@@ -450,13 +463,14 @@ class TestShiftPage:
         shift.enter_texts('(//label[text()="代码"])[1]/parent::div//input', "111")
         # 点击确定
         shift.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
-        # 等待弹窗出现（最多等10秒）
-        error_popup = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(
-                ("xpath", '//div[text()=" 记录已存在,请检查！ "]')
-            )
-        )
-        assert error_popup.text == "记录已存在,请检查！", f"预期数据{error_popup}"
+        error_popup = shift.get_find_element_xpath(
+            '//div[text()=" 记录已存在,请检查！ "]'
+        ).get_attribute("innerText")
+        shift.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        shift.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert (
+                error_popup == "记录已存在,请检查！"
+        ), f"预期数据是记录已存在,请检查，实际得到{error_popup}"
         assert not shift.has_fail_message()
 
     @allure.story("修改班次代码成功")
@@ -480,7 +494,7 @@ class TestShiftPage:
         # 定位表格内容
         shiftdata = shift.get_find_element_xpath(
             f'(//span[contains(text(),"{name}")])[1]'
-        ).text
+        ).get_attribute("innerText")
         assert shiftdata == text, f"预期{shiftdata}"
         assert not shift.has_fail_message()
 
@@ -499,7 +513,7 @@ class TestShiftPage:
         # 点击确定
         shift.click_confirm()
         # 定位表格内容
-        shiftdata = shift.get_find_element_xpath('(//span[text()="1测试A"])[1]').text
+        shiftdata = shift.get_find_element_xpath('(//span[text()="1测试A"])[1]').get_attribute("innerText")
         assert shiftdata == name, f"预期{shiftdata}"
         assert not shift.has_fail_message()
 
@@ -576,13 +590,13 @@ class TestShiftPage:
 
         timedata = shift.get_find_element_xpath(
             '(//span[text()="时间"])[1]/ancestor::table/parent::div/parent::div/div[2]/table//tr[1]//td[2]//span'
-        ).text
+        ).get_attribute("innerText")
 
         # 点击确定
         shift.click_confirm()
         adddata = shift.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[3]'
-        ).text
+        ).get_attribute("innerText")
         assert adddata == timedata and adddata == "05:05:05-08:05:05"
         assert not shift.has_fail_message()
 
@@ -607,12 +621,12 @@ class TestShiftPage:
         # 获取下拉框数据
         shiftsel = shift.get_find_element_xpath(
             '//div[label[text()="显示颜色"]]/div//span[@class="ivu-select-selected-value"]'
-        ).text
+        ).get_attribute("innerText")
         # 点击确定
         shift.click_confirm()
         shiftautoGenerateFlag = shift.get_find_element_xpath(
             f'(//span[text()="{name}"])[1]/ancestor::tr/td[4]/div'
-        ).text
+        ).get_attribute("innerText")
         assert shiftautoGenerateFlag == shiftsel
         assert not shift.has_fail_message()
 
@@ -629,7 +643,7 @@ class TestShiftPage:
         shift.click_ref_button()
         shifttext = shift.get_find_element_xpath(
             '//p[text()="代码"]/ancestor::div[2]//input'
-        ).text
+        ).get_attribute("innerText")
         assert shifttext == "", f"预期{shifttext}"
         assert not shift.has_fail_message()
 
@@ -673,6 +687,7 @@ class TestShiftPage:
         # 点击确认
         shift.click_select_button()
         eles = shift.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[2]')
+        shift.right_refresh('班次')
         assert len(eles) > 0
         assert all(name in ele for ele in eles)
         assert not shift.has_fail_message()
@@ -690,7 +705,6 @@ class TestShiftPage:
             '//p[text()="代码"]/ancestor::div[2]//input', data_list[0]
         )
         # 缩放到最小（例如 60%）
-        driver.execute_script("document.body.style.zoom='0.6'")
         sleep(1)
 
         row_xpath = f'//tr[./td[2][.//span[text()="{data_list[0]}"]]]'
@@ -721,6 +735,7 @@ class TestShiftPage:
 
         print(columns_text)
         bef_text = [f'{data_list[0]}', '20:20:20-21:20:20', 'RGB(100,255,178)', f'{data_list[0]}', f'{DateDriver.username}', '2025']
+        shift.right_refresh('班次')
         assert len(columns_text) == len(bef_text), f"长度不一致：actual={len(columns_text)}, expected={len(bef_text)}"
         for i, (a, e) in enumerate(zip(columns_text, bef_text), start=1):
             if i == 6:
@@ -739,7 +754,6 @@ class TestShiftPage:
             '//p[text()="代码"]/ancestor::div[2]//input', code
         )
         # 缩放到最小（例如 60%）
-        driver.execute_script("document.body.style.zoom='0.6'")
         sleep(1)
 
         row_xpath = f'//tr[./td[2][.//span[text()="{code}"]]]'
@@ -770,6 +784,7 @@ class TestShiftPage:
 
         print(columns_text)
         bef_text = [code, '20:20:20-21:20:20', 'RGB(100,255,178)', code, f'{DateDriver.username}', '2025']
+        shift.right_refresh('班次')
         assert len(columns_text) == len(bef_text), f"长度不一致：actual={len(columns_text)}, expected={len(bef_text)}"
         for i, (a, e) in enumerate(zip(columns_text, bef_text), start=1):
             if i == 6:

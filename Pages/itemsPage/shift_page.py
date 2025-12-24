@@ -1,7 +1,7 @@
 from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver import Keys
+from selenium.webdriver import Keys, ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -46,6 +46,15 @@ class ShiftPage(BasePage):
             return self.find_element(By.XPATH, xpath)
         except NoSuchElementException:
             return None
+
+    def right_refresh(self, name):
+        """右键刷新."""
+        but = self.get_find_element_xpath(f'//div[@class="scroll-body"]/div[.//div[text()=" {name} "]]')
+        but.click()
+        # 右键点击
+        ActionChains(self.driver).context_click(but).perform()
+        self.click_button('//li[text()=" 刷新"]')
+        self.wait_for_loading_to_disappear()
 
     def get_find_message(self):
         """获取正确信息"""

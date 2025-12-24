@@ -173,8 +173,8 @@ class TestItemPage:
         val = self.item.add_none([
             "//div[@id='p34nag46-7evf']//input",
             "//div[@id='izykzohi-1l5u']//input",
-            "//div[@id='ctfddy1k-hbmj']//div[1]",
-            "//div[@id='z0h20cps-xzrs']//div[1]"
+            "//div[@id='ctfddy1k-hbmj']//div[2]",
+            "//div[@id='z0h20cps-xzrs']//div[2]"
         ], color_value)
         self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
         assert val

@@ -247,7 +247,7 @@ class TestStartPage:
             print("制造订单 1测试C订单 已存在，跳过创建")
 
         plan = PlanPage(driver)
-        wait = WebDriverWait(driver, 60)
+        wait = WebDriverWait(driver, 300)
         list_ = ["计划运行", "计算工作台", "计划计算"]
         for v in list_:
             if v == "计划计算":

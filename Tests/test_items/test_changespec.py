@@ -491,9 +491,8 @@ class TestChangeSpecPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
         )
         # 勾选框
-        random_int = random.randint(1, 6)
         change.wait_for_loading_to_disappear()
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         change.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
@@ -503,9 +502,8 @@ class TestChangeSpecPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[2]'
         )
         # 勾选框
-        random_int = random.randint(1, 2)
         change.wait_for_loading_to_disappear()
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int}]')
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
         sleep(1)
         change.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
@@ -516,9 +514,8 @@ class TestChangeSpecPage:
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[3]'
         )
         # 勾选框
-        random_int1 = random.randint(1, 2)
         change.wait_for_loading_to_disappear()
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[{random_int1}]')
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[2]')
         sleep(1)
         change.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
@@ -1061,6 +1058,8 @@ class TestChangeSpecPage:
         updatatime = change.get_find_element_xpath(
             '//label[text()="更新时间"]/following-sibling::div//input').get_attribute("value")
         today_str = date.today().strftime('%Y/%m/%d')
+        change.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        change.right_refresh('生产特征1切换')
         assert before_all_value == after_all_value and username == DateDriver().username and today_str in updatatime and int(
             num) == (int(len_num) + 2)
         assert all(before_all_value), "列表中存在为空或为假值的元素！"

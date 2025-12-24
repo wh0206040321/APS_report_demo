@@ -1131,7 +1131,7 @@ class TestAffairsPage:
         affairs.right_refresh()
         affairs.click_process()
         affairs.click_process_update(before_)
-        sleep(1)
+        sleep(3)
         before_name = affairs.get_find_element_xpath('//div[label[text()="名称"]]/div//input').get_attribute("value")
         before_type = affairs.get_find_element_xpath('//div[label[text()="分类"]]/div//input').get_attribute("value")
         assert message == "编辑成功！"
@@ -1156,7 +1156,7 @@ class TestAffairsPage:
         affairs.right_refresh()
         affairs.click_process()
         affairs.click_process_update(name)
-        sleep(1)
+        sleep(3)
         before_ = affairs.get_find_element_xpath('//div[label[text()="频率"]]/div//input').get_attribute("value")
         assert before_ == "一次" and message == "编辑成功！"
         assert not affairs.has_fail_message()
