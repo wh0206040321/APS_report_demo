@@ -67,8 +67,6 @@ class TestItemPage:
         # 全部新增输入框xpath
         self.all_input_add_xpath_list = [
             "//div[@id='p34nag46-7evf']//input",
-            "//div[@id='x1k7t87i-tvc3']//input",
-            "//div[@id='hpjqsv1m-5607']//input",
             "//div[@id='o7c9sdve-vat3']//input",
             "//div[@id='7z1rv7fs-trb6']//input",
             "//div[@id='hguo4esk-gii0']//input",
@@ -99,8 +97,6 @@ class TestItemPage:
         # 全部编辑输入框xpath
         self.all_input_edit_xpath_list = [
             "//div[@id='2cc32qmh-62ih']//input",
-            "//div[@id='5sw6sv3r-ntvx']//input",
-            "//div[@id='efcxcawj-4xrg']//input",
             "//div[@id='i17ic9zl-6ynv']//input",
             "//div[@id='orbrnirr-6vff']//input",
             "//div[@id='hnlszun7-8kn2']//input",
@@ -151,7 +147,7 @@ class TestItemPage:
             "//div[@id='ywz9q11i-sp3b']//input",
             "//div[@id='x1k7t87i-tvc3']//input",
             "//div[@id='hpjqsv1m-5607']//input",
-            "//div[@id='0t8pfkrw-y5i1']//div[1]"
+            "//div[@id='0t8pfkrw-y5i1']//div[2]"
         ], color_value)
         self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
         assert val
@@ -411,7 +407,14 @@ class TestItemPage:
         # 点击修改按钮
         self.item.click_edi_button()
         sleep(1)
-
+        input_icon_list = [
+            "//div[@id='5sw6sv3r-ntvx']//i",
+            "//div[@id='efcxcawj-4xrg']//i",
+        ]
+        text_list = self.item.batch_modify_dialog_box(
+            input_icon_list,
+            '(//div[@id="dialogCanvas"]//table//tr[1]/td[2])'
+        )
         # 清空数字输入框
         ele = self.item.get_find_element_xpath(
             "//div[@id='3ebm4ac2-vprp']//input"
@@ -438,11 +441,16 @@ class TestItemPage:
         # 批量获取输入框的value
         input_values = self.item.batch_acquisition_input(self.all_input_edit_xpath_list, text_str)
         input_values2 = self.item.batch_acquisition_input(self.all_date_edit_xpath_list, date_str)
+        pop_input_val = self.item.batch_acquisition_input_list([
+            "//div[@id='5sw6sv3r-ntvx']//input",
+            "//div[@id='efcxcawj-4xrg']//input",
+        ], text_list)
         sleep(1)
         self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
         assert (
             len(self.all_input_edit_xpath_list) == len(input_values) and
-            len(self.all_date_edit_xpath_list) == len(input_values2)
+            len(self.all_date_edit_xpath_list) == len(input_values2) and
+            len(pop_input_val) == len(input_icon_list)
         )
         assert not self.item.has_fail_message()
 
@@ -490,7 +498,14 @@ class TestItemPage:
         date_str = "2025/07/17 00:00:00"
         self.item.click_add_button()  # 点击添加
         sleep(1)
-
+        input_icon_list = [
+            "//div[@id='x1k7t87i-tvc3']//i",
+            "//div[@id='hpjqsv1m-5607']//i",
+        ]
+        text_list = self.item.batch_modify_dialog_box(
+            input_icon_list,
+            '(//div[@id="dialogCanvas"]//table//tr[1]/td[2])'
+        )
         # 批量修改输入框
         self.item.batch_modify_input(self.all_input_add_xpath_list, text_str)
         # 批量修改日期
@@ -509,11 +524,16 @@ class TestItemPage:
         input_values = self.item.batch_acquisition_input(self.all_input_edit_xpath_list, text_str)
         # 批量获取日期的value
         date_values = self.item.batch_acquisition_input(self.all_date_edit_xpath_list, date_str)
+        pop_input_val = self.item.batch_acquisition_input_list([
+            "//div[@id='5sw6sv3r-ntvx']//input",
+            "//div[@id='efcxcawj-4xrg']//input",
+        ], text_list)
         sleep(1)
         self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
         assert (
                 len(self.all_input_add_xpath_list) == len(input_values)
                 and len(self.all_date_add_xpath_list) == len(date_values)
+                and len(pop_input_val) == len(input_icon_list)
         )
         assert not self.item.has_fail_message()
 

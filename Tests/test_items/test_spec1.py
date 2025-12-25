@@ -18,7 +18,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_spec1():
     driver = None
     try:
@@ -81,6 +81,8 @@ class TestSpecPage:
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        spec.right_refresh('生产特征1')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -107,6 +109,8 @@ class TestSpecPage:
         specnum = spec.get_find_element_xpath(
             '(//label[text()="显示顺序"])[1]/parent::div//input'
         ).get_attribute("value")
+        spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        spec.right_refresh('生产特征1')
         assert specnum == "1123", f"预期{specnum}"
         assert not spec.has_fail_message()
 
@@ -124,6 +128,8 @@ class TestSpecPage:
         specsel = spec.get_find_element_xpath(
             '//div[label[text()="显示颜色"]]/div//span[@class="ivu-select-selected-value"]'
         ).text
+        spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        spec.right_refresh('生产特征1')
         assert specsel == "2", f"预期{specsel}"
         assert not spec.has_fail_message()
 
@@ -144,10 +150,11 @@ class TestSpecPage:
         spec.wait_for_loading_to_disappear()
         adddata = spec.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]'
-        ).text
+        ).get_attribute('innerText')
         num_ = spec.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[5]'
-        ).text
+        ).get_attribute("innerText")
+        spec.right_refresh('生产特征1')
         assert adddata == name and num_ == '9999999999',f"预期数据是{name}，实际得到{adddata}"
         assert not spec.has_fail_message()
 
@@ -160,7 +167,7 @@ class TestSpecPage:
         spec.add_spec_data(name)
         adddata = spec.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]'
-        ).text
+        ).get_attribute("innerText")
         assert adddata == name, f"预期数据是111，实际得到{adddata}"
         assert not spec.has_fail_message()
 
@@ -175,6 +182,8 @@ class TestSpecPage:
         error_popup = spec.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
         ).get_attribute("innerText")
+        spec.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             error_popup == "记录已存在,请检查！"
         ), f"预期数据是记录已存在,请检查，实际得到{error_popup}"
@@ -194,7 +203,7 @@ class TestSpecPage:
         # 定位内容为‘111’的行
         itemdata = spec.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]'
-        ).text
+        ).get_attribute('innerText')
         assert itemdata == name, f"预期{itemdata}"
         assert not spec.has_fail_message()
 
@@ -226,7 +235,7 @@ class TestSpecPage:
         spec.wait_for_loading_to_disappear()
         adddata = spec.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]'
-        ).text
+        ).get_attribute("innerText")
         assert adddata == name, f"预期数据是1测试A，实际得到{adddata}"
         assert not spec.has_fail_message()
 
@@ -249,6 +258,8 @@ class TestSpecPage:
         error_popup = spec.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
         ).get_attribute("innerText")
+        spec.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert error_popup == "记录已存在,请检查！", f"预期数据{error_popup}"
         assert not spec.has_fail_message()
 
@@ -276,7 +287,7 @@ class TestSpecPage:
         # 定位表格内容
         specdata = spec.get_find_element_xpath(
             f'//tr[./td[2][.//span[contains(text(),"{name}")]]]/td[2]'
-        ).text
+        ).get_attribute("innerText")
         assert specdata == text, f"预期{specdata}"
         assert not spec.has_fail_message()
 
@@ -298,7 +309,7 @@ class TestSpecPage:
         # 定位表格内容
         specdata = spec.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]'
-        ).text
+        ).get_attribute("innerText")
         assert specdata == name, f"预期{specdata}"
         assert not spec.has_fail_message()
 
@@ -341,10 +352,10 @@ class TestSpecPage:
         # 定位表格内容
         itemname = spec.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[3]/div'
-        ).text
+        ).get_attribute("innerText")
         color = spec.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[4]/div'
-        ).text
+        ).get_attribute("innerText")
         sleep(1)
         assert (
             itemname == editname
@@ -365,7 +376,7 @@ class TestSpecPage:
         spec.click_ref_button()
         spectext = spec.get_find_element_xpath(
             '//p[text()="代码"]/ancestor::div[2]//input'
-        ).text
+        ).get_attribute("innerText")
         assert spectext == "", f"预期{spectext}"
         assert not spec.has_fail_message()
 
@@ -418,6 +429,7 @@ class TestSpecPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
+        spec.right_refresh('生产特征1')
         assert speccode == name and len(speccode2) == 0
         assert not spec.has_fail_message()
 
@@ -464,6 +476,7 @@ class TestSpecPage:
             By.XPATH,
             '(//table[@class="vxe-table--body"])[2]//tr[1]/td[2]',
         )
+        spec.right_refresh('生产特征1')
         assert len(itemcode) == 0
         assert not spec.has_fail_message()
 
@@ -508,6 +521,7 @@ class TestSpecPage:
         spec.click_select_button()
         # 定位第一行显示顺序
         speccode = spec.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[5]')
+        spec.right_refresh('生产特征1')
         assert len(speccode) > 0
         assert all(int(code) > 10 for code in speccode)
         assert not spec.has_fail_message()
@@ -635,6 +649,7 @@ class TestSpecPage:
         spec.click_select_button()
         specname = spec.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
         speccode = spec.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[5]')
+        spec.right_refresh('生产特征1')
         assert len(specname) > 0 and len(speccode) > 0
         assert all(int(code) > 10 for code in speccode) and all(
             "1" in name for name in specname
@@ -793,6 +808,7 @@ class TestSpecPage:
                 td5_val = int(td5_raw) if td5_raw else 0
                 assert "普" in td3 or td5_val > 10, f"第 {idx + 1} 行不符合：td3={td3}, td5={td5_raw}"
                 valid_count += 1
+        spec.right_refresh('生产特征1')
         assert not spec.has_fail_message()
         print(f"符合条件的行数：{valid_count}")
 
@@ -809,7 +825,7 @@ class TestSpecPage:
             '//p[text()="代码"]/ancestor::div[2]//input', data_list[0]
         )
         # 缩放到最小（例如 25%）
-        driver.execute_script("document.body.style.zoom='0.25'")
+        driver.execute_script("document.body.style.zoom='0.4'")
         sleep(1)
 
         row_xpath = f'//tr[./td[2][.//span[text()="{data_list[0]}"]]]'
@@ -840,6 +856,7 @@ class TestSpecPage:
 
         print(columns_text)
         bef_text = ['全部数据', '全部数据', '2', '20', '全部数据', f'{DateDriver().username}', '2025', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20']
+        spec.right_refresh('生产特征1')
         assert len(columns_text) == len(bef_text), f"长度不一致：actual={len(columns_text)}, expected={len(bef_text)}"
         for i, (a, e) in enumerate(zip(columns_text, bef_text)):
             if i == 6:
@@ -858,7 +875,7 @@ class TestSpecPage:
             '//p[text()="代码"]/ancestor::div[2]//input', code
         )
         # 缩放到最小（例如 25%）
-        driver.execute_script("document.body.style.zoom='0.25'")
+        driver.execute_script("document.body.style.zoom='0.4'")
         sleep(1)
 
         row_xpath = f'//tr[./td[2][.//span[text()="{code}"]]]'
@@ -891,6 +908,7 @@ class TestSpecPage:
         bef_text = ['全部数据', '全部数据', '2', '20', '全部数据', f'{DateDriver().username}', '2025', '20', '20', '20',
                     '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20',
                     '20', '20']
+        spec.right_refresh('生产特征1')
         assert len(columns_text) == len(bef_text), f"长度不一致：actual={len(columns_text)}, expected={len(bef_text)}"
         for i, (a, e) in enumerate(zip(columns_text, bef_text)):
             if i == 6:
@@ -904,6 +922,7 @@ class TestSpecPage:
     def test_spec_delsuccess1(self, login_to_spec1):
         driver = login_to_spec1  # WebDriver 实例
         spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
+        driver.execute_script("document.body.style.zoom='1'")
         layout = "测试布局A"
 
         value = ['全部数据', '111', '1测试A', '1111111111111111333311222211112222211111111133331111111444441111111111111111111111111111111111111111']
@@ -976,8 +995,8 @@ class TestSpecPage:
         spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
         list_name = ['1测试生产特征33', '1测试生产特征3']
         after_name = '1修改生产特征33'
-        spec.click_button('//div[text()=" 生产特征1 "]')
-        spec.click_button('//div[div[text()=" 生产特征1 "]]/span')
+        spec.click_button('//div[text()=" 生产特征2 "]')
+        spec.click_button('//div[div[text()=" 生产特征2 "]]/span')
         spec.click_spec_num(3)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
@@ -1023,8 +1042,8 @@ class TestSpecPage:
         spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
         list_name = ['1测试生产特征44', '1测试生产特征4']
         after_name = '1修改生产特征44'
-        spec.click_button('//div[text()=" 生产特征1 "]')
-        spec.click_button('//div[div[text()=" 生产特征1 "]]/span')
+        spec.click_button('//div[text()=" 生产特征3 "]')
+        spec.click_button('//div[div[text()=" 生产特征3 "]]/span')
         spec.click_spec_num(4)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
@@ -1070,8 +1089,8 @@ class TestSpecPage:
         spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
         list_name = ['1测试生产特征55', '1测试生产特征5']
         after_name = '1修改生产特征55'
-        spec.click_button('//div[text()=" 生产特征1 "]')
-        spec.click_button('//div[div[text()=" 生产特征1 "]]/span')
+        spec.click_button('//div[text()=" 生产特征4 "]')
+        spec.click_button('//div[div[text()=" 生产特征4 "]]/span')
         spec.click_spec_num(5)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
@@ -1117,8 +1136,8 @@ class TestSpecPage:
         spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
         list_name = ['1测试生产特征66', '1测试生产特征6']
         after_name = '1修改生产特征66'
-        spec.click_button('//div[text()=" 生产特征1 "]')
-        spec.click_button('//div[div[text()=" 生产特征1 "]]/span')
+        spec.click_button('//div[text()=" 生产特征5 "]')
+        spec.click_button('//div[div[text()=" 生产特征5 "]]/span')
         spec.click_spec_num(6)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
@@ -1164,8 +1183,8 @@ class TestSpecPage:
         spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
         list_name = ['1测试生产特征77', '1测试生产特征7']
         after_name = '1修改生产特征77'
-        spec.click_button('//div[text()=" 生产特征1 "]')
-        spec.click_button('//div[div[text()=" 生产特征1 "]]/span')
+        spec.click_button('//div[text()=" 生产特征6 "]')
+        spec.click_button('//div[div[text()=" 生产特征6 "]]/span')
         spec.click_spec_num(7)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
@@ -1211,8 +1230,8 @@ class TestSpecPage:
         spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
         list_name = ['1测试生产特征88', '1测试生产特征8']
         after_name = '1修改生产特征88'
-        spec.click_button('//div[text()=" 生产特征1 "]')
-        spec.click_button('//div[div[text()=" 生产特征1 "]]/span')
+        spec.click_button('//div[text()=" 生产特征7 "]')
+        spec.click_button('//div[div[text()=" 生产特征7 "]]/span')
         spec.click_spec_num(8)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
@@ -1258,8 +1277,8 @@ class TestSpecPage:
         spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
         list_name = ['1测试生产特征99', '1测试生产特征9']
         after_name = '1修改生产特征99'
-        spec.click_button('//div[text()=" 生产特征1 "]')
-        spec.click_button('//div[div[text()=" 生产特征1 "]]/span')
+        spec.click_button('//div[text()=" 生产特征8 "]')
+        spec.click_button('//div[div[text()=" 生产特征8 "]]/span')
         spec.click_spec_num(9)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')
@@ -1305,8 +1324,8 @@ class TestSpecPage:
         spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
         list_name = ['1测试生产特征100', '1测试生产特征10']
         after_name = '1修改生产特征10'
-        spec.click_button('//div[text()=" 生产特征1 "]')
-        spec.click_button('//div[div[text()=" 生产特征1 "]]/span')
+        spec.click_button('//div[text()=" 生产特征9 "]')
+        spec.click_button('//div[div[text()=" 生产特征9 "]]/span')
         spec.click_spec_num(10)
         add1 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[0]}"]]]/td[2]')
         add2 = spec.finds_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{list_name[1]}"]]]/td[2]')

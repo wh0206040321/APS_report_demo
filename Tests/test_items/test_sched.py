@@ -16,7 +16,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_sched():
     driver = None
     try:
@@ -68,8 +68,9 @@ class TestSchedPage:
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
         sched.click_add_schedbutton()  # 点击添加方案
 
-        sched.click_ok_schedbutton()  # 点击确定
+        sched.click_name_ok()  # 点击确定
         message = sched.get_error_message()
+        sched.click_button('(//button[span[text()="取消"]])[2]')
         # 检查元素是否包含子节点
         assert message == "请输入"
         assert not sched.has_fail_message()
@@ -86,8 +87,9 @@ class TestSchedPage:
         )  # 点击下拉框
         sched.click_button('//li[text()="排产方案（工序级）"]')
 
-        sched.click_ok_schedbutton()  # 点击确定
+        sched.click_name_ok()  # 点击确定
         message = sched.get_error_message()
+        sched.click_button('(//button[span[text()="取消"]])[2]')
         # 检查元素是否包含子节点
         assert message == "请输入"
         assert not sched.has_fail_message()
@@ -103,8 +105,9 @@ class TestSchedPage:
             '//label[text()="名称"]/following-sibling::div//input', "排产方案（工序级）"
         )
 
-        sched.click_ok_schedbutton()  # 点击确定
+        sched.click_name_ok()  # 点击确定
         message = sched.get_error_message()
+        sched.click_button('(//button[span[text()="取消"]])[2]')
         # 检查元素是否包含子节点
         assert message == "计划方案已存在"
         assert not sched.has_fail_message()
@@ -125,7 +128,7 @@ class TestSchedPage:
             '//label[text()="选择复制的方案"]/following-sibling::div/div'
         )  # 点击下拉框
         sched.click_button('//li[text()="排产方案（工序级）"]')
-        sched.click_ok_schedbutton()  # 点击确定
+        sched.click_name_ok()  # 点击确定
         sched.click_save_button()  # 点击保存
         sleep(1)
 
@@ -144,15 +147,15 @@ class TestSchedPage:
 
         addtext = sched.get_find_element_xpath(
             '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[last()]'
-        )
+        ).get_attribute('innerText')
         addtext1 = sched.get_find_element_xpath(
             '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/span[2]'
-        )
+        ).get_attribute('innerText')
         addul = driver.find_elements(
             By.XPATH,
             '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/ul',
         )
-        assert addtext.text == name and addtext1.text == name and len(addul) > 0
+        assert addtext == name and addtext1 == name and len(addul) > 0
         assert not sched.has_fail_message()
 
     @allure.story("删除刚才添加的方案")
@@ -165,7 +168,7 @@ class TestSchedPage:
             '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="22"]'
         )
         sched.click_del_schedbutton()  # 点击删除
-        sched.click_button('(//button[@class="ivu-btn ivu-btn-primary"])[2]')
+        sched.click_button('//div[@class="ivu-modal-confirm"]//span[text()="确定"]')
 
         # 点击保存
         sched.click_save_button()
@@ -184,7 +187,7 @@ class TestSchedPage:
 
         sched.click_add_schedbutton()  # 点击添加方案
         sched.enter_texts('//label[text()="名称"]/following-sibling::div//input', "33")
-        sched.click_ok_schedbutton()  # 点击确定
+        sched.click_name_ok()  # 点击确定
         sched.click_save_button()  # 点击保存
         sleep(1)
         addtext = sched.get_find_element_xpath(
@@ -415,7 +418,7 @@ class TestSchedPage:
             '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="33"]'
         )
         sched.click_del_schedbutton()  # 点击删除
-        sched.click_button('(//button[@class="ivu-btn ivu-btn-primary"])[2]')
+        sched.click_button('//div[@class="ivu-modal-confirm"]//span[text()="确定"]')
 
         # 点击保存
         sched.click_save_button()
@@ -443,7 +446,7 @@ class TestSchedPage:
         )  # 点击下拉框
         sched.click_button('//li[text()="排产方案(订单级)"]')
         sleep(1)
-        sched.click_ok_schedbutton()  # 点击确定
+        sched.click_name_ok()  # 点击确定
         sleep(1)
         sched.click_save_button()  # 点击保存
         sleep(1)
@@ -479,6 +482,7 @@ class TestSchedPage:
     def test_sched_attribute1(self, login_to_sched):
         driver = login_to_sched  # WebDriver 实例
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        driver.refresh()
         name = "排产方案(订单级)复制"
         # 选择排产方案(订单级)复制方案
         sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
@@ -496,6 +500,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="按分派规则顺序排列"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
+        sched.right_refresh('计划方案管理')
         assert befort_input == after_input == "是"
         assert not sched.has_fail_message()
 
@@ -521,6 +526,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="分割工作靠拢在一起"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
+        sched.right_refresh('计划方案管理')
         assert befort_input == after_input == "是"
         assert not sched.has_fail_message()
 
@@ -546,6 +552,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="分派方法"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
+        sched.right_refresh('计划方案管理')
         assert befort_input == after_input == "无限能力"
         assert not sched.has_fail_message()
 
@@ -571,6 +578,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="分派方向"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
+        sched.right_refresh('计划方案管理')
         assert befort_input == after_input == "逆方向"
         assert not sched.has_fail_message()
 
@@ -608,6 +616,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="分派规则"]/following-sibling::div//p'
         ).text
+        sched.right_refresh('计划方案管理')
         assert (
             befort_input == after_input == 'ME.Order.UserDate1,d'
             and sele_text1 == "OLD合批日期"
@@ -649,6 +658,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="分派规则"]/following-sibling::div//p'
         ).text
+        sched.right_refresh('计划方案管理')
         assert (
             befort_input == after_input == 'ME.Order.UserStr2,a'
             and sele_text1 == "OLD订单类别"
@@ -677,6 +687,9 @@ class TestSchedPage:
         message = sched.get_error_message()
         # 检查元素是否包含子节点
         sleep(1)
+        sched.click_button('(//div[@class="vxe-modal--footer"]//span[text()="取消"])[last()]')
+        sleep(1)
+        sched.right_refresh('计划方案管理')
         assert message == "请把信息填写完整"
         assert not sched.has_fail_message()
 
@@ -704,6 +717,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="分派失败时(资源锁定制约)"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
+        sched.right_refresh('计划方案管理')
         assert befort_input == after_input == '忽视制约'
         assert not sched.has_fail_message()
 
@@ -731,6 +745,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="分派失败时(最大移动时间制约)"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
+        sched.right_refresh('计划方案管理')
         assert befort_input == after_input == '忽视制约'
         assert not sched.has_fail_message()
 
@@ -767,6 +782,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="分派停止条件式"]/following-sibling::div//p'
         ).text
+        sched.right_refresh('计划方案管理')
         assert "ME.PrevOperation[1].PrevOperation[1].IsAssigned!='0'&&ME.PrevOperation[1].PrevOperation[1].OperationMainRes=='A'" in befort_input == after_input
         assert not sched.has_fail_message()
 
@@ -792,6 +808,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="分派资源"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
+        sched.right_refresh('计划方案管理')
         assert befort_input == after_input == '优先资源'
         assert not sched.has_fail_message()
 
@@ -817,6 +834,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="更新关联/补充订单"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
+        sched.right_refresh('计划方案管理')
         assert befort_input == after_input == '是'
         assert not sched.has_fail_message()
 
@@ -842,6 +860,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="工作临时固定"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
+        sched.right_refresh('计划方案管理')
         assert befort_input == after_input == '分派结束工作'
         assert not sched.has_fail_message()
 
@@ -869,6 +888,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="忽视未分派的前后工序的工作"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
+        sched.right_refresh('计划方案管理')
         assert befort_input == after_input == '是'
         assert not sched.has_fail_message()
 
@@ -894,6 +914,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="启用原料库存制约"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
+        sched.right_refresh('计划方案管理')
         assert befort_input == after_input == '是'
         assert not sched.has_fail_message()
 
@@ -929,6 +950,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="筛选工作"]/following-sibling::div//p'
         ).text
+        sched.right_refresh('计划方案管理')
         assert befort_input == after_input
         assert "ME.Order.Spec1=='A'" in befort_input
         assert not sched.has_fail_message()
@@ -965,6 +987,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="筛选订单"]/following-sibling::div//p'
         ).text
+        sched.right_refresh('计划方案管理')
         assert befort_input == after_input
         assert "ME.Order_Type=='P'" in befort_input
         assert not sched.has_fail_message()
@@ -995,6 +1018,7 @@ class TestSchedPage:
         after_class = sched.get_find_element_xpath(
             '//div[text()="严格遵守后资源制约"]/following-sibling::div//span[1]'
         ).get_attribute("class")
+        sched.right_refresh('计划方案管理')
         assert befort_class == after_class
         assert (
             befort_class
@@ -1031,6 +1055,7 @@ class TestSchedPage:
         after_class = sched.get_find_element_xpath(
             '//div[text()="严格遵守后资源制约"]/following-sibling::div//span[1]'
         ).get_attribute("class")
+        sched.right_refresh('计划方案管理')
         assert befort_class == after_class
         assert befort_class == "ivu-switch ivu-switch-default"
         assert not sched.has_fail_message()
@@ -1061,6 +1086,7 @@ class TestSchedPage:
         after_input = sched.get_find_element_xpath(
             '//div[text()="制造效率"]/following-sibling::div//input'
         ).get_attribute("value")
+        sched.right_refresh('计划方案管理')
         assert befort_input == after_input
         assert befort_input == "110.8"
         assert not sched.has_fail_message()
@@ -1086,14 +1112,16 @@ class TestSchedPage:
             '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[3]/button[1]'
         )
 
-        message = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(
-                (By.XPATH, '//div[@class="el-message el-message--error"]//p')
-            )
-        )
+        message = sched.get_find_element_xpath('//div[@class="el-message el-message--error"]//p').get_attribute('innerText')
+        sched.click_button(
+            '(//div[@class="vxe-modal--footer"]//span[text()="取消"])[3]')
+        sleep(1)
+        sched.click_button(
+            '(//div[@class="vxe-modal--footer"]//span[text()="取消"])[2]')
         # 检查元素是否包含子节点
         sleep(1)
-        assert message.text == "请填写策略名称"
+        sched.right_refresh('计划方案管理')
+        assert message == "请填写策略名称"
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-新增资源选择策略")
@@ -1124,7 +1152,7 @@ class TestSchedPage:
         sleep(1)
         before_text = sched.get_find_element_xpath(
             '//div[@class="flex-1 p-r-10 overflow-auto"]/div[contains(text(), "策略名称111")]'
-        ).text
+        ).get_attribute('innerText')
         sched.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]//span[text()="确定"]')
         sched.get_after_value(name)
         sleep(1)
@@ -1135,7 +1163,10 @@ class TestSchedPage:
 
         after_text = sched.get_find_element_xpath(
             '//div[@class="flex-1 p-r-10 overflow-auto"]//div[contains(text(), "策略名称111")]'
-        ).text
+        ).get_attribute("innerText")
+        sched.click_button(
+            '(//div[@class="vxe-modal--footer"]//span[text()="取消"])[2]')
+        sched.right_refresh('计划方案管理')
         assert before_text == after_text == "策略名称111"
         assert not sched.has_fail_message()
 
@@ -1198,6 +1229,10 @@ class TestSchedPage:
         after_input_num = sched.get_find_element_xpath(
             '(//input[@placeholder="请输入数字"])[2]'
         ).get_attribute("value")
+        sched.click_button(
+            '(//div[@class="vxe-modal--footer"]//span[text()="取消"])[2]')
+        sleep(1)
+        sched.right_refresh('计划方案管理')
         assert (
             before_input_text == after_input_text == "AS相同物料优先"
             and before_input_num == after_input_num == "110.8"
@@ -1230,7 +1265,13 @@ class TestSchedPage:
         sched.click_button(
             '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[3]/button[1]'
         )
-        message = sched.get_find_element_xpath('//div[@class="el-message el-message--error"]//p').text
+        message = sched.get_find_element_xpath('//div[@class="el-message el-message--error"]//p').get_attribute("innerText")
+        sched.click_button(
+            '(//div[@class="vxe-modal--footer"]//span[text()="取消"])[3]')
+        sleep(1)
+        sched.click_button(
+            '(//div[@class="vxe-modal--footer"]//span[text()="取消"])[2]')
+        sched.right_refresh('计划方案管理')
         assert message == "不允许新增相同名称的策略"
         assert not sched.has_fail_message()
 
@@ -1264,7 +1305,8 @@ class TestSchedPage:
         sched.click_time_sched()
         after_div_text = sched.get_find_element_xpath(
             '//div[text()="分派开始时间"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
-        ).text
+        ).get_attribute("innerText")
+        sched.right_refresh('计划方案管理')
         assert "Min(ME.Command_OperationList,TARGET.Work_StartTime)" in before_div_text == after_div_text
         assert not sched.has_fail_message()
 
@@ -1298,7 +1340,8 @@ class TestSchedPage:
         sched.click_time_sched()
         after_div_text = sched.get_find_element_xpath(
             '//div[text()="分派结束时间"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
-        ).text
+        ).get_attribute("innerText")
+        sched.right_refresh('计划方案管理')
         assert "Max(ME.Command_OperationList,TARGET.Work_EndTime)+1d" in before_div_text == after_div_text
         assert not sched.has_fail_message()
 
@@ -1332,7 +1375,8 @@ class TestSchedPage:
         sched.click_time_sched()
         after_div_text = sched.get_find_element_xpath(
             '//div[text()="用户指定最早开始时刻"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
-        ).text
+        ).get_attribute("innerText")
+        sched.right_refresh('计划方案管理')
         assert "ME.Parent.Work_StartTime+5h" in before_div_text == after_div_text
         assert not sched.has_fail_message()
 
@@ -1366,7 +1410,8 @@ class TestSchedPage:
         sched.click_time_sched()
         after_div_text = sched.get_find_element_xpath(
             '//div[text()="用户指定最迟结束时刻"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
-        ).text
+        ).get_attribute("innerText")
+        sched.right_refresh('计划方案管理')
         assert "ME.Parent.Work_StartTime+5h" in before_div_text == after_div_text
         assert not sched.has_fail_message()
 

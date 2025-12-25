@@ -117,7 +117,7 @@ class TestItemPage:
 
         # 点击确定
         self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
-        self.item.wait_for_loading_to_disappear()
+        sleep(1)
         adddata = self.item.get_find_element_xpath(
             '//tr[./td[2][.//span[text()="111"]]]/td[2]'
         ).text
@@ -185,7 +185,7 @@ class TestItemPage:
         self.item.enter_texts("//div[@id='ol0ayk71-opoa']//input", "2025/07/22 00:00:00")
         # 点击确定
         self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
-        self.item.wait_for_loading_to_disappear()
+        sleep(1)
         adddata = self.item.get_find_element_xpath(
             '//tr[./td[2][.//span[text()="1测试A"]]]/td[2]'
         ).text
@@ -208,7 +208,7 @@ class TestItemPage:
         )
         # 点击确定
         self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
-        self.item.wait_for_loading_to_disappear()
+        sleep(3)
         # 定位表格内容
         itemdata = self.item.get_find_element_xpath(
             '//tr[./td[2][.//span[contains(text(),"1测试A")]]]/td[2]'
@@ -227,7 +227,7 @@ class TestItemPage:
         self.item.enter_texts("//div[@id='mbh7ra45-w560']//input", "1测试A")
         # 点击确定
         self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
-        self.item.wait_for_loading_to_disappear()
+        sleep(1)
         # 定位表格内容
         itemdata = self.item.get_find_element_xpath(
             '//tr[./td[2][.//span[text()="1测试A"]]]/td[2]'
@@ -267,7 +267,7 @@ class TestItemPage:
     @allure.story("删除数据成功")
     # @pytest.mark.run(order=1)
     def test_materialInventory_delsuccess1(self, login_to_item):
-        self.driver.refresh()
+        # self.driver.refresh()
         self.item.wait_for_loading_to_disappear()
         # 定位内容为‘111’的行
         self.item.click_button('//tr[./td[2][.//span[text()="111"]]]/td[2]')
@@ -295,19 +295,14 @@ class TestItemPage:
     @allure.story("编辑全部选项成功")
     # @pytest.mark.run(order=1)
     def test_materialInventory_editnamesuccess(self, login_to_item):
-
         # 输入框要修改的值
         text_str = "111"
         text_data = '2025/07/22 00:00:00'
 
         # 输入框的xpath
         input_xpath_list = [
-            "//div[@id='mbh7ra45-w560']//input",
-            "//div[@id='iywd9qev-4vy4']//input",
-            "//div[@id='fie6kuba-cfam']//input",
             "//div[@id='fupxj7hi-szmt']//input",
             "//div[@id='zo2th84z-lzcg']//input",
-            "//div[@id='ryeanffg-5o1d']//input",
             "//div[@id='ut62fa19-gqyk']//input",
             "//div[@id='n43xlnyi-8vxq']//input",
             "//div[@id='j7e4dz0t-7bu7']//input",
@@ -329,13 +324,37 @@ class TestItemPage:
             "//div[@id='1t48zhco-fwz6']//input",
             "//div[@id='tn39rj1c-kfyx']//input",
         ]
-
+        sleep(6)
         # 选中工厂代码
         self.item.click_button('//tr[./td[2][.//span[text()="1测试A"]]]/td[2]')
         # 点击修改按钮
         self.item.click_edi_button()
         sleep(1)
 
+        input_icon_list = [
+            "//div[@id='mbh7ra45-w560']//i",
+            "//div[@id='ryeanffg-5o1d']//i",
+        ]
+        text_list = self.item.batch_modify_dialog_box(
+            input_icon_list,
+            '(//div[@id="dialogCanvas"]//table//tr[1]/td[2])'
+        )
+
+        input_icon_list2 = [
+            "//div[@id='iywd9qev-4vy4']//i",
+        ]
+        input_icon_list3 = [
+            "//div[@id='fie6kuba-cfam']//i",
+        ]
+        text_list2 = self.item.batch_modify_dialog_box(
+            input_icon_list2,
+            '(//div[@id="dialogCanvas"]//table//tr[1]/td[3])'
+        )
+
+        text_list3 = self.item.batch_modify_dialog_box(
+            input_icon_list3,
+            '(//div[@id="dialogCanvas"]//table//tr[1]/td[5])'
+        )
         # 批量修改输入框
         self.item.batch_modify_input(input_xpath_list, text_str)
         self.item.batch_modify_input(date_xpath_list, text_data)
@@ -345,18 +364,33 @@ class TestItemPage:
         self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
         sleep(1)
         # 选中物料员代码
-        self.item.click_button('//tr[./td[2][.//span[text()="111"]]]/td[2]')
+        self.item.click_button('//tr[./td[6][.//span[text()="111"]]]/td[2]')
         # 点击编辑按钮
         self.item.click_edi_button()
         sleep(1)
         # 批量获取输入框的value
         input_values = self.item.batch_acquisition_input(input_xpath_list, text_str)
         date_values = self.item.batch_acquisition_input(date_xpath_list, text_data)
+        # 批量获取弹窗式输入框的value
+        pop_input_val = self.item.batch_acquisition_input_list([
+            "//div[@id='mbh7ra45-w560']//input",
+            "//div[@id='ryeanffg-5o1d']//input",
+        ], text_list)
+        pop_input_val2 = self.item.batch_acquisition_input_list([
+            "//div[@id='iywd9qev-4vy4']//input",
+        ], text_list2)
+        pop_input_val3 = self.item.batch_acquisition_input_list([
+            "//div[@id='fie6kuba-cfam']//input"
+        ], text_list3)
         print('input_values', input_values)
         sleep(1)
         self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
         assert (
-            len(input_xpath_list) == len(input_values) and len(date_xpath_list) == len(date_values)
+                len(input_xpath_list) == len(input_values) and
+                len(date_xpath_list) == len(date_values) and
+                len(pop_input_val) == len(input_icon_list) and
+                len(pop_input_val2) == len(input_icon_list2) and
+                len(pop_input_val3) == len(input_icon_list3)
         )
         assert not self.item.has_fail_message()
 
@@ -365,7 +399,7 @@ class TestItemPage:
     def test_materialInventory_delsuccess2(self, login_to_item):
 
         # 定位内容为‘1测试A’的行
-        self.item.click_button('//tr[./td[2][.//span[text()="111"]]]/td[2]')
+        self.item.click_button('//tr[./td[6][.//span[text()="111"]]]/td[2]')
         self.item.click_del_button()  # 点击删除
         sleep(1)
         # 点击确定
@@ -401,12 +435,8 @@ class TestItemPage:
     def test_materialInventory_add_success(self, login_to_item):
         # 输入框的xpath
         input_xpath_list = [
-            "//div[@id='p34nag46-7evf']//input",
-            "//div[@id='ywz9q11i-sp3b']//input",
-            "//div[@id='x1k7t87i-tvc3']//input",
             "//div[@id='u2tgl5h9-otp1']//input",
             "//div[@id='o7c9sdve-vat3']//input",
-            "//div[@id='fgobbtop-s46e']//input",
             "//div[@id='ctfddy1k-hbmj']//input",
             "//div[@id='z0h20cps-xzrs']//input",
             "//div[@id='0t8pfkrw-y5i1']//input",
@@ -420,12 +450,8 @@ class TestItemPage:
             "//div[@id='wcmoz0yh-ws7q']//input",
         ]
         input_xpath_list2 = [
-            "//div[@id='mbh7ra45-w560']//input",
-            "//div[@id='iywd9qev-4vy4']//input",
-            "//div[@id='fie6kuba-cfam']//input",
             "//div[@id='fupxj7hi-szmt']//input",
             "//div[@id='zo2th84z-lzcg']//input",
-            "//div[@id='ryeanffg-5o1d']//input",
             "//div[@id='ut62fa19-gqyk']//input",
             "//div[@id='n43xlnyi-8vxq']//input",
             "//div[@id='j7e4dz0t-7bu7']//input",
@@ -464,6 +490,36 @@ class TestItemPage:
         self.item.click_add_button()  # 点击添加
         sleep(1)
 
+        input_icon_list = [
+            "//div[@id='p34nag46-7evf']//i",
+            "//div[@id='fgobbtop-s46e']//i",
+        ]
+        text_list = self.item.batch_modify_dialog_box(
+            input_icon_list,
+            '(//div[@id="dialogCanvas"]//table//tr[1]/td[2])'
+        )
+
+        input_icon_list2 = [
+            "//div[@id='ywz9q11i-sp3b']//i",
+        ]
+        text_list2 = self.item.batch_modify_dialog_box(
+            input_icon_list2,
+            '(//div[@id="dialogCanvas"]//table//tr[1]/td[3])'
+        )
+
+        input_icon_list3 = [
+            "//div[@id='x1k7t87i-tvc3']//i",
+        ]
+
+        text_list3 = self.item.batch_modify_dialog_box(
+            input_icon_list3,
+            '(//div[@id="dialogCanvas"]//table//tr[1]/td[5])'
+        )
+
+        print('text_list', text_list)
+        print('text_list2', text_list2)
+        print('text_list3', text_list3)
+
         # 批量修改输入框
         self.item.batch_modify_input(input_xpath_list, text_str)
         # 批量修改日期
@@ -474,7 +530,7 @@ class TestItemPage:
         self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
         sleep(1)
         # 选中物料代码
-        self.item.click_button('//tr[./td[2][.//span[text()="111"]]]/td[2]')
+        self.item.click_button('//tr[./td[6][.//span[text()="111"]]]/td[2]')
         # 点击编辑按钮
         self.item.click_edi_button()
         sleep(1)
@@ -482,11 +538,25 @@ class TestItemPage:
         input_values = self.item.batch_acquisition_input(input_xpath_list2, text_str)
         # 批量获取日期的value
         date_values = self.item.batch_acquisition_input(date_xpath_list2, date_str)
+        # 批量获取弹窗式输入框的value
+        pop_input_val = self.item.batch_acquisition_input_list([
+            "//div[@id='mbh7ra45-w560']//input",
+            "//div[@id='ryeanffg-5o1d']//input",
+        ], text_list)
+        pop_input_val2 = self.item.batch_acquisition_input_list([
+            "//div[@id='iywd9qev-4vy4']//input",
+        ], text_list2)
+        pop_input_val3 = self.item.batch_acquisition_input_list([
+            "//div[@id='fie6kuba-cfam']//input",
+        ], text_list3)
         sleep(1)
         self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
         assert (
                 len(input_xpath_list) == len(input_values)
                 and len(date_xpath_list) == len(date_values)
+                and len(pop_input_val) == len(input_icon_list)
+                and len(pop_input_val2) == len(input_icon_list2)
+                and len(pop_input_val3) == len(input_icon_list3)
         )
         assert not self.item.has_fail_message()
 
@@ -510,7 +580,7 @@ class TestItemPage:
         actions.double_click(element_to_double_click).perform()
         sleep(1)
         # 点击工厂代码
-        item.click_button('//div[text()="物料代码" and contains(@optid,"opt_")]')
+        item.click_button('//div[text()="批次号" and contains(@optid,"opt_")]')
         sleep(1)
         # 点击比较关系框
         item.click_button(
@@ -531,7 +601,7 @@ class TestItemPage:
         item.click_select_button()
         # 定位第一行是否为产品A
         itemcode = item.get_find_element_xpath(
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[6]'
         ).text
         # 定位第二行没有数据
         itemcode2 = driver.find_elements(
@@ -591,7 +661,7 @@ class TestItemPage:
     def test_materialInventory_delsuccess3(self, login_to_item):
         # 定位内容为‘111’的行
         self.item.wait_for_loading_to_disappear()
-        self.item.click_button('//tr[./td[2][.//span[text()="111"]]]/td[2]')
+        self.item.click_button('//tr[./td[6][.//span[text()="111"]]]/td[2]')
         self.item.click_del_button()  # 点击删除
         sleep(1)
         # 点击确定

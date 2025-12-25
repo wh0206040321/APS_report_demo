@@ -120,7 +120,7 @@ class TestItemPage:
         )
         # 在途数量xpath
         inputname_box = self.item.get_find_element_xpath(
-            "//div[@id='izykzohi-1l5u']//div[1]"
+            "//div[@id='izykzohi-1l5u']//div[2]"
         )
 
         self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')

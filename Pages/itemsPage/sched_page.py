@@ -1,7 +1,7 @@
 from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver import Keys
+from selenium.webdriver import Keys, ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -39,6 +39,7 @@ class SchedPage(BasePage):
 
     def click_attribute_button(self):
         """点击属性设置按钮."""
+        sleep(1)
         self.click_button('//span[text()="属性设置"]')
 
     def click_sched_button(self):
@@ -49,10 +50,16 @@ class SchedPage(BasePage):
         """点击时间属性"""
         self.click_button('//div[text()=" 时间属性 "]')
 
+    def click_name_ok(self):
+        """点击确定按钮."""
+        sleep(1)
+        self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        sleep(1)
+
     def click_ok_schedbutton(self):
         """点击确定按钮."""
         sleep(1)
-        self.click_button('(//button[@class="ivu-btn ivu-btn-primary"])[2]')
+        self.click_button('//div[@class="ivu-modal-confirm"]//span[text()="确定"]')
         sleep(1)
 
     def click_ok_button(self):
@@ -90,6 +97,18 @@ class SchedPage(BasePage):
             return self.find_element(By.CLASS_NAME, classname)
         except NoSuchElementException:
             return None
+
+    def right_refresh(self, name):
+        """右键刷新."""
+        self.click_button('(//div[@class="vxe-modal--footer"]//span[text()="取消"])[1]')
+        sleep(0.5)
+        but = self.get_find_element_xpath(f'//div[@class="scroll-body"]/div[.//div[text()=" {name} "]]')
+        but.click()
+        # 右键点击
+        ActionChains(self.driver).context_click(but).perform()
+        self.click_button('//li[text()=" 刷新"]')
+        self.wait_for_el_loading_mask()
+        sleep(1)
 
     def get_find_message(self):
         """获取错误信息"""
@@ -133,7 +152,7 @@ class SchedPage(BasePage):
                 '//label[text()="选择复制的方案"]/following-sibling::div/div'
             )  # 点击下拉框
             self.click_button('//li[text()="排产方案(订单级)"]')
-            self.click_ok_schedbutton()  # 点击确定
+            self.click_name_ok()  # 点击确定
             self.click_save_button()  # 点击保存
 
     def add_copy_materialsched(self, name=[]):
