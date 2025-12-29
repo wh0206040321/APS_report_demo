@@ -287,15 +287,6 @@ class TestResourceAllocationPage:
             eles = user.finds_elements(By.XPATH, xpath)
             assert len(eles) == 0, f"用户 {name} 未成功删除"
 
-        role_list = ["角色管理"]
-        role_name = [
-            "1测试角色代码1",
-        ]
-        for v in role_list:
-            allocation.click_button(f'(//span[text()="{v}"])[1]')
-        role.del_all(role_name, '//div[div[p[text()="角色代码"]]]//input')
-        role.get_find_message()
-
         unit_list = ["计划单元"]
         unit_name = [
             "1测试A",

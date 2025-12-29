@@ -2,6 +2,7 @@ import logging
 from time import sleep
 
 import allure
+import pyautogui
 import pytest
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
@@ -17,7 +18,7 @@ from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 from Utils.shared_data_util import SharedDataUtil
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")   # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_personal():
     driver = None
     try:
@@ -71,6 +72,7 @@ class TestPersonalPage:
         password = [f"{DateDriver.password}", "123", "123"]
         personal.edit_password(password[0], password[1], password[2])
         ele = driver.find_elements(By.XPATH, '//p[text()=" 密码至少包含大写字母，小写字母，数字，特殊字符中的3类 "]')
+        personal.click_button('//div[div[text()="修改密码"]]//i[@title="关闭"]')
         assert len(ele) == 1
         assert not personal.has_fail_message()
 
@@ -82,6 +84,7 @@ class TestPersonalPage:
         password = [f"{DateDriver.password}", "a123", "a123"]
         personal.edit_password(password[0], password[1], password[2])
         ele = driver.find_elements(By.XPATH, '//p[text()=" 密码至少包含大写字母，小写字母，数字，特殊字符中的3类 "]')
+        personal.click_button('//div[div[text()="修改密码"]]//i[@title="关闭"]')
         assert len(ele) == 1
         assert not personal.has_fail_message()
 
@@ -93,6 +96,7 @@ class TestPersonalPage:
         password = [f"{DateDriver.password}", "AAA123", "AAA123"]
         personal.edit_password(password[0], password[1], password[2])
         ele = driver.find_elements(By.XPATH, '//p[text()=" 密码至少包含大写字母，小写字母，数字，特殊字符中的3类 "]')
+        personal.click_button('//div[div[text()="修改密码"]]//i[@title="关闭"]')
         assert len(ele) == 1
         assert not personal.has_fail_message()
 
@@ -104,6 +108,7 @@ class TestPersonalPage:
         password = [f"{DateDriver.password}", "AAAb123", "AAAb123"]
         personal.edit_password(password[0], password[1], password[2])
         ele = driver.find_elements(By.XPATH, '//p[text()=" 密码最小长度为8位，最大为30位 "]')
+        personal.click_button('//div[div[text()="修改密码"]]//i[@title="关闭"]')
         assert len(ele) == 1
         assert not personal.has_fail_message()
 
@@ -116,6 +121,7 @@ class TestPersonalPage:
         password = [f"{DateDriver.password}", "Qw12+>3", "Qw12+>3"]
         personal.edit_password(password[0], password[1], password[2])
         ele = driver.find_elements(By.XPATH, f'//p[text()="{text}"]')
+        personal.click_button('//div[div[text()="修改密码"]]//i[@title="关闭"]')
         assert len(ele) == 1
         assert not personal.has_fail_message()
 
@@ -127,6 +133,7 @@ class TestPersonalPage:
         password = [f"{DateDriver.password}", " AAAb123", " AAAb123"]
         personal.edit_password(password[0], password[1], password[2])
         ele = driver.find_elements(By.XPATH, '//p[text()=" 首位字符不允许为空格 "]')
+        personal.click_button('//div[div[text()="修改密码"]]//i[@title="关闭"]')
         assert len(ele) == 1
         assert not personal.has_fail_message()
 
@@ -138,6 +145,7 @@ class TestPersonalPage:
         password = [f"{DateDriver.password}", f"W11{DateDriver.username}", f"W1{DateDriver.username}"]
         personal.edit_password(password[0], password[1], password[2])
         ele = driver.find_elements(By.XPATH, '//p[text()=" 不允许包含用户名 "]')
+        personal.click_button('//div[div[text()="修改密码"]]//i[@title="关闭"]')
         assert len(ele) == 1
         assert not personal.has_fail_message()
 
@@ -149,6 +157,7 @@ class TestPersonalPage:
         password = [f"{DateDriver.password}", "Qw123456", "Qw123446"]
         personal.edit_password(password[0], password[1], password[2])
         ele = driver.find_elements(By.XPATH, '//p[text()=" 与新密码保持一致 "]')
+        personal.click_button('//div[div[text()="修改密码"]]//i[@title="关闭"]')
         assert len(ele) == 1
         assert not personal.has_fail_message()
 
@@ -160,6 +169,7 @@ class TestPersonalPage:
         password = [f"{DateDriver.password}", f"{DateDriver.password}1", f"{DateDriver.password}1"]
         personal.edit_password(password[0], password[1], password[2])
         ele = driver.find_elements(By.XPATH, '//p[text()=" 新密码不能包含旧密码 "]')
+        personal.click_button('//div[div[text()="修改密码"]]//i[@title="关闭"]')
         assert len(ele) == 1
         assert not personal.has_fail_message()
 
@@ -171,6 +181,7 @@ class TestPersonalPage:
         password = [f"{DateDriver.password}1", "Qq123456", "Qq123456"]
         personal.edit_password(password[0], password[1], password[2])
         message = personal.get_error_message()
+        personal.click_button('//div[div[text()="修改密码"]]//i[@title="关闭"]')
         assert message == "修改失败"
         assert not personal.has_fail_message()
 
@@ -254,8 +265,8 @@ class TestPersonalPage:
 
         message = personal.get_find_message()
         sleep(2)
-        format = personal.get_find_element('(//span[text()="需求管理"])[1]')
-        assert "m-l-2" == format.get_attribute("class") and message == "保存成功"
+        format = personal.get_find_element('(//span[text()="需求管理"])[1]').get_attribute("class")
+        assert "m-l-2" == format and message == "保存成功"
         assert not personal.has_fail_message()
 
     @allure.story("切换后重新启动，设置不变，切换回常用风格")
@@ -383,6 +394,12 @@ class TestPersonalPage:
         driver = login_to_personal  # WebDriver 实例
         personal = PersonalPage(driver)  # 用 driver 初始化 PersonalPage
         wait = WebDriverWait(driver, 60)
+        personal.go_setting_page()
+
+        personal.click_button('//p[text()=" 本地引擎打开方式: "]/following-sibling::div//i')
+        personal.click_button('//li[text()="系统设置"]')
+        personal.click_button('//div[@class="demo-drawer-footer"]//span[text()="确定"]')
+        personal.get_find_message()
         personal.go_engine_page(name='system_web')
 
         # 等待 el-loading-spinner 消失
@@ -425,6 +442,8 @@ class TestPersonalPage:
         ele2 = personal.get_find_element('//li[text()="IP"]').get_attribute("class")
         assert success_element.text == "完成"
         assert "ivu-select-item-disabled" in ele1 and "ivu-select-item-disabled" in ele2
+        personal.click_button('//p[text()=" 本地引擎打开方式: "]/following-sibling::div//i')
+        personal.click_button('//div[@class="demo-drawer-footer"]//span[text()="取消"]')
         assert not personal.has_fail_message()
 
     @allure.story("打开引擎为web服务")
@@ -458,6 +477,7 @@ class TestPersonalPage:
             pass  # alert 未出现
         assert success_element.text == "完成"
         assert len(ele) == 1
+        pyautogui.press('esc')
 
     @allure.story("打开引擎为IP")
     # @pytest.mark.run(order=1)
@@ -490,6 +510,7 @@ class TestPersonalPage:
         assert success_element.text == "完成"
         assert len(ele) == 1
         assert not personal.has_fail_message()
+        pyautogui.press('esc')
 
     @allure.story("打开引擎为系统设置-web服务器")
     # @pytest.mark.run(order=1)
@@ -523,6 +544,7 @@ class TestPersonalPage:
         assert success_element.text == "完成"
         assert len(ele) == 1
         assert not personal.has_fail_message()
+        pyautogui.press('esc')
 
     @allure.story("打开引擎为系统设置-IP")
     # @pytest.mark.run(order=1)
@@ -556,6 +578,7 @@ class TestPersonalPage:
         assert success_element.text == "完成"
         assert len(ele) == 1
         assert not personal.has_fail_message()
+        pyautogui.press('esc')
 
     @allure.story("切换系统语言-英语")
     # @pytest.mark.run(order=1)
@@ -589,12 +612,16 @@ class TestPersonalPage:
     def test_personal_exit1(self, login_to_personal):
         driver = login_to_personal  # WebDriver 实例
         personal = PersonalPage(driver)  # 用 driver 初始化 PersonalPage
+        page = LoginPage(driver)
+        date_driver = DateDriver()
         num = 10
         personal.go_exit(num)
         sleep(num)
         ele = driver.find_elements(By.XPATH, '//div[text()="由于您已经长时间没有操作，系统已自动退出！"]')
         personal.click_button('//div[./div[text()="由于您已经长时间没有操作，系统已自动退出！"]]/following-sibling::div//button')
         username = driver.find_elements(By.XPATH, '//input[@placeholder="请输入账户"]')
+        page.login(date_driver.username, date_driver.password, date_driver.planning)
+        sleep(5)
         assert len(ele) == 1 == len(username)
 
     @allure.story("不操作自动退出-输入超过86400数字为86400")
@@ -613,6 +640,7 @@ class TestPersonalPage:
     def test_personal_characters_display(self, login_to_personal):
         driver = login_to_personal  # WebDriver 实例
         personal = PersonalPage(driver)  # 用 driver 初始化 PersonalPage
+
         name = "显示"
         style = personal.go_characters_display(name)
         assert style == ""

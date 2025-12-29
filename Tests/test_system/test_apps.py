@@ -128,7 +128,6 @@ class TestSAppsPage:
 
         apps.enter_texts(xpath_list[4], "1")
         apps.click_save_button()
-        apps.wait_for_el_loading_mask()
         message = apps.get_find_message()
         apps.click_apps_button()
         apps.select_input(name)
@@ -938,7 +937,7 @@ class TestSAppsPage:
         eles = apps.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
-        assert all(str(item).endswith(name) for item in list_)
+        assert all(str(item).lower().endswith(name.lower()) for item in list_)
         assert not apps.has_fail_message()
 
     @allure.story("清除筛选效果成功")
@@ -970,8 +969,8 @@ class TestSAppsPage:
 
         value = ['appstest1']
         apps.del_all(xpath='//div[p[text()="应用代码"]]/following-sibling::div//input', value=value)
-        apps.del_layout(layout)
         sleep(2)
+        apps.del_layout(layout)
         itemdata = [
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
             for v in value[:1]

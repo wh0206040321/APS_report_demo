@@ -16,7 +16,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_chart():
     driver = None
     try:
@@ -187,8 +187,9 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="排序方法"]/following-sibling::div//input'
-        )
-        assert "ME.DisplayOrder,a" in ele.get_attribute("value")
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ME.DisplayOrder,a" in ele
         assert not chart.has_fail_message()
 
     @allure.story("排序方案可选择-资源代码顺序-降序")
@@ -207,8 +208,9 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="排序方法"]/following-sibling::div//input'
-        )
-        assert "ME.Code,d" in ele.get_attribute("value")
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ME.Code,d" in ele
         assert not chart.has_fail_message()
 
     @allure.story("筛选方法可使用")
@@ -226,10 +228,11 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="筛选方法"]/following-sibling::div//input'
-        )
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             "AddOCalendar(Me.OperationMainRes,#2006/10/01 00:00:00#,#2006/10/15 00:00:00#,1)"
-            in ele.get_attribute("value")
+            in ele
         )
         assert not chart.has_fail_message()
 
@@ -248,8 +251,9 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="指令筛选"]/following-sibling::div//input'
-        )
-        assert "CalcDeliveryCost(ME)" in ele.get_attribute("value")
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "CalcDeliveryCost(ME)" in ele
         assert not chart.has_fail_message()
 
     @allure.story("按钮显示文字开关可关闭")
@@ -273,8 +277,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="按钮显示文字"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-small" in button.get_attribute("class")
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮显示文字开关可开启")
@@ -295,10 +300,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="按钮显示文字"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button.get_attribute(
-            "class"
-        )
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮自动刷新开关可关闭")
@@ -322,8 +326,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="自动刷新"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-small" in button.get_attribute("class")
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮自动刷新开关可开启")
@@ -344,10 +349,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="自动刷新"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button.get_attribute(
-            "class"
-        )
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮移动后全固定开关可关闭")
@@ -371,8 +375,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="移动后全固定"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-small" in button.get_attribute("class")
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮移动后全固定开关可开启")
@@ -393,10 +398,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="移动后全固定"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button.get_attribute(
-            "class"
-        )
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮是否显示工作选择面板开关可关闭")
@@ -420,8 +424,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="是否显示工作选择面板"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-small" in button.get_attribute("class")
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮是否显示工作选择面板开关可开启")
@@ -442,10 +447,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="是否显示工作选择面板"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button.get_attribute(
-            "class"
-        )
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮变更使用时间开关可关闭")
@@ -469,8 +473,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="变更使用时间"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-small" in button.get_attribute("class")
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮变更使用时间开关可开启")
@@ -491,10 +496,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="变更使用时间"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button.get_attribute(
-            "class"
-        )
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("图棒-显示颜色")
@@ -513,8 +517,9 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="显示颜色表达式"]/following-sibling::div//input'
-        )
-        assert "Abs(-1)ME.Order.Color" in ele.get_attribute("value")
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "Abs(-1)ME.Order.Color" in ele
         assert not chart.has_fail_message()
 
     @allure.story("资源甘特图-使用指令棒文本格式表达式")
@@ -538,11 +543,11 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="使用指令棒文本格式表达式"]/following-sibling::div//input'
-        )
-        print(ele.get_attribute("value"))
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             "Sum(ME.Operation.PrevOperation,TARGET.OperationOutMainItemQty)"
-            in ele.get_attribute("value")
+            in ele
         )
         assert not chart.has_fail_message()
 
@@ -565,11 +570,11 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="工作面板显示内容"]/following-sibling::div//input'
-        )
-        print(ele.get_attribute("value"))
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             "ME.Operation.ProductionTask.UseInstructions['S0'].Resource"
-            in ele.get_attribute("value")
+            in ele
         )
         assert not chart.has_fail_message()
 
@@ -592,9 +597,9 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="左侧资源显示表达式"]/following-sibling::div//input'
-        )
-        print(ele.get_attribute("value"))
-        assert "ME.Code" in ele.get_attribute("value")
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ME.Code" in ele
         assert not chart.has_fail_message()
 
     @allure.story("排产成功")
@@ -671,7 +676,7 @@ class TestChartPage:
     def test_orderchart_addlayout(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单甘特图')
+        chart.click_close_page('资源甘特图', '订单甘特图')
         chart.click_add_button()
         chart.enter_texts('//input[@placeholder="请输入名称"]', "测试布局")
         chart.click_order_confirm_button()
@@ -701,7 +706,6 @@ class TestChartPage:
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
         wait = WebDriverWait(driver, 10)
-        chart.click_close_page('订单甘特图')
         chart.click_button(
             '//div[@class="el-tabs__nav is-top"]/div[@role="tab" and text()="测试布局"]'
         )
@@ -732,7 +736,6 @@ class TestChartPage:
     def test_orderchart_deletelayout(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单甘特图')
         chart.click_button(
             '//div[@class="el-tabs__nav is-top"]/div[@role="tab" and text()="测试布局修改"]'
         )
@@ -756,7 +759,6 @@ class TestChartPage:
     def test_orderchart_sort1(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单甘特图')
         chart.click_button('//a[@title="设置"]')
         chart.click_button('//label[text()="排序方法"]/following-sibling::div//i')
         chart.click_button('//div[@class="right"]/button[2]')
@@ -768,8 +770,9 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="排序方法"]/following-sibling::div//input'
-        )
-        assert "ME.DisplayOrder,a" in ele.get_attribute("value")
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ME.DisplayOrder,a" in ele
         assert not chart.has_fail_message()
 
     @allure.story("排序方案可选择-资源代码顺序-降序")
@@ -777,7 +780,6 @@ class TestChartPage:
     def test_orderchart_sort2(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单甘特图')
         chart.click_button('//a[@title="设置"]')
         chart.click_button('//label[text()="排序方法"]/following-sibling::div//i')
         chart.click_button('//div[@class="right"]/button[2]')
@@ -789,8 +791,9 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="排序方法"]/following-sibling::div//input'
-        )
-        assert "ME.Priority,d" in ele.get_attribute("value")
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ME.Priority,d" in ele
         assert not chart.has_fail_message()
 
     @allure.story("筛选方法可使用")
@@ -798,7 +801,6 @@ class TestChartPage:
     def test_orderchart_filter(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单甘特图')
         chart.click_button('//a[@title="设置"]')
         chart.click_button('//label[text()="筛选方法"]/following-sibling::div//i')
         ele = chart.get_find_element_xpath('//span[text()="添加覆盖日历。"]')
@@ -809,10 +811,11 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="筛选方法"]/following-sibling::div//input'
-        )
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
                 "AddOCalendar(Me.OperationMainRes,#2006/10/01 00:00:00#,#2006/10/15 00:00:00#,1)"
-                in ele.get_attribute("value")
+                in ele
         )
         assert not chart.has_fail_message()
 
@@ -821,7 +824,6 @@ class TestChartPage:
     def test_orderchart_button1(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单甘特图')
 
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
@@ -839,8 +841,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="按钮显示文字"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-small" in button.get_attribute("class")
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮显示文字开关可开启")
@@ -848,7 +851,6 @@ class TestChartPage:
     def test_orderchart_button2(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单甘特图')
 
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
@@ -863,10 +865,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="按钮显示文字"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button.get_attribute(
-            "class"
-        )
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮自动刷新开关可关闭")
@@ -874,7 +875,6 @@ class TestChartPage:
     def test_orderchart_button3(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单甘特图')
 
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
@@ -892,8 +892,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="自动刷新"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-small" in button.get_attribute("class")
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮自动刷新开关可开启")
@@ -901,7 +902,6 @@ class TestChartPage:
     def test_orderchart_button4(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单甘特图')
 
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
@@ -916,10 +916,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="自动刷新"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button.get_attribute(
-            "class"
-        )
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     # @allure.story("校验文本框成功")
@@ -957,7 +956,7 @@ class TestChartPage:
     def test_orderAssociationChart_addlayout(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单关联甘特图')
+        chart.click_close_page('订单甘特图', '订单关联甘特图')
         chart.click_add_button()
         chart.enter_texts('//input[@placeholder="请输入名称"]', "测试布局")
         chart.click_order_confirm_button()
@@ -987,7 +986,6 @@ class TestChartPage:
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
         wait = WebDriverWait(driver, 10)
-        chart.click_close_page('订单关联甘特图')
         chart.click_button(
             '//div[@class="el-tabs__nav is-top"]/div[@role="tab" and text()="测试布局"]'
         )
@@ -1018,7 +1016,6 @@ class TestChartPage:
     def test_orderAssociationChart_deletelayout(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单关联甘特图')
         chart.click_button(
             '//div[@class="el-tabs__nav is-top"]/div[@role="tab" and text()="测试布局修改"]'
         )
@@ -1042,7 +1039,6 @@ class TestChartPage:
     def test_orderAssociationChart_sort1(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单关联甘特图')
         chart.click_button('//a[@title="设置"]')
         chart.click_button('//label[text()="排序方法"]/following-sibling::div//i')
         chart.click_button('//div[@class="right"]/button[2]')
@@ -1054,8 +1050,9 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="排序方法"]/following-sibling::div//input'
-        )
-        assert "ME.DisplayOrder,a" in ele.get_attribute("value")
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ME.DisplayOrder,a" in ele
         assert not chart.has_fail_message()
 
     @allure.story("排序方案可选择-资源代码顺序-降序")
@@ -1063,7 +1060,6 @@ class TestChartPage:
     def test_orderAssociationChart_sort2(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单关联甘特图')
         chart.click_button('//a[@title="设置"]')
         chart.click_button('//label[text()="排序方法"]/following-sibling::div//i')
         chart.click_button('//div[@class="right"]/button[2]')
@@ -1075,8 +1071,9 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="排序方法"]/following-sibling::div//input'
-        )
-        assert "ME.Priority,d" in ele.get_attribute("value")
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ME.Priority,d" in ele
         assert not chart.has_fail_message()
 
     @allure.story("筛选方法可使用")
@@ -1084,7 +1081,6 @@ class TestChartPage:
     def test_orderAssociationChart_filter(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单关联甘特图')
         chart.click_button('//a[@title="设置"]')
         chart.click_button('//label[text()="筛选方法"]/following-sibling::div//i')
         ele = chart.get_find_element_xpath('//span[text()="添加覆盖日历。"]')
@@ -1095,10 +1091,11 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="筛选方法"]/following-sibling::div//input'
-        )
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
                 "AddOCalendar(Me.OperationMainRes,#2006/10/01 00:00:00#,#2006/10/15 00:00:00#,1)"
-                in ele.get_attribute("value")
+                in ele
         )
         assert not chart.has_fail_message()
 
@@ -1107,7 +1104,6 @@ class TestChartPage:
     def test_orderAssociationChart_button1(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单关联甘特图')
 
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
@@ -1125,8 +1121,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="按钮显示文字"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-small" in button.get_attribute("class")
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮显示文字开关可开启")
@@ -1134,7 +1131,6 @@ class TestChartPage:
     def test_orderAssociationChart_button2(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单关联甘特图')
 
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
@@ -1149,10 +1145,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="按钮显示文字"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button.get_attribute(
-            "class"
-        )
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮自动刷新开关可关闭")
@@ -1160,7 +1155,6 @@ class TestChartPage:
     def test_orderAssociationChart_button3(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单关联甘特图')
 
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
@@ -1178,8 +1172,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="自动刷新"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-small" in button.get_attribute("class")
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮自动刷新开关可开启")
@@ -1187,7 +1182,6 @@ class TestChartPage:
     def test_orderAssociationChart_button4(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('订单关联甘特图')
 
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
@@ -1202,10 +1196,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="自动刷新"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button.get_attribute(
-            "class"
-        )
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     # @allure.story("校验文本框成功")
@@ -1243,7 +1236,7 @@ class TestChartPage:
     def test_loadChart_addlayout(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('负荷甘特图')
+        chart.click_close_page('订单关联甘特图', '负荷甘特图')
         chart.click_add_button()
         chart.enter_texts('//input[@placeholder="请输入名称"]', "测试布局")
         chart.click_order_confirm_button()
@@ -1273,7 +1266,6 @@ class TestChartPage:
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
         wait = WebDriverWait(driver, 10)
-        chart.click_close_page('负荷甘特图')
         chart.click_button(
             '//div[@class="el-tabs__nav is-top"]/div[@role="tab" and text()="测试布局"]'
         )
@@ -1304,7 +1296,6 @@ class TestChartPage:
     def test_loadChart_deletelayout(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('负荷甘特图')
         chart.click_button(
             '//div[@class="el-tabs__nav is-top"]/div[@role="tab" and text()="测试布局修改"]'
         )
@@ -1328,7 +1319,6 @@ class TestChartPage:
     def test_loadChart_sort1(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('负荷甘特图')
         chart.click_button('//a[@title="设置"]')
         chart.click_button('//label[text()="排序方法"]/following-sibling::div//i')
         chart.click_button('//div[@class="right"]/button[2]')
@@ -1340,8 +1330,9 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="排序方法"]/following-sibling::div//input'
-        )
-        assert "ME.DisplayOrder,a" in ele.get_attribute("value")
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ME.DisplayOrder,a" in ele
         assert not chart.has_fail_message()
 
     @allure.story("排序方案可选择-资源代码顺序-降序")
@@ -1349,7 +1340,6 @@ class TestChartPage:
     def test_loadChart_sort2(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('负荷甘特图')
         chart.click_button('//a[@title="设置"]')
         chart.click_button('//label[text()="排序方法"]/following-sibling::div//i')
         chart.click_button('//div[@class="right"]/button[2]')
@@ -1361,8 +1351,9 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="排序方法"]/following-sibling::div//input'
-        )
-        assert "ME.UserStr1,d" in ele.get_attribute("value")
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ME.UserStr1,d" in ele
         assert not chart.has_fail_message()
 
     @allure.story("筛选方法可使用")
@@ -1370,7 +1361,6 @@ class TestChartPage:
     def test_loadChart_filter(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('负荷甘特图')
         chart.click_button('//a[@title="设置"]')
         chart.click_button('//label[text()="筛选方法"]/following-sibling::div//i')
         ele = chart.get_find_element_xpath('//span[text()="添加覆盖日历。"]')
@@ -1381,10 +1371,11 @@ class TestChartPage:
         chart.wait_for_el_loading_mask()
         ele = chart.get_find_element_xpath(
             '//label[text()="筛选方法"]/following-sibling::div//input'
-        )
+        ).get_attribute("value")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
                 "AddOCalendar(Me.OperationMainRes,#2006/10/01 00:00:00#,#2006/10/15 00:00:00#,1)"
-                in ele.get_attribute("value")
+                in ele
         )
         assert not chart.has_fail_message()
 
@@ -1393,7 +1384,6 @@ class TestChartPage:
     def test_loadChart_button1(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('负荷甘特图')
 
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
@@ -1411,8 +1401,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="按钮显示文字"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-small" in button.get_attribute("class")
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮显示文字开关可开启")
@@ -1420,7 +1411,6 @@ class TestChartPage:
     def test_loadChart_button2(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('负荷甘特图')
 
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
@@ -1435,10 +1425,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="按钮显示文字"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button.get_attribute(
-            "class"
-        )
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮自动刷新开关可关闭")
@@ -1446,7 +1435,6 @@ class TestChartPage:
     def test_loadChart_button3(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('负荷甘特图')
 
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
@@ -1464,8 +1452,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="自动刷新"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-small" in button.get_attribute("class")
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("按钮自动刷新开关可开启")
@@ -1473,7 +1462,6 @@ class TestChartPage:
     def test_loadChart_button4(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('负荷甘特图')
 
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
@@ -1488,10 +1476,9 @@ class TestChartPage:
         chart.click_button('//a[@title="设置"]')
         button = chart.get_find_element_xpath(
             '(//label[text()="自动刷新"]/following-sibling::div//span)[1]'
-        )
-        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button.get_attribute(
-            "class"
-        )
+        ).get_attribute("class")
+        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert "ivu-switch ivu-switch-checked ivu-switch-small" in button
         assert not chart.has_fail_message()
 
     @allure.story("显示表格成功")
@@ -1499,12 +1486,11 @@ class TestChartPage:
     def test_loadChart_displaytable(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('负荷甘特图')
 
         chart.click_button('//a[@title="显示表格"]')
         ele = chart.get_find_element_xpath(
             '//table[@class="vxe-table--header"]//tr/th[1]'
-        ).text
+        ).get_attribute('innerText')
         assert ele == "序号"
 
     # @allure.story("校验文本框成功")
@@ -1542,7 +1528,7 @@ class TestChartPage:
     def test_workSequenceChart_addlayout(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('工作顺序表')
+        chart.click_close_page('负荷甘特图', '工作顺序表')
         chart.click_add_button()
         chart.enter_texts('//input[@placeholder="请输入名称"]', "测试布局")
         chart.click_order_confirm_button()
@@ -1572,7 +1558,6 @@ class TestChartPage:
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
         wait = WebDriverWait(driver, 10)
-        chart.click_close_page('工作顺序表')
         chart.click_button(
             '//div[@class="el-tabs__nav is-top"]/div[@role="tab" and text()="测试布局"]'
         )
@@ -1603,7 +1588,6 @@ class TestChartPage:
     def test_workSequenceChart_deletelayout(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('工作顺序表')
         chart.click_button(
             '//div[@class="el-tabs__nav is-top"]/div[@role="tab" and text()="测试布局修改"]'
         )
@@ -1627,7 +1611,7 @@ class TestChartPage:
     def test_planEvaluationChart_select1(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('计划评估对比')
+        chart.click_close_page('工作顺序表', '计划评估对比')
         chart.click_button('//button//span[text()="重置选择"]')
         sleep(1)
         chart.click_button('//button//span[text()="查询"]')
@@ -1640,7 +1624,6 @@ class TestChartPage:
     def test_planEvaluationChart_select2(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_close_page('计划评估对比')
         chart.click_button('//button//span[text()="重置选择"]')
         sleep(1)
         chart.click_button('//div[@id="s6zctuz5-ki6s"]//i')

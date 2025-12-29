@@ -364,7 +364,7 @@ class TestItemPage:
         self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
         sleep(1)
         # 选中物料员代码
-        self.item.click_button('//tr[./td[6][.//span[text()="111"]]]/td[2]')
+        self.item.click_button('//tr[./td[7][.//span[text()="111"]]]/td[2]')
         # 点击编辑按钮
         self.item.click_edi_button()
         sleep(1)
@@ -399,7 +399,7 @@ class TestItemPage:
     def test_materialInventory_delsuccess2(self, login_to_item):
 
         # 定位内容为‘1测试A’的行
-        self.item.click_button('//tr[./td[6][.//span[text()="111"]]]/td[2]')
+        self.item.click_button('//tr[./td[7][.//span[text()="111"]]]/td[2]')
         self.item.click_del_button()  # 点击删除
         sleep(1)
         # 点击确定
@@ -483,6 +483,7 @@ class TestItemPage:
             "//div[@id='1t48zhco-fwz6']//input",
             "//div[@id='tn39rj1c-kfyx']//input",
         ]
+        sleep(4)
         # 输入框要修改的值
         text_str = "111"
         # 日期要修改的值
@@ -530,7 +531,7 @@ class TestItemPage:
         self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
         sleep(1)
         # 选中物料代码
-        self.item.click_button('//tr[./td[6][.//span[text()="111"]]]/td[2]')
+        self.item.click_button('//tr[./td[7][.//span[text()="111"]]]/td[2]')
         # 点击编辑按钮
         self.item.click_edi_button()
         sleep(1)
@@ -601,7 +602,7 @@ class TestItemPage:
         item.click_select_button()
         # 定位第一行是否为产品A
         itemcode = item.get_find_element_xpath(
-            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[6]'
+            '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[7]'
         ).text
         # 定位第二行没有数据
         itemcode2 = driver.find_elements(
@@ -661,7 +662,7 @@ class TestItemPage:
     def test_materialInventory_delsuccess3(self, login_to_item):
         # 定位内容为‘111’的行
         self.item.wait_for_loading_to_disappear()
-        self.item.click_button('//tr[./td[6][.//span[text()="111"]]]/td[2]')
+        self.item.click_button('//tr[./td[7][.//span[text()="111"]]]/td[2]')
         self.item.click_del_button()  # 点击删除
         sleep(1)
         # 点击确定

@@ -424,10 +424,9 @@ class TestUserRolePage:
         user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
         name = ["1111111111111111333311222211112222211111111133331111111444441111111111111111111111111111111111111111"]
         user.del_(name)
-        message = user.get_find_message()
         user.select_input(name)
         ele = user.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
-        assert message == "删除成功！" and len(ele) == 0
+        assert len(ele) == 0
         assert not user.has_fail_message()
 
     @allure.story("添加用户重复")

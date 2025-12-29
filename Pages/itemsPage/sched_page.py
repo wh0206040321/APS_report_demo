@@ -167,7 +167,7 @@ class SchedPage(BasePage):
                 '//label[text()="选择复制的方案"]/following-sibling::div/div'
             )  # 点击下拉框
             self.click_button(f'//li[text()="{ele}"]')
-            self.click_ok_schedbutton()  # 点击确定
+            self.click_name_ok()  # 点击确定
             self.click_save_button()  # 点击保存
 
     def del_all_sched(self, name=[]):

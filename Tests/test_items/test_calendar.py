@@ -752,9 +752,112 @@ class TestCalendarPage:
         # 定位第一行
         calendarcode = calendar.get_find_element_xpath(
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
-        ).text
+        ).get_attribute('innerText')
         calendar.right_refresh('生产日历')
         assert calendarcode == ele
+        assert not calendar.has_fail_message()
+
+    @allure.story("过滤条件查询，一个不选，显示正常")
+    # @pytest.mark.run(order=1)
+    def test_calendar_select2(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = Calendar(driver)  # 用 driver 初始化 Calendar
+        calendar.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//i')
+        sleep(1)
+        eles = calendar.get_find_element_xpath('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
+            "class")
+        if eles == "ivu-checkbox ivu-checkbox-checked":
+            calendar.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            calendar.click_button('//div[@class="filter-btn-bar"]/button')
+        sleep(1)
+        calendar.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//input')
+        eles = calendar.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        calendar.right_refresh('生产日历')
+        assert len(eles) == 0
+        assert not calendar.has_fail_message()
+
+    @allure.story("过滤条件查询，设置包含条件查询成功")
+    # @pytest.mark.run(order=1)
+    def test_calendar_select3(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = Calendar(driver)  # 用 driver 初始化 Calendar
+        name = calendar.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        calendar.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//i')
+        calendar.hover("包含")
+        sleep(1)
+        calendar.select_input(first_char)
+        sleep(1)
+        eles = calendar.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        calendar.right_refresh('生产日历')
+        assert all(first_char in text for text in list_)
+        assert not calendar.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合开头查询成功")
+    # @pytest.mark.run(order=1)
+    def test_calendar_select4(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = Calendar(driver)  # 用 driver 初始化 Calendar
+        name = calendar.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        calendar.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//i')
+        calendar.hover("符合开头")
+        sleep(1)
+        calendar.select_input(first_char)
+        sleep(1)
+        eles = calendar.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        calendar.right_refresh('生产日历')
+        assert all(str(item).startswith(first_char) for item in list_)
+        assert not calendar.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合结尾查询成功")
+    # @pytest.mark.run(order=1)
+    def test_calendar_select5(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = Calendar(driver)  # 用 driver 初始化 Calendar
+        name = calendar.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        last_char = name[-1:] if name else ""
+        calendar.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//i')
+        calendar.hover("符合结尾")
+        sleep(1)
+        calendar.select_input(last_char)
+        sleep(1)
+        eles = calendar.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        calendar.right_refresh('生产日历')
+        assert all(str(item).endswith(last_char) for item in list_)
+        assert not calendar.has_fail_message()
+
+    @allure.story("清除筛选效果成功")
+    # @pytest.mark.run(order=1)
+    def test_calendar_clear(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = Calendar(driver)  # 用 driver 初始化 Calendar
+        name = "3"
+        sleep(1)
+        calendar.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//i')
+        calendar.hover("包含")
+        sleep(1)
+        calendar.select_input(name)
+        sleep(1)
+        calendar.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//i')
+        calendar.hover("清除所有筛选条件")
+        sleep(1)
+        ele = calendar.get_find_element_xpath('//p[text()="资源"]/ancestor::div[2]/div[3]//i').get_attribute(
+            "class")
+        calendar.right_refresh('生产日历')
+        assert ele == "vxe-icon-funnel suffixIcon"
         assert not calendar.has_fail_message()
 
     @allure.story("删除布局成功")

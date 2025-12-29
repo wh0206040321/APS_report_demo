@@ -32,7 +32,7 @@ class UserRolePage(BasePage):
 
     def get_find_message(self):
         """获取错误信息"""
-        message = WebDriverWait(self.driver, 30).until(
+        message = WebDriverWait(self.driver, 60).until(
             EC.visibility_of_element_located(
                 (By.XPATH, '//div[@class="el-message el-message--success"]/p')
             )
@@ -164,7 +164,7 @@ class UserRolePage(BasePage):
                 self.click_button(f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
                 self.click_all_button("删除")  # 点击删除
                 self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-                sleep(1)
+                self.get_find_message()
             except NoSuchElementException:
                 print(f"未找到元素: {v}")
             except Exception as e:

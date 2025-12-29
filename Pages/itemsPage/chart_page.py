@@ -62,6 +62,7 @@ class ChartPage(BasePage):
         检查页面上是否存在class中包含'el-loading-mask'且style中不包含'display: none'的div元素，
         以此判断加载遮罩是否消失。
         """
+        sleep(2)
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
         )
@@ -77,10 +78,10 @@ class ChartPage(BasePage):
         self.click_button('(//button[@class="ivu-btn ivu-btn-primary"])[2]')
         self.wait_for_el_loading_mask()
 
-    def click_close_page(self, name):
+    def click_close_page(self, before_name, name):
         """点击关闭页面."""
-        self.click_button('//div[text()=" 资源甘特图 "]')
-        self.click_button('//div[div[text()=" 资源甘特图 "]]/span')
+        self.click_button(f'//div[text()=" {before_name} "]')
+        self.click_button(f'//div[div[text()=" {before_name} "]]/span')
         self.click_button(f'(//span[text()="{name }"])[1]')
         self.wait_for_el_loading_mask()
         sleep(2)

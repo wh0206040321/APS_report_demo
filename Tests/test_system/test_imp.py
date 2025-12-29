@@ -99,8 +99,8 @@ class TestImpPage:
         message = imp.get_find_message()
         sleep(2)
         value = imp.get_find_element_xpath(
-            '//div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//input[@class="ivu-select-input"]')
-        assert message == "新增成功！" and value.get_attribute("value") == name
+            '//div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//input[@class="ivu-select-input"]').get_attribute("value")
+        assert message == "新增成功！" and value == name
         assert not imp.has_fail_message()
 
     @allure.story("添加重复方案，提示重复")
@@ -213,6 +213,7 @@ class TestImpPage:
         pyautogui.press('enter')
         sleep(1)
         imp.click_button('//div[text()=" 字段映射 "]')
+        sleep(1)
         imp.wait_for_el_loading_mask()
         num = len(imp.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr'))
         for i in range(1, num + 1):
@@ -279,7 +280,7 @@ class TestImpPage:
         name = "1导入设置方案"
         copyname = '1同步导入1'
         imp.copy_(copy_name=copyname)
-        sleep(1)
+        sleep(2)
         list_ = ['//div[label[text()="源方案"]]//div[@class="ivu-select-selection"]']
         box_color = add.get_border_color(list_)
         assert all(color == "rgb(237, 64, 20)" for color in box_color), f"预期{box_color}"

@@ -737,40 +737,40 @@ class TestSynchronizePage:
         imp.click_button(
             '//div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//input[@class="ivu-select-input"]')
 
-        role_list = ["系统管理", "系统设置", "用户权限管理"]
-        for v in role_list:
-            synchronize.click_button(f'(//span[text()="{v}"])[1]')
+        # role_list = ["系统管理", "系统设置", "用户权限管理"]
+        # for v in role_list:
+        #     synchronize.click_button(f'(//span[text()="{v}"])[1]')
+        #
+        # names = ["1测试角色代码1", "1测试角色代码3"]
+        # # 取消当前用户选中的角色
+        # user.select_input(username)
+        # user.click_button(f'(//table[@class="vxe-table--body"])[1]//tr/td[2]//span[text()="{username}"]')
+        # sleep(1)
+        # user.click_all_button("编辑")
+        # sleep(1)
+        # for name in names:
+        #     xpath = '//div[div[p[text()="角色代码"]]]//input'
+        #     ele = synchronize.get_find_element_xpath(xpath)
+        #     ele.send_keys(Keys.CONTROL, "a")
+        #     ele.send_keys(Keys.DELETE)
+        #     user.enter_texts('//div[div[p[text()="角色代码"]]]//input', name)
+        #     sleep(3)
+        #     eles = synchronize.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr/td[2]//span[@class="vxe-cell--checkbox is--checked"]')
+        #     if len(eles) == 1:
+        #         synchronize.click_button('//table[@class="vxe-table--body"]//tr/td[2]//span[@class="vxe-cell--checkbox is--checked"]')
+        #
+        # user.click_all_button("保存")
+        # user.get_find_message()
+        #
+        # role_list = ["角色管理"]
+        # role_name = [
+        #     "1测试角色代码3",
+        # ]
+        # for v in role_list:
+        #     synchronize.click_button(f'(//span[text()="{v}"])[1]')
+        # role.del_all(role_name, '//div[div[p[text()="角色代码"]]]//input')
 
-        names = ["1测试角色代码1", "1测试角色代码3"]
-        # 取消当前用户选中的角色
-        user.select_input(username)
-        user.click_button(f'(//table[@class="vxe-table--body"])[1]//tr/td[2]//span[text()="{username}"]')
-        sleep(1)
-        user.click_all_button("编辑")
-        sleep(1)
-        for name in names:
-            xpath = '//div[div[p[text()="角色代码"]]]//input'
-            ele = synchronize.get_find_element_xpath(xpath)
-            ele.send_keys(Keys.CONTROL, "a")
-            ele.send_keys(Keys.DELETE)
-            user.enter_texts('//div[div[p[text()="角色代码"]]]//input', name)
-            sleep(3)
-            eles = synchronize.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr/td[2]//span[@class="vxe-cell--checkbox is--checked"]')
-            if len(eles) == 1:
-                synchronize.click_button('//table[@class="vxe-table--body"]//tr/td[2]//span[@class="vxe-cell--checkbox is--checked"]')
-
-        user.click_all_button("保存")
-        user.get_find_message()
-
-        role_list = ["角色管理"]
-        role_name = [
-            "1测试角色代码3",
-        ]
-        for v in role_list:
-            synchronize.click_button(f'(//span[text()="{v}"])[1]')
-        role.del_all(role_name, '//div[div[p[text()="角色代码"]]]//input')
-
-        unit_list = ["计划单元"]
+        unit_list = ["系统管理", "系统设置", "计划单元"]
 
         unit_name = [
             "1测试计划单元标准",

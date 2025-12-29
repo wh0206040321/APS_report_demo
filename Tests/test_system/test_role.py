@@ -163,14 +163,16 @@ class TestRolePage:
         ele = role.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
 
         role.click_button('(//span[text()="用户权限管理"])[1]')
+        role.wait_for_loading_to_disappear()
         role.enter_texts('//div[div[p[text()="用户代码"]]]//input', date_driver.username)
         sleep(3)
         role.click_button(f'(//table[@class="vxe-table--body"]//span[text()="{date_driver.username}"])[1]')
         sleep(2)
         role.click_all_button("编辑")
+        sleep(2)
 
         role.select_input(name)
-        sleep(2)
+        sleep(3)
         role.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span)[2]')
         role.click_all_button("保存")
         message = role.get_find_message()

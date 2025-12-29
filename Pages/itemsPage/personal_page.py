@@ -101,7 +101,7 @@ class PersonalPage(BasePage):
         self.click_button('//div[@class="flex-alignItems-center"]')
 
         # 点击文本为"个人设置"的div，进入个人设置页面。
-        self.click_button('//div[text()=" 个人设置 "]')
+        self.click_button('//i[@class="el-icon-setting"]')
         self.wait_for_el_loading_mask()
 
     def switch_language(self, language):
@@ -117,13 +117,13 @@ class PersonalPage(BasePage):
         self.go_setting_page()
 
         # 点击系统语言设置图标，准备选择新的语言
-        self.click_button('//p[text()=" 系统语言: "]/following-sibling::div//i')
+        self.click_button('//div[@class="ivu-tabs-tabpane"]/div[.//li[text()="简体中文"]]/div')
 
         # 选择目标语言
         self.click_button(f'//li[text()="{language}"]')
 
         # 确认
-        self.click_button('//div[@class="demo-drawer-footer"]//span[text()="确定"]')
+        self.click_button('//div[@class="demo-drawer-footer"]/button[2]')
         sleep(3)
         # 获取并返回特定元素的文本，用于验证语言是否已成功切换
         ele = self.get_find_element('//div[@class="vxe-pulldown--content"]//input').get_attribute("placeholder")

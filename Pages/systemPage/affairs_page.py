@@ -384,6 +384,7 @@ class AffairsPage(BasePage):
         if pname:
             self.enter_texts('//input[@placeholder="请输入流程名称"]', pname)
         if affairs_name:
+            sleep(1)
             self.click_button('//div[label[text()="事务:"]]//input')
             self.click_button(f'//li[div/span[text()="{affairs_name}"]]')
         if button:

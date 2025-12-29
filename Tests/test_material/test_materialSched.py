@@ -67,7 +67,7 @@ class TestMaterialSchedPage:
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
         sched.click_add_schedbutton()  # 点击添加方案
 
-        sched.click_ok_schedbutton()  # 点击确定
+        sched.click_name_ok()  # 点击确定
         message = sched.get_error_message()
         # 检查元素是否包含子节点
         assert message == "请输入"
@@ -85,7 +85,7 @@ class TestMaterialSchedPage:
         )  # 点击下拉框
         sched.click_button('//div[label[text()="选择复制的方案"]]//ul[@class="ivu-select-dropdown-list"]/li[1]')
 
-        sched.click_ok_schedbutton()  # 点击确定
+        sched.click_name_ok()  # 点击确定
         message = sched.get_error_message()
         # 检查元素是否包含子节点
         assert message == "请输入"
@@ -106,7 +106,7 @@ class TestMaterialSchedPage:
             '//label[text()="名称"]/following-sibling::div//input', ele
         )
 
-        sched.click_ok_schedbutton()  # 点击确定
+        sched.click_name_ok()  # 点击确定
         message = sched.get_error_message()
         # 检查元素是否包含子节点
         assert message == "物控方案已存在"
@@ -132,7 +132,7 @@ class TestMaterialSchedPage:
             '//label[text()="选择复制的方案"]/following-sibling::div/div'
         )  # 点击下拉框
         sched.click_button(f'//li[text()="{ele}"]')
-        sched.click_ok_schedbutton()  # 点击确定
+        sched.click_name_ok()  # 点击确定
         sched.click_save_button()  # 点击保存
         sleep(1)
 
@@ -191,7 +191,7 @@ class TestMaterialSchedPage:
 
         sched.click_add_schedbutton()  # 点击添加方案
         sched.enter_texts('//label[text()="名称"]/following-sibling::div//input', "33")
-        sched.click_ok_schedbutton()  # 点击确定
+        sched.click_name_ok()  # 点击确定
         sched.click_save_button()  # 点击保存
         sleep(1)
         addtext = sched.get_find_element_xpath(
@@ -451,7 +451,7 @@ class TestMaterialSchedPage:
             '//label[text()="选择复制的方案"]/following-sibling::div/div'
         )  # 点击下拉框
         sched.click_button(f'//li[text()="{ele}"]')
-        sched.click_ok_schedbutton()  # 点击确定
+        sched.click_name_ok()  # 点击确定
         sched.click_save_button()  # 点击保存
         sleep(1)
 

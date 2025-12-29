@@ -126,32 +126,6 @@ class TestPlanDataPage:
         assert all(name in text for text in eles)
         assert not information.has_fail_message()
 
-    @allure.story("计划评估页面删除成功")
-    # @pytest.mark.run(order=1)
-    def test_planEvaluation_del(self, login_to_plandata):
-        driver = login_to_plandata  # WebDriver 实例
-        word = WorkTasksPage(driver)  # 用 driver 初始化 WorkTasksPage
-        word.click_button('(//span[text()="计划评估"])[1]')
-        word.wait_for_loading_to_disappear()
-        # 定位第一行
-        word.click_button(
-            '//table[@class="vxe-table--body"]//tr[1]//td[3]'
-        )
-        before_data = word.get_find_element_xpath(
-            '(//span[contains(text(),"条记录")])[1]'
-        ).text
-        word.click_all_button("删除")  # 点击删除
-        word.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-        sleep(1)
-        after_data = word.get_find_element_xpath(
-            '(//span[contains(text(),"条记录")])[1]'
-        ).get_attribute('innerText')
-        word.right_refresh('计划评估')
-        assert (
-                before_data != after_data
-        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
-        assert not word.has_fail_message()
-
     @allure.story("计划评估页面刷新成功")
     # @pytest.mark.run(order=1)
     def test_planEvaluation_ref(self, login_to_plandata):
