@@ -1,0 +1,5 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="查询"]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[text()="物料代码" and contains(@optid,"opt_")]
+[31m[1mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
