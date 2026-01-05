@@ -1,0 +1,69 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="ivu-select-head-flex"]/input
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()="金属（演示）"]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //button[contains(@class, "ivu-btn-primary")]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="系统管理"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="单元设置"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="配置同步"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[text()=" 数据导入 "]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[p[text()="数据导入方案名称"]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//tr[td[3]//span[text()="1同步导入1"]])[1]/td[2]/div/span
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[p[text()="数据导入方案名称"]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//tr[td[3]//span[text()="1同步导入2"]])[1]/td[2]/div/span
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[p[text()="数据导入方案名称"]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//tr[td[3]//span[text()="1同步导入3"]])[1]/td[2]/div/span
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//div[p[text()="计划单元"]]/following-sibling::div//input)[4]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //tr[td[3]//span[text()="1测试计划单元标准"]]/td[2]/div/span
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//div[p[text()="计划单元"]]/following-sibling::div//input)[4]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //tr[td[3]//span[text()="1测试A"]]/td[2]/div/span
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="同步"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[div[text()="将同步数据到目的计划单元, 是否继续?"]]/following-sibling::div//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[contains(text(),"金属（演示）")]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //ul/li[text()="1测试计划单元标准"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="数据接口底座"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="DBLinK"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="导入设置"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //input[@class="ivu-select-input" and @placeholder="请选择"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = (//li[text()="1同步导入1"])[1]
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = (//li[text()="1同步导入2"])[1]
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = (//li[text()="1同步导入3"])[1]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //input[@class="ivu-select-input" and @placeholder="请选择"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[contains(text(),"1测试计划单元标准")]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //ul/li[text()="1测试A"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="数据接口底座"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="DBLinK"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="导入设置"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //input[@class="ivu-select-input" and @placeholder="请选择"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = (//li[text()="1同步导入1"])[1]
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = (//li[text()="1同步导入2"])[1]
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = (//li[text()="1同步导入3"])[1]
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //div[@class="ivu-modal-content"]//div[text()=" 对不起,在处理您的请求期间,产生了一个服务器内部错误! "]
+[32mINFO    [0m root:driver_manager.py:56 🛑 已从实例池移除并关闭 driver：2096820189072
