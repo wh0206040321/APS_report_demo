@@ -1,0 +1,15 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //tr[.//span[text()="1测试A"]]/td[2]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="编辑"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//label[text()="工序名"])[1]/parent::div//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//label[text()="显示颜色"])[1]/parent::div//i
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //span[text()="5"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[label[text()="显示颜色"]]/div//span[@class="ivu-select-selected-value"]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="vxe-modal--footer"]//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//span[text()="1测试A"])[1]/ancestor::tr/td[3]/div
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//span[text()="1测试A"])[1]/ancestor::tr/td[4]/div
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //div[@class="ivu-modal-content"]//div[text()=" 对不起,在处理您的请求期间,产生了一个服务器内部错误! "]
