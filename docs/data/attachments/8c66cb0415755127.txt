@@ -1,0 +1,51 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="ivu-select-head-flex"]/input
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()="金属（演示）"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //button[contains(@class, "ivu-btn-primary")]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="系统管理"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="单元设置"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="事务管理"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版1"]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版2"]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版3"]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版4"]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版5"]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版6"]
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版6"]，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版7"]
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //div[@class="template-card__title"]/div[contains(text(),"测试事务模版")]
+[32mINFO    [0m root:driver_manager.py:56 🛑 已从实例池移除并关闭 driver：2139493480624
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="ivu-select-head-flex"]/input
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()="金属（演示）"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //button[contains(@class, "ivu-btn-primary")]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="系统管理"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="单元设置"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="事务管理"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版1"]
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版1"]，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版2"]
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版2"]，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版3"]
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版3"]，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版4"]
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版4"]，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版5"]
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版5"]，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版6"]
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版6"]，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版7"]
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版7"]，等待超时 10s
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //div[@class="template-card__title"]/div[contains(text(),"测试事务模版")]
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //div[@class="ivu-modal-content"]//div[text()=" 对不起,在处理您的请求期间,产生了一个服务器内部错误! "]
+[32mINFO    [0m root:driver_manager.py:56 🛑 已从实例池移除并关闭 driver：2139494469872
