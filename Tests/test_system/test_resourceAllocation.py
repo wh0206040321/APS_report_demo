@@ -86,6 +86,8 @@ class TestResourceAllocationPage:
         resource.click_button(
             '//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         message = allocation.get_find_message()
+        allocation.click_button('//div[div[text()=" 资源 "]]/span')
+        allocation.right_refresh()
         assert message == "新增成功！"
         assert not allocation.has_fail_message()
 
@@ -96,6 +98,8 @@ class TestResourceAllocationPage:
         user = '1user1'
         resource_ = '1测试资源同步数据1'
         allocation = ResourceAllocationPage(driver)  # 用 driver 初始化 ResourceAllocationPage
+        date_driver = DateDriver()
+
         allocation.select_input('用户代码', user)
         allocation.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{user}"]')
         allocation.click_all_button("编辑")
@@ -106,6 +110,13 @@ class TestResourceAllocationPage:
         message = allocation.get_find_message()
         allocation.log_out(name="1user1", password="Qw123456", module="1测试A")
         ele = allocation.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{resource_}"]')
+        allocation.click_button(f'//div[contains(text(),"1测试A")]')
+        allocation.click_button(f'//ul/li[text()="{date_driver.planning}"]')
+        allocation.wait_for_loadingbox()
+        list_ = ["系统管理", "单元设置", "资源分配"]
+        for v in list_:
+            allocation.click_button(f'(//span[text()="{v}"])[1]')
+        allocation.wait_for_loading_to_disappear()
         assert message == "保存成功" and len(ele) == 1
         assert not allocation.has_fail_message()
 
@@ -116,6 +127,8 @@ class TestResourceAllocationPage:
         user = '1user1'
         resource_ = ['1测试资源同步数据1', '1测试资源同步数据2']
         allocation = ResourceAllocationPage(driver)  # 用 driver 初始化 ResourceAllocationPage
+        date_driver = DateDriver()
+
         allocation.select_input('用户代码', user)
         allocation.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{user}"]')
         allocation.click_all_button("编辑")
@@ -134,6 +147,14 @@ class TestResourceAllocationPage:
                                         f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{resource_[0]}"]')
         ele2 = allocation.finds_elements(By.XPATH,
                                          f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{resource_[1]}"]')
+
+        allocation.click_button(f'//div[contains(text(),"1测试A")]')
+        allocation.click_button(f'//ul/li[text()="{date_driver.planning}"]')
+        allocation.wait_for_loadingbox()
+        list_ = ["系统管理", "单元设置", "资源分配"]
+        for v in list_:
+            allocation.click_button(f'(//span[text()="{v}"])[1]')
+        allocation.wait_for_loading_to_disappear()
         assert message == "保存成功" and len(ele1) == 1 and len(ele2) == 1
         assert not allocation.has_fail_message()
 
@@ -143,6 +164,8 @@ class TestResourceAllocationPage:
         driver = login_to_resourceAllocation  # WebDriver 实例
         user = '1user1'
         allocation = ResourceAllocationPage(driver)  # 用 driver 初始化 ResourceAllocationPage
+        date_driver = DateDriver()
+
         allocation.select_input('用户代码', user)
         allocation.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{user}"]')
         allocation.click_all_button("编辑")
@@ -153,6 +176,13 @@ class TestResourceAllocationPage:
         message = allocation.get_find_message()
         allocation.log_out(name="1user1", password="Qw123456", module="1测试A")
         ele = allocation.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr/td[3]')
+        allocation.click_button(f'//div[contains(text(),"1测试A")]')
+        allocation.click_button(f'//ul/li[text()="{date_driver.planning}"]')
+        allocation.wait_for_loadingbox()
+        list_ = ["系统管理", "单元设置", "资源分配"]
+        for v in list_:
+            allocation.click_button(f'(//span[text()="{v}"])[1]')
+        allocation.wait_for_loading_to_disappear()
         assert message == "保存成功" and len(ele) >= 3
         assert not allocation.has_fail_message()
 
@@ -166,6 +196,7 @@ class TestResourceAllocationPage:
         sleep(1)
         eles = allocation.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[2]//tr//td[3]')
         list_ = [ele.text for ele in eles]
+        allocation.right_refresh()
         assert all(text == name for text in list_), f"表格内容不符合预期，实际值: {list_}"
         assert not allocation.has_fail_message()
 
@@ -184,6 +215,7 @@ class TestResourceAllocationPage:
         sleep(1)
         allocation.click_button('//div[p[text()="资源代码"]]/following-sibling::div//input')
         eles = allocation.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[2]//tr//td[3]')
+        allocation.right_refresh()
         assert len(eles) == 0
         assert not allocation.has_fail_message()
 
@@ -201,6 +233,7 @@ class TestResourceAllocationPage:
         eles = allocation.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[2]//tr//td[3]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        allocation.right_refresh()
         assert all(name in text for text in list_)
         assert not allocation.has_fail_message()
 
@@ -218,6 +251,7 @@ class TestResourceAllocationPage:
         eles = allocation.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[2]//tr//td[3]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        allocation.right_refresh()
         assert all(str(item).startswith(name) for item in list_)
         assert not allocation.has_fail_message()
 
@@ -235,6 +269,7 @@ class TestResourceAllocationPage:
         eles = allocation.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[2]//tr//td[3]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        allocation.right_refresh()
         assert all(str(item).endswith(name) for item in list_)
         assert not allocation.has_fail_message()
 
@@ -255,6 +290,7 @@ class TestResourceAllocationPage:
         sleep(1)
         ele = allocation.get_find_element_xpath('//div[p[text()="资源代码"]]/following-sibling::div//i').get_attribute(
             "class")
+        allocation.right_refresh()
         assert ele == "vxe-icon-funnel suffixIcon"
         assert not allocation.has_fail_message()
 
@@ -270,8 +306,8 @@ class TestResourceAllocationPage:
 
         list_ = ["计划管理", "计划基础数据", "资源"]
         for v in list_:
-            allocation.click_button(f'(//span[text()="{v}"])[1]')
             sleep(1)
+            allocation.click_button(f'(//span[text()="{v}"])[1]')
         resource_ = ['1测试资源同步数据1', '1测试资源同步数据2']
         sleep(1)
         resource.del_all(value=resource_, xpath='//p[text()="资源代码"]/ancestor::div[2]//input')

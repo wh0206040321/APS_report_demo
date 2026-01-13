@@ -51,7 +51,7 @@ class ChartPage(BasePage):
         )
         return message.text
 
-    def wait_for_el_loading_mask(self, timeout=15):
+    def wait_for_el_loading_mask(self, timeout=30):
         """
         显式等待加载遮罩元素消失。
 

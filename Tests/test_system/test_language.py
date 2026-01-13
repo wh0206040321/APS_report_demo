@@ -19,7 +19,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_language():
     driver = None
     try:
@@ -77,6 +77,7 @@ class TestSLanguagePage:
         sleep(1)
         language.click_confirm()
         message = language.get_error_message()
+        language.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert layout == name
         assert message == "校验不通过，请检查标红的表单字段！"
         assert not language.has_fail_message()
@@ -99,6 +100,7 @@ class TestSLanguagePage:
         add.batch_modify_input(xpath_list[:1], name)
         language.click_confirm()
         message = language.get_error_message()
+        language.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "校验不通过，请检查标红的表单字段！"
         assert not language.has_fail_message()
 
@@ -119,6 +121,7 @@ class TestSLanguagePage:
         add.batch_modify_input(xpath_list[:3], name)
         language.click_confirm()
         message = language.get_error_message()
+        language.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "校验不通过，请检查标红的表单字段！"
         assert not language.has_fail_message()
 
@@ -164,7 +167,9 @@ class TestSLanguagePage:
         add.batch_modify_input(xpath_list[:4], name)
         language.click_confirm()
         sleep(1)
-        message = language.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').text
+        message = language.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        language.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        language.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "记录已存在,请检查！"
         assert not language.has_fail_message()
 
@@ -276,6 +281,8 @@ class TestSLanguagePage:
         add.batch_modify_input(xpath_list[:1], after_name)
         language.click_confirm()
         message = language.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute('innerText')
+        language.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        language.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "记录已存在,请检查！"
         assert not language.has_fail_message()
 
@@ -442,6 +449,7 @@ class TestSLanguagePage:
         sleep(2)
         eles = language.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         list_ = [ele.text for ele in eles]
+        language.right_refresh('多语言资源')
         assert all(name in text for text in list_), f"表格内容不符合预期，实际值: {list_}"
         assert not language.has_fail_message()
 
@@ -462,6 +470,7 @@ class TestSLanguagePage:
         sleep(1)
         language.click_button('//div[div[span[text()=" 键"]]]/div[3]//input')
         eles = language.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        language.right_refresh('多语言资源')
         assert len(eles) == 0
         assert not language.has_fail_message()
 
@@ -481,6 +490,7 @@ class TestSLanguagePage:
         eles = language.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        language.right_refresh('多语言资源')
         assert all(name in text for text in list_)
         assert not language.has_fail_message()
 
@@ -500,6 +510,7 @@ class TestSLanguagePage:
         eles = language.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        language.right_refresh('多语言资源')
         assert all(str(item).startswith(name) for item in list_)
         assert not language.has_fail_message()
 
@@ -519,6 +530,7 @@ class TestSLanguagePage:
         eles = language.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        language.right_refresh('多语言资源')
         assert all(str(item).casefold().endswith(name.casefold()) for item in list_)
         assert not language.has_fail_message()
 

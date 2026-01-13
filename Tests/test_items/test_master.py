@@ -1028,6 +1028,230 @@ class TestMasterPage:
         assert ordercode == item and len(notext) == 0
         assert not master.has_fail_message()
 
+    @allure.story("过滤条件查询，一个不选，显示正常")
+    # @pytest.mark.run(order=1)
+    def test_master_select2(self, login_to_master):
+        driver = login_to_master  # WebDriver 实例
+        master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        driver.execute_script("document.body.style.zoom='1'")
+        master.right_refresh('工艺产能')
+        master.click_button('//p[text()="物料代码"]/ancestor::div[2]/div[3]//i')
+        sleep(1)
+        eles = master.get_find_element_xpath(
+            '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
+            "class")
+        if eles == "ivu-checkbox ivu-checkbox-checked":
+            master.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            master.click_button('//div[@class="filter-btn-bar"]/button')
+        sleep(1)
+        master.click_button('//p[text()="物料代码"]/ancestor::div[2]//input')
+        eles = master.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        master.right_refresh('工艺产能')
+        assert len(eles) == 0
+        assert not master.has_fail_message()
+
+    @allure.story("过滤条件查询，设置包含条件查询成功")
+    # @pytest.mark.run(order=1)
+    def test_master_select3(self, login_to_master):
+        driver = login_to_master  # WebDriver 实例
+        master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        name = master.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        master.click_button('//p[text()="物料代码"]/ancestor::div[2]/div[3]//i')
+        master.hover("包含")
+        sleep(1)
+        master.select_input(first_char)
+        sleep(1)
+        eles = master.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.get_attribute("innerText") for ele in eles]
+        master.right_refresh('工艺产能')
+        assert all(first_char in text for text in list_)
+        assert not master.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合开头查询成功")
+    # @pytest.mark.run(order=1)
+    def test_master_select4(self, login_to_master):
+        driver = login_to_master  # WebDriver 实例
+        master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        name = master.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        master.click_button('//p[text()="物料代码"]/ancestor::div[2]/div[3]//i')
+        master.hover("符合开头")
+        sleep(1)
+        master.select_input(first_char)
+        sleep(1)
+        eles = master.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.get_attribute("innerText") for ele in eles]
+        master.right_refresh('工艺产能')
+        assert all(str(master).startswith(first_char) for master in list_)
+        assert not master.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合结尾查询成功")
+    # @pytest.mark.run(order=1)
+    def test_master_select5(self, login_to_master):
+        driver = login_to_master  # WebDriver 实例
+        master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        name = master.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        last_char = name[-1:] if name else ""
+        master.click_button('//p[text()="物料代码"]/ancestor::div[2]/div[3]//i')
+        master.hover("符合结尾")
+        sleep(1)
+        master.select_input(last_char)
+        sleep(1)
+        eles = master.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.get_attribute("innerText") for ele in eles]
+        master.right_refresh('工艺产能')
+        assert all(str(master).endswith(last_char) for master in list_)
+        assert not master.has_fail_message()
+
+    @allure.story("清除筛选效果成功")
+    # @pytest.mark.run(order=1)
+    def test_master_clear(self, login_to_master):
+        driver = login_to_master  # WebDriver 实例
+        master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        name = "3"
+        sleep(1)
+        master.click_button('//p[text()="物料代码"]/ancestor::div[2]/div[3]//i')
+        master.hover("包含")
+        sleep(1)
+        master.select_input(name)
+        sleep(1)
+        master.click_button('//p[text()="物料代码"]/ancestor::div[2]/div[3]//i')
+        master.hover("清除所有筛选条件")
+        sleep(1)
+        ele = master.get_find_element_xpath('//p[text()="物料代码"]/ancestor::div[2]/div[3]//i').get_attribute(
+            "class")
+        master.right_refresh('工艺产能')
+        assert ele == "vxe-icon-funnel suffixIcon"
+        assert not master.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加重复")
+    # @pytest.mark.run(order=1)
+    def test_master_ctrlIrepeat(self, login_to_master):
+        driver = login_to_master  # WebDriver 实例
+        master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        master.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        ele1 = master.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
+            "innerText")
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = master.get_error_message()
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert message == '记录已存在,请检查！'
+        assert not master.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_master_ctrlI(self, login_to_master):
+        driver = login_to_master  # WebDriver 实例
+        master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        master.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        master.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        master.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加')
+        sleep(1)
+        ele1 = master.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        master.get_find_message()
+        master.select_input('1没有数据添加')
+        ele2 = master.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2 == '1没有数据添加'
+        assert not master.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改")
+    # @pytest.mark.run(order=1)
+    def test_master_ctrlM(self, login_to_master):
+        driver = login_to_master  # WebDriver 实例
+        master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        master.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        master.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        master.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改')
+        ele1 = master.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        master.get_find_message()
+        master.select_input('1没有数据修改')
+        ele2 = master.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2
+        master.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        master.click_del_button()
+        master.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        message = master.get_find_message()
+        master.right_refresh('工艺产能')
+        assert message == "删除成功！"
+        assert not master.has_fail_message()
+
+    @allure.story("模拟ctrl+c复制可查询")
+    # @pytest.mark.run(order=1)
+    def test_master_ctrlC(self, login_to_master):
+        driver = login_to_master  # WebDriver 实例
+        master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        master.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        before_data = master.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+        master.click_button('//p[text()="物料代码"]/ancestor::div[2]//input')
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        eles = master.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        eles = [ele.get_attribute("innerText") for ele in eles]
+        master.right_refresh('工艺产能')
+        assert all(before_data in ele for ele in eles)
+        assert not master.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_master_shift(self, login_to_master):
+        driver = login_to_master  # WebDriver 实例
+        master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        master.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = master.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        num = master.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert len(num) == 2
+        assert not master.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+m编辑")
+    # @pytest.mark.run(order=1)
+    def test_master_ctrls(self, login_to_master):
+        driver = login_to_master  # WebDriver 实例
+        master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        master.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = master.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        num = master.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = master.get_find_message()
+        master.right_refresh('工艺产能')
+        assert len(num) == 2 and message == "保存成功"
+        assert not master.has_fail_message()
+
     @allure.story("删除数据成功")
     # @pytest.mark.run(order=1)
     def test_master_delsuccess4(self, login_to_master):

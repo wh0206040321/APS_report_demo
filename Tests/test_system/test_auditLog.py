@@ -24,7 +24,7 @@ from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 from datetime import datetime
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_auditlog():
     driver = None
     try:
@@ -132,6 +132,8 @@ class TestAuditLogPage:
         audit.enter_texts('//div[span[text()="用户:"]]//input[@class="ivu-select-input"]', name)
         audit.click_button(f'//div[@class="d-flex"]//li[text()="{name}"]')
         audit.click_button('//div[span[text()="用户:"]]//i[@class="ivu-icon ivu-icon-ios-arrow-down ivu-select-arrow"]')
+        audit.click_button('//div[span[text()="异常:"] ]//input[@class="ivu-select-input"]')
+        audit.click_button('//div[@class="d-flex"]//li[text()="是"]')
         audit.click_all_button("查询")
         WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
         user_list = audit.loop_judgment('//table[@class="vxe-table--body"]//tr/td[3]')
@@ -157,7 +159,6 @@ class TestAuditLogPage:
         audit = AuditLogPage(driver)  # 用 driver 初始化 AuditLogPage
         date_driver = DateDriver()
         name = date_driver.username
-        today = datetime.now().date()
         # 格式化为年/月/日
         today = datetime.now().date()
         # 格式化为年/月/日
@@ -174,6 +175,7 @@ class TestAuditLogPage:
         sleep(1)
         eles = audit.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         list_ = [ele.text for ele in eles]
+        audit.right_refresh()
         assert all(text == name for text in list_), f"表格内容不符合预期，实际值: {list_}"
         assert not audit.has_fail_message()
 

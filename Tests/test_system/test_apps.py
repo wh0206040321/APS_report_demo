@@ -19,7 +19,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_apps():
     driver = None
     try:
@@ -88,8 +88,6 @@ class TestSAppsPage:
         apps = AppsPage(driver)  # 用 driver 初始化 ExpressionPage
         add = AddsPages(driver)
         name = "testapp1"
-        apps.click_all_button("新增")
-        sleep(1)
         xpath_list = [
             '//div[@class="d-flex"]/div[label[text()="应用代码"]]//input',
             '//div[@class="d-flex"]/div[label[text()="应用名称"]]//input',
@@ -100,6 +98,7 @@ class TestSAppsPage:
         add.batch_modify_input(xpath_list[:2], name)
         apps.click_save_button()
         message = apps.get_error_message()
+        apps.click_close_button()
         assert message == "请设计表格或填写字段"
         assert not apps.has_fail_message()
 
@@ -133,6 +132,7 @@ class TestSAppsPage:
         apps.select_input(name)
         sleep(1)
         ele = apps.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]/td[2]').text
+        apps.right_refresh()
         assert message == "新增成功！" and ele == name
         assert not apps.has_fail_message()
 
@@ -162,6 +162,8 @@ class TestSAppsPage:
         apps.enter_texts(xpath_list[4], "1")
         apps.click_save_button()
         ele = apps.finds_elements(By.XPATH, '//div[text()=" 记录已存在,请检查！ "]')
+        apps.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        apps.click_close_button()
         assert len(ele) == 1
         assert not apps.has_fail_message()
 
@@ -193,6 +195,7 @@ class TestSAppsPage:
         apps.click_save_template_button(name)
         apps.go_template()
         num = apps.get_template_num(name)
+        apps.click_close_button()
         assert num == 1
         assert not apps.has_fail_message()
 
@@ -221,6 +224,7 @@ class TestSAppsPage:
         apps.get_find_message()
         sleep(2)
         num = apps.get_template_num(afert_name)
+        apps.click_button('//div[div[text()=" 应用设计 "]]/span')
         assert before_name1 == before_name
         assert num == 1
         assert not apps.has_fail_message()
@@ -242,6 +246,7 @@ class TestSAppsPage:
         for value in values:
             ele = apps.finds_elements(By.XPATH, f'(//div[@class="ivu-tabs"])[1]/div[2]//div[div/span[contains(text(),"{value}")]]')
             assert len(ele) == 0
+        apps.click_button('//div[div[text()=" 应用设计 "]]/span')
         assert not apps.has_fail_message()
 
     @allure.story("修改应用点击关闭，弹出弹窗点击无需保存，不保存")
@@ -331,6 +336,7 @@ class TestSAppsPage:
         apps.select_input(name)
         sleep(2)
         ele = apps.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]/td[8]').text
+        apps.right_refresh()
         assert message == "编辑成功！"
         assert ele == "1123"
         assert not apps.has_fail_message()
@@ -357,6 +363,7 @@ class TestSAppsPage:
         apps.select_input(name)
         sleep(2)
         ele = apps.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]/td[8]').text
+        apps.right_refresh()
         assert message == "编辑成功！"
         assert ele == "10000"
         assert not apps.has_fail_message()
@@ -863,6 +870,7 @@ class TestSAppsPage:
         sleep(2)
         eles = apps.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
         list_ = [ele.text for ele in eles]
+        apps.right_refresh()
         assert all(name in text for text in list_), f"表格内容不符合预期，实际值: {list_}"
         assert not apps.has_fail_message()
 
@@ -883,6 +891,7 @@ class TestSAppsPage:
         sleep(1)
         apps.click_button('//div[div[p[text()="应用代码"]]]//input')
         eles = apps.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        apps.right_refresh()
         assert len(eles) == 0
         assert not apps.has_fail_message()
 
@@ -901,6 +910,7 @@ class TestSAppsPage:
         eles = apps.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        apps.right_refresh()
         assert all(name.casefold() in text.casefold() for text in list_)
         assert not apps.has_fail_message()
 
@@ -919,6 +929,7 @@ class TestSAppsPage:
         eles = apps.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        apps.right_refresh()
         assert all(str(item).startswith(name) for item in list_)
         assert not apps.has_fail_message()
 
@@ -937,6 +948,7 @@ class TestSAppsPage:
         eles = apps.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        apps.right_refresh()
         assert all(str(item).lower().endswith(name.lower()) for item in list_)
         assert not apps.has_fail_message()
 
@@ -970,6 +982,7 @@ class TestSAppsPage:
         value = ['appstest1']
         apps.del_all(xpath='//div[p[text()="应用代码"]]/following-sibling::div//input', value=value)
         sleep(2)
+        apps.wait_for_loading_to_disappear()
         apps.del_layout(layout)
         itemdata = [
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')

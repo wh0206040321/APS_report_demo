@@ -4,7 +4,7 @@ from time import sleep
 import allure
 import pytest
 from selenium.common.exceptions import WebDriverException
-from selenium.webdriver import Keys
+from selenium.webdriver import Keys, ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -59,6 +59,130 @@ def login_to_operationPlan():
 @allure.feature("工作指示发布表测试用例")
 @pytest.mark.run(order=22)
 class TestOperationPlanPage:
+    @allure.story("过滤条件查询，一个不选，显示正常")
+    # @pytest.mark.run(order=1)
+    def test_operationPlan_select2(self, login_to_operationPlan):
+        driver = login_to_operationPlan  # WebDriver 实例
+        operationPlan = operationPlanPage(driver)  # 用 driver 初始化 operationPlanPage
+        driver.execute_script("document.body.style.zoom='1'")
+        operationPlan.right_refresh('工作指示发布')
+        operationPlan.click_button('//p[text()="资源代码"]/ancestor::div[2]/div[3]//i')
+        sleep(1)
+        eles = operationPlan.get_find_element_xpath(
+            '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
+            "class")
+        if eles == "ivu-checkbox ivu-checkbox-checked":
+            operationPlan.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            operationPlan.click_button('//div[@class="filter-btn-bar"]/button')
+        sleep(1)
+        operationPlan.click_button('//p[text()="资源代码"]/ancestor::div[2]//input')
+        eles = operationPlan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        operationPlan.right_refresh('工作指示发布')
+        assert len(eles) == 0
+        assert not operationPlan.has_fail_message()
+
+    @allure.story("过滤条件查询，设置包含条件查询成功")
+    # @pytest.mark.run(order=1)
+    def test_operationPlan_select3(self, login_to_operationPlan):
+        driver = login_to_operationPlan  # WebDriver 实例
+        operationPlan = operationPlanPage(driver)  # 用 driver 初始化 operationPlanPage
+        name = operationPlan.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[3]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        operationPlan.click_button('//p[text()="资源代码"]/ancestor::div[2]/div[3]//i')
+        operationPlan.hover("包含")
+        sleep(1)
+        operationPlan.select_input(first_char)
+        sleep(1)
+        eles = operationPlan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        sleep(1)
+        list_ = [ele.get_attribute("innerText") for ele in eles]
+        operationPlan.right_refresh('工作指示发布')
+        assert all(first_char in text for text in list_)
+        assert not operationPlan.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合开头查询成功")
+    # @pytest.mark.run(order=1)
+    def test_operationPlan_select4(self, login_to_operationPlan):
+        driver = login_to_operationPlan  # WebDriver 实例
+        operationPlan = operationPlanPage(driver)  # 用 driver 初始化 operationPlanPage
+        name = operationPlan.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[3]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        operationPlan.click_button('//p[text()="资源代码"]/ancestor::div[2]/div[3]//i')
+        operationPlan.hover("符合开头")
+        sleep(1)
+        operationPlan.select_input(first_char)
+        sleep(1)
+        eles = operationPlan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        sleep(1)
+        list_ = [ele.get_attribute("innerText") for ele in eles]
+        operationPlan.right_refresh('工作指示发布')
+        assert all(str(operationPlan).startswith(first_char) for operationPlan in list_)
+        assert not operationPlan.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合结尾查询成功")
+    # @pytest.mark.run(order=1)
+    def test_operationPlan_select5(self, login_to_operationPlan):
+        driver = login_to_operationPlan  # WebDriver 实例
+        operationPlan = operationPlanPage(driver)  # 用 driver 初始化 operationPlanPage
+        name = operationPlan.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[3]'
+        ).get_attribute('innerText')
+        last_char = name[-1:] if name else ""
+        operationPlan.click_button('//p[text()="资源代码"]/ancestor::div[2]/div[3]//i')
+        operationPlan.hover("符合结尾")
+        sleep(1)
+        operationPlan.select_input(last_char)
+        sleep(1)
+        eles = operationPlan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        sleep(1)
+        list_ = [ele.get_attribute("innerText") for ele in eles]
+        operationPlan.right_refresh('工作指示发布')
+        assert all(str(operationPlan).endswith(last_char) for operationPlan in list_)
+        assert not operationPlan.has_fail_message()
+
+    @allure.story("清除筛选效果成功")
+    # @pytest.mark.run(order=1)
+    def test_operationPlan_clear(self, login_to_operationPlan):
+        driver = login_to_operationPlan  # WebDriver 实例
+        operationPlan = operationPlanPage(driver)  # 用 driver 初始化 operationPlanPage
+        name = "3"
+        sleep(1)
+        operationPlan.click_button('//p[text()="资源代码"]/ancestor::div[2]/div[3]//i')
+        operationPlan.hover("包含")
+        sleep(1)
+        operationPlan.select_input(name)
+        sleep(1)
+        operationPlan.click_button('//p[text()="资源代码"]/ancestor::div[2]/div[3]//i')
+        operationPlan.hover("清除所有筛选条件")
+        sleep(1)
+        ele = operationPlan.get_find_element_xpath('//p[text()="资源代码"]/ancestor::div[2]/div[3]//i').get_attribute(
+            "class")
+        operationPlan.right_refresh('工作指示发布')
+        assert ele == "vxe-icon-funnel suffixIcon"
+        assert not operationPlan.has_fail_message()
+
+    @allure.story("模拟ctrl+c复制可查询")
+    # @pytest.mark.run(order=1)
+    def test_operationPlan_ctrlC(self, login_to_operationPlan):
+        driver = login_to_operationPlan  # WebDriver 实例
+        operationPlan = operationPlanPage(driver)  # 用 driver 初始化 operationPlanPage
+        operationPlan.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        before_data = operationPlan.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[3]').text
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+        operationPlan.click_button('//p[text()="资源代码"]/ancestor::div[2]//input')
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        eles = operationPlan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[3]')
+        eles = [ele.get_attribute("innerText") for ele in eles]
+        operationPlan.right_refresh('工作指示发布')
+        assert all(before_data in ele for ele in eles)
+        assert not operationPlan.has_fail_message()
+
     @allure.story("不勾选资源不点击时间，点击查询 不允许查询")
     # @pytest.mark.run(order=1)
     def test_operationPlan_selectfail1(self, login_to_operationPlan):

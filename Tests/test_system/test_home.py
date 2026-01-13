@@ -20,7 +20,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_home():
     driver = None
     try:
@@ -134,6 +134,7 @@ class TestHomePage:
     def test_home_clear_all_cancel(self, login_to_home):
         driver = login_to_home  # WebDriver 实例
         home = HomePage(driver)  # 用 driver 初始化 HomePage
+        driver.execute_script("document.body.style.zoom='1'")
         home.clear_all_button("取消")
         home.click_save_button()
         message = home.get_find_message()
@@ -166,6 +167,9 @@ class TestHomePage:
         home.clear_all_button("确定")
         home.drag_component(index="2")
         text = home.click_save_template_button(button="确定")
+        home.click_button(
+            f'//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        home.click_button('//div[text()=" 组件 "]')
         assert text == "请输入模板名称"
         assert not home.has_fail_message()
 
@@ -179,6 +183,7 @@ class TestHomePage:
         home.clear_all_button("确定")
         home.drag_component(index="2")
         text = home.click_save_template_button(name="测试模版cancel", button="取消")
+        home.click_button('//div[text()=" 组件 "]')
         assert text == 0
         assert not home.has_fail_message()
 
@@ -194,6 +199,7 @@ class TestHomePage:
         text = home.click_save_template_button(name="测试模版confirm", button="确定")
         home.click_save_button()
         message = home.get_find_message()
+        home.click_button('//div[text()=" 组件 "]')
         assert text == 1 and message == "保存成功"
         assert not home.has_fail_message()
 
@@ -209,6 +215,7 @@ class TestHomePage:
         text = home.click_save_template_button(name="测试模版2confirm", button="确定")
         home.click_save_button()
         message = home.get_find_message()
+        home.click_button('//div[text()=" 组件 "]')
         assert text == 1 and message == "保存成功"
         assert not home.has_fail_message()
 
@@ -217,12 +224,16 @@ class TestHomePage:
     def test_home_add_template_repeat(self, login_to_home):
         driver = login_to_home  # WebDriver 实例
         home = HomePage(driver)  # 用 driver 初始化 HomePage
+        driver.execute_script("document.body.style.zoom='1'")
         home.wait_for_el_loading_mask()
         home.click_button('(//div[@class="d-flex m-b-7 toolBar"]//button)[2]')
         home.enter_texts('//div[text()=" 名称 "]/following-sibling::div//input', "测试模版confirm")
         home.click_button(
             f'//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         message = home.get_error_message()
+        home.click_button(
+            f'//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        home.click_button('//div[text()=" 组件 "]')
         assert message == "模板已存在"
         assert not home.has_fail_message()
 
@@ -237,6 +248,7 @@ class TestHomePage:
         home.click_save_button()
         num = home.count_div_elements()
         style = home.get_find_element_xpath('//div[./span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]').get_attribute("style")
+        home.click_button('//div[text()=" 组件 "]')
         assert num == 4 and style == "display: none;"
         assert not home.has_fail_message()
 
@@ -257,6 +269,7 @@ class TestHomePage:
         home.click_button('//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]')
         home.wait_for_el_loading_mask()
         num2 = home.count_div_elements()
+        home.click_button('//div[text()=" 组件 "]')
         assert num1 == 2 and num2 == 4 and style == "display: none;"
         assert not home.has_fail_message()
 
@@ -266,6 +279,7 @@ class TestHomePage:
         driver = login_to_home  # WebDriver 实例
         home = HomePage(driver)  # 用 driver 初始化 HomePage
         home.wait_for_el_loading_mask()
+        driver.execute_script("document.body.style.zoom='0.25'")
         home.drag_component(name="表格")
         home.click_template()
         home.click_save_button()
@@ -280,6 +294,7 @@ class TestHomePage:
         home.click_button('//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]')
         home.wait_for_el_loading_mask()
         num2 = home.count_div_elements()
+        home.click_button('//div[text()=" 组件 "]')
         assert num1 == 2 and num2 == 5 and style == "display: none;"
         assert not home.has_fail_message()
 
@@ -288,6 +303,7 @@ class TestHomePage:
     def test_home_switch_template4(self, login_to_home):
         driver = login_to_home  # WebDriver 实例
         home = HomePage(driver)  # 用 driver 初始化 HomePage
+        driver.execute_script("document.body.style.zoom='1'")
 
         home.click_template()
         home.click_button('//div[./span[text()=" 测试模版confirm "]]/span[text()=" 加载模板 "]')
@@ -380,6 +396,7 @@ class TestHomePage:
     def test_home_default_boot1(self, login_to_home):
         driver = login_to_home  # WebDriver 实例
         home = HomePage(driver)  # 用 driver 初始化 HomePage
+        home.click_button('//div[text()=" 组件 "]')
         PersonalPage(driver).go_setting_page()
         home.wait_for_el_loading_mask()
         elem1 = len(driver.find_elements(By.XPATH, '//div[p[text()=" 主页启动模板: "]]/div/div[contains(@class,"demo-upload-list")]'))
@@ -450,6 +467,8 @@ class TestHomePage:
         sleep(3)
         elem1 = len(driver.find_elements(By.XPATH, '//div[p[text()=" 主页启动模板: "]]/div/div[contains(@class,"demo-upload-list")]'))
         home.click_button('//div[@class="demo-drawer-footer"]//span[text()="取消"]')
+        home.click_button('//div[text()=" 主页设置 "]')
+        home.wait_for_el_loading_mask()
         home.click_template()
         sty = home.get_find_element_xpath(
             '//div[span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]').get_attribute("style")
@@ -471,6 +490,7 @@ class TestHomePage:
         PersonalPage(driver).go_setting_page()
         sleep(3)
         after_eles = len(driver.find_elements(By.XPATH, '//div[p[text()=" 主页启动模板: "]]/div/div[contains(@class,"demo-upload-list")]'))
+        home.click_button('//div[@class="demo-drawer-footer"]//span[text()="取消"]')
         assert elem2 == after_eles
         assert not home.has_fail_message()
 
@@ -479,6 +499,8 @@ class TestHomePage:
     def test_home_default_boot4(self, login_to_home):
         driver = login_to_home  # WebDriver 实例
         home = HomePage(driver)  # 用 driver 初始化 HomePage
+        home.click_button('//div[text()=" 主页设置 "]')
+        home.wait_for_el_loading_mask()
         home.click_template()
         sty = home.get_find_element_xpath(
             '//div[span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]').get_attribute("style")
@@ -501,6 +523,8 @@ class TestHomePage:
     def test_home_savete(self, login_to_home):
         driver = login_to_home  # WebDriver 实例
         home = HomePage(driver)  # 用 driver 初始化 HomePage
+        home.click_button('//div[text()=" 主页设置 "]')
+        home.wait_for_el_loading_mask()
         name = "初始模版使用"
         home.click_template()
         home.click_button(f'//div[./span[text()=" {name} "]]/span[text()=" 加载模板 "]')

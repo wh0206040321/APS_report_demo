@@ -19,7 +19,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_psi():
     driver = None
     try:
@@ -69,6 +69,7 @@ class TestPSIPage:
         psi.click_button_psi("新增")
         psi.click_button_psi("保存")
         message = psi.get_error_message()
+        psi.right_refresh()
         assert message == "请填写完整的信息才能提交"
         assert not psi.has_fail_message()
 
@@ -81,6 +82,7 @@ class TestPSIPage:
         psi.add_psi(name=name, condition=False,method=False)
         psi.click_button_psi("保存")
         message = psi.get_error_message()
+        psi.right_refresh()
         assert message == "请填写完整的信息才能提交"
         assert not psi.has_fail_message()
 
@@ -93,6 +95,7 @@ class TestPSIPage:
         psi.add_psi(name=name, method=False)
         psi.click_button_psi("保存")
         message = psi.get_error_message()
+        psi.right_refresh()
         assert message == "请填写完整的信息才能提交"
         assert not psi.has_fail_message()
 
@@ -105,6 +108,7 @@ class TestPSIPage:
         psi.add_psi(name=name, condition=False)
         psi.click_button_psi("保存")
         message = psi.get_error_message()
+        psi.right_refresh()
         assert message == "请填写完整的信息才能提交"
         assert not psi.has_fail_message()
 
@@ -118,6 +122,7 @@ class TestPSIPage:
         psi.click_button_psi("保存")
         message = psi.get_find_message()
         eles = psi.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
+        psi.right_refresh()
         assert message == "保存成功" and len(eles) == 1
         assert not psi.has_fail_message()
 
@@ -225,6 +230,7 @@ class TestPSIPage:
             '(//table[@class="vxe-table--body"]//tr/td[2]//input)[3]').get_attribute("value")
 
         after_list = list(chain(after_v1, after_v2, after_v3, after_v21, after_v22, after_v32, [after_input1], [after_input2], [after_input3]))
+        psi.right_refresh()
         assert before_list == after_list and all(after_list)
         assert message == "保存成功" and len(eles) == 1
         assert not psi.has_fail_message()
@@ -239,6 +245,7 @@ class TestPSIPage:
         psi.click_button_psi("保存")
         message = psi.get_find_message()
         eles = psi.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
+        psi.right_refresh()
         assert message == "保存成功" and len(eles) == 1
         assert not psi.has_fail_message()
 
@@ -251,6 +258,7 @@ class TestPSIPage:
         psi.add_psi(name=name)
         psi.click_button_psi("保存")
         message = psi.get_error_message()
+        psi.right_refresh()
         assert message == "名称不能重复"
         assert not psi.has_fail_message()
 
@@ -280,6 +288,7 @@ class TestPSIPage:
         after_v2 = psi.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr/td[2]//input)[2]').get_attribute("value")
         psi.click_button('//div[text()=" 透视数据内容 "]')
         after_v3 = psi.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr/td[2]//input)[3]').get_attribute("value")
+        psi.right_refresh()
         assert message == "保存成功"
         assert before_v1 == after_v1 and before_v2 == after_v2 and before_v3 == after_v3
         assert not psi.has_fail_message()
@@ -296,6 +305,7 @@ class TestPSIPage:
         psi.enter_text(By.XPATH, '//div[p[text()="PSI名称: "]]//input', name1)
         psi.click_button_psi("保存")
         message = psi.get_error_message()
+        psi.right_refresh()
         assert message == "名称不能重复"
         assert not psi.has_fail_message()
 
@@ -321,6 +331,7 @@ class TestPSIPage:
         psi.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name1}"]')
         psi.click_button_psi("编辑")
         after_list = psi.batch_acquisition_input(list_)
+        psi.right_refresh()
         assert message == "保存成功"
         assert before_list == after_list and all(after_list)
         assert not psi.has_fail_message()
@@ -333,8 +344,9 @@ class TestPSIPage:
         name = "1测试psi1"
         psi.enter_texts('//div[p[text()="PSI名称"]]/following-sibling::div//input', name)
         sleep(1)
-        eles = psi.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        eles = psi.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr//td[2]')
         list_ = [ele.text for ele in eles]
+        psi.right_refresh()
         assert all(text == name for text in list_), f"表格内容不符合预期，实际值: {list_}"
         assert not psi.has_fail_message()
 
@@ -352,7 +364,8 @@ class TestPSIPage:
             psi.click_button('//div[@class="filter-btn-bar"]/button')
         sleep(1)
         psi.click_button('//div[p[text()="PSI名称"]]/following-sibling::div//input')
-        eles = psi.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        eles = psi.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr//td[2]')
+        psi.right_refresh()
         assert len(eles) == 0
         assert not psi.has_fail_message()
 
@@ -367,9 +380,10 @@ class TestPSIPage:
         sleep(1)
         psi.enter_texts('//div[p[text()="PSI名称"]]/following-sibling::div//input', name)
         sleep(1)
-        eles = psi.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        eles = psi.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        psi.right_refresh()
         assert all(name in text for text in list_)
         assert not psi.has_fail_message()
 
@@ -384,9 +398,10 @@ class TestPSIPage:
         sleep(1)
         psi.enter_texts('//div[p[text()="PSI名称"]]/following-sibling::div//input', name)
         sleep(1)
-        eles = psi.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        eles = psi.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        psi.right_refresh()
         assert all(str(item).startswith(name) for item in list_)
         assert not psi.has_fail_message()
 
@@ -401,9 +416,10 @@ class TestPSIPage:
         sleep(1)
         psi.enter_texts('//div[p[text()="PSI名称"]]/following-sibling::div//input', name)
         sleep(1)
-        eles = psi.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        eles = psi.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        psi.right_refresh()
         assert all(str(item).endswith(name) for item in list_)
         assert not psi.has_fail_message()
 
@@ -424,6 +440,7 @@ class TestPSIPage:
         sleep(1)
         ele = psi.get_find_element_xpath('//div[p[text()="PSI名称"]]/following-sibling::div//i').get_attribute(
             "class")
+        psi.right_refresh()
         assert ele == "vxe-icon-funnel suffixIcon"
         assert not psi.has_fail_message()
 
@@ -441,6 +458,7 @@ class TestPSIPage:
         psi.click_button_psi("取消")
         psi.right_refresh()
         eles = psi.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
+        psi.right_refresh()
         assert len(eles) == 1
         assert not psi.has_fail_message()
 
@@ -464,6 +482,7 @@ class TestPSIPage:
         psi.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
         psi.click_button_psi("编辑")
         ele = psi.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr/td[2]//input')
+        psi.right_refresh()
         assert len(ele) == 0
         assert message == "保存成功"
         assert not psi.has_fail_message()

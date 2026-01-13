@@ -73,7 +73,11 @@ class AuditLogPage(BasePage):
 
     def select_input(self, name):
         """选择输入框."""
-        self.enter_texts('//div[div[p[text()="用户代码"]]]//input', name)
+        xpath = '//div[div[p[text()="用户代码"]]]//input'
+        ele = self.get_find_element_xpath(xpath)
+        ele.send_keys(Keys.CONTROL + "a")
+        ele.send_keys(Keys.DELETE)
+        self.enter_texts(xpath, name)
         sleep(0.5)
 
     def loop_judgment(self, xpath):

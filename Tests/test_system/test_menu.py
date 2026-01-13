@@ -19,7 +19,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_menu():
     driver = None
     try:
@@ -77,6 +77,7 @@ class TestSMenuPage:
         sleep(1)
         menu.click_confirm()
         message = menu.get_error_message()
+        menu.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert layout == name
         assert message == "校验不通过，请检查标红的表单字段！"
         assert not menu.has_fail_message()
@@ -92,6 +93,7 @@ class TestSMenuPage:
         menu.enter_texts('//div[@id="ph5ht87u-mndd"]//input', name)
         menu.click_confirm()
         message = menu.get_error_message()
+        menu.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "校验不通过，请检查标红的表单字段！"
         assert not menu.has_fail_message()
 
@@ -107,6 +109,7 @@ class TestSMenuPage:
         menu.enter_texts('//div[@id="t4svyhz8-n3vp"]//input', name)
         menu.click_confirm()
         message = menu.get_error_message()
+        menu.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "校验不通过，请检查标红的表单字段！"
         assert not menu.has_fail_message()
 
@@ -147,7 +150,9 @@ class TestSMenuPage:
         sleep(0.5)
         menu.click_confirm()
         sleep(1)
-        message = menu.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').text
+        message = menu.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute('innerText')
+        menu.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        menu.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "记录已存在,请检查！"
         assert not menu.has_fail_message()
 
@@ -163,6 +168,7 @@ class TestSMenuPage:
         menu.click_all_button("编辑")
         sleep(2)
         ele = menu.get_find_element_xpath('//div[@id="0lollcex-w9k3"]//input').get_attribute("readonly")
+        menu.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert ele == "true" or ele == "readonly"
         assert not menu.has_fail_message()
 
@@ -252,6 +258,7 @@ class TestSMenuPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][2]/td[2]',
         )
+        menu.right_refresh('菜单组件')
         assert itemcode == name and len(itemcode2) == 0
         assert not menu.has_fail_message()
 
@@ -298,6 +305,7 @@ class TestSMenuPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]',
         )
+        menu.right_refresh('菜单组件')
         assert len(itemcode) == 0
         assert not menu.has_fail_message()
 
@@ -342,6 +350,7 @@ class TestSMenuPage:
         # 点击确认
         menu.click_select_button2()
         eles = menu.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
+        menu.right_refresh('菜单组件')
         assert len(eles) > 0
         assert all(name in ele for ele in eles)
         assert not menu.has_fail_message()
@@ -387,6 +396,7 @@ class TestSMenuPage:
         # 点击确认
         menu.click_select_button2()
         eles = menu.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[5]')
+        menu.right_refresh('菜单组件')
         assert len(eles) > 0
         assert all(int(ele) > num for ele in eles)
         assert not menu.has_fail_message()
@@ -516,6 +526,7 @@ class TestSMenuPage:
         menu.click_select_button2()
         eles1 = menu.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[5]')
         eles2 = menu.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
+        menu.right_refresh('菜单组件')
         assert len(eles1) > 0 and len(eles2) > 0
         assert all(int(ele) > num for ele in eles1) and all(name in ele for ele in eles2)
         assert not menu.has_fail_message()
@@ -674,6 +685,7 @@ class TestSMenuPage:
                 td5_raw = int(td5_raw) if td5_raw else 0
                 assert name in td3 or td5_raw >= num, f"第 {idx + 1} 行不符合：td3={td3}, td5={td5_raw}"
                 valid_count += 1
+        menu.right_refresh('菜单组件')
         assert not menu.has_fail_message()
         print(f"符合条件的行数：{valid_count}")
 
@@ -689,6 +701,7 @@ class TestSMenuPage:
         sleep(2)
         eles = menu.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         list_ = [ele.text for ele in eles]
+        menu.right_refresh('菜单组件')
         assert all(name in text for text in list_), f"表格内容不符合预期，实际值: {list_}"
         assert not menu.has_fail_message()
 
@@ -709,6 +722,7 @@ class TestSMenuPage:
         sleep(1)
         menu.click_button('//div[div[span[text()=" 组件代码"]]]/div[3]//input')
         eles = menu.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        mmenu.right_refresh('菜单组件')
         assert len(eles) == 0
         assert not menu.has_fail_message()
 
@@ -728,6 +742,7 @@ class TestSMenuPage:
         eles = menu.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        menu.right_refresh('菜单组件')
         assert all(name in text for text in list_)
         assert not menu.has_fail_message()
 
@@ -747,6 +762,7 @@ class TestSMenuPage:
         eles = menu.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        menu.right_refresh('菜单组件')
         assert all(str(item).startswith(name) for item in list_)
         assert not menu.has_fail_message()
 
@@ -766,6 +782,7 @@ class TestSMenuPage:
         eles = menu.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        menu.right_refresh('菜单组件')
         assert all(str(item).endswith(name) for item in list_)
         assert not menu.has_fail_message()
 

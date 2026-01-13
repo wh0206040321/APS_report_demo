@@ -172,9 +172,9 @@ class AppsPage(BasePage):
     def del_all(self, xpath, value=[]):
         for index, v in enumerate(value, start=1):
             try:
-                sleep(3)
+                sleep(1)
                 self.enter_texts(xpath, v)
-                sleep(0.5)
+                sleep(1)
                 self.click_button(f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
                 self.click_all_button("删除")  # 点击删除
                 self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
@@ -258,3 +258,9 @@ class AppsPage(BasePage):
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         self.wait_for_loading_to_disappear()
+
+    def click_close_button(self):
+        """点击关闭按钮"""
+        self.click_button('//div[div[text()=" 应用设计 "]]/span')
+        self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="无需保存"]')
+        sleep(1)

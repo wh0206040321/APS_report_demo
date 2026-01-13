@@ -19,7 +19,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_expression():
     driver = None
     try:
@@ -71,6 +71,7 @@ class TestSExpressionPage:
         sleep(1)
         expression.click_all_button("保存")
         message = expression.get_error_message()
+        expression.click_all_button("取消")
         assert message == "请填写完整的信息才能提交"
         assert not expression.has_fail_message()
 
@@ -85,6 +86,7 @@ class TestSExpressionPage:
         expression.enter_texts('//div[p[text()="名称: "]]//input', name)
         expression.click_all_button("保存")
         message = expression.get_error_message()
+        expression.click_all_button("取消")
         assert message == "请填写完整的信息才能提交"
         assert not expression.has_fail_message()
 
@@ -101,6 +103,7 @@ class TestSExpressionPage:
         expression.click_button('//li[text()="图棒显示颜色"]')
         expression.click_all_button("保存")
         message = expression.get_error_message()
+        expression.click_all_button("取消")
         assert message == "请填写完整的信息才能提交"
         assert not expression.has_fail_message()
 
@@ -138,6 +141,7 @@ class TestSExpressionPage:
         expression.enter_texts('//div[p[text()="表达式: "]]//textarea', name)
         expression.click_all_button("保存")
         message = expression.get_error_message()
+        expression.click_all_button("取消")
         assert message == "不可以新增名称和分类相同的数据"
         assert not expression.has_fail_message()
 
@@ -209,6 +213,7 @@ class TestSExpressionPage:
         expression.click_button('//table[@class="vxe-table--body"]//tr[1]/td[2]')
         expression.click_all_button("编辑")
         testarea = expression.get_find_element_xpath('//div[p[text()="表达式: "]]//textarea').get_attribute('value')
+        expression.right_refresh('表达式管理')
         assert testarea == text
         assert message == "保存成功"
         assert not expression.has_fail_message()
@@ -227,6 +232,7 @@ class TestSExpressionPage:
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
             for v in value[:3]
         ]
+        expression.right_refresh('表达式管理')
         assert all(len(elements) == 0 for elements in itemdata)
         assert not expression.has_fail_message()
 
@@ -241,6 +247,7 @@ class TestSExpressionPage:
         sleep(1)
         eles = expression.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         list_ = [ele.text for ele in eles]
+        expression.right_refresh('表达式管理')
         assert all(name in text for text in list_), f"表格内容不符合预期，实际值: {list_}"
         assert not expression.has_fail_message()
 
@@ -260,6 +267,7 @@ class TestSExpressionPage:
         sleep(1)
         expression.click_button('//div[p[text()="名称"]]/following-sibling::div//input')
         eles = expression.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        expression.right_refresh('表达式管理')
         assert len(eles) == 0
         assert not expression.has_fail_message()
 
@@ -278,6 +286,7 @@ class TestSExpressionPage:
         eles = expression.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        expression.right_refresh('表达式管理')
         assert all(name in text for text in list_)
         assert not expression.has_fail_message()
 
@@ -296,6 +305,7 @@ class TestSExpressionPage:
         eles = expression.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        expression.right_refresh('表达式管理')
         assert all(str(item).startswith(name) for item in list_)
         assert not expression.has_fail_message()
 
@@ -314,6 +324,7 @@ class TestSExpressionPage:
         eles = expression.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        expression.right_refresh('表达式管理')
         assert all(str(item).endswith(name) for item in list_)
         assert not expression.has_fail_message()
 

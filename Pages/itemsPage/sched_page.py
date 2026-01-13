@@ -193,3 +193,19 @@ class SchedPage(BasePage):
                 print(f"未找到元素: {xpath}")
             except Exception as e:
                 print(f"操作 {xpath} 时出错: {str(e)}")
+
+    def click_property_editing(self, name):
+        self.click_button(
+            f'//div[text()="{name}"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+        )
+        self.click_button('//div[@class="vxe-modal--body"]//i[@class="ivu-icon ivu-icon-md-add"]')
+        self.click_button('(//i[@class="ivu-icon ivu-icon-md-albums"])[last()]')
+        ele = self.get_find_element_xpath(
+            '//span[text()="绝对值函数"]'
+        )
+        # 双击命令
+        ActionChains(self.driver).double_click(ele).perform()
+        sleep(1)
+        self.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[3]')
+        self.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
+        sleep(1)

@@ -15,6 +15,10 @@ class WorkTasksPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)  # 调用基类构造函数
 
+    def click_del_button(self):
+        """点击删除按钮."""
+        self.click(By.XPATH, '//p[text()="删除"]')
+
     def enter_texts(self, xpath, text):
         """输入文字."""
         self.enter_text(By.XPATH, xpath, text)
@@ -161,3 +165,30 @@ class WorkTasksPage(BasePage):
         except Exception as e:
             self.click_button(f'(//div[@class="demo-drawer-footer"]//span[text()="确定"])[2]')
         sleep(3)
+
+    def select_input_workdetails(self, name):
+        """选择输入框."""
+        xpath = '//p[text()="订单"]/ancestor::div[2]//input'
+        ele = self.get_find_element_xpath(xpath)
+        ele.send_keys(Keys.CONTROL + "a")
+        ele.send_keys(Keys.DELETE)
+        self.enter_texts(xpath, name)
+        sleep(1)
+
+    def select_input_taskdetails(self, name):
+        """选择输入框."""
+        xpath = '//p[text()="订单编号"]/ancestor::div[2]//input'
+        ele = self.get_find_element_xpath(xpath)
+        ele.send_keys(Keys.CONTROL + "a")
+        ele.send_keys(Keys.DELETE)
+        self.enter_texts(xpath, name)
+        sleep(1)
+
+    def select_input_relateddetails(self, name):
+        """选择输入框."""
+        xpath = '//p[text()="数量"]/ancestor::div[2]//input'
+        ele = self.get_find_element_xpath(xpath)
+        ele.send_keys(Keys.CONTROL + "a")
+        ele.send_keys(Keys.DELETE)
+        self.enter_texts(xpath, name)
+        sleep(1)

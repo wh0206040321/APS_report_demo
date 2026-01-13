@@ -493,7 +493,7 @@ class TestSchedPage:
             '//div[text()="按分派规则顺序排列"]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="按分派规则顺序排列"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
@@ -501,7 +501,7 @@ class TestSchedPage:
             '//div[text()="按分派规则顺序排列"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
-        assert befort_input == after_input == "是"
+        assert before_input == after_input == "是"
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-分割工作靠拢在一起")
@@ -519,7 +519,7 @@ class TestSchedPage:
             '//div[text()="分割工作靠拢在一起"]/following-sibling::div//ul[2]/li[1]'
         )
         sleep(1)
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="分割工作靠拢在一起"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
@@ -527,7 +527,7 @@ class TestSchedPage:
             '//div[text()="分割工作靠拢在一起"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
-        assert befort_input == after_input == "是"
+        assert before_input == after_input == "是"
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-分派方法")
@@ -545,7 +545,7 @@ class TestSchedPage:
             '//div[text()="分派方法"]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="分派方法"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
@@ -553,7 +553,7 @@ class TestSchedPage:
             '//div[text()="分派方法"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
-        assert befort_input == after_input == "无限能力"
+        assert before_input == after_input == "无限能力"
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-分派方向")
@@ -571,7 +571,7 @@ class TestSchedPage:
             '//div[text()="分派方向"]/following-sibling::div//ul[2]/li[3]'
         )
         sleep(1)
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="分派方向"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
@@ -579,7 +579,7 @@ class TestSchedPage:
             '//div[text()="分派方向"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
-        assert befort_input == after_input == "逆方向"
+        assert before_input == after_input == "逆方向"
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-分派规则-降序")
@@ -609,7 +609,7 @@ class TestSchedPage:
         sched.click_ok_button()
         sleep(2)
         # 获取输入框数据
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="分派规则"]/following-sibling::div//p'
         ).text
         sched.get_after_value(name)
@@ -618,7 +618,7 @@ class TestSchedPage:
         ).text
         sched.right_refresh('计划方案管理')
         assert (
-            befort_input == after_input == 'ME.Order.UserDate1,d'
+            before_input == after_input == 'ME.Order.UserDate1,d'
             and sele_text1 == "OLD合批日期"
             and sele_text2 == "降序"
         )
@@ -651,7 +651,7 @@ class TestSchedPage:
         sched.click_ok_button()
         sleep(2)
         # 获取输入框数据
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="分派规则"]/following-sibling::div//p'
         ).text
         sched.get_after_value(name)
@@ -660,7 +660,7 @@ class TestSchedPage:
         ).text
         sched.right_refresh('计划方案管理')
         assert (
-            befort_input == after_input == 'ME.Order.UserStr2,a'
+            before_input == after_input == 'ME.Order.UserStr2,a'
             and sele_text1 == "OLD订单类别"
             and sele_text2 == "升序"
         )
@@ -710,7 +710,7 @@ class TestSchedPage:
             '//div[text()="分派失败时(资源锁定制约)"]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="分派失败时(资源锁定制约)"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
@@ -718,7 +718,7 @@ class TestSchedPage:
             '//div[text()="分派失败时(资源锁定制约)"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
-        assert befort_input == after_input == '忽视制约'
+        assert before_input == after_input == '忽视制约'
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-分派失败时(最大移动时间制约)")
@@ -738,7 +738,7 @@ class TestSchedPage:
             '//div[text()="分派失败时(最大移动时间制约)"]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="分派失败时(最大移动时间制约)"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
@@ -746,7 +746,7 @@ class TestSchedPage:
             '//div[text()="分派失败时(最大移动时间制约)"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
-        assert befort_input == after_input == '忽视制约'
+        assert before_input == after_input == '忽视制约'
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-分派停止条件式")
@@ -775,7 +775,7 @@ class TestSchedPage:
         sched.click_ok_button()
         sleep(2)
         # 获取输入框数据
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="分派停止条件式"]/following-sibling::div//p'
         ).text
         sched.get_after_value(name)
@@ -783,7 +783,7 @@ class TestSchedPage:
             '//div[text()="分派停止条件式"]/following-sibling::div//p'
         ).text
         sched.right_refresh('计划方案管理')
-        assert "ME.PrevOperation[1].PrevOperation[1].IsAssigned!='0'&&ME.PrevOperation[1].PrevOperation[1].OperationMainRes=='A'" in befort_input == after_input
+        assert "ME.PrevOperation[1].PrevOperation[1].IsAssigned!='0'&&ME.PrevOperation[1].PrevOperation[1].OperationMainRes=='A'" in before_input == after_input
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-分派资源")
@@ -801,7 +801,7 @@ class TestSchedPage:
             '//div[text()="分派资源"]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="分派资源"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
@@ -809,7 +809,7 @@ class TestSchedPage:
             '//div[text()="分派资源"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
-        assert befort_input == after_input == '优先资源'
+        assert before_input == after_input == '优先资源'
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-更新关联/补充订单")
@@ -827,7 +827,7 @@ class TestSchedPage:
             '//div[text()="更新关联/补充订单"]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="更新关联/补充订单"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
@@ -835,7 +835,7 @@ class TestSchedPage:
             '//div[text()="更新关联/补充订单"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
-        assert befort_input == after_input == '是'
+        assert before_input == after_input == '是'
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-工作临时固定")
@@ -853,7 +853,7 @@ class TestSchedPage:
             '//div[text()="工作临时固定"]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="工作临时固定"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
@@ -861,7 +861,7 @@ class TestSchedPage:
             '//div[text()="工作临时固定"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
-        assert befort_input == after_input == '分派结束工作'
+        assert before_input == after_input == '分派结束工作'
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-忽视未分派的前后工序的工作")
@@ -881,7 +881,7 @@ class TestSchedPage:
             '//div[text()="忽视未分派的前后工序的工作"]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="忽视未分派的前后工序的工作"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
@@ -889,7 +889,7 @@ class TestSchedPage:
             '//div[text()="忽视未分派的前后工序的工作"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
-        assert befort_input == after_input == '是'
+        assert before_input == after_input == '是'
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-启用原料库存制约")
@@ -907,7 +907,7 @@ class TestSchedPage:
             '//div[text()="启用原料库存制约"]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="启用原料库存制约"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
@@ -915,7 +915,7 @@ class TestSchedPage:
             '//div[text()="启用原料库存制约"]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
-        assert befort_input == after_input == '是'
+        assert before_input == after_input == '是'
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-筛选工作")
@@ -943,7 +943,7 @@ class TestSchedPage:
         sched.click_ok_button()
         sleep(2)
         # 获取输入框数据
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="筛选工作"]/following-sibling::div//p'
         ).text
         sched.get_after_value(name)
@@ -951,8 +951,8 @@ class TestSchedPage:
             '//div[text()="筛选工作"]/following-sibling::div//p'
         ).text
         sched.right_refresh('计划方案管理')
-        assert befort_input == after_input
-        assert "ME.Order.Spec1=='A'" in befort_input
+        assert before_input == after_input
+        assert "ME.Order.Spec1=='A'" in before_input
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-筛选订单")
@@ -980,7 +980,7 @@ class TestSchedPage:
         sched.click_ok_button()
         sleep(2)
         # 获取输入框数据
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="筛选订单"]/following-sibling::div//p'
         ).text
         sched.get_after_value(name)
@@ -988,8 +988,8 @@ class TestSchedPage:
             '//div[text()="筛选订单"]/following-sibling::div//p'
         ).text
         sched.right_refresh('计划方案管理')
-        assert befort_input == after_input
-        assert "ME.Order_Type=='P'" in befort_input
+        assert before_input == after_input
+        assert "ME.Order_Type=='P'" in before_input
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-严格遵守后资源制约-开关开启")
@@ -1011,7 +1011,7 @@ class TestSchedPage:
             )
         sleep(1)
         # 获取输入框数据
-        befort_class = sched.get_find_element_xpath(
+        before_class = sched.get_find_element_xpath(
             '//div[text()="严格遵守后资源制约"]/following-sibling::div//span[1]'
         ).get_attribute("class")
         sched.get_after_value(name)
@@ -1019,9 +1019,9 @@ class TestSchedPage:
             '//div[text()="严格遵守后资源制约"]/following-sibling::div//span[1]'
         ).get_attribute("class")
         sched.right_refresh('计划方案管理')
-        assert befort_class == after_class
+        assert before_class == after_class
         assert (
-            befort_class
+            before_class
             == "ivu-switch ivu-switch-checked ivu-switch-default"
         )
         assert not sched.has_fail_message()
@@ -1048,7 +1048,7 @@ class TestSchedPage:
             )
 
         # 获取输入框数据
-        befort_class = sched.get_find_element_xpath(
+        before_class = sched.get_find_element_xpath(
             '//div[text()="严格遵守后资源制约"]/following-sibling::div//span[1]'
         ).get_attribute("class")
         sched.get_after_value(name)
@@ -1056,8 +1056,8 @@ class TestSchedPage:
             '//div[text()="严格遵守后资源制约"]/following-sibling::div//span[1]'
         ).get_attribute("class")
         sched.right_refresh('计划方案管理')
-        assert befort_class == after_class
-        assert befort_class == "ivu-switch ivu-switch-default"
+        assert before_class == after_class
+        assert before_class == "ivu-switch ivu-switch-default"
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-制造效率")
@@ -1079,7 +1079,7 @@ class TestSchedPage:
             '//div[text()="制造效率"]/following-sibling::div//input', "1aQ!~_-1+=0.8"
         )
         sleep(1)
-        befort_input = sched.get_find_element_xpath(
+        before_input = sched.get_find_element_xpath(
             '//div[text()="制造效率"]/following-sibling::div//input'
         ).get_attribute("value")
         sched.get_after_value(name)
@@ -1087,8 +1087,8 @@ class TestSchedPage:
             '//div[text()="制造效率"]/following-sibling::div//input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
-        assert befort_input == after_input
-        assert befort_input == "110.8"
+        assert before_input == after_input
+        assert before_input == "110.8"
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-新增资源选择策略")
@@ -1273,6 +1273,89 @@ class TestSchedPage:
             '(//div[@class="vxe-modal--footer"]//span[text()="取消"])[2]')
         sched.right_refresh('计划方案管理')
         assert message == "不允许新增相同名称的策略"
+        assert not sched.has_fail_message()
+
+    @allure.story("属性设置-启用资源区间控制-关闭，制造时间调整控制-开启，启用事件控制为工作前")
+    # @pytest.mark.run(order=1)
+    def test_sched_ResourceIntervalControl_close(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        name = "排产方案(订单级)复制"
+        # 选择排产方案(订单级)复制方案
+        sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
+        sched.click_attribute_button()
+        # 点击开关
+        ele1 = sched.get_find_element_xpath(
+            '//div[text()="启用资源区间控制"]/following-sibling::div//span[1]'
+        )
+        ele2 = sched.get_find_element_xpath(
+            '//div[text()="制造时间调整控制"]/following-sibling::div//span[1]'
+        )
+        if ele1.get_attribute("class") != "ivu-switch ivu-switch-default":
+            sched.click_button(
+                '//div[text()="启用资源区间控制"]/following-sibling::div//span[1]'
+            )
+        if ele2.get_attribute("class") == "ivu-switch ivu-switch-default":
+            sched.click_button(
+                '//div[text()="制造时间调整控制"]/following-sibling::div//span[1]'
+            )
+        sched.click_button('//div[text()="启用事件控制"]/following-sibling::div')
+        sched.click_button(
+            '//div[text()="启用事件控制"]/following-sibling::div//ul[2]/li[2]'
+        )
+        sleep(1)
+        # 获取输入框数据
+        before_class1 = sched.get_find_element_xpath(
+            '//div[text()="启用资源区间控制"]/following-sibling::div//span[1]'
+        ).get_attribute("class")
+        before_class2 = sched.get_find_element_xpath(
+            '//div[text()="制造时间调整控制"]/following-sibling::div//span[1]'
+        ).get_attribute("class")
+        before_input = sched.get_find_element_xpath(
+            '//div[text()="启用事件控制"]/following-sibling::div//input/following-sibling::div/input'
+        ).get_attribute("value")
+        sched.get_after_value(name)
+        after_class1 = sched.get_find_element_xpath(
+            '//div[text()="启用资源区间控制"]/following-sibling::div//span[1]'
+        ).get_attribute("class")
+        after_class2 = sched.get_find_element_xpath(
+            '//div[text()="制造时间调整控制"]/following-sibling::div//span[1]'
+        ).get_attribute("class")
+        after_input = sched.get_find_element_xpath(
+            '//div[text()="启用事件控制"]/following-sibling::div//input/following-sibling::div/input'
+        ).get_attribute("value")
+        sched.right_refresh('计划方案管理')
+        assert before_class1 == after_class1 and before_class2 == after_class2 and before_input == after_input
+        assert (
+                before_class1
+                == "ivu-switch ivu-switch-default" and before_class2
+                == "ivu-switch ivu-switch-checked ivu-switch-default"
+                and before_input == "工作前"
+        )
+        assert not sched.has_fail_message()
+
+    @allure.story("分派前工作属性编辑和分派后工作属性编辑")
+    # @pytest.mark.run(order=1)
+    def test_sched_property_editing(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        name = "排产方案(订单级)复制"
+        # 选择排产方案(订单级)复制方案
+        sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
+        sched.click_attribute_button()
+        # 点击开关
+        sched.click_property_editing('分派前工作属性编辑')
+        sched.click_property_editing('分派后工作属性编辑')
+        sched.get_after_value(name)
+        after_input1 = sched.get_find_element_xpath(
+            '//div[text()="分派前工作属性编辑"]/following-sibling::div//p'
+        ).text
+        after_input2 = sched.get_find_element_xpath(
+            '//div[text()="分派前工作属性编辑"]/following-sibling::div//p'
+        ).text
+
+        sched.right_refresh('计划方案管理')
+        assert "Abs(-1)" in after_input1 and "Abs(-1)" in after_input2
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-时间属性-分派开始时间")

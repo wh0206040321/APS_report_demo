@@ -26,6 +26,10 @@ class PersonalPage(BasePage):
         """点击按钮."""
         self.click(By.XPATH, xpath)
 
+    def enter_texts(self, xpath, text):
+        """输入文字."""
+        self.enter_text(By.XPATH, xpath, text)
+
     def select_planning_unit(self, planning_unit):
         self.click_button('//input[@placeholder="请选择计划单元"]')
         self.click_button(f'//li[text()="{planning_unit}"]')
@@ -88,6 +92,7 @@ class PersonalPage(BasePage):
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
         )
+        sleep(1)
 
     def go_setting_page(self):
         """

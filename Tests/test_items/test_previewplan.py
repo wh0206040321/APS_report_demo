@@ -116,7 +116,7 @@ class TestPreviewPlanPage:
             sleep(1)
             previewPlan.click_del_button()
             previewPlan.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-        sleep(1)
+        previewPlan.wait_for_loading_to_disappear()
         ele_none = driver.find_elements(
             By.XPATH, '//table[.//td[4]//span[text()="1测试C订单"]]/tbody//tr'
         )
@@ -207,10 +207,11 @@ class TestPreviewPlanPage:
         operationPlan.click_button('//p[text()="工作指示发布"]')
         operationPlan.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         operationPlan.get_find_message()
-        sleep(1)
+        operationPlan.wait_for_loading_to_disappear()
         after_text = driver.find_elements(
             By.XPATH, '(//table[@class="vxe-table--body"])[3]/tbody//tr'
         )
+        operationPlan.click_button('//div[div[text()=" 工作指示发布 "]]/span')
 
         # 验证提示信息是否符合预期
         assert (
@@ -220,4 +221,109 @@ class TestPreviewPlanPage:
             and len(ele_none) == 0
             and len(after_text) == 0
         )
+        assert not previewPlan.has_fail_message()
+
+    @allure.story("过滤条件查询，一个不选，显示正常")
+    # @pytest.mark.run(order=1)
+    def test_previewPlan_select2(self, login_to_previewPlan):
+        driver = login_to_previewPlan  # WebDriver 实例
+        previewPlan = PreviewPlanPage(driver)  # 用 driver 初始化 PreviewPlanPage
+        previewPlan.right_refresh('工作指示一览')
+        previewPlan.click_button('//p[text()="工作代码"]/ancestor::div[2]/div[3]//i')
+        sleep(1)
+        eles = previewPlan.get_find_element_xpath(
+            '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
+            "class")
+        if eles == "ivu-checkbox ivu-checkbox-checked":
+            previewPlan.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            previewPlan.click_button('//div[@class="filter-btn-bar"]/button')
+        sleep(1)
+        previewPlan.click_button('//p[text()="工作代码"]/ancestor::div[2]//input')
+        eles = previewPlan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        previewPlan.right_refresh('工作指示一览')
+        assert len(eles) == 0
+        assert not previewPlan.has_fail_message()
+
+    @allure.story("过滤条件查询，设置包含条件查询成功")
+    # @pytest.mark.run(order=1)
+    def test_previewPlan_select3(self, login_to_previewPlan):
+        driver = login_to_previewPlan  # WebDriver 实例
+        previewPlan = PreviewPlanPage(driver)  # 用 driver 初始化 PreviewPlanPage
+        name = previewPlan.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[3]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        previewPlan.click_button('//p[text()="工作代码"]/ancestor::div[2]/div[3]//i')
+        previewPlan.hover("包含")
+        sleep(1)
+        previewPlan.select_input(first_char)
+        sleep(1)
+        eles = previewPlan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        previewPlan.right_refresh('工作指示一览')
+        assert all(first_char in text for text in list_)
+        assert not previewPlan.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合开头查询成功")
+    # @pytest.mark.run(order=1)
+    def test_previewPlan_select4(self, login_to_previewPlan):
+        driver = login_to_previewPlan  # WebDriver 实例
+        previewPlan = PreviewPlanPage(driver)  # 用 driver 初始化 PreviewPlanPage
+        name = previewPlan.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[3]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        previewPlan.click_button('//p[text()="工作代码"]/ancestor::div[2]/div[3]//i')
+        previewPlan.hover("符合开头")
+        sleep(1)
+        previewPlan.select_input(first_char)
+        sleep(1)
+        eles = previewPlan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        previewPlan.right_refresh('工作指示一览')
+        assert all(str(previewPlan).startswith(first_char) for previewPlan in list_)
+        assert not previewPlan.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合结尾查询成功")
+    # @pytest.mark.run(order=1)
+    def test_previewPlan_select5(self, login_to_previewPlan):
+        driver = login_to_previewPlan  # WebDriver 实例
+        previewPlan = PreviewPlanPage(driver)  # 用 driver 初始化 PreviewPlanPage
+        name = previewPlan.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[3]'
+        ).get_attribute('innerText')
+        last_char = name[-1:] if name else ""
+        previewPlan.click_button('//p[text()="工作代码"]/ancestor::div[2]/div[3]//i')
+        previewPlan.hover("符合结尾")
+        sleep(1)
+        previewPlan.select_input(last_char)
+        sleep(1)
+        eles = previewPlan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        previewPlan.right_refresh('工作指示一览')
+        assert all(str(previewPlan).endswith(last_char) for previewPlan in list_)
+        assert not previewPlan.has_fail_message()
+
+    @allure.story("清除筛选效果成功")
+    # @pytest.mark.run(order=1)
+    def test_previewPlan_clear(self, login_to_previewPlan):
+        driver = login_to_previewPlan  # WebDriver 实例
+        previewPlan = PreviewPlanPage(driver)  # 用 driver 初始化 PreviewPlanPage
+        name = "3"
+        sleep(1)
+        previewPlan.click_button('//p[text()="工作代码"]/ancestor::div[2]/div[3]//i')
+        previewPlan.hover("包含")
+        sleep(1)
+        previewPlan.select_input(name)
+        sleep(1)
+        previewPlan.click_button('//p[text()="工作代码"]/ancestor::div[2]/div[3]//i')
+        previewPlan.hover("清除所有筛选条件")
+        sleep(1)
+        ele = previewPlan.get_find_element_xpath('//p[text()="工作代码"]/ancestor::div[2]/div[3]//i').get_attribute(
+            "class")
+        previewPlan.right_refresh('工作指示一览')
+        assert ele == "vxe-icon-funnel suffixIcon"
         assert not previewPlan.has_fail_message()

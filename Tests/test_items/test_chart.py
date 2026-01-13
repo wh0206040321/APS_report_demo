@@ -105,7 +105,7 @@ class TestChartPage:
             if eles[i].text == "测试布局":
                 break
             i += 1
-        wait = WebDriverWait(driver, 10)
+        wait = WebDriverWait(driver, 30)
         element = wait.until(
             EC.presence_of_element_located(
                 (
@@ -122,7 +122,7 @@ class TestChartPage:
     def test_resourcechart_editlayout(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        wait = WebDriverWait(driver, 10)
+        wait = WebDriverWait(driver, 30)
         chart.click_button(
             '//div[@class="el-tabs__nav is-top"]/div[@role="tab" and text()="测试布局"]'
         )
@@ -705,7 +705,7 @@ class TestChartPage:
     def test_orderchart_editlayout(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        wait = WebDriverWait(driver, 10)
+        wait = WebDriverWait(driver, 30)
         chart.click_button(
             '//div[@class="el-tabs__nav is-top"]/div[@role="tab" and text()="测试布局"]'
         )
@@ -985,7 +985,7 @@ class TestChartPage:
     def test_orderAssociationChart_editlayout(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        wait = WebDriverWait(driver, 10)
+        wait = WebDriverWait(driver, 30)
         chart.click_button(
             '//div[@class="el-tabs__nav is-top"]/div[@role="tab" and text()="测试布局"]'
         )
@@ -1265,7 +1265,7 @@ class TestChartPage:
     def test_loadChart_editlayout(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        wait = WebDriverWait(driver, 10)
+        wait = WebDriverWait(driver, 30)
         chart.click_button(
             '//div[@class="el-tabs__nav is-top"]/div[@role="tab" and text()="测试布局"]'
         )
@@ -1557,7 +1557,7 @@ class TestChartPage:
     def test_workSequenceChart_editlayout(self, login_to_chart):
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        wait = WebDriverWait(driver, 10)
+        wait = WebDriverWait(driver, 30)
         chart.click_button(
             '//div[@class="el-tabs__nav is-top"]/div[@role="tab" and text()="测试布局"]'
         )

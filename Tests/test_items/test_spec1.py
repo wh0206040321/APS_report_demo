@@ -1,5 +1,6 @@
 import logging
 import random
+from datetime import date
 from time import sleep
 
 import allure
@@ -855,7 +856,7 @@ class TestSpecPage:
                 columns_text.append(text)
 
         print(columns_text)
-        bef_text = ['全部数据', '全部数据', '2', '20', '全部数据', f'{DateDriver().username}', '2025', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20']
+        bef_text = ['全部数据', '全部数据', '2', '20', '全部数据', f'{DateDriver().username}', date.today().strftime("%Y/%m/%d"), '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20']
         spec.right_refresh('生产特征1')
         assert len(columns_text) == len(bef_text), f"长度不一致：actual={len(columns_text)}, expected={len(bef_text)}"
         for i, (a, e) in enumerate(zip(columns_text, bef_text)):
@@ -905,7 +906,7 @@ class TestSpecPage:
                 columns_text.append(text)
 
         print(columns_text)
-        bef_text = ['全部数据', '全部数据', '2', '20', '全部数据', f'{DateDriver().username}', '2025', '20', '20', '20',
+        bef_text = ['全部数据', '全部数据', '2', '20', '全部数据', f'{DateDriver().username}', date.today().strftime("%Y/%m/%d"), '20', '20', '20',
                     '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20',
                     '20', '20']
         spec.right_refresh('生产特征1')
@@ -915,6 +916,229 @@ class TestSpecPage:
                 assert str(e) in str(a), f"第7项包含断言失败：'{e}' not in '{a}'"
             else:
                 assert a == e, f"第{i + 1}项不一致：actual='{a}', expected='{e}'"
+        assert not spec.has_fail_message()
+
+    @allure.story("过滤条件查询，一个不选，显示正常")
+    # @pytest.mark.run(order=1)
+    def test_spec_select2(self, login_to_spec1):
+        driver = login_to_spec1  # WebDriver 实例
+        spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
+        driver.execute_script("document.body.style.zoom='1'")
+        spec.right_refresh('生产特征1')
+        spec.click_button('//p[text()="代码"]/ancestor::div[2]/div[3]//i')
+        sleep(1)
+        eles = spec.get_find_element_xpath(
+            '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
+            "class")
+        if eles == "ivu-checkbox ivu-checkbox-checked":
+            spec.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            spec.click_button('//div[@class="filter-btn-bar"]/button')
+        sleep(1)
+        spec.click_button('//p[text()="代码"]/ancestor::div[2]//input')
+        eles = spec.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        spec.right_refresh('生产特征1')
+        assert len(eles) == 0
+        assert not spec.has_fail_message()
+
+    @allure.story("过滤条件查询，设置包含条件查询成功")
+    # @pytest.mark.run(order=1)
+    def test_spec_select3(self, login_to_spec1):
+        driver = login_to_spec1  # WebDriver 实例
+        spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
+        name = spec.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        spec.click_button('//p[text()="代码"]/ancestor::div[2]/div[3]//i')
+        spec.hover("包含")
+        sleep(1)
+        spec.select_input(first_char)
+        sleep(1)
+        eles = spec.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        spec.right_refresh('生产特征1')
+        assert all(first_char in text for text in list_)
+        assert not spec.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合开头查询成功")
+    # @pytest.mark.run(order=1)
+    def test_spec_select4(self, login_to_spec1):
+        driver = login_to_spec1  # WebDriver 实例
+        spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
+        name = spec.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        spec.click_button('//p[text()="代码"]/ancestor::div[2]/div[3]//i')
+        spec.hover("符合开头")
+        sleep(1)
+        spec.select_input(first_char)
+        sleep(1)
+        eles = spec.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        spec.right_refresh('生产特征1')
+        assert all(str(spec).startswith(first_char) for spec in list_)
+        assert not spec.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合结尾查询成功")
+    # @pytest.mark.run(order=1)
+    def test_spec_select5(self, login_to_spec1):
+        driver = login_to_spec1  # WebDriver 实例
+        spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
+        name = spec.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        last_char = name[-1:] if name else ""
+        spec.click_button('//p[text()="代码"]/ancestor::div[2]/div[3]//i')
+        spec.hover("符合结尾")
+        sleep(1)
+        spec.select_input(last_char)
+        sleep(1)
+        eles = spec.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        spec.right_refresh('生产特征1')
+        assert all(str(spec).endswith(last_char) for spec in list_)
+        assert not spec.has_fail_message()
+
+    @allure.story("清除筛选效果成功")
+    # @pytest.mark.run(order=1)
+    def test_spec_clear(self, login_to_spec1):
+        driver = login_to_spec1  # WebDriver 实例
+        spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
+        name = "3"
+        sleep(1)
+        spec.click_button('//p[text()="代码"]/ancestor::div[2]/div[3]//i')
+        spec.hover("包含")
+        sleep(1)
+        spec.select_input(name)
+        sleep(1)
+        spec.click_button('//p[text()="代码"]/ancestor::div[2]/div[3]//i')
+        spec.hover("清除所有筛选条件")
+        sleep(1)
+        ele = spec.get_find_element_xpath('//p[text()="代码"]/ancestor::div[2]/div[3]//i').get_attribute(
+            "class")
+        spec.right_refresh('生产特征1')
+        assert ele == "vxe-icon-funnel suffixIcon"
+        assert not spec.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加重复")
+    # @pytest.mark.run(order=1)
+    def test_spec_ctrlIrepeat(self, login_to_spec1):
+        driver = login_to_spec1  # WebDriver 实例
+        spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
+        spec.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        ele1 = spec.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
+            "innerText")
+        spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = spec.get_error_message()
+        spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert message == '记录已存在,请检查！'
+        assert not spec.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_spec_ctrlI(self, login_to_spec1):
+        driver = login_to_spec1  # WebDriver 实例
+        spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
+        spec.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        spec.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        spec.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加')
+        sleep(1)
+        ele1 = spec.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        spec.get_find_message()
+        spec.select_input('1没有数据添加')
+        ele2 = spec.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2 == '1没有数据添加'
+        assert not spec.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改")
+    # @pytest.mark.run(order=1)
+    def test_spec_ctrlM(self, login_to_spec1):
+        driver = login_to_spec1  # WebDriver 实例
+        spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
+        spec.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        spec.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        spec.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改')
+        ele1 = spec.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        spec.get_find_message()
+        spec.select_input('1没有数据修改')
+        ele2 = spec.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2
+        spec.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        spec.click_del_button()
+        spec.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        message = spec.get_find_message()
+        spec.right_refresh('生产特征1')
+        assert message == "删除成功！"
+        assert not spec.has_fail_message()
+
+    @allure.story("模拟ctrl+c复制可查询")
+    # @pytest.mark.run(order=1)
+    def test_spec_ctrlC(self, login_to_spec1):
+        driver = login_to_spec1  # WebDriver 实例
+        spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
+        spec.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        before_data = spec.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+        spec.click_button('//p[text()="代码"]/ancestor::div[2]//input')
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        eles = spec.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        eles = [ele.text for ele in eles]
+        spec.right_refresh('生产特征1')
+        assert all(before_data in ele for ele in eles)
+        assert not spec.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_spec_shift(self, login_to_spec1):
+        driver = login_to_spec1  # WebDriver 实例
+        spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        spec.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = spec.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        num = spec.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert len(num) == 2
+        assert not spec.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+m编辑")
+    # @pytest.mark.run(order=1)
+    def test_spec_ctrls(self, login_to_spec1):
+        driver = login_to_spec1  # WebDriver 实例
+        spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        spec.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = spec.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        num = spec.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = spec.get_find_message()
+        assert len(num) == 2 and message == "保存成功"
         assert not spec.has_fail_message()
 
     @allure.story("删除测试数据成功，删除布局成功")

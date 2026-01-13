@@ -67,6 +67,13 @@ class SynchronizePage(BasePage):
         )
         sleep(1)
 
+    def wait_for_loadingbox(self, timeout=30):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located(
+                (By.XPATH, '//div[@class="loadingbox"]')
+            )
+        )
+
     def click_synchronize_button(self):
         """点击同步按钮."""
         self.click_button('//p[text()="同步"]')

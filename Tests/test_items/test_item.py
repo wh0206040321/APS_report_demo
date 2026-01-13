@@ -6,6 +6,7 @@ from time import sleep
 import allure
 import pytest
 from selenium.common.exceptions import WebDriverException, StaleElementReferenceException
+from selenium.webdriver import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -1099,6 +1100,229 @@ class TestItemPage:
         item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert before_all_value == after_all_value and username == DateDriver().username and today_str in updatatime and int(num) == (int(len_num) + 2)
         assert all(before_all_value), "列表中存在为空或为假值的元素！"
+        assert not item.has_fail_message()
+
+    @allure.story("过滤条件查询，一个不选，显示正常")
+    # @pytest.mark.run(order=1)
+    def test_item_select2(self, login_to_item):
+        driver = login_to_item  # WebDriver 实例
+        item = ItemPage(driver)  # 用 driver 初始化 ItemPage
+        driver.execute_script("document.body.style.zoom='1'")
+        item.right_refresh('物品')
+        item.click_button('//p[text()="物料代码"]/ancestor::div[2]/div[3]//i')
+        sleep(1)
+        eles = item.get_find_element_xpath(
+            '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
+            "class")
+        if eles == "ivu-checkbox ivu-checkbox-checked":
+            item.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            item.click_button('//div[@class="filter-btn-bar"]/button')
+        sleep(1)
+        item.click_button('//p[text()="物料代码"]/ancestor::div[2]//input')
+        eles = item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        item.right_refresh('物品')
+        assert len(eles) == 0
+        assert not item.has_fail_message()
+
+    @allure.story("过滤条件查询，设置包含条件查询成功")
+    # @pytest.mark.run(order=1)
+    def test_item_select3(self, login_to_item):
+        driver = login_to_item  # WebDriver 实例
+        item = ItemPage(driver)  # 用 driver 初始化 ItemPage
+        name = item.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        item.click_button('//p[text()="物料代码"]/ancestor::div[2]/div[3]//i')
+        item.hover("包含")
+        sleep(1)
+        item.select_input_item(first_char)
+        sleep(1)
+        eles = item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        item.right_refresh('物品')
+        assert all(first_char in text for text in list_)
+        assert not item.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合开头查询成功")
+    # @pytest.mark.run(order=1)
+    def test_item_select4(self, login_to_item):
+        driver = login_to_item  # WebDriver 实例
+        item = ItemPage(driver)  # 用 driver 初始化 ItemPage
+        name = item.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        item.click_button('//p[text()="物料代码"]/ancestor::div[2]/div[3]//i')
+        item.hover("符合开头")
+        sleep(1)
+        item.select_input_item(first_char)
+        sleep(1)
+        eles = item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        item.right_refresh('物品')
+        assert all(str(item).startswith(first_char) for item in list_)
+        assert not item.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合结尾查询成功")
+    # @pytest.mark.run(order=1)
+    def test_item_select5(self, login_to_item):
+        driver = login_to_item  # WebDriver 实例
+        item = ItemPage(driver)  # 用 driver 初始化 ItemPage
+        name = item.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        last_char = name[-1:] if name else ""
+        item.click_button('//p[text()="物料代码"]/ancestor::div[2]/div[3]//i')
+        item.hover("符合结尾")
+        sleep(1)
+        item.select_input_item(last_char)
+        sleep(1)
+        eles = item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        item.right_refresh('物品')
+        assert all(str(item).endswith(last_char) for item in list_)
+        assert not item.has_fail_message()
+
+    @allure.story("清除筛选效果成功")
+    # @pytest.mark.run(order=1)
+    def test_item_clear(self, login_to_item):
+        driver = login_to_item  # WebDriver 实例
+        item = ItemPage(driver)  # 用 driver 初始化 ItemPage
+        name = "3"
+        sleep(1)
+        item.click_button('//p[text()="物料代码"]/ancestor::div[2]/div[3]//i')
+        item.hover("包含")
+        sleep(1)
+        item.select_input_item(name)
+        sleep(1)
+        item.click_button('//p[text()="物料代码"]/ancestor::div[2]/div[3]//i')
+        item.hover("清除所有筛选条件")
+        sleep(1)
+        ele = item.get_find_element_xpath('//p[text()="物料代码"]/ancestor::div[2]/div[3]//i').get_attribute(
+            "class")
+        item.right_refresh('物品')
+        assert ele == "vxe-icon-funnel suffixIcon"
+        assert not item.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加重复")
+    # @pytest.mark.run(order=1)
+    def test_item_ctrlIrepeat(self, login_to_item):
+        driver = login_to_item  # WebDriver 实例
+        item = ItemPage(driver)  # 用 driver 初始化 ItemPage
+        item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        ele1 = item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
+            "innerText")
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = item.get_error_message()
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert message == '记录已存在,请检查！'
+        assert not item.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_item_ctrlI(self, login_to_item):
+        driver = login_to_item  # WebDriver 实例
+        item = ItemPage(driver)  # 用 driver 初始化 ItemPage
+        item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加')
+        sleep(1)
+        ele1 = item.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        item.get_find_message()
+        item.select_input_item('1没有数据添加')
+        ele2 = item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2 == '1没有数据添加'
+        assert not item.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改")
+    # @pytest.mark.run(order=1)
+    def test_item_ctrlM(self, login_to_item):
+        driver = login_to_item  # WebDriver 实例
+        item = ItemPage(driver)  # 用 driver 初始化 ItemPage
+        item.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改')
+        ele1 = item.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        item.get_find_message()
+        item.select_input_item('1没有数据修改')
+        ele2 = item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2
+        item.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        item.click_del_button()
+        item.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        message = item.get_find_message()
+        item.right_refresh('物品')
+        assert message == "删除成功！"
+        assert not item.has_fail_message()
+
+    @allure.story("模拟ctrl+c复制可查询")
+    # @pytest.mark.run(order=1)
+    def test_item_ctrlC(self, login_to_item):
+        driver = login_to_item  # WebDriver 实例
+        item = ItemPage(driver)  # 用 driver 初始化 ItemPage
+        item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        before_data = item.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+        item.click_button('//p[text()="物料代码"]/ancestor::div[2]//input')
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        eles = item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        eles = [ele.text for ele in eles]
+        item.right_refresh('物品')
+        assert all(before_data in ele for ele in eles)
+        assert not item.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_item_shift(self, login_to_item):
+        driver = login_to_item  # WebDriver 实例
+        item = ItemPage(driver)  # 用 driver 初始化 ItemPage
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        item.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = item.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        num = item.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert len(num) == 2
+        assert not item.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+m编辑")
+    # @pytest.mark.run(order=1)
+    def test_item_ctrls(self, login_to_item):
+        driver = login_to_item  # WebDriver 实例
+        item = ItemPage(driver)  # 用 driver 初始化 ItemPage
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        item.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = item.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        num = item.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = item.get_find_message()
+        assert len(num) == 2 and message == "保存成功"
         assert not item.has_fail_message()
 
     @allure.story("删除测试数据成功，删除布局成功")

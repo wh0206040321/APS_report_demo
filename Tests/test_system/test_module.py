@@ -19,7 +19,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_module():
     driver = None
     try:
@@ -77,6 +77,7 @@ class TestSModulePage:
         sleep(1)
         module.click_confirm()
         message = module.get_error_message()
+        module.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert layout == name
         assert message == "校验不通过，请检查标红的表单字段！"
         assert not module.has_fail_message()
@@ -97,6 +98,7 @@ class TestSModulePage:
         add.batch_modify_input(xpath_list, name)
         module.click_confirm()
         message = module.get_error_message()
+        module.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "校验不通过，请检查标红的表单字段！"
         assert not module.has_fail_message()
 
@@ -146,6 +148,8 @@ class TestSModulePage:
         module.click_button(xpath_list[3])
         module.click_confirm()
         ele = module.finds_elements(By.XPATH, '//div[text()=" 记录已存在,请检查！ "]')
+        module.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        module.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert len(ele) == 1
         assert not module.has_fail_message()
 
@@ -166,6 +170,7 @@ class TestSModulePage:
         ]
         sleep(2)
         ele = module.get_find_element_xpath(xpath_list[0]).get_attribute("readonly")
+        module.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert ele == "true" or ele == "readonly"
         assert not module.has_fail_message()
 
@@ -197,6 +202,7 @@ class TestSModulePage:
         sleep(2)
         ele1 = module.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{before_name}"]]/td[3]').text
         ele2 = module.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{before_name}"]]/td[5]').text
+        module.right_refresh('模块管理')
         assert message == "编辑成功！" and ele1 == after_name and ele2 == "33"
         assert not module.has_fail_message()
 
@@ -311,6 +317,7 @@ class TestSModulePage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][2]/td[2]',
         )
+        module.right_refresh('模块管理')
         assert itemcode == name and len(itemcode2) == 0
         assert not module.has_fail_message()
 
@@ -357,6 +364,7 @@ class TestSModulePage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[@class="vxe-body--row"][1]/td[2]',
         )
+        module.right_refresh('模块管理')
         assert len(itemcode) == 0
         assert not module.has_fail_message()
 
@@ -401,6 +409,7 @@ class TestSModulePage:
         # 点击确认
         module.click_select_button2()
         eles = module.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
+        module.right_refresh('模块管理')
         assert len(eles) > 0
         assert all(name in ele for ele in eles)
         assert not module.has_fail_message()
@@ -446,6 +455,7 @@ class TestSModulePage:
         # 点击确认
         module.click_select_button2()
         eles = module.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[5]')
+        module.right_refresh('模块管理')
         assert len(eles) > 0
         assert all(int(ele) > num for ele in eles)
         assert not module.has_fail_message()
@@ -575,6 +585,7 @@ class TestSModulePage:
         module.click_select_button2()
         eles1 = module.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[5]')
         eles2 = module.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
+        module.right_refresh('模块管理')
         assert len(eles1) > 0 and len(eles2) > 0
         assert all(int(ele) > num for ele in eles1) and all(name in ele for ele in eles2)
         assert not module.has_fail_message()
@@ -733,6 +744,7 @@ class TestSModulePage:
                 td5_raw = int(td5_raw) if td5_raw else 0
                 assert name in td3 or td5_raw >= num, f"第 {idx + 1} 行不符合：td3={td3}, td5={td5_raw}"
                 valid_count += 1
+        module.right_refresh('模块管理')
         assert not module.has_fail_message()
         print(f"符合条件的行数：{valid_count}")
 
@@ -747,6 +759,7 @@ class TestSModulePage:
         sleep(2)
         eles = module.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
         list_ = [ele.text for ele in eles]
+        module.right_refresh('模块管理')
         assert all(name in text for text in list_), f"表格内容不符合预期，实际值: {list_}"
         assert not module.has_fail_message()
 
@@ -756,7 +769,7 @@ class TestSModulePage:
         driver = login_to_module  # WebDriver 实例
         module = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
         module.wait_for_loading_to_disappear()
-        module.click_button('//div[div[span[text()=" 模块代码"]]]//i[@class="vxe-icon-funnel suffixIcon"]')
+        module.click_button('//div[div[span[text()=" 模块代码"]]]/div[3]//i')
         sleep(1)
         eles = module.get_find_element_xpath(
             '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
@@ -767,6 +780,7 @@ class TestSModulePage:
         sleep(1)
         module.click_button('//div[div[span[text()=" 模块代码"]]]//input')
         eles = module.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        module.right_refresh('模块管理')
         assert len(eles) == 0
         assert not module.has_fail_message()
 
@@ -777,7 +791,7 @@ class TestSModulePage:
         module = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
         module.wait_for_loading_to_disappear()
         name = "Co"
-        module.click_button('//div[div[span[text()=" 模块代码"]]]//i[@class="vxe-icon-funnel suffixIcon"]')
+        module.click_button('//div[div[span[text()=" 模块代码"]]]/div[3]//i')
         module.hover("包含")
         sleep(1)
         module.select_input_module(name)
@@ -785,6 +799,7 @@ class TestSModulePage:
         eles = module.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        module.right_refresh('模块管理')
         assert all(name in text for text in list_)
         assert not module.has_fail_message()
 
@@ -795,7 +810,7 @@ class TestSModulePage:
         module = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
         name = "Plan"
         module.wait_for_loading_to_disappear()
-        module.click_button('//div[div[span[text()=" 模块代码"]]]//i[@class="vxe-icon-funnel suffixIcon"]')
+        module.click_button('//div[div[span[text()=" 模块代码"]]]/div[3]//i')
         module.hover("符合开头")
         sleep(1)
         module.select_input_module(name)
@@ -803,6 +818,8 @@ class TestSModulePage:
         eles = module.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        module.right_refresh('模块管理')
+        assert len(list_) > 0
         assert all(str(item).startswith(name) for item in list_)
         assert not module.has_fail_message()
 
@@ -813,7 +830,7 @@ class TestSModulePage:
         module = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
         module.wait_for_loading_to_disappear()
         name = "t"
-        module.click_button('//div[div[span[text()=" 模块代码"]]]//i[@class="vxe-icon-funnel suffixIcon"]')
+        module.click_button('//div[div[span[text()=" 模块代码"]]]/div[3]//i')
         module.hover("符合结尾")
         sleep(1)
         module.select_input_module(name)
@@ -821,6 +838,7 @@ class TestSModulePage:
         eles = module.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        module.right_refresh('模块管理')
         assert all(str(item).endswith(name) for item in list_)
         assert not module.has_fail_message()
 
@@ -832,7 +850,7 @@ class TestSModulePage:
         module.wait_for_loading_to_disappear()
         sleep(1)
         name = "3"
-        module.click_button('//div[div[span[text()=" 模块代码"]]]//i[@class="vxe-icon-funnel suffixIcon"]')
+        module.click_button('//div[div[span[text()=" 模块代码"]]]/div[3]//i')
         module.hover("包含")
         sleep(1)
         module.select_input_module(name)
@@ -842,6 +860,7 @@ class TestSModulePage:
         sleep(1)
         ele = module.get_find_element_xpath('//div[div[span[text()=" 模块代码"]]]//i[@class="vxe-icon-funnel suffixIcon"]').get_attribute(
             "class")
+        module.right_refresh('模块管理')
         assert ele == "vxe-icon-funnel suffixIcon"
         assert not module.has_fail_message()
 

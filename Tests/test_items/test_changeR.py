@@ -942,23 +942,23 @@ class TestChangeRPage:
     # @pytest.mark.run(order=1)
     def test_changeR_del1(self, login_to_changeR):
         driver = login_to_changeR  # WebDriver 实例
-        changeI = ChangeR(driver)  # 用 driver 初始化 ChangeR
-        changeI.right_refresh('资源切换')
-        before_data = changeI.get_find_element_xpath(
+        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        changeR.right_refresh('资源切换')
+        before_data = changeR.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
-        changeI.del_data()
-        changeI.click_ref_button()
-        changeI.wait_for_loading_to_disappear()
-        changeI.del_data()
+        changeR.del_data()
+        changeR.click_ref_button()
+        changeR.wait_for_loading_to_disappear()
+        changeR.del_data()
         # 定位
-        after_data = changeI.get_find_element_xpath(
+        after_data = changeR.get_find_element_xpath(
             '(//span[contains(text(),"条记录")])[1]'
         ).text
         assert (
                 before_data != after_data
         ), f"删除后的数据{after_data}，删除前的数据{before_data}"
-        assert not changeI.has_fail_message()
+        assert not changeR.has_fail_message()
 
     @allure.story("输入全部数据，添加保存成功")
     # @pytest.mark.run(order=1)
@@ -1018,6 +1018,7 @@ class TestChangeRPage:
         updatatime = changeR.get_find_element_xpath(
             '//label[text()="更新时间"]/following-sibling::div//input').get_attribute("value")
         today_str = date.today().strftime('%Y/%m/%d')
+        changeR.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert before_all_value == after_all_value and username == DateDriver().username and today_str in updatatime and int(
             num) == (int(len_num) + 2)
         assert all(before_all_value), "列表中存在为空或为假值的元素！"
@@ -1045,6 +1046,226 @@ class TestChangeRPage:
         assert (
                 before_data != after_data
         ), f"删除后的数据{after_data}，删除前的数据{before_data}"
+        assert not changeR.has_fail_message()
+
+    @allure.story("过滤条件查询，一个不选，显示正常")
+    # @pytest.mark.run(order=1)
+    def test_changeR_select2(self, login_to_changeR):
+        driver = login_to_changeR  # WebDriver 实例
+        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        changeR.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//i')
+        sleep(1)
+        eles = changeR.get_find_element_xpath(
+            '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
+            "class")
+        if eles == "ivu-checkbox ivu-checkbox-checked":
+            changeR.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            changeR.click_button('//div[@class="filter-btn-bar"]/button')
+        sleep(1)
+        changeR.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//input')
+        eles = changeR.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        changeR.right_refresh('资源切换')
+        assert len(eles) == 0
+        assert not changeR.has_fail_message()
+
+    @allure.story("过滤条件查询，设置包含条件查询成功")
+    # @pytest.mark.run(order=1)
+    def test_changeR_select3(self, login_to_changeR):
+        driver = login_to_changeR  # WebDriver 实例
+        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        name = changeR.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        changeR.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//i')
+        changeR.hover("包含")
+        sleep(1)
+        changeR.select_input(first_char)
+        sleep(1)
+        eles = changeR.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        changeR.right_refresh('资源切换')
+        assert all(first_char in text for text in list_)
+        assert not changeR.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合开头查询成功")
+    # @pytest.mark.run(order=1)
+    def test_changeR_select4(self, login_to_changeR):
+        driver = login_to_changeR  # WebDriver 实例
+        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        name = changeR.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        changeR.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//i')
+        changeR.hover("符合开头")
+        sleep(1)
+        changeR.select_input(first_char)
+        sleep(1)
+        eles = changeR.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        changeR.right_refresh('资源切换')
+        assert all(str(item).startswith(first_char) for item in list_)
+        assert not changeR.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合结尾查询成功")
+    # @pytest.mark.run(order=1)
+    def test_changeR_select5(self, login_to_changeR):
+        driver = login_to_changeR  # WebDriver 实例
+        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        name = changeR.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        last_char = name[-1:] if name else ""
+        changeR.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//i')
+        changeR.hover("符合结尾")
+        sleep(1)
+        changeR.select_input(last_char)
+        sleep(1)
+        eles = changeR.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        changeR.right_refresh('资源切换')
+        assert all(str(item).endswith(last_char) for item in list_)
+        assert not changeR.has_fail_message()
+
+    @allure.story("清除筛选效果成功")
+    # @pytest.mark.run(order=1)
+    def test_changeR_clear(self, login_to_changeR):
+        driver = login_to_changeR  # WebDriver 实例
+        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        name = "3"
+        sleep(1)
+        changeR.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//i')
+        changeR.hover("包含")
+        sleep(1)
+        changeR.select_input(name)
+        sleep(1)
+        changeR.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//i')
+        changeR.hover("清除所有筛选条件")
+        sleep(1)
+        ele = changeR.get_find_element_xpath('//p[text()="资源"]/ancestor::div[2]/div[3]//i').get_attribute(
+            "class")
+        changeR.right_refresh('资源切换')
+        assert ele == "vxe-icon-funnel suffixIcon"
+        assert not changeR.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加重复")
+    # @pytest.mark.run(order=1)
+    def test_changeR_ctrlIrepeat(self, login_to_changeR):
+        driver = login_to_changeR  # WebDriver 实例
+        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        changeR.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        ele1 = changeR.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
+            "innerText")
+        changeR.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = changeR.get_error_message()
+        changeR.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert message == '记录已存在,请检查！'
+        assert not changeR.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_changeR_ctrlI(self, login_to_changeR):
+        driver = login_to_changeR  # WebDriver 实例
+        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        changeR.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        changeR.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        changeR.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加')
+        sleep(1)
+        ele1 = changeR.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        changeR.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        changeR.get_find_message()
+        changeR.click_flagdata()
+        ele2 = changeR.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2 == '1没有数据添加'
+        assert not changeR.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改")
+    # @pytest.mark.run(order=1)
+    def test_changeR_ctrlM(self, login_to_changeR):
+        driver = login_to_changeR  # WebDriver 实例
+        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        changeR.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        changeR.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        changeR.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改')
+        ele1 = changeR.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        changeR.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        changeR.get_find_message()
+        changeR.click_flagdata()
+        ele2 = changeR.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2
+        changeR.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        changeR.click_del_button()
+        changeR.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        message = changeR.get_find_message()
+        assert message == "删除成功！"
+        assert not changeR.has_fail_message()
+
+    @allure.story("模拟ctrl+c复制可查询")
+    # @pytest.mark.run(order=1)
+    def test_changeR_ctrlC(self, login_to_changeR):
+        driver = login_to_changeR  # WebDriver 实例
+        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        changeR.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        before_data = changeR.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+        changeR.click_button('//p[text()="资源"]/ancestor::div[2]//input')
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        eles = changeR.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        eles = [ele.text for ele in eles]
+        changeR.right_refresh('资源切换')
+        assert all(before_data in ele for ele in eles)
+        assert not changeR.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_changeR_shift(self, login_to_changeR):
+        driver = login_to_changeR  # WebDriver 实例
+        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]']
+        changeR.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = changeR.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        num = changeR.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        changeR.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert len(num) == 2
+        assert not changeR.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+m编辑")
+    # @pytest.mark.run(order=1)
+    def test_changeR_ctrls(self, login_to_changeR):
+        driver = login_to_changeR  # WebDriver 实例
+        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]']
+        changeR.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = changeR.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        num = changeR.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        changeR.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = changeR.get_find_message()
+        assert len(num) == 2 and message == "保存成功"
         assert not changeR.has_fail_message()
 
     @allure.story("删除布局成功")

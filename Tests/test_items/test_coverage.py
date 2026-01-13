@@ -1,7 +1,7 @@
 import logging
 import random
 import re
-from datetime import datetime
+from datetime import datetime, date
 from time import sleep
 
 import allure
@@ -569,7 +569,7 @@ class TestCoveragePage:
         # 格式化为 年/月/日 的字符串
         formatted_date = current_time.strftime("%Y/%m/%d")
         print(columns_text)
-        bef_text = [f'{resource}', f'{start}', f'{end}', f'{data_list}', f'{selClass}', f'{start};{end}', f'{data_list}', '2025', f'{formatted_date}',
+        bef_text = [f'{resource}', f'{start}', f'{end}', f'{data_list}', f'{selClass}', f'{start};{end}', f'{data_list}', date.today().strftime("%Y/%m/%d"), f'{formatted_date}',
                     '2', f'{data_list}', f'{data_list}',  f'{DateDriver.username}']
         assert len(columns_text) == len(bef_text), f"长度不一致：actual={len(columns_text)}, expected={len(bef_text)}"
         for i, (a, e) in enumerate(zip(columns_text, bef_text),start=1):
@@ -641,7 +641,7 @@ class TestCoveragePage:
         formatted_date = current_time.strftime("%Y/%m/%d")
         print(columns_text)
         bef_text = [f'{resource}', f'{start}', f'{end}', f'{data_list}', f'{selClass}', f'{start};{end}',
-                    f'{data_list}', '2025', f'{formatted_date}',
+                    f'{data_list}', date.today().strftime("%Y/%m/%d"), f'{formatted_date}',
                     '2', f'{data_list}', f'{data_list}', f'{DateDriver.username}']
         assert len(columns_text) == len(bef_text), f"长度不一致：actual={len(columns_text)}, expected={len(bef_text)}"
         for i, (a, e) in enumerate(zip(columns_text, bef_text), start=1):
@@ -893,6 +893,211 @@ class TestCoveragePage:
             f'(//span[text()="{resource}"])[1]/ancestor::tr[1]/td[2]'
         ).get_attribute("innerText")
         assert adddata == resource
+        assert not coverage.has_fail_message()
+
+    @allure.story("过滤条件查询，一个不选，显示正常")
+    # @pytest.mark.run(order=1)
+    def test_coverage_select2(self, login_to_coverage):
+        driver = login_to_coverage  # WebDriver 实例
+        coverage = Coverage(driver)  # 用 driver 初始化 Coverage
+        coverage.click_button('//div[div[span[text()=" 资源代码"]]]/div[3]//i')
+        sleep(1)
+        eles = coverage.get_find_element_xpath(
+            '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
+            "class")
+        if eles == "ivu-checkbox ivu-checkbox-checked":
+            coverage.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            coverage.click_button('//div[@class="filter-btn-bar"]/button')
+        sleep(1)
+        coverage.click_button('//div[div[span[text()=" 资源代码"]]]//input')
+        eles = coverage.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        coverage.right_refresh('覆盖日历')
+        assert len(eles) == 0
+        assert not coverage.has_fail_message()
+
+    @allure.story("过滤条件查询，设置包含条件查询成功")
+    # @pytest.mark.run(order=1)
+    def test_coverage_select3(self, login_to_coverage):
+        driver = login_to_coverage  # WebDriver 实例
+        coverage = Coverage(driver)  # 用 driver 初始化 Coverage
+        name = coverage.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        coverage.click_button('//div[div[span[text()=" 资源代码"]]]/div[3]//i')
+        coverage.hover("包含")
+        sleep(1)
+        coverage.select_input(first_char)
+        sleep(1)
+        eles = coverage.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        coverage.right_refresh('覆盖日历')
+        assert all(first_char in text for text in list_)
+        assert not coverage.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合开头查询成功")
+    # @pytest.mark.run(order=1)
+    def test_coverage_select4(self, login_to_coverage):
+        driver = login_to_coverage  # WebDriver 实例
+        coverage = Coverage(driver)  # 用 driver 初始化 Coverage
+        name = coverage.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        coverage.click_button('//div[div[span[text()=" 资源代码"]]]/div[3]//i')
+        coverage.hover("符合开头")
+        sleep(1)
+        coverage.select_input(first_char)
+        sleep(1)
+        eles = coverage.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        coverage.right_refresh('覆盖日历')
+        assert all(str(item).startswith(first_char) for item in list_)
+        assert not coverage.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合结尾查询成功")
+    # @pytest.mark.run(order=1)
+    def test_coverage_select5(self, login_to_coverage):
+        driver = login_to_coverage  # WebDriver 实例
+        coverage = Coverage(driver)  # 用 driver 初始化 Coverage
+        name = coverage.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        last_char = name[-1:] if name else ""
+        coverage.click_button('//div[div[span[text()=" 资源代码"]]]/div[3]//i')
+        coverage.hover("符合结尾")
+        sleep(1)
+        coverage.select_input(last_char)
+        sleep(1)
+        eles = coverage.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        coverage.right_refresh('覆盖日历')
+        assert all(str(item).endswith(last_char) for item in list_)
+        assert not coverage.has_fail_message()
+
+    @allure.story("清除筛选效果成功")
+    # @pytest.mark.run(order=1)
+    def test_coverage_clear(self, login_to_coverage):
+        driver = login_to_coverage  # WebDriver 实例
+        coverage = Coverage(driver)  # 用 driver 初始化 Coverage
+        name = "3"
+        sleep(1)
+        coverage.click_button('//div[div[span[text()=" 资源代码"]]]/div[3]//i')
+        coverage.hover("包含")
+        sleep(1)
+        coverage.select_input(name)
+        sleep(1)
+        coverage.click_button('//div[div[span[text()=" 资源代码"]]]/div[3]//i')
+        coverage.hover("清除所有筛选条件")
+        sleep(1)
+        ele = coverage.get_find_element_xpath('//div[div[span[text()=" 资源代码"]]]/div[3]//i').get_attribute(
+            "class")
+        coverage.right_refresh('覆盖日历')
+        assert ele == "vxe-icon-funnel suffixIcon"
+        assert not coverage.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_coverage_ctrlI(self, login_to_coverage):
+        driver = login_to_coverage  # WebDriver 实例
+        coverage = Coverage(driver)  # 用 driver 初始化 Coverage
+        coverage.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        coverage.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        coverage.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加')
+        sleep(1)
+        ele1 = coverage.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        coverage.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        coverage.get_find_message()
+        coverage.click_flagdata()
+        ele2 = coverage.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2 == '1没有数据添加'
+        assert not coverage.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改")
+    # @pytest.mark.run(order=1)
+    def test_coverage_ctrlM(self, login_to_coverage):
+        driver = login_to_coverage  # WebDriver 实例
+        coverage = Coverage(driver)  # 用 driver 初始化 Coverage
+        coverage.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        coverage.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        coverage.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改')
+        ele1 = coverage.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        coverage.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        coverage.get_find_message()
+        coverage.click_flagdata()
+        ele2 = coverage.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2
+        coverage.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        coverage.click_del_button()
+        coverage.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        message = coverage.get_find_message()
+        assert message == "删除成功！"
+        assert not coverage.has_fail_message()
+
+    @allure.story("模拟ctrl+c复制可查询")
+    # @pytest.mark.run(order=1)
+    def test_coverage_ctrlC(self, login_to_coverage):
+        driver = login_to_coverage  # WebDriver 实例
+        coverage = Coverage(driver)  # 用 driver 初始化 Coverage
+        coverage.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        before_data = coverage.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+        coverage.click_button('//p[text()="资源"]/ancestor::div[2]//input')
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        eles = coverage.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        eles = [ele.text for ele in eles]
+        coverage.right_refresh('覆盖日历')
+        assert all(before_data in ele for ele in eles)
+        assert not coverage.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_coverage_shift(self, login_to_coverage):
+        driver = login_to_coverage  # WebDriver 实例
+        coverage = Coverage(driver)  # 用 driver 初始化 Coverage
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        coverage.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = coverage.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        num = coverage.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        coverage.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert len(num) == 2
+        assert not coverage.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+m编辑")
+    # @pytest.mark.run(order=1)
+    def test_coverage_ctrls(self, login_to_coverage):
+        driver = login_to_coverage  # WebDriver 实例
+        coverage = Coverage(driver)  # 用 driver 初始化 Coverage
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        coverage.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = coverage.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        num = coverage.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        coverage.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = coverage.get_find_message()
+        assert len(num) == 2 and message == "保存成功"
         assert not coverage.has_fail_message()
 
     @allure.story("删除数据成功，删除布局成功")

@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from time import sleep
 
 import allure
@@ -286,4 +287,131 @@ class TestPlanPage:
         )
 
         assert success_element.text == "完成"
+        assert not plan.has_fail_message()
+
+    @allure.story("消息内容过滤查询成功,更新人为自己，更新时间为当天")
+    # @pytest.mark.run(order=1)
+    def test_plan_select_success(self, login_to_plan):
+        driver = login_to_plan
+        plan = PlanPage(driver)
+        wait = WebDriverWait(driver, 60)
+        date_driver = DateDriver()
+        # 等待loading遮罩消失
+        wait.until(
+            EC.invisibility_of_element_located(
+                (By.CSS_SELECTOR, "div.el-loading-spinner")
+            )
+        )
+
+        list_ = ["计算工作台", "计划计算"]
+        for v in list_:
+            plan.click_button(f'(//span[text()="{v}"])[1]')
+
+        # 等待 el-loading-spinner 消失
+        WebDriverWait(driver, 10).until(
+            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-spinner"))
+        )
+        target = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, '//div[@class="vue-treeselect__control-arrow-container"]'))
+        )
+        sleep(3)
+        target.click()
+
+        # 等待第一个方案标签可点击后点击选择
+        first_option = wait.until(
+            EC.element_to_be_clickable(
+                (
+                    By.XPATH,
+                    '//div[@class="vue-treeselect__list"]/div[1]',
+                )
+            )
+        )
+        first_option.click()
+
+        # 执行计划
+        plan.click_plan()
+
+        # 等待“完成”的文本出现
+        success_element = wait.until(
+            EC.presence_of_element_located(
+                (By.XPATH, '(//div[@class="d-flex"])[3]/p[text()=" 完成 "]')
+            )
+        )
+
+        plan.click_button('(//div[@class="d-flex"])[2]/p[text()=" 完成 "]')
+        plan.wait_for_loading_to_disappear()
+        # 过滤条件查询，一个不选，显示正常
+        plan.click_button('//p[text()="消息内容"]/ancestor::div[2]/div[3]//i')
+        sleep(1)
+        eles = plan.get_find_element_xpath(
+            '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
+            "class")
+        if eles == "ivu-checkbox ivu-checkbox-checked":
+            plan.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            plan.click_button('//div[@class="filter-btn-bar"]/button')
+        sleep(1)
+        plan.click_button('//p[text()="消息内容"]/ancestor::div[2]//input')
+        eles = plan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        plan.click_button('//p[text()="消息内容"]/ancestor::div[2]/div[3]//i')
+        plan.hover("清除所有筛选条件")
+        assert len(eles) == 0
+
+        # 过滤条件查询，设置包含条件查询成功
+        plan.click_button('//p[text()="消息内容"]/ancestor::div[2]/div[3]//i')
+        plan.hover("包含")
+        sleep(1)
+        plan.select_input('使用指令')
+        sleep(1)
+        eles = plan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        assert all('使用指令' in text for text in list_)
+
+        # 过滤条件查询，设置符合开头查询成功
+        name = plan.get_find_element_xpath(
+            '//table[@class="vxe-table--body"]//tr//td[3]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        plan.click_button('//p[text()="消息内容"]/ancestor::div[2]/div[3]//i')
+        plan.hover("符合开头")
+        sleep(1)
+        plan.select_input(first_char)
+        sleep(1)
+        eles = plan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        assert all(str(item).startswith(first_char) for item in list_)
+
+        # 过滤条件查询，设置符合结尾查询成功
+        name = plan.get_find_element_xpath(
+            '//table[@class="vxe-table--body"]//tr//td[3]'
+        ).get_attribute('innerText')
+        last_char = name[-1:] if name else ""
+        plan.click_button('//p[text()="消息内容"]/ancestor::div[2]/div[3]//i')
+        plan.hover("符合结尾")
+        sleep(1)
+        plan.select_input(last_char)
+        sleep(1)
+        eles = plan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        assert all(str(item).endswith(last_char) for item in list_)
+
+        # 清除筛选效果成功
+        plan.click_button('//p[text()="消息内容"]/ancestor::div[2]/div[3]//i')
+        plan.hover("清除所有筛选条件")
+        sleep(1)
+        ele = plan.get_find_element_xpath('//p[text()="消息内容"]/ancestor::div[2]/div[3]//i').get_attribute(
+            "class")
+        assert ele == "vxe-icon-funnel suffixIcon"
+
+        # 更新者为自己
+        eles = plan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[6]')
+        assert all(date_driver.username == ele.text for ele in eles)
+
+        # 更新时间为今天
+        today = datetime.now().strftime('%Y/%m/%d')
+        eles = plan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[7]')
+        assert all(today in ele.text for ele in eles)
+
         assert not plan.has_fail_message()

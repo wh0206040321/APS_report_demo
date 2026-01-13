@@ -20,7 +20,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_userrole():
     driver = None
     try:
@@ -83,6 +83,7 @@ class TestUserRolePage:
         value_list = add.get_border_color(list_)
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        user.click_all_button("取消")
         assert all(value == expected_color for value in value_list)
         assert not user.has_fail_message()
 
@@ -111,6 +112,7 @@ class TestUserRolePage:
         value_list = add.get_border_color(list_)
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        user.click_all_button("取消")
         assert all(value == expected_color for value in value_list)
         assert not user.has_fail_message()
 
@@ -140,6 +142,7 @@ class TestUserRolePage:
         value_list = add.get_border_color(list_)
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        user.click_all_button("取消")
         assert all(value == expected_color for value in value_list)
         assert not user.has_fail_message()
 
@@ -165,6 +168,7 @@ class TestUserRolePage:
         sleep(0.5)
         user.click_all_button("保存")
         message = user.get_error_message()
+        user.click_all_button("取消")
         assert message == "请选择角色"
         assert not user.has_fail_message()
 
@@ -181,6 +185,7 @@ class TestUserRolePage:
         message = user.get_find_message()
         user.select_input(name)
         ele = user.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
+        user.right_refresh()
         assert message == "保存成功" and len(ele) == 1
         assert not user.has_fail_message()
 
@@ -190,7 +195,6 @@ class TestUserRolePage:
         driver = login_to_userrole  # WebDriver 实例
         user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
         name = '1用户w+.?=-+a_1'
-        add = AddsPages(driver)
         list_ = [
             '//div[label[text()="用户代码"]]//input',
             '//div[label[text()="用户名称"]]//input'
@@ -200,6 +204,7 @@ class TestUserRolePage:
         user.click_button(list_[1])
         sleep(0.5)
         ele = user.get_find_element_xpath(list_[0]).get_attribute("value")
+        user.click_all_button("取消")
         assert ele == '1wa_1'
         assert not user.has_fail_message()
 
@@ -217,7 +222,7 @@ class TestUserRolePage:
         user.click_all_button("新增")
         user.enter_texts(list_[0], password[0])
         user.enter_texts(list_[1], password[1])
-        user.click_button('//div[label[text()="用户名称"]]//input')
+        user.click_all_button("保存")
         sleep(0.5)
         verify1 = user.get_verify_text("密码")
         verify2 = user.get_verify_text("确认密码")
@@ -225,7 +230,7 @@ class TestUserRolePage:
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
         assert all(value == expected_color for value in value_list)
-        assert verify1== verify2 == "密码最小长度为8位，最大为30位"
+        assert verify1 == verify2 == "密码最小长度为8位，最大为30位"
         assert not user.has_fail_message()
 
     @allure.story("校验密码和确认密码不符合标准,密码长度最大为30")
@@ -239,10 +244,9 @@ class TestUserRolePage:
             '//div[label[text()="密码"]]//input',
             '//div[label[text()="确认密码"]]//input',
         ]
-        user.click_all_button("新增")
         user.enter_texts(list_[0], password[0])
         user.enter_texts(list_[1], password[1])
-        user.click_button('//div[label[text()="用户名称"]]//input')
+        user.click_all_button("保存")
         sleep(0.5)
         verify1 = user.get_verify_text("密码")
         verify2 = user.get_verify_text("确认密码")
@@ -264,10 +268,9 @@ class TestUserRolePage:
             '//div[label[text()="密码"]]//input',
             '//div[label[text()="确认密码"]]//input',
         ]
-        user.click_all_button("新增")
         user.enter_texts(list_[0], password[0])
         user.enter_texts(list_[1], password[1])
-        user.click_button('//div[label[text()="用户名称"]]//input')
+        user.click_all_button("保存")
         sleep(0.5)
         verify1 = user.get_verify_text("密码")
         verify2 = user.get_verify_text("确认密码")
@@ -289,10 +292,9 @@ class TestUserRolePage:
             '//div[label[text()="密码"]]//input',
             '//div[label[text()="确认密码"]]//input',
         ]
-        user.click_all_button("新增")
         user.enter_texts(list_[0], password[0])
         user.enter_texts(list_[1], password[1])
-        user.click_button('//div[label[text()="用户名称"]]//input')
+        user.click_all_button("保存")
         sleep(0.5)
         verify1 = user.get_verify_text("密码")
         verify2 = user.get_verify_text("确认密码")
@@ -314,10 +316,9 @@ class TestUserRolePage:
             '//div[label[text()="密码"]]//input',
             '//div[label[text()="确认密码"]]//input',
         ]
-        user.click_all_button("新增")
         user.enter_texts(list_[0], password[0])
         user.enter_texts(list_[1], password[1])
-        user.click_button('//div[label[text()="用户名称"]]//input')
+        user.click_all_button("保存")
         sleep(0.5)
         verify1 = user.get_verify_text("密码")
         verify2 = user.get_verify_text("确认密码")
@@ -339,11 +340,10 @@ class TestUserRolePage:
             '//div[label[text()="密码"]]//input',
             '//div[label[text()="确认密码"]]//input',
         ]
-        user.click_all_button("新增")
         user.enter_texts('//div[label[text()="用户代码"]]//input', "1user1")
         user.enter_texts(list_[0], password[0])
         user.enter_texts(list_[1], password[1])
-        user.click_button('//div[label[text()="用户名称"]]//input')
+        user.click_all_button("保存")
         sleep(0.5)
         verify1 = user.get_verify_text("密码")
         verify2 = user.get_verify_text("确认密码")
@@ -365,10 +365,9 @@ class TestUserRolePage:
             '//div[label[text()="密码"]]//input',
             '//div[label[text()="确认密码"]]//input',
         ]
-        user.click_all_button("新增")
         user.enter_texts(list_[0], password[0])
         user.enter_texts(list_[1], password[1])
-        user.click_button('//div[label[text()="用户名称"]]//input')
+        user.click_all_button("保存")
         sleep(0.5)
         value_list = add.batch_acquisition_input(list_)
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
@@ -386,15 +385,15 @@ class TestUserRolePage:
             '//div[label[text()="密码"]]//input',
             '//div[label[text()="确认密码"]]//input',
         ]
-        user.click_all_button("新增")
         user.enter_texts(list_[0], password[0])
         user.enter_texts(list_[1], password[1])
-        user.click_button('//div[label[text()="用户名称"]]//input')
+        user.click_all_button("保存")
         sleep(0.5)
         verify2 = user.get_verify_text("确认密码")
         value_list = add.get_border_color(['//div[label[text()="确认密码"]]//input'])
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        user.click_all_button("取消")
         assert all(value == expected_color for value in value_list)
         assert verify2 == "与用户密码保持一致！"
         assert not user.has_fail_message()
@@ -414,10 +413,11 @@ class TestUserRolePage:
         message = user.get_find_message()
         user.select_input(name)
         ele = user.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
+        user.right_refresh()
         assert message == "保存成功" and len(ele) == 1 and num == '100000'
         assert not user.has_fail_message()
 
-    @allure.story("校验数字文本框和文本框")
+    @allure.story("删除数字文本框和文本框")
     # @pytest.mark.run(order=1)
     def test_user_delverify10(self, login_to_userrole):
         driver = login_to_userrole  # WebDriver 实例
@@ -426,6 +426,7 @@ class TestUserRolePage:
         user.del_(name)
         user.select_input(name)
         ele = user.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
+        user.right_refresh()
         assert len(ele) == 0
         assert not user.has_fail_message()
 
@@ -443,8 +444,11 @@ class TestUserRolePage:
         # 获取重复弹窗文字
         error_popup = user.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
-        )
-        assert error_popup.text == "记录已存在,请检查！"
+        ).text
+        user.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        user.click_all_button("取消")
+        user.right_refresh()
+        assert error_popup == "记录已存在,请检查！"
         assert not user.has_fail_message()
 
     @allure.story("添加测试数据，设置指定登录方式为扫码")
@@ -453,6 +457,7 @@ class TestUserRolePage:
         driver = login_to_userrole  # WebDriver 实例
         user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
         page = LoginPage(driver)
+        date_driver = DateDriver()
         name = '1user2'
         password = 'Qw123456'
         role = '1测试角色代码2'
@@ -469,6 +474,13 @@ class TestUserRolePage:
         user.click_button('//ul/li/div[text()=" 注销 "]')
         page.login(name, password, '1测试计划单元小日程')
         ele_err = user.finds_elements(By.XPATH, f'//div[@class="ivu-modal-body"]//div[text()=" 用户登录类型错误 "]')
+        user.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        page.login(date_driver.username, date_driver.password, date_driver.planning)
+        user.wait_for_loadingbox()
+        list_ = ["系统管理", "系统设置", "用户权限管理"]
+        for v in list_:
+            page.click_button(f'(//span[text()="{v}"])[1]')
+        user.wait_for_loading_to_disappear()
         assert message == "保存成功" and len(ele) == 1 == len(ele_err)
         assert not user.has_fail_message()
 
@@ -478,6 +490,8 @@ class TestUserRolePage:
         driver = login_to_userrole  # WebDriver 实例
         user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
         page = LoginPage(driver)
+        date_driver = DateDriver()
+
         name = '1user2'
         password = 'Qw1234561'
         user.select_input(name)
@@ -506,6 +520,13 @@ class TestUserRolePage:
         user.click_button('//button[span[text()="关闭"]]')
         page.login(name, 'Qw123456', '1测试计划单元小日程')
         ele_err = user.finds_elements(By.XPATH, f'//div[@class="ivu-modal-body"]//div[text()=" 账户被锁定,请稍后再试. "]')
+        user.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        page.login(date_driver.username, date_driver.password, date_driver.planning)
+        user.wait_for_loadingbox()
+        list_ = ["系统管理", "系统设置", "用户权限管理"]
+        for v in list_:
+            page.click_button(f'(//span[text()="{v}"])[1]')
+        user.wait_for_loading_to_disappear()
         assert 1 == len(ele_err)
         assert not user.has_fail_message()
 
@@ -515,6 +536,7 @@ class TestUserRolePage:
         driver = login_to_userrole  # WebDriver 实例
         user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
         page = LoginPage(driver)
+        date_driver = DateDriver()
         password = 'Qw123456'
         name = '1user2'
         user.select_input(name)
@@ -546,10 +568,24 @@ class TestUserRolePage:
         user.click_button('//div[@class="flex-alignItems-center"]')
         user.click_button('//ul/li/div[text()=" 注销 "]')
         page.login(name, password, '1测试计划单元小日程')
+        err = user.finds_elements(By.XPATH, f'//div[@class="ivu-modal-body"]//div[text()="当前用户已经登录此单元，是否继续登录？"]')
+        if len(err) == 1:
+            user.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+
+        user.wait_for_loadingbox()
         profile_icon = user.get_find_element_xpath(
             f'//div[text()=" 1测试计划单元小日程 "]'
         )
         assert profile_icon.is_displayed()
+        user.click_button('//div[@class="flex-alignItems-center"]')
+        user.click_button('//ul/li/div[text()=" 注销 "]')
+        page.login(date_driver.username, date_driver.password, date_driver.planning)
+        user.wait_for_loadingbox()
+        list_ = ["系统管理", "系统设置", "用户权限管理"]
+        for v in list_:
+            page.click_button(f'(//span[text()="{v}"])[1]')
+        user.wait_for_loading_to_disappear()
+        assert len(err) == 0
         assert not user.has_fail_message()
 
     @allure.story("设置用户禁用成功")
@@ -558,6 +594,8 @@ class TestUserRolePage:
         driver = login_to_userrole  # WebDriver 实例
         user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
         page = LoginPage(driver)
+        date_driver = DateDriver()
+
         name = '1user2'
         password = 'Qw123456'
         user.select_input(name)
@@ -578,6 +616,13 @@ class TestUserRolePage:
         user.click_button('//ul/li/div[text()=" 注销 "]')
         page.login(name, password, '1测试计划单元小日程')
         ele_err = user.finds_elements(By.XPATH, f'//div[@class="ivu-modal-body"]//div[text()=" 用户名或密码无效 "]')
+        user.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        page.login(date_driver.username, date_driver.password, date_driver.planning)
+        user.wait_for_loadingbox()
+        list_ = ["系统管理", "系统设置", "用户权限管理"]
+        for v in list_:
+            page.click_button(f'(//span[text()="{v}"])[1]')
+        user.wait_for_loading_to_disappear()
         assert message == "保存成功" and 1 == len(ele_err)
         assert not user.has_fail_message()
 
@@ -587,6 +632,8 @@ class TestUserRolePage:
         driver = login_to_userrole  # WebDriver 实例
         user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
         page = LoginPage(driver)
+        date_driver = DateDriver()
+
         name = '1user2'
         password = 'Qw123456'
         user.select_input(name)
@@ -609,6 +656,13 @@ class TestUserRolePage:
         user.click_button('//ul/li/div[text()=" 注销 "]')
         page.login(name, password, '1测试计划单元小日程')
         ele_err = user.finds_elements(By.XPATH, f'//div[@class="ivu-modal-body"]//div[text()=" 用户已失效,请联系管理员 "]')
+        user.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        page.login(date_driver.username, date_driver.password, date_driver.planning)
+        user.wait_for_loadingbox()
+        list_ = ["系统管理", "系统设置", "用户权限管理"]
+        for v in list_:
+            page.click_button(f'(//span[text()="{v}"])[1]')
+        user.wait_for_loading_to_disappear()
         assert message == "保存成功" and 1 == len(ele_err)
         assert not user.has_fail_message()
 
@@ -618,6 +672,8 @@ class TestUserRolePage:
         driver = login_to_userrole  # WebDriver 实例
         user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
         page = LoginPage(driver)
+        date_driver = DateDriver()
+
         name = '1user2'
         password = 'Qw123456'
         module = '1测试计划单元标准'
@@ -663,9 +719,17 @@ class TestUserRolePage:
         user.click_button('//div[@class="flex-alignItems-center"]')
         user.click_button('//ul/li/div[text()=" 注销 "]')
         page.login(name, password, module)
-        sleep(3)
+        user.wait_for_loadingbox()
         num_ = len(user.finds_elements(By.XPATH, f'//div[@class="listDivCon"]/div'))
         swich_name = user.get_find_element_xpath(f'//div[@class="ivu-dropdown-rel"]/div').text
+        user.click_button('//div[@class="flex-alignItems-center"]')
+        user.click_button('//ul/li/div[text()=" 注销 "]')
+        page.login(date_driver.username, date_driver.password, date_driver.planning)
+        user.wait_for_loadingbox()
+        list_ = ["系统管理", "系统设置", "用户权限管理"]
+        for v in list_:
+            page.click_button(f'(//span[text()="{v}"])[1]')
+        user.wait_for_loading_to_disappear()
         assert message == "保存成功" and num_ >= 7 and swich_name == module
         assert before_name == after_name and before_sel == after_sel and before_pass == after_pass == '2'
         assert not user.has_fail_message()
@@ -675,7 +739,6 @@ class TestUserRolePage:
     def test_user_lock1(self, login_to_userrole):
         driver = login_to_userrole  # WebDriver 实例
         user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
-        user.wait_for_loading_to_disappear()
         name = '1user2'
         user.select_input(name)
         sleep(1)
@@ -759,6 +822,7 @@ class TestUserRolePage:
         sleep(1)
         eles = user.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr//td[2]')
         list_ = [ele.text for ele in eles]
+        user.right_refresh()
         assert all(text == name for text in list_), f"表格内容不符合预期，实际值: {list_}"
         assert not user.has_fail_message()
 
@@ -882,10 +946,12 @@ class TestUserRolePage:
         user.click_all_button("删除")
         user.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         user.wait_for_loading_to_disappear()
-        message = user.get_find_element_xpath('//div[text()=" 记录已被使用,请检查 "]')
+        message = user.get_find_element_xpath('//div[text()=" 记录已被使用,请检查 "]').text
         eles = user.finds_elements(By.XPATH,
                                    f'(//table[@class="vxe-table--body"])[1]//tr/td[2]//span[text()="{name}"]')
-        assert len(eles) == 1 and message.text == "记录已被使用,请检查"
+        user.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        user.right_refresh('角色管理')
+        assert len(eles) == 1 and message == "记录已被使用,请检查"
         assert not user.has_fail_message()
 
     @allure.story("删除用户成功")
@@ -893,6 +959,8 @@ class TestUserRolePage:
     def test_user_del1(self, login_to_userrole):
         driver = login_to_userrole  # WebDriver 实例
         user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
+        user.click_button('(//span[text()="用户权限管理"])[1]')
+        user.wait_for_loading_to_disappear()
         names = ['1user2']
         user.del_(names)
         for name in names:
@@ -908,6 +976,8 @@ class TestUserRolePage:
         user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
         username = DateDriver().username
         name1 = "1测试角色代码2"
+        name2 = "1测试角色代码4"
+
         # 取消当前用户选中的角色
         user.select_input(username)
         user.click_button(f'(//table[@class="vxe-table--body"])[1]//tr/td[2]//span[text()="{username}"]')
@@ -917,16 +987,10 @@ class TestUserRolePage:
         user.enter_texts('//div[div[p[text()="角色代码"]]]//input', name1)
         sleep(1)
         user.click_button('//table[@class="vxe-table--body"]//tr/td[2]//span[@class="vxe-cell--checkbox is--checked"]')
-        user.click_all_button("保存")
-        user.get_find_message()
-        user.right_refresh()
-
-        name2 = "1测试角色代码4"
-        # 取消当前用户选中的角色
-        user.select_input(username)
-        user.click_button(f'(//table[@class="vxe-table--body"])[1]//tr/td[2]//span[text()="{username}"]')
-        sleep(1)
-        user.click_all_button("编辑")
+        ele = user.get_find_element_xpath(
+            '//div[div[p[text()="角色代码"]]]//input')
+        ele.send_keys(Keys.CONTROL, 'a')
+        ele.send_keys(Keys.DELETE)
         sleep(1)
         user.enter_texts('//div[div[p[text()="角色代码"]]]//input', name2)
         sleep(1)
@@ -935,6 +999,7 @@ class TestUserRolePage:
         user.get_find_message()
 
         user.click_button('(//span[text()="角色管理"])[1]')
+        user.right_refresh('角色管理')
         # 等待遮罩层消失
         user.wait_for_el_loading_mask()
         user.enter_texts('//div[div[p[text()="角色代码"]]]//input', name1)
@@ -972,6 +1037,8 @@ class TestUserRolePage:
         driver = login_to_userrole  # WebDriver 实例
         user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
         page = LoginPage(driver)
+        date_driver = DateDriver()
+
         name = '1user2'
         password = 'Qw123456'
         user.click_button('//div[@class="flex-alignItems-center"]')
@@ -980,6 +1047,13 @@ class TestUserRolePage:
         page.enter_password(password)
         page.click_button('//div[@class="ivu-select-head-flex"]/input')
         ele = user.finds_elements(By.XPATH, '//ul[@class="ivu-select-not-found"]/li[text()="无匹配数据"]')
+
+        page.login(date_driver.username, date_driver.password, date_driver.planning)
+        user.wait_for_loadingbox()
+        list_ = ["系统管理", "系统设置", "用户权限管理"]
+        for v in list_:
+            page.click_button(f'(//span[text()="{v}"])[1]')
+        user.wait_for_loading_to_disappear()
         assert len(ele) == 1
         assert not user.has_fail_message()
 

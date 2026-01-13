@@ -19,7 +19,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")   # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_environment():
     driver = None
     try:
@@ -242,6 +242,7 @@ class TestEnvironmentPage:
         environment.click_save_button()
         message = environment.get_error_message()
         before_value = environment.get_find_element_xpath('//div[label[text()="工作日的起始时间:"]]//input').value_of_css_property("border-color")
+        environment.right_refresh()
         assert before_value == "rgb(237, 64, 20)" and message == "请填写信息"
         assert not environment.has_fail_message()
 
@@ -301,6 +302,7 @@ class TestEnvironmentPage:
         environment.right_refresh()
         environment.click_cycle()
         data2 = current_date.strftime("%Y/%m/%d")
+        environment.right_refresh()
         assert data1 == data2 and message == "保存成功"
         assert not environment.has_fail_message()
 
@@ -318,6 +320,7 @@ class TestEnvironmentPage:
         environment.right_refresh()
         environment.click_cycle()
         check2 = environment.get_find_element_xpath('//div[label[text()="计划基准日期:"]]/div/div/div[2]/label/span').get_attribute("class")
+        environment.right_refresh()
         assert check2 == "ivu-radio ivu-radio-checked" and message == "保存成功"
         assert not environment.has_fail_message()
 
@@ -338,6 +341,7 @@ class TestEnvironmentPage:
         environment.click_save_button()
         message = environment.get_error_message()
         before_value = environment.get_border_color(div_xpth_list)
+        environment.right_refresh()
         assert all(color == "rgb(237, 64, 20)" for color in before_value) and message == "请填写信息"
         assert not environment.has_fail_message()
 
@@ -362,6 +366,7 @@ class TestEnvironmentPage:
         after_value = environment.batch_acquisition_input(xpth_list)
         num_ = "9999999999"
         print(v for v in after_value)
+        environment.right_refresh()
         assert all(num_ == v for v in after_value) and message == "保存成功"
         assert all(after_value), "列表中存在为空或为假值的元素！"
         assert not environment.has_fail_message()
@@ -386,6 +391,7 @@ class TestEnvironmentPage:
         environment.right_refresh()
         environment.click_plan()
         after_value = environment.batch_acquisition_input(xpth_list)
+        environment.right_refresh()
         assert before_value == after_value and message == "保存成功"
         assert all(value == "133" for value in before_value)
         assert not environment.has_fail_message()
@@ -408,6 +414,7 @@ class TestEnvironmentPage:
         environment.right_refresh()
         environment.click_plan()
         after_value = environment.batch_acquisition_input(select_input_list)
+        environment.right_refresh()
         assert before_value == after_value and message == "保存成功"
         assert all(after_value), "列表中存在为空或为假值的元素！"
         assert not environment.has_fail_message()
@@ -430,6 +437,7 @@ class TestEnvironmentPage:
         environment.right_refresh()
         environment.click_plan()
         after_value = environment.batch_acquisition_input(select_input_list)
+        environment.right_refresh()
         assert before_value == after_value and message == "保存成功"
         assert all(after_value), "列表中存在为空或为假值的元素！"
         assert not environment.has_fail_message()
@@ -455,6 +463,7 @@ class TestEnvironmentPage:
         environment.right_refresh()
         environment.click_plan()
         after_value = environment.get_checkbox_value(xpth_list)
+        environment.right_refresh()
         assert before_value == after_value and message == "保存成功"
         assert not all(after_value)
         assert not environment.has_fail_message()
@@ -480,6 +489,7 @@ class TestEnvironmentPage:
         environment.right_refresh()
         environment.click_plan()
         after_value = environment.get_checkbox_value(xpth_list)
+        environment.right_refresh()
         assert before_value == after_value and message == "保存成功"
         assert all(after_value)
         assert not environment.has_fail_message()
@@ -502,6 +512,7 @@ class TestEnvironmentPage:
         environment.right_refresh()
         environment.click_plan()
         after_value = environment.batch_acquisition_input(xpath_list)
+        environment.right_refresh()
         assert before_value == after_value and message == "保存成功"
         assert all(value == "QAseE1@!><?+_+=-33." for value in before_value)
         assert not environment.has_fail_message()
@@ -524,6 +535,7 @@ class TestEnvironmentPage:
         environment.right_refresh()
         environment.click_plan()
         after_value = environment.batch_acquisition_input(xpath_list)
+        environment.right_refresh()
         assert before_value == after_value and message == "保存成功"
         assert all(value == "全部-=" for value in before_value)
         assert not environment.has_fail_message()
@@ -541,7 +553,8 @@ class TestEnvironmentPage:
         environment.click_save_button()
         message = environment.get_find_message()
         environment.right_refresh()
-        text = environment.get_find_element_xpath('//div[@class="navTop"]/div/span').text
+        text = environment.get_find_element_xpath('//div[@class="navTop"]/div/span').get_attribute("innerText")
+        environment.right_refresh()
         assert message == "保存成功" and text == "测试"
         assert not environment.has_fail_message()
 
@@ -558,7 +571,8 @@ class TestEnvironmentPage:
         environment.click_save_button()
         message = environment.get_find_message()
         environment.right_refresh()
-        text = environment.get_find_element_xpath('//div[@class="navTop"]/div/span').text
+        text = environment.get_find_element_xpath('//div[@class="navTop"]/div/span').get_attribute("innerText")
+        environment.right_refresh()
         assert message == "保存成功" and text == "Elligent SCP"
         assert not environment.has_fail_message()
 

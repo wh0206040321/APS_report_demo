@@ -28,6 +28,7 @@ class CustomerPage(BasePage):
     def click_sel_button(self):
         """点击查询按钮."""
         self.click(By.XPATH, '//p[text()="查询"]')
+        self.wait_for_el_loading_mask()
 
     def click_ref_button(self):
         """点击刷新按钮."""
@@ -94,6 +95,15 @@ class CustomerPage(BasePage):
         message = WebDriverWait(self.driver, 10).until(
             EC.visibility_of_element_located(
                 (By.XPATH, '//div[@class="el-message el-message--success"]/p')
+            )
+        )
+        return message.text
+
+    def get_error_message(self):
+        """获取错误信息"""
+        message = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(
+                (By.XPATH, '//div[@class="el-message el-message--error"]/p')
             )
         )
         return message.text
@@ -241,3 +251,30 @@ class CustomerPage(BasePage):
                         self.enter_texts(xpath, value)
 
             self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+
+    def hover(self, name=""):
+        # 悬停模版容器触发图标显示
+        container = self.get_find_element_xpath(
+            f'//span[@class="position-absolute font12 right10"]'
+        )
+        ActionChains(self.driver).move_to_element(container).perform()
+
+        # 2️⃣ 等待图标可见
+        delete_icon = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located((
+                By.XPATH,
+                f'//ul/li[contains(text(),"{name}")]'
+            ))
+        )
+
+        # 3️⃣ 再点击图标
+        delete_icon.click()
+
+    def select_input(self, name):
+        """选择输入框."""
+        xpath = '//p[text()="客户代码"]/ancestor::div[2]//input'
+        ele = self.get_find_element_xpath(xpath)
+        ele.send_keys(Keys.CONTROL + "a")
+        ele.send_keys(Keys.DELETE)
+        self.enter_texts(xpath, name)
+        sleep(1)

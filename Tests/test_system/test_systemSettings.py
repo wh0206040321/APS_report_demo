@@ -4,6 +4,7 @@ from datetime import datetime
 from time import sleep
 
 import allure
+import pyautogui
 import pytest
 from selenium.webdriver import Keys
 from selenium.webdriver.common.action_chains import ActionChains
@@ -19,7 +20,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_systemSettings():
     driver = None
     try:
@@ -71,7 +72,8 @@ class TestSystemSettingsPage:
         settings.click_save_button()
         maeessage = settings.get_find_message()
         settings.log_out()
-        ele = settings.get_find_element_xpath('//div[@class="copyRight"]').text
+        ele = settings.get_find_element_xpath('//div[@class="copyRight"]').get_attribute('innerText')
+        settings.login()
         assert maeessage == "保存成功"
         assert text in ele
         assert not settings.has_fail_message()
@@ -89,7 +91,8 @@ class TestSystemSettingsPage:
         settings.click_save_button()
         maeessage = settings.get_find_message()
         settings.log_out()
-        ele = settings.get_find_element_xpath('//div[@class="copyRight"]').text
+        ele = settings.get_find_element_xpath('//div[@class="copyRight"]').get_attribute('innerText')
+        settings.login()
         assert maeessage == "保存成功"
         assert text in ele
         assert not settings.has_fail_message()
@@ -133,6 +136,7 @@ class TestSystemSettingsPage:
         # 3. 等待上传完成并断言结果
         assert maeessage == "保存成功" and len(ele) == 1
         assert not settings.has_fail_message()
+        pyautogui.press('esc')
 
     @allure.story("LOGO显示方式为仅显示图标")
     # @pytest.mark.run(order=1)
@@ -188,6 +192,7 @@ class TestSystemSettingsPage:
         maeessage = settings.get_find_message()
         settings.log_out()
         ele = settings.get_find_element_xpath('//div[@id="app"]/div/div[@class="logoHead"]').get_attribute("style")
+        settings.login()
         assert maeessage == "保存成功" and ele == "display: none;"
         assert not settings.has_fail_message()
 
@@ -204,6 +209,7 @@ class TestSystemSettingsPage:
         maeessage = settings.get_find_message()
         settings.log_out()
         ele = settings.get_find_element_xpath('//div[@id="app"]/div/div[@class="logoHead"]').get_attribute("style")
+        settings.login()
         assert maeessage == "保存成功" and ele == ""
         assert not settings.has_fail_message()
 
@@ -233,7 +239,8 @@ class TestSystemSettingsPage:
 
         settings.log_out()
         img = settings.finds_elements(By.XPATH, '//div[@id="app"]/div/div[@class="view-left"]/div[1]/div')
-
+        pyautogui.press('esc')
+        settings.login()
         assert maeessage == "保存成功" and len(ele) == 1
         assert len(img) == 1
         assert not settings.has_fail_message()
@@ -251,6 +258,7 @@ class TestSystemSettingsPage:
         ele = settings.finds_elements(By.XPATH, '//div[p[text()=" 登录背景图: "]]/div//img')
         settings.log_out()
         img = settings.finds_elements(By.XPATH, '//div[@id="app"]/div/div[@class="view-left"]/div[1]/div')
+        settings.login()
         assert maeessage == "保存成功" and len(ele) == 0
         assert len(img) == 2
         assert not settings.has_fail_message()
@@ -266,6 +274,7 @@ class TestSystemSettingsPage:
         maeessage = settings.get_find_message()
         settings.log_out()
         ele = settings.finds_elements(By.XPATH, '//div[@class="LoginTypeTab"]//li[text()=" 域账号登录 "]')
+        settings.login()
         assert maeessage == "保存成功" and len(ele) == 1
         assert not settings.has_fail_message()
 
@@ -280,6 +289,7 @@ class TestSystemSettingsPage:
         maeessage = settings.get_find_message()
         settings.log_out()
         ele = settings.finds_elements(By.XPATH, '//div[@class="LoginTypeTab"]//li[text()=" 域账号登录 "]')
+        settings.login()
         assert maeessage == "保存成功" and len(ele) == 0
         assert not settings.has_fail_message()
 

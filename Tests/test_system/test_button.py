@@ -19,7 +19,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_button():
     driver = None
     try:
@@ -77,6 +77,7 @@ class TestSButtonPage:
         sleep(1)
         button.click_confirm()
         message = button.get_error_message()
+        button.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert layout == name
         assert message == "校验不通过，请检查标红的表单字段！"
         assert not button.has_fail_message()
@@ -98,6 +99,7 @@ class TestSButtonPage:
         add.batch_modify_input(xpath_list[:1], name)
         button.click_confirm()
         message = button.get_error_message()
+        button.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "校验不通过，请检查标红的表单字段！"
         assert not button.has_fail_message()
 
@@ -118,6 +120,7 @@ class TestSButtonPage:
         add.batch_modify_input(xpath_list[:2], name)
         button.click_confirm()
         message = button.get_error_message()
+        button.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "校验不通过，请检查标红的表单字段！"
         assert not button.has_fail_message()
 
@@ -165,7 +168,9 @@ class TestSButtonPage:
         add.click_button(xpath_list[3])
         button.click_confirm()
         sleep(1)
-        message = button.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').text
+        message = button.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        button.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        button.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "记录已存在,请检查！"
         assert not button.has_fail_message()
 
@@ -189,6 +194,7 @@ class TestSButtonPage:
         sleep(1)
         ele = button.get_find_element_xpath(xpath_list[0])
         assert not ele.is_enabled()
+        button.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert not button.has_fail_message()
 
     @allure.story("添加测试按钮成功")
@@ -243,6 +249,7 @@ class TestSButtonPage:
         button.select_input_button(after_name)
         button.wait_for_loading_to_disappear()
         eles1 = button.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]/td[3]').text
+        button.right_refresh('工具栏按钮管理')
         assert eles1 == after_name
         assert message == "编辑成功！"
         assert not button.has_fail_message()
@@ -295,6 +302,7 @@ class TestSButtonPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
+        button.right_refresh('工具栏按钮管理')
         assert itemcode == name and len(itemcode2) == 0
         assert not button.has_fail_message()
 
@@ -341,6 +349,7 @@ class TestSButtonPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
         )
+        button.right_refresh('工具栏按钮管理')
         assert len(itemcode) == 0
         assert not button.has_fail_message()
 
@@ -385,6 +394,7 @@ class TestSButtonPage:
         # 点击确认
         button.click_select_button()
         eles = button.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
+        button.right_refresh('工具栏按钮管理')
         assert len(eles) > 0
         assert all(name in ele for ele in eles)
         assert not button.has_fail_message()
@@ -401,6 +411,7 @@ class TestSButtonPage:
         sleep(2)
         eles = button.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         list_ = [ele.text for ele in eles]
+        button.right_refresh('工具栏按钮管理')
         assert all(name in text for text in list_), f"表格内容不符合预期，实际值: {list_}"
         assert not button.has_fail_message()
 
@@ -421,6 +432,7 @@ class TestSButtonPage:
         sleep(1)
         button.click_button('//div[p[text()="按钮代码"]]/following-sibling::div//input')
         eles = button.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        button.right_refresh('工具栏按钮管理')
         assert len(eles) == 0
         assert not button.has_fail_message()
 
@@ -440,6 +452,7 @@ class TestSButtonPage:
         eles = button.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        button.right_refresh('工具栏按钮管理')
         assert all(name in text for text in list_)
         assert not button.has_fail_message()
 
@@ -459,6 +472,7 @@ class TestSButtonPage:
         eles = button.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        button.right_refresh('工具栏按钮管理')
         assert all(str(item).startswith(name) for item in list_)
         assert not button.has_fail_message()
 
@@ -478,6 +492,7 @@ class TestSButtonPage:
         eles = button.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        button.right_refresh('工具栏按钮管理')
         assert all(str(item).endswith(name) for item in list_)
         assert not button.has_fail_message()
 

@@ -77,6 +77,7 @@ class TestAffairsPage:
         color_value = affairs.get_border_color(list_input)
         div_xpath_list = [item.replace("//input", '//div[@class="el-form-item__error"]') for item in list_input]
         value = affairs.batch_acquisition_text(div_xpath_list)
+        affairs.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert all(color == "rgb(245, 108, 108)" for color in color_value)
         assert value == ['请输入事务名称', '请选择事务类型', '请输入配置参数']
         assert not affairs.has_fail_message()
@@ -95,6 +96,7 @@ class TestAffairsPage:
         color_value = affairs.get_border_color(list_input)
         div_xpath_list = [item.replace("//input", '//div[@class="el-form-item__error"]') for item in list_input]
         value = affairs.batch_acquisition_text(div_xpath_list)
+        affairs.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert all(color == "rgb(245, 108, 108)" for color in color_value)
         assert value == ['请选择事务类型', '请输入配置参数']
         assert not affairs.has_fail_message()
@@ -116,6 +118,7 @@ class TestAffairsPage:
         color_value = affairs.get_border_color(list_input)
         div_xpath_list = [item.replace("//input", '//div[@class="el-form-item__error"]') for item in list_input]
         value = affairs.batch_acquisition_text(div_xpath_list)
+        affairs.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert all(color == "rgb(245, 108, 108)" for color in color_value)
         assert value == ['请输入事务名称']
         assert not affairs.has_fail_message()
@@ -129,6 +132,8 @@ class TestAffairsPage:
         affairs.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         mes = affairs.get_error_message()
+        affairs.click_button('(//div[@class="vxe-modal--footer"]//span[text()="取消"])[2]')
+        affairs.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert mes == "请把信息填写完整"
         assert not affairs.has_fail_message()
 
@@ -191,6 +196,8 @@ class TestAffairsPage:
         affairs.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         mes = affairs.get_error_message()
+        affairs.click_button('(//div[@class="vxe-modal--footer"]//span[text()="取消"])[2]')
+        affairs.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert mes == '自定义值需以http或https开头'
         assert not affairs.has_fail_message()
 
@@ -243,6 +250,8 @@ class TestAffairsPage:
         affairs.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         mes = affairs.get_error_message()
+        affairs.click_button('(//div[@class="vxe-modal--footer"]//span[text()="取消"])[2]')
+        affairs.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert mes == "请把信息填写完整"
         assert not affairs.has_fail_message()
 
@@ -257,6 +266,8 @@ class TestAffairsPage:
         affairs.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         mes = affairs.get_error_message()
+        affairs.click_button('(//div[@class="vxe-modal--footer"]//span[text()="取消"])[2]')
+        affairs.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert mes == "请把信息填写完整"
         assert not affairs.has_fail_message()
 
@@ -327,6 +338,7 @@ class TestAffairsPage:
         affairs.click_button(
             '//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         mes = affairs.get_error_message()
+        affairs.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert mes == "事务已存在"
         assert not affairs.has_fail_message()
 
@@ -440,6 +452,7 @@ class TestAffairsPage:
         affairs.click_button(
             '//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         mes = affairs.get_error_message()
+        affairs.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert mes == "事务已存在"
         assert not affairs.has_fail_message()
 
@@ -515,7 +528,7 @@ class TestAffairsPage:
         affairs.get_find_message()
         ele = driver.find_elements(By.XPATH, f'//div[@class="template-card__title"]/div[text()="{name}"]')
         value = ele[0].find_element(By.XPATH, './ancestor::div[3]/div[3]/div').text
-        assert type1 == type2 ==value and value != type
+        assert type1 == type2 == value and value != type
         assert not affairs.has_fail_message()
 
     @allure.story("事务模版-循环删除模版成功")

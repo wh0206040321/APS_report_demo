@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from Pages.base_page import BasePage
+from Pages.itemsPage.login_page import LoginPage
 from Utils.data_driven import DateDriver
 
 
@@ -73,6 +74,14 @@ class SystemSettingsPage(BasePage):
                 (By.XPATH, '//div[@class="loadingbox"]')
             )
         )
+
+    def login(self):
+        date_driver = DateDriver()
+        page = LoginPage(self.driver)
+        page.login(date_driver.username, date_driver.password, date_driver.planning)
+        list_ = ["系统管理", "系统设置", "系统标识设置"]
+        for v in list_:
+            page.click_button(f'(//span[text()="{v}"])[1]')
 
     def click_save_button(self):
         """点击保存按钮."""

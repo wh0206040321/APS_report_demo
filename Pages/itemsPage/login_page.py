@@ -42,6 +42,13 @@ class LoginPage(BasePage):
         self.click_login_button()
         sleep(1)
 
+    def wait_for_loadingbox(self, timeout=30):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located(
+                (By.XPATH, '//div[@class="loadingbox"]')
+            )
+        )
+
     def click_login_button(self):
         self.click_button('//button[contains(@class, "ivu-btn-primary")]')
 

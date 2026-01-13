@@ -28,10 +28,22 @@ class SettingPage(BasePage):
         except NoSuchElementException:
             return None
 
+    def click_select_button(self):
+        """点击查询按钮."""
+        self.click_button('//div[@class="queryBtn"]/button[1]')
+        self.wait_for_loading_to_disappear()
+
+    def click_last_button(self):
+        """点击最后一条按钮."""
+        self.click_button('(//button[@class="ivu-btn ivu-btn-primary"])[last()]')
+        self.wait_for_el_loading_mask()
+
     def add_layout(self):
         """添加布局."""
         self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[2]//i')
         self.click_button('//li[text()="添加新布局"]')
+        self.wait_for_el_loading_mask()
+        sleep(2)
 
     def loop_judgment(self, xpath):
         """循环判断"""
@@ -50,6 +62,7 @@ class SettingPage(BasePage):
         检查页面上是否存在class中包含'vxe-loading'的div元素，
         以此判断加载遮罩是否消失。
         """
+        sleep(1)
         try:
             WebDriverWait(self.driver, timeout).until(
                 EC.invisibility_of_element_located(
@@ -257,3 +270,12 @@ class SettingPage(BasePage):
         )
         # 3️⃣ 再点击图标
         delete_icon.click()
+
+    def right_refresh(self, name):
+        """右键刷新."""
+        but = self.get_find_element_xpath(f'//div[@class="scroll-body"]/div[.//div[text()=" {name} "]]')
+        but.click()
+        # 右键点击
+        ActionChains(self.driver).context_click(but).perform()
+        self.click_button('//li[text()=" 刷新"]')
+        self.wait_for_loading_to_disappear()

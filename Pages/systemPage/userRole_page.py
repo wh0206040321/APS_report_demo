@@ -73,6 +73,13 @@ class UserRolePage(BasePage):
             EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
         )
 
+    def wait_for_loadingbox(self, timeout=30):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located(
+                (By.XPATH, '//div[@class="loadingbox"]')
+            )
+        )
+
     def click_all_button(self, name):
         """点击按钮."""
         self.click_button(f'//div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//p[text()="{name}"]')

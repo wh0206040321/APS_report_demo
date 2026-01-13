@@ -114,3 +114,10 @@ class ResourceAllocationPage(BasePage):
         list_ = ["计划管理", "计划基础数据", "资源"]
         for v in list_:
             page.click_button(f'(//span[text()="{v}"])[1]')
+
+    def wait_for_loadingbox(self, timeout=30):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located(
+                (By.XPATH, '//div[@class="loadingbox"]')
+            )
+        )
