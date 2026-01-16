@@ -1,0 +1,13 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[text()=" 生产特征5 "]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[div[text()=" 生产特征5 "]]/span
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="生产特征6"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //tr[./td[2][.//span[text()="1测试生产特征66"]]]/td[2]
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //tr[./td[2][.//span[text()="1测试生产特征6"]]]/td[2]
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //tr[./td[2][.//span[text()="1修改生产特征66"]]]/td[2]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="新增"]
+[31m[1mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[text()=" 生产特征5 "]
+[31m[1mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击

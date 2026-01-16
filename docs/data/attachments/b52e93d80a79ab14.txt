@@ -1,4 +1,0 @@
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//p[text()="解除所有锁定"]
-[31m[1mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//p[text()="解除所有锁定"]
-[31m[1mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
