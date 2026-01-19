@@ -1,5 +1,0 @@
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //tr[./td[7][.//span[text()="111"]]]/td[2]
-[31m[1mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //tr[./td[7][.//span[text()="111"]]]/td[2]
-[31m[1mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
-[32mINFO    [0m root:driver_manager.py:56 🛑 已从实例池移除并关闭 driver：1390061541872

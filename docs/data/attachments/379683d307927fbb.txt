@@ -1,0 +1,61 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//p[text()="新增"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@id="twqlo0fa-ulcj"]//i
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[div[text()="请选择图标"]]/following-sibling::div//div[@class="flex-wrap"]/div
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="vxe-modal--footer"]//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[div[span[text()=" 组件代码"]]]//input
+[33mWARNING [0m root:base_page.py:97 ⚠️ clear() 清空失败：Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=142.0.7444.60); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff74af1fe35
+	0x7ff74af1fe90
+	0x7ff74aca139d
+	0x7ff74aca918f
+	0x7ff74acac1ef
+	0x7ff74acac2af
+	0x7ff74acfc04d
+	0x7ff74acef24e
+	0x7ff74ad2265a
+	0x7ff74acec7a6
+	0x7ff74ad4b61b
+	0x7ff74aceac6d
+	0x7ff74acebae3
+	0x7ff74b1ea10d
+	0x7ff74b1e448a
+	0x7ff74b205157
+	0x7ff74af3a81e
+	0x7ff74af4262f
+	0x7ff74af29324
+	0x7ff74af294df
+	0x7ff74af0ee88
+	0x7ff9e6a37374
+	0x7ff9e86dcc91
+，尝试使用 JS 清空
+[33mWARNING [0m root:base_page.py:102 ❌ JS 清空也失败：Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=142.0.7444.60); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff74af1fe35
+	0x7ff74af1fe90
+	0x7ff74aca139d
+	0x7ff74aca918f
+	0x7ff74acac582
+	0x7ff74ad4c9bf
+	0x7ff74ad2265a
+	0x7ff74ad4b61b
+	0x7ff74aceac6d
+	0x7ff74acebae3
+	0x7ff74b1ea10d
+	0x7ff74b1e448a
+	0x7ff74b205157
+	0x7ff74af3a81e
+	0x7ff74af4262f
+	0x7ff74af29324
+	0x7ff74af294df
+	0x7ff74af0ee88
+	0x7ff9e6a37374
+	0x7ff9e86dcc91

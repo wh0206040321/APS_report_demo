@@ -1,0 +1,2 @@
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[div[span[text()=" 组件代码"]]]//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="scroll-body"]/div[.//div[text()=" 菜单组件 "]]

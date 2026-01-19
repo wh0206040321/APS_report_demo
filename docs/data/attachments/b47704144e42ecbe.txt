@@ -1,0 +1,65 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //table[@class="vxe-table--body"]//tr[2]//td[2]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//table[@class="vxe-table--body"]//tr[1]/td[2])[2]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[33mWARNING [0m root:base_page.py:97 ⚠️ clear() 清空失败：Message: invalid element state: Element is not currently interactable and may not be manipulated
+  (Session info: chrome=142.0.7444.60)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff74af1fe35
+	0x7ff74af1fe90
+	0x7ff74aca139d
+	0x7ff74aca918f
+	0x7ff74acac1ef
+	0x7ff74acac2af
+	0x7ff74acefcea
+	0x7ff74ad2265a
+	0x7ff74acec7a6
+	0x7ff74ad4b61b
+	0x7ff74aceac6d
+	0x7ff74acebae3
+	0x7ff74b1ea10d
+	0x7ff74b1e448a
+	0x7ff74b205157
+	0x7ff74af3a81e
+	0x7ff74af4262f
+	0x7ff74af29324
+	0x7ff74af294df
+	0x7ff74af0ee88
+	0x7ff9e6a37374
+	0x7ff9e86dcc91
+，尝试使用 JS 清空
+[32mINFO    [0m root:base_page.py:100 ✅ JS 清空成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //table[@class="vxe-table--body"]//tr[2]//td[2]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//table[@class="vxe-table--body"]//tr[1]/td[2])[2]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[33mWARNING [0m root:base_page.py:97 ⚠️ clear() 清空失败：Message: invalid element state: Element is not currently interactable and may not be manipulated
+  (Session info: chrome=142.0.7444.60)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff74af1fe35
+	0x7ff74af1fe90
+	0x7ff74aca139d
+	0x7ff74aca918f
+	0x7ff74acac1ef
+	0x7ff74acac2af
+	0x7ff74acefcea
+	0x7ff74ad2265a
+	0x7ff74acec7a6
+	0x7ff74ad4b61b
+	0x7ff74aceac6d
+	0x7ff74acebae3
+	0x7ff74b1ea10d
+	0x7ff74b1e448a
+	0x7ff74b205157
+	0x7ff74af3a81e
+	0x7ff74af4262f
+	0x7ff74af29324
+	0x7ff74af294df
+	0x7ff74af0ee88
+	0x7ff9e6a37374
+	0x7ff9e86dcc91
+，尝试使用 JS 清空
+[32mINFO    [0m root:base_page.py:100 ✅ JS 清空成功

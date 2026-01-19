@@ -1,0 +1,4 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="角色管理"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//table[@class="vxe-table--body"])[1]//tr/td[2]//span[text()="1测试角色代码2"]
+[1m[31mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击

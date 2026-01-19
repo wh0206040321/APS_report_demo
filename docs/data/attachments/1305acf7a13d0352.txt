@@ -1,0 +1,61 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="PSI设置"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //table[@class="vxe-table--body"]//tr/td[2]//span[text()="1测试psi1"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="删除"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //p[text()="PSI名称"]/ancestor::div[2]//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //table[@class="vxe-table--body"]//tr/td[2]//span[text()="1测试psi2"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="删除"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //p[text()="PSI名称"]/ancestor::div[2]//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //table[@class="vxe-table--body"]//tr/td[2]//span[text()="1测试psi3"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="删除"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //p[text()="PSI名称"]/ancestor::div[2]//input
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //table[@class="vxe-table--body"]//tr/td[2]//span[text()="1测试psi1"]
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //table[@class="vxe-table--body"]//tr/td[2]//span[text()="1测试psi2"]
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //table[@class="vxe-table--body"]//tr/td[2]//span[text()="1测试psi3"]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="计划运行"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="方案管理"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="计划方案管理"])[1]
+[33mWARNING [0m root:base_page.py:81 点击失败：Message: element not interactable
+  (Session info: chrome=142.0.7444.60)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff74af1fe35
+	0x7ff74af1fe90
+	0x7ff74aca11a5
+	0x7ff74acfb343
+	0x7ff74aced2ef
+	0x7ff74ad2265a
+	0x7ff74acec7a6
+	0x7ff74ad4b61b
+	0x7ff74aceac6d
+	0x7ff74acebae3
+	0x7ff74b1ea10d
+	0x7ff74b1e448a
+	0x7ff74b205157
+	0x7ff74af3a81e
+	0x7ff74af4262f
+	0x7ff74af29324
+	0x7ff74af294df
+	0x7ff74af0ee88
+	0x7ff9e6a37374
+	0x7ff9e86dcc91
+
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="计划方案管理"])[1]
+[1m[31mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="PSI设置"])[1]
+[1m[31mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
+[32mINFO    [0m root:driver_manager.py:56 🛑 已从实例池移除并关闭 driver：2074415514240

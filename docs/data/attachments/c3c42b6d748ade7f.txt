@@ -1,0 +1,9 @@
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="计划单元"]/ancestor::div[2]/div[3]//i
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //span[@class="position-absolute font12 right10"]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[div[p[text()="计划单元"]]]//input
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //table[@class="vxe-table--body"]//tr//td[2]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="scroll-body"]/div[.//div[text()=" 计划单元 "]]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()=" 刷新"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
