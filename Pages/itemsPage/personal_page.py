@@ -147,9 +147,10 @@ class PersonalPage(BasePage):
         3. 保存配置。
         4. 依次点击计划运行、计算工作台、计划计算，进入计划计算页面。
         """
-        self.click_button('(//span[text()="系统管理"])[1]')  # 点击系统管理
-        self.click_button('(//span[text()="单元设置"])[1]')  # 点击单元设置
-        self.click_button('(//span[text()="环境设置"])[1]')  # 点击环境设置
+        list_ = ["系统管理", "单元设置", "环境设置"]
+        for v in list_:
+            sleep(0.5)
+            self.click_button(f'(//span[text()="{v}"])[1]')
         sleep(2)
         radio = self.get_find_element('//label[text()=" 服务器"]/span')
         sleep(1)

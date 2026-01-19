@@ -72,7 +72,7 @@ class ItemPage(BasePage):
         """删除物料信息."""
         # 定位内容为‘1测试A’的行
         self.click_button(
-            f'(//span[text()="{material_code}"])[1]/ancestor::tr[1]/td[2]'
+            f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{material_code}"]'
         )
         self.click_del_button()  # 点击删除
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')

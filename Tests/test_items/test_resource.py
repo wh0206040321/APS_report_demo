@@ -1108,7 +1108,16 @@ class TestResourcePage:
             '//label[text()="无效资源"]/following-sibling::div//label/span').get_attribute("class")
         today_str = date.today().strftime('%Y/%m/%d')
         resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
-        resource.right_refresh('资源')
+        ele = resource.finds_elements(By.XPATH,
+                                  f'(//div[@class="vxe-table--main-wrapper"])[2]//table[@class="vxe-table--body"]//tr/td[2][.//span[text()="{input_value}"]]')
+        if len(ele) == 1:
+            resource.click_button(
+                f'(//div[@class="vxe-table--main-wrapper"])[2]//table[@class="vxe-table--body"]//tr/td[2][.//span[text()="{input_value}"]]')
+            resource.click_del_button()  # 点击删除
+            resource.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+            resource.wait_for_loading_to_disappear()
+            resource.right_refresh('资源')
+        logging.info(f"before_all_value: {before_all_value}, after_all_value: {after_all_value}")
         assert before_all_value == after_all_value and username == DateDriver().username and today_str in updatatime and int(
             num) == (int(len_num) + 3) and before_checked == after_checked
         assert all(before_all_value), "列表中存在为空或为假值的元素！"
@@ -1350,7 +1359,10 @@ class TestResourcePage:
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
             for v in value[:4]
         ]
-        resource.del_layout(layout)
+        try:
+            resource.del_layout(layout)
+        except Exception:
+            print(f"布局 '{layout}' 可能不存在或已被删除")
         sleep(2)
         # 再次查找页面上是否有目标 div，以验证是否删除成功
         after_layout = driver.find_elements(

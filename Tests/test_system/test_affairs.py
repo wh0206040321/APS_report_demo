@@ -658,7 +658,7 @@ class TestAffairsPage:
         affairs.add_process(name=name, type="服务", frequency="一次", time="一次")
         affairs.click_save()
         message = affairs.get_find_message()
-        ele = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[2][div[text()="{name}"]]]')
+        ele = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
         assert message == "新增成功！" and len(ele) == 1
         assert not affairs.has_fail_message()
 
@@ -672,7 +672,7 @@ class TestAffairsPage:
         affairs.add_process(name=name, type="服务", frequency="每天", time="1")
         affairs.click_save()
         message = affairs.get_find_message()
-        ele = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[2][div[text()="{name}"]]]')
+        ele = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
         assert message == "新增成功！" and len(ele) == 1
         assert not affairs.has_fail_message()
 
@@ -686,7 +686,7 @@ class TestAffairsPage:
         affairs.add_process(name=name, type="服务", frequency="每天", time="2")
         affairs.click_save()
         message = affairs.get_find_message()
-        ele = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[2][div[text()="{name}"]]]')
+        ele = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
         assert message == "新增成功！" and len(ele) == 1
         assert not affairs.has_fail_message()
 
@@ -700,7 +700,7 @@ class TestAffairsPage:
         affairs.add_process(name=name, type="服务", frequency="周", time="周")
         affairs.click_save()
         message = affairs.get_find_message()
-        ele = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[2][div[text()="{name}"]]]')
+        ele = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
         assert message == "新增成功！" and len(ele) == 1
         assert not affairs.has_fail_message()
 
@@ -714,7 +714,7 @@ class TestAffairsPage:
         affairs.add_process(name=name, type="服务", frequency="月", time="月")
         affairs.click_save()
         message = affairs.get_find_message()
-        ele = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[2][div[text()="{name}"]]]')
+        ele = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
         assert message == "新增成功！" and len(ele) == 1
         assert not affairs.has_fail_message()
 
@@ -864,8 +864,8 @@ class TestAffairsPage:
         ele1 = driver.find_elements(By.XPATH, f'//div[@class="template-card__title"]/div[text()="{process_name}"]')
         affairs.click_process()
         affairs.wait_for_el_loading_mask()
-        ele2 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[2][div[text()="{name}"]]]')
-        ele3 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[1]//div[text()="{process_name}"]]')
+        ele2 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
+        ele3 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[2]//div[text()="{process_name}"]]')
         assert message == "新增成功！" and len(ele1) == 1 == len(ele2) == len(ele3) and value[1] == process_name
         assert not affairs.has_fail_message()
 
@@ -887,11 +887,11 @@ class TestAffairsPage:
         affairs.right_refresh()
         affairs.click_process()
         affairs.wait_for_el_loading_mask()
-        ele1 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[2][div[text()="{name}"]]]')
+        ele1 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
         # 一次性获取所有匹配的元素
         elements = affairs.finds_elements(
             By.XPATH,
-            f'//table[@class="el-table__body"]//tr[td[2][div[text()="{name}"]]]/td[1]//div[@class="flow-direction"]/div'
+            f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]/td[2]//div[@class="flow-direction"]/div'
         )
 
         # 直接提取所有元素的文本到列表
@@ -944,14 +944,14 @@ class TestAffairsPage:
         affairs.click_process()
         affairs.add_process(name=name, type="服务", frequency="每天")
         affairs.enter_texts('//textarea[@prop="comments"]', name)
-        sleep(2)
+        sleep(3)
         affairs.click_next()
         value1 = affairs.add_process_affairs(add=False, sel=sel)
         affairs.click_save()
         message = affairs.get_find_message()
         affairs.right_refresh()
         affairs.click_process()
-        ele1 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[2][div[text()="{name}"]]]')
+        ele1 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
         affairs.click_process_update(name)
         sleep(1)
         list_ = affairs.batch_acquisition_input(xpth_list)
@@ -979,7 +979,7 @@ class TestAffairsPage:
         for index, row in enumerate(rows, start=1):
             div_text = row.find_element(
                 By.XPATH,
-                './td[1]//div[@class="flow-direction"]/div'
+                './td[2]//div[@class="flow-direction"]/div'
             ).text.strip()
 
             assert template_name == div_text, (
@@ -1008,7 +1008,7 @@ class TestAffairsPage:
         for index, row in enumerate(rows, start=1):
             div_class = row.find_element(
                 By.XPATH,
-                './td[6]/div/span'
+                './td[7]/div/span'
             ).get_attribute("class")
 
             assert "ivu-switch-checked" in div_class, (
@@ -1037,7 +1037,7 @@ class TestAffairsPage:
         for index, row in enumerate(rows, start=1):
             div_class = row.find_element(
                 By.XPATH,
-                './td[6]/div/span'
+                './td[7]/div/span'
             ).get_attribute("class")
 
             assert "ivu-switch-checked" not in div_class, (
@@ -1067,7 +1067,7 @@ class TestAffairsPage:
         for index, row in enumerate(rows, start=1):
             div_text = row.find_element(
                 By.XPATH,
-                './td[2]/div'
+                './td[3]/div'
             ).text.strip()
 
             assert name == div_text, (
@@ -1088,10 +1088,10 @@ class TestAffairsPage:
         sleep(1)
         affairs.click_process()
         affairs.select_all(template_name, enable, name)
-        td1 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[1]//tr[1]/td[1]//div[@class="flow-direction"]/div').text
-        td2 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[1]//tr[1]/td[2]/div').text
-        td6 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[1]//tr[1]/td[6]/div/span').get_attribute("class")
-        ele = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[1]//tr[2]')
+        td1 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[1]//tr[1]/td[2]//div[@class="flow-direction"]/div').text
+        td2 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[1]//tr[1]/td[3]/div').text
+        td6 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[1]//tr[1]/td[7]/div/span').get_attribute("class")
+        ele = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[1]//tr[3]')
         assert td1 == template_name and td2 == name and td6 == "ivu-switch ivu-switch-checked ivu-switch-default" and len(ele) == 0
         assert not affairs.has_fail_message()
 
@@ -1192,7 +1192,7 @@ class TestAffairsPage:
         message = affairs.get_find_message()
         affairs.right_refresh()
         affairs.click_process()
-        eles = affairs.finds_elements(By.XPATH, f'(//table[@class="el-table__body"])[1]//tr[td[2]/div[text()="{name}"]]//div[@class="flow-direction"]/div')
+        eles = affairs.finds_elements(By.XPATH, f'(//table[@class="el-table__body"])[1]//tr[td[3]/div[text()="{name}"]]//div[@class="flow-direction"]/div')
         list_ = [ele.text for ele in eles]
         assert message == '编辑成功！'
         assert aff in list_
@@ -1256,7 +1256,7 @@ class TestAffairsPage:
         affairs.right_refresh()
         affairs.click_process()
         eles = affairs.finds_elements(By.XPATH,
-                                      f'(//table[@class="el-table__body"])[1]//tr[td[2]/div[text()="{name}"]]//div[@class="flow-direction"]/div')
+                                      f'(//table[@class="el-table__body"])[1]//tr[td[3]/div[text()="{name}"]]//div[@class="flow-direction"]/div')
         list_ = [ele.text for ele in eles]
         assert message == '编辑成功！'
         assert aff in list_
@@ -1284,10 +1284,10 @@ class TestAffairsPage:
         affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
         name = "添加全部成功"
         affairs.click_process()
-        affairs.click_button(f'//table[@class="el-table__body"]//tr[td[2][div[text()="{name}"]]]/td[last()]//span[text()="复制"]')
+        affairs.click_button(f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]/td[last()]//span[text()="复制"]')
         affairs.click_button('//div[@class="ivu-modal-confirm-footer"]/button[2]')
         sleep(1)
-        ele = affairs.get_find_element_xpath('//table[@class="el-table__body"]//tr[1]/td[2]').text
+        ele = affairs.get_find_element_xpath('//table[@class="el-table__body"]//tr[2]/td[3]').text
         assert name + "_copy1" == ele
         assert not affairs.has_fail_message()
 
@@ -1299,7 +1299,7 @@ class TestAffairsPage:
         name = "添加全部成功"
         affairs.click_process()
         affairs.click_button(
-            f'//table[@class="el-table__body"]//tr[td[2][div[text()="{name}"]]]/td[last()]//span[text()="查看"]')
+            f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]/td[last()]//span[text()="查看"]')
         sleep(1)
         ele = affairs.get_find_element_xpath('//div[@class="log-info-title"]/div').text
         assert ele == name
@@ -1315,8 +1315,8 @@ class TestAffairsPage:
         affairs.del_process(name1)
         sleep(1)
         affairs.del_process(name2)
-        ele1 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[2][div[contains(text(),"{name1}")]]]')
-        ele2 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[2][div[contains(text(),"{name2}")]]]')
+        ele1 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[contains(text(),"{name1}")]]]')
+        ele2 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[contains(text(),"{name2}")]]]')
         assert len(ele1) == len(ele2) == 0
         assert not affairs.has_fail_message()
 
@@ -1349,7 +1349,7 @@ class TestAffairsPage:
         time1, time2 = affairs.get_log_time()
         affairs.sel_log_all(time1=time1, time2=time2)
         list_ = []
-        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[5]')
+        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[6]')
         for cell in cells:
             list_.append(datetime.strptime(cell.text, "%Y/%m/%d %H:%M:%S"))
 
@@ -1369,7 +1369,7 @@ class TestAffairsPage:
         sleep(1)
         affairs.sel_log_all(ptype=ptype)
         list_ = []
-        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[1]')
+        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[2]')
         for cell in cells:
             list_.append(cell.text)
         assert all(ptype == t for t in list_)
@@ -1386,7 +1386,7 @@ class TestAffairsPage:
         sleep(1)
         affairs.sel_log_all(ptype=ptype)
         list_ = []
-        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[1]')
+        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[2]')
         for cell in cells:
             list_.append(cell.text)
         assert all(ptype == t for t in list_)
@@ -1398,12 +1398,12 @@ class TestAffairsPage:
         affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
         num = 1000
         affairs.click_process_log()
-        pid = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[4]').text
+        pid = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[5]').text
         affairs.click_paging(num)
         sleep(1)
         affairs.sel_log_all(pid=pid)
         list_ = []
-        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[4]')
+        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[5]')
         for cell in cells:
             list_.append(cell.text)
         assert all(pid == t for t in list_)
@@ -1415,12 +1415,12 @@ class TestAffairsPage:
         affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
         num = 1000
         affairs.click_process_log()
-        pname = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[3]').text
+        pname = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[4]').text
         affairs.click_paging(num)
         sleep(1)
         affairs.sel_log_all(pname=pname)
         list_ = []
-        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[3]')
+        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[4]')
         for cell in cells:
             list_.append(cell.text)
         assert all(pname == t for t in list_)
@@ -1436,12 +1436,12 @@ class TestAffairsPage:
         sleep(1)
         affairs.click_paging(num)
         affairs_name_all = affairs.get_find_element_xpath(
-            '(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute("innerText")
+            '(//table[@class="el-table__body"])[2]//tr[2]/td[3]').get_attribute("innerText")
         sleep(1)
         affairs_name = affairs_name_all.split()[0]
         affairs.sel_log_all(affairs_name=affairs_name)
         list_ = []
-        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[2]')
+        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[3]')
         for cell in cells:
             list_.append(cell.text)
         assert list_ and all(affairs_name in t for t in list_)
@@ -1455,32 +1455,32 @@ class TestAffairsPage:
         affairs.click_process_log()
         sleep(1)
         affairs_name_all = affairs.get_find_element_xpath(
-            '(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute("innerText")
+            '(//table[@class="el-table__body"])[2]//tr[2]/td[3]').get_attribute("innerText")
         affairs_name = affairs_name_all.split()[0]
         num = 1000
-        time = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[5]').get_attribute(
+        time = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[6]').get_attribute(
             "innerText")
         time_with_dash = time.replace('/', '-')
         time1 = time_with_dash.split(' ')[0] + ' '
         time2 = time.split(' ')[1]
-        ptype = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[1]').get_attribute(
+        ptype = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute(
             "innerText")
-        pid = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[4]').get_attribute(
+        pid = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[5]').get_attribute(
             "innerText")
-        pname = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[3]').get_attribute(
+        pname = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[4]').get_attribute(
             "innerText")
         affairs.click_paging(num)
         sleep(1)
         affairs.sel_log_all(time1=time1, time2=time2, ptype=ptype, pid=pid, pname=pname, affairs_name=affairs_name)
-        td1 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[1]').get_attribute(
+        td1 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[2]').get_attribute(
             "innerText")
-        td2 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[2]').get_attribute(
+        td2 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[3]').get_attribute(
             "innerText")
-        td3 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[3]').get_attribute(
+        td3 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[4]').get_attribute(
             "innerText")
-        td4 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[4]').get_attribute(
+        td4 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[5]').get_attribute(
             "innerText")
-        td5 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[5]').get_attribute(
+        td5 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[6]').get_attribute(
             "innerText")
         tr2 = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[2]/tbody/tr[2]')
         assert td1 == ptype and affairs_name in td2 and td3 == pname and td4 == pid and td5 == time
@@ -1501,7 +1501,7 @@ class TestAffairsPage:
         pid = "41183627842692411"
         pname = "每周"
         affairs_name_all = affairs.get_find_element_xpath(
-            '(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute("innerText")
+            '(//table[@class="el-table__body"])[2]//tr[2]/td[3]').get_attribute("innerText")
         affairs_name = affairs_name_all.split()[0]
         affairs.click_paging(num)
         sleep(1)
@@ -1523,7 +1523,7 @@ class TestAffairsPage:
         pid = "4118362784269241"
         pname = "每周"
         affairs_name_all = affairs.get_find_element_xpath(
-            '(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute("innerText")
+            '(//table[@class="el-table__body"])[2]//tr[2]/td[3]').get_attribute("innerText")
         affairs_name = affairs_name_all.split()[0]
         affairs.click_paging(num)
         sleep(1)

@@ -93,7 +93,7 @@ class TestFunctionPage:
         function.click_button(f'//div[@class="scroll-body"]//div[text()=" {data_list[2]} "]')
         # 物料代码筛选框输入123
         function.enter_texts(
-            '//p[text()="物料代码"]/ancestor::div[2]//input', "123"
+            '(//p[text()="物料代码"]/ancestor::div[2]//input)[2]', "123"
         )
         # 右键点击
         ActionChains(driver).context_click(item).perform()

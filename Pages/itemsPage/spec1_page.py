@@ -203,6 +203,7 @@ class Spec1Page(BasePage):
         sleep(2)
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.get_find_message()
         self.wait_for_loading_to_disappear()
 
     def add_input_all(self, name, num):

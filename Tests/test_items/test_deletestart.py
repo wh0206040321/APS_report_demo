@@ -40,7 +40,8 @@ class TestDeleteStart:
         # 批量删除物品并等待
         for item_name in ITEMS_TO_DELETE:
             try:
-                xpath = '//p[text()="物料代码"]/ancestor::div[2]//input'
+                xpath = '(//p[text()="物料代码"]/ancestor::div[2]//input)[2]'
+
                 item.enter_texts(xpath, item_name)
                 sleep(1)
                 # 先判断是否存在该物品
@@ -49,7 +50,7 @@ class TestDeleteStart:
                 )
                 if not elements:
                     print(f"物品 {item_name} 不存在，跳过删除。")
-                    ele = item.get_find_element_xpath('//p[text()="物料代码"]/ancestor::div[2]//input')
+                    ele = item.get_find_element_xpath('(//p[text()="物料代码"]/ancestor::div[2]//input)[2]')
                     ele.send_keys(Keys.CONTROL, "a")
                     ele.send_keys(Keys.DELETE)
                     continue
@@ -57,7 +58,7 @@ class TestDeleteStart:
                 item.delete_item(item_name)  # 确认存在后再调用删除方法
                 sleep(1)
             except Exception as e:
-                ele = item.get_find_element_xpath('//p[text()="物料代码"]/ancestor::div[2]//input')
+                ele = item.get_find_element_xpath('(//p[text()="物料代码"]/ancestor::div[2]//input)[2]')
                 ele.send_keys(Keys.CONTROL, "a")
                 ele.send_keys(Keys.DELETE)
                 print(f"删除物品 {item_name} 时发生异常: {e}")

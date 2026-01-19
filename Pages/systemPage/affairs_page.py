@@ -2,7 +2,7 @@ from time import sleep
 from datetime import datetime
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver import ActionChains
+from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -121,7 +121,7 @@ class AffairsPage(BasePage):
         while True:
             # 查找当前页面中符合条件的删除按钮
             eles = self.finds_elements(By.XPATH,
-                                       f'//table[@class="el-table__body"]//tr[td[2][div[contains(text(),"{name}")]]]/td[last()]//span[text()="{edi}"]')
+                                       f'//table[@class="el-table__body"]//tr[td[3][div[contains(text(),"{name}")]]]/td[last()]//span[text()="{edi}"]')
 
             if not eles:
                 print("所有目标项已删除完毕")
@@ -155,7 +155,12 @@ class AffairsPage(BasePage):
 
     def input_text(self, text):
         """输入文字."""
-        self.enter_texts('//input[@placeholder="搜索相关事务名称或描述关键词"]', text)
+        xpath = '//input[@placeholder="搜索相关事务名称或描述关键词"]'
+        ele = self.find_element(By.XPATH, xpath)
+        ele.send_keys(Keys.CONTROL, "a")
+        ele.send_keys(Keys.DELETE)
+        self.enter_texts(xpath, text)
+
 
     def click_process(self):
         """点击流程"""
@@ -169,7 +174,7 @@ class AffairsPage(BasePage):
 
     def click_process_update(self, name):
         """点击编辑流程"""
-        self.click_button(f'//table[@class="el-table__body"]//tr[td[2][div[text()="{name}"]]]/td[last()]//span[text()="编辑"]')
+        self.click_button(f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]/td[last()]//span[text()="编辑"]')
 
     def add_process_affairs(self, add: bool = True, name="", sel=""):
         """点击添加流程"""
@@ -349,8 +354,8 @@ class AffairsPage(BasePage):
 
     def get_log_time(self):
         """获取日志时间."""
-        time1 = self.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[5]').text
-        time2 = self.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[4]/td[5]').text
+        time1 = self.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[6]').text
+        time2 = self.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[4]/td[6]').text
         # 解析原始字符串
         dt1 = datetime.strptime(time1, "%Y/%m/%d %H:%M:%S")
         dt2 = datetime.strptime(time2, "%Y/%m/%d %H:%M:%S")

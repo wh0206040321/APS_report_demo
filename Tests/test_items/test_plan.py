@@ -133,9 +133,9 @@ class TestPlanPage:
             plan.click_button(f'(//span[text()="{v}"])[1]')
         # 选择第一个方案
         sched_text = sched.get_find_element_xpath(
-            '//div[@class="ivu-tree"]//li/ul[1]'
+            '(//div[@class="ivu-tree"]//li/ul[1])[1]/li/span[2]'
         ).text
-        sched.click_button('//div[@class="ivu-tree"]//li/ul[1]')
+        sched.click_button('(//div[@class="ivu-tree"]//li/ul[1])[1]/li/span[2]')
         sched.click_attribute_button()
         # 点击开关 如果为开 则关闭
         ele = sched.get_find_element_xpath(
@@ -195,9 +195,9 @@ class TestPlanPage:
         sleep(1)
         # 选择第一个方案
         sched_text = sched.get_find_element_xpath(
-            '//div[@class="ivu-tree"]/ul/li/ul[1]/li/span[@class="ivu-tree-title"]'
+            '(//div[@class="ivu-tree"]//li/ul[1])[1]/li/span[2]'
         ).text
-        sched.click_button('//div[@class="ivu-tree"]//li/ul[1]')
+        sched.click_button('(//div[@class="ivu-tree"]//li/ul[1])[1]/li/span[2]')
         sched.click_attribute_button()
         # 点击开关 如果为关则打开
         ele = sched.get_find_element_xpath(

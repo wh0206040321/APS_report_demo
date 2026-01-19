@@ -984,6 +984,7 @@ class TestSAppsPage:
         sleep(2)
         apps.wait_for_loading_to_disappear()
         apps.del_layout(layout)
+        sleep(2)
         itemdata = [
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
             for v in value[:1]

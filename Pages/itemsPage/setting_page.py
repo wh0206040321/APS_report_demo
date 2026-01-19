@@ -163,6 +163,7 @@ class SettingPage(BasePage):
         sleep(2)
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.get_find_message()
         self.wait_for_loading_to_disappear()
 
     def add_pivot_table(self):
@@ -174,7 +175,8 @@ class SettingPage(BasePage):
     def click_setting_button(self):
         """点击设置按钮."""
         self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[3]//i')
-        sleep(3)
+        self.wait_for_el_loading_mask()
+        sleep(1)
 
     def get_find_message(self):
         """获取错误信息"""
@@ -279,3 +281,42 @@ class SettingPage(BasePage):
         ActionChains(self.driver).context_click(but).perform()
         self.click_button('//li[text()=" 刷新"]')
         self.wait_for_loading_to_disappear()
+
+    def click_right_click_row(self, xpath, name):
+        """右键点击行."""
+        self.click_button(xpath)
+        ele = self.get_find_element_xpath(xpath)
+        ActionChains(self.driver).context_click(ele).perform()
+        self.click_button(f'//li//span[text()="{name}"]')
+        sleep(0.5)
+
+    def realistic_right_click(self, xpath, name):
+        self.click_button(xpath)
+
+        element = self.get_find_element_xpath(xpath)
+
+        # 获取元素位置和大小
+        location = element.location
+        size = element.size
+
+        # 计算中心点坐标
+        center_x = size['width'] // 2
+        center_y = size['height'] // 2
+
+        # ✅ 向左偏移 10 像素，向上偏移 10 像素
+        offset_left = 10
+        offset_up = 10
+
+        center_x -= offset_left  # 向左移动
+        center_y -= offset_up  # 向上移动（Y轴坐标向上是减少）
+
+        # 精确移动到偏移后的位置（左上方）
+        actions = ActionChains(self.driver)
+        actions.move_to_element_with_offset(element, center_x, center_y)
+        actions.pause(0.1)
+        actions.context_click()
+        actions.perform()
+        self.click_button(f'//li//span[text()="{name}"]')
+        sleep(0.5)
+
+

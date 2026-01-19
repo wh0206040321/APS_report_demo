@@ -722,7 +722,7 @@ class TestSMenuPage:
         sleep(1)
         menu.click_button('//div[div[span[text()=" 组件代码"]]]/div[3]//input')
         eles = menu.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
-        mmenu.right_refresh('菜单组件')
+        menu.right_refresh('菜单组件')
         assert len(eles) == 0
         assert not menu.has_fail_message()
 

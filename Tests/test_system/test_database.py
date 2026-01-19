@@ -19,7 +19,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_database():
     driver = None
     try:
@@ -70,6 +70,7 @@ class TestSDateBasePage:
         data.add_table_code(button_name='新增', code='111')
         data.click_all_button("保存")
         message = data.get_error_message()
+        data.click_all_button("取消")
         assert message == "请填写表信息和字段信息"
         assert not data.has_fail_message()
 
@@ -96,7 +97,9 @@ class TestSDateBasePage:
         name = 'AAtest1'
         data.add_table_code(button_name='新增', code=name, field_code=name, fieldbutton_name='添加')
         sleep(2)
-        message = data.get_find_element_xpath('//div[text()=" 表已存在 "]').text
+        message = data.get_find_element_xpath('//div[text()=" 表已存在 "]').get_attribute("innerText")
+        data.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        data.click_all_button("取消")
         assert message == "表已存在"
         assert not data.has_fail_message()
 
@@ -114,6 +117,7 @@ class TestSDateBasePage:
         data.click_all_button("编辑")
         sleep(2)
         eles = data.finds_elements(By.XPATH, f'(//table[@class="vxe-table--body"])[3]//tr/td[2]')
+        data.click_all_button("取消")
         assert len(eles) == 2
         assert message == "保存成功"
         assert not data.has_fail_message()
@@ -127,6 +131,8 @@ class TestSDateBasePage:
         name = 'AAtest2'
         data.add_table_code(button_name='编辑', code=code, field_code=name, fieldbutton_name='添加')
         message = data.get_error_message()
+        data.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        data.click_all_button("取消")
         assert message == '字段代码或者字段名称已经存在，不能再次创建！'
         assert not data.has_fail_message()
 
@@ -148,6 +154,8 @@ class TestSDateBasePage:
         add.batch_modify_input(xpath_list[:2], code)
         data.click_confirm()
         message = data.get_error_message()
+        data.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        data.click_all_button("取消")
         assert message == "字段代码或者字段名称已经存在，不能再次创建！"
         assert not data.has_fail_message()
 
@@ -178,6 +186,7 @@ class TestSDateBasePage:
         sleep(2)
         eles = data.get_find_element_xpath(f'(//table[@class="vxe-table--body"])[3]//tr/td[2]//span[text()="{code+name}"]').text
         elesint = data.get_find_element_xpath(f'(//table[@class="vxe-table--body"])[3]//tr[td[3][//span[text()="{code+name}"]]]/td[4]').text
+        data.click_all_button("取消")
         assert eles == code+name and elesint == 'int'
         assert message == "保存成功"
         assert not data.has_fail_message()
@@ -200,6 +209,7 @@ class TestSDateBasePage:
         data.click_all_button("编辑")
         sleep(2)
         eles = data.finds_elements(By.XPATH, f'(//table[@class="vxe-table--body"])[3]//tr/td[2]')
+        data.click_all_button("取消")
         assert len(eles) == 1
         assert message == "保存成功"
         assert not data.has_fail_message()
@@ -253,6 +263,7 @@ class TestSDateBasePage:
         sleep(1)
         num = data.finds_elements(By.XPATH, '//div[@role="tablist"]/div')
         eles = data.finds_elements(By.XPATH, '//table[@class="vxe-table--header"]//span[text()="序号"]')
+        data.right_refresh()
         assert len(num) == 2 and len(eles) == 1
         assert not data.has_fail_message()
 
@@ -267,6 +278,7 @@ class TestSDateBasePage:
         sleep(2)
         eles = database.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr//td[3]')
         list_ = [ele.text for ele in eles]
+        database.right_refresh()
         assert all(name in text for text in list_), f"表格内容不符合预期，实际值: {list_}"
         assert not database.has_fail_message()
 
@@ -287,6 +299,7 @@ class TestSDateBasePage:
         sleep(1)
         database.click_button('//div[p[text()="表代码"]]/following-sibling::div//i')
         eles = database.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr//td[2]')
+        database.right_refresh()
         assert len(eles) == 0
         assert not database.has_fail_message()
 
@@ -305,6 +318,7 @@ class TestSDateBasePage:
         eles = database.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        database.right_refresh()
         assert all(name in text for text in list_)
         assert not database.has_fail_message()
 
@@ -323,6 +337,7 @@ class TestSDateBasePage:
         eles = database.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        database.right_refresh()
         assert all(str(item).startswith(name) for item in list_)
         assert not database.has_fail_message()
 
@@ -341,6 +356,7 @@ class TestSDateBasePage:
         eles = database.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        database.right_refresh()
         assert all(str(item).endswith(name) for item in list_)
         assert not database.has_fail_message()
 

@@ -472,7 +472,7 @@ class TestChangeRPage:
         )
         # 勾选框
         change.wait_for_loading_to_disappear()
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[2]')
         change.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
@@ -483,7 +483,7 @@ class TestChangeRPage:
         )
         # 勾选框
         change.wait_for_loading_to_disappear()
-        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[1]')
+        change.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span/span)[2]')
         sleep(1)
         change.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
@@ -659,39 +659,6 @@ class TestChangeRPage:
         ).text
         assert changeRdata1 == changeRdata, f"预期{changeRdata}"
         assert not changeR.has_fail_message()
-
-    @allure.story("删除数据成功")
-    # @pytest.mark.run(order=1)
-    def test_changeR_delsuccess2(self, login_to_changeR):
-        driver = login_to_changeR  # WebDriver 实例
-        change = ChangeR(driver)  # 用 driver 初始化 ChangeR
-        code1 = SharedDataUtil.load_data().get("resource")
-        code2 = SharedDataUtil.load_data().get("item1")
-        change.click_flagdata()
-        # 定位第一行
-        change.click_button(
-            f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{code1}"] and td[3]//span[text()="{code2}"]]//td[2]'
-        )
-        before_data = change.get_find_element_xpath(
-            '(//span[contains(text(),"条记录")])[1]'
-        ).text
-        change.click_del_button()  # 点击删除
-        change.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-        change.wait_for_loading_to_disappear()
-        sleep(1)
-        ele = driver.find_elements(
-            By.XPATH,
-            f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{code1}"] and td[3]//span[text()="{code2}"]]//td[2]'
-        )
-        # 定位
-        after_data = change.get_find_element_xpath(
-            '(//span[contains(text(),"条记录")])[1]'
-        ).text
-        assert (
-                before_data != after_data and
-                len(ele) == 0
-        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
-        assert not change.has_fail_message()
 
     @allure.story("刷新成功")
     # @pytest.mark.run(order=1)
@@ -1024,30 +991,6 @@ class TestChangeRPage:
         assert all(before_all_value), "列表中存在为空或为假值的元素！"
         assert not changeR.has_fail_message()
 
-    @allure.story("删除全部数据功")
-    # @pytest.mark.run(order=1)
-    def test_changeR_deleteall(self, login_to_changeR):
-        driver = login_to_changeR  # WebDriver 实例
-        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
-        changeR.click_flagdata()
-        sleep(1)
-        before_data = changeR.get_find_element_xpath(
-            '(//span[contains(text(),"条记录")])[1]'
-        ).text
-        changeR.click_button(
-            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]')
-        changeR.click_del_button()
-        changeR.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-        changeR.wait_for_loading_to_disappear()
-        # 定位
-        after_data = changeR.get_find_element_xpath(
-            '(//span[contains(text(),"条记录")])[1]'
-        ).text
-        assert (
-                before_data != after_data
-        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
-        assert not changeR.has_fail_message()
-
     @allure.story("过滤条件查询，一个不选，显示正常")
     # @pytest.mark.run(order=1)
     def test_changeR_select2(self, login_to_changeR):
@@ -1266,6 +1209,64 @@ class TestChangeRPage:
         changeR.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         message = changeR.get_find_message()
         assert len(num) == 2 and message == "保存成功"
+        assert not changeR.has_fail_message()
+
+    @allure.story("删除数据成功")
+    # @pytest.mark.run(order=1)
+    def test_changeR_delsuccess2(self, login_to_changeR):
+        driver = login_to_changeR  # WebDriver 实例
+        change = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        change.right_refresh('资源切换')
+        code1 = SharedDataUtil.load_data().get("resource")
+        code2 = SharedDataUtil.load_data().get("item1")
+        change.click_flagdata()
+        # 定位第一行
+        change.click_button(
+            f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{code1}"] and td[3]//span[text()="{code2}"]]//td[2]'
+        )
+        before_data = change.get_find_element_xpath(
+            '(//span[contains(text(),"条记录")])[1]'
+        ).text
+        change.click_del_button()  # 点击删除
+        change.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        change.wait_for_loading_to_disappear()
+        sleep(1)
+        ele = driver.find_elements(
+            By.XPATH,
+            f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{code1}"] and td[3]//span[text()="{code2}"]]//td[2]'
+        )
+        # 定位
+        after_data = change.get_find_element_xpath(
+            '(//span[contains(text(),"条记录")])[1]'
+        ).text
+        assert (
+                before_data != after_data and
+                len(ele) == 0
+        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
+        assert not change.has_fail_message()
+
+    @allure.story("删除全部数据功")
+    # @pytest.mark.run(order=1)
+    def test_changeR_deleteall(self, login_to_changeR):
+        driver = login_to_changeR  # WebDriver 实例
+        changeR = ChangeR(driver)  # 用 driver 初始化 ChangeR
+        changeR.click_flagdata()
+        sleep(1)
+        before_data = changeR.get_find_element_xpath(
+            '(//span[contains(text(),"条记录")])[1]'
+        ).text
+        changeR.click_button(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]')
+        changeR.click_del_button()
+        changeR.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        changeR.wait_for_loading_to_disappear()
+        # 定位
+        after_data = changeR.get_find_element_xpath(
+            '(//span[contains(text(),"条记录")])[1]'
+        ).text
+        assert (
+                before_data != after_data
+        ), f"删除后的数据{after_data}，删除前的数据{before_data}"
         assert not changeR.has_fail_message()
 
     @allure.story("删除布局成功")

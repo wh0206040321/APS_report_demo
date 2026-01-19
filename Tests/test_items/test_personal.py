@@ -484,6 +484,7 @@ class TestPersonalPage:
     def test_personal_openengine3(self, login_to_personal):
         driver = login_to_personal  # WebDriver 实例
         personal = PersonalPage(driver)  # 用 driver 初始化 PersonalPage
+        sleep(2)
         wait = WebDriverWait(driver, 20)
         personal.go_engine_page(name='ip')
         personal.go_setting_page()

@@ -719,6 +719,11 @@ class TestUserRolePage:
         user.click_button('//div[@class="flex-alignItems-center"]')
         user.click_button('//ul/li/div[text()=" 注销 "]')
         page.login(name, password, module)
+        err = user.finds_elements(By.XPATH,
+                                  f'//div[@class="ivu-modal-body"]//div[text()="当前用户已经登录此单元，是否继续登录？"]')
+        if len(err) == 1:
+            user.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+
         user.wait_for_loadingbox()
         num_ = len(user.finds_elements(By.XPATH, f'//div[@class="listDivCon"]/div'))
         swich_name = user.get_find_element_xpath(f'//div[@class="ivu-dropdown-rel"]/div').text

@@ -45,7 +45,7 @@ class AddsPages(BasePage):
         """批量修改输入框"""
         for xpath in xpath_list:
             try:
-                sleep(0.3)
+                sleep(0.1)
                 self.enter_texts(xpath, new_value)
             except NoSuchElementException:
                 print(f"未找到元素: {xpath}")
@@ -72,7 +72,7 @@ class AddsPages(BasePage):
             try:
                 self.click_button(xpath)
                 ActionChains(self.driver).double_click(self.get_find_element_xpath(new_value)).perform()
-                sleep(0.5)
+                sleep(1)
                 self.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[last()]//span[text()="确定"]')
             except NoSuchElementException:
                 print(f"未找到元素: {xpath}")

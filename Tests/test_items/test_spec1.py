@@ -5,7 +5,7 @@ from time import sleep
 
 import allure
 import pytest
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import WebDriverException, TimeoutException
 from selenium.common import StaleElementReferenceException
 from selenium.webdriver import Keys
 from selenium.webdriver.common.action_chains import ActionChains
@@ -1155,8 +1155,12 @@ class TestSpecPage:
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
             for v in value[:4]
         ]
-        spec.del_layout(layout)
-        sleep(2)
+        try:
+            spec.del_layout(layout)
+        except TimeoutException:
+            print(f"布局 '{layout}' 可能不存在或已被删除")
+        spec.right_refresh('生产特征1')
+        sleep(1)
         # 再次查找页面上是否有目标 div，以验证是否删除成功
         after_layout = driver.find_elements(
             By.XPATH, f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'

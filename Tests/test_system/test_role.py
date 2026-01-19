@@ -185,15 +185,17 @@ class TestRolePage:
         role.click_all_button("保存")
         message = role.get_find_message()
         role.right_refresh('用户权限管理')
-
+        driver.refresh()
         role.wait_for_loading_to_disappear()
         role.enter_texts('//div[div[p[text()="用户代码"]]]//input', date_driver.username)
+        sleep(2)
         role.click_button(f'(//table[@class="vxe-table--body"]//span[text()="{date_driver.username}"])[1]')
+        sleep(2)
         role.select_input(name)
-        sleep(1)
+        sleep(3)
         sty = role.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span)[2]').get_attribute('class')
         if 'is--checked' not in sty:
-            role.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span)[2]')
+            role.click_button(f'(//table[@class="vxe-table--body"]//span[text()="{date_driver.username}"])[1]')
             role.click_all_button("编辑")
             sleep(2)
 
