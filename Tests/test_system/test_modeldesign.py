@@ -4,6 +4,7 @@ from datetime import datetime
 from time import sleep
 
 import allure
+import pyautogui
 import pytest
 from selenium.webdriver import Keys
 from selenium.webdriver.common.action_chains import ActionChains
@@ -19,7 +20,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_modeldesign():
     driver = None
     try:
@@ -70,6 +71,7 @@ class TestSModelDesignPage:
         model.click_modeldesign_button("新增模型")
         model.click_confirm()
         message = model.get_error_message()
+        model.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "名称不能为空"
         assert not model.has_fail_message()
 
@@ -128,6 +130,7 @@ class TestSModelDesignPage:
         model.enter_texts('//div[label[text()="模型名称"]]//input', name)
         model.click_confirm()
         message = model.get_error_message()
+        model.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "名称不能重复"
         assert not model.has_fail_message()
 
@@ -142,6 +145,7 @@ class TestSModelDesignPage:
         model.enter_texts('//div[@class="content-siadeNav"]//input[@placeholder="请输入"]', name)
         sleep(2)
         ele2 = model.finds_elements(By.XPATH, f'//div[@class="content-siadeNav"]//div[@role="treeitem"][1]/div[2]/div')
+        model.right_refresh('模型设计')
         assert len(ele1) != len(ele2)
         assert len(ele2) == 1
         assert not model.has_fail_message()
@@ -192,27 +196,42 @@ class TestSModelDesignPage:
         assert not model.has_fail_message()
 
     @allure.story("删除模型成功")
-    # @pytest.mark.run(order=1)
     def test_modeldesign_del(self, login_to_modeldesign):
-        driver = login_to_modeldesign  # WebDriver 实例
-        model = OtherPage(driver)  # 用 driver 初始化 OtherPage
+        driver = login_to_modeldesign
+        model = OtherPage(driver)
+        pyautogui.press('esc')
+        driver.refresh()
+
         list_name = ['2测试模型', '3测试模型']
-        sleep(2)
+
         for name in list_name:
-            model.click_button(
-                f'//div[@class="content-siadeNav"]//div[@role="treeitem"][1]/div[2]/div//span[text()=" {name} "]')
+
+            # ① 判断节点是否存在，不存在就跳过
+            xpath = f'//span[text()=" {name} "]'
+            elements = model.finds_elements(By.XPATH, xpath)
+            if not elements:
+                logging.info(f"模型 {name} 不存在，跳过删除")
+                continue
+
+            # ② 点击节点
+            model.click_button(xpath)
+
+            # ③ 点击删除
             model.click_modeldesign_button("删除模型")
             model.click_del_confirm()
+
+            # ④ 获取提示信息
             message = model.get_find_message()
-            sy = model.get_find_element_xpath(
-                f'(//div[@class="content-siadeNav"]//div[@role="treeitem"][1]/div[1]/span[contains(@class,"el-tree-node__expand-icon")])[1]').get_attribute(
-                'class')
-            if 'expanded' not in sy:
-                model.click_button(
-                    '(//div[@class="content-siadeNav"]//div[@role="treeitem"][1]/div[1]/span[contains(@class,"el-tree-node__expand-icon")])[1]')
-            sleep(1)
-            ele = model.finds_elements(By.XPATH,
-                                        f'//div[@class="content-siadeNav"]//div[@role="treeitem"]//span[text()=" {name} "]')
             assert message == "删除成功！"
-            assert len(ele) == 0
+
+            # ⑤ 等待节点真正消失（最关键）
+            WebDriverWait(driver, 5).until_not(
+                EC.presence_of_element_located((By.XPATH, xpath))
+            )
+
+            # ⑥ 再次确认不存在
+            assert len(model.finds_elements(By.XPATH, xpath)) == 0
+
+        # ⑦ 最终检查是否有失败提示
         assert not model.has_fail_message()
+

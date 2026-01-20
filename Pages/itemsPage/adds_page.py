@@ -85,6 +85,17 @@ class AddsPages(BasePage):
             self.click_button(d['select'])
             self.click_button(d['value'])
 
+    def batch_click_input(self, xpath_list=[]):
+        """批量点击"""
+        for index, xpath in enumerate(xpath_list, start=1):
+            try:
+                self.click_button(xpath)
+                sleep(0.5)
+            except NoSuchElementException:
+                print(f"未找到元素: {xpath}")
+            except Exception as e:
+                print(f"操作 {xpath} 时出错: {str(e)}")
+
     def batch_modify_time_input(self, xpath_list=[]):
         """批量修改时间"""
         for index, xpath in enumerate(xpath_list, start=1):
@@ -137,13 +148,14 @@ class AddsPages(BasePage):
         return values
 
     def get_checkbox_value(self, xpath_list=[]):
-        """获取复选框值"""
+        """获取复选框 class 判断是否选中"""
         values = []
         for index, xpath in enumerate(xpath_list, 1):
             try:
-                value = self.get_find_element_xpath(xpath)
-                is_checked = value.is_selected()
-                values.append(is_checked)
+                element = self.get_find_element_xpath(xpath)
+                class_value = element.get_attribute("class")
+                # is_checked = "is--checked" in class_value
+                values.append(class_value)
 
             except TimeoutException:
                 raise NoSuchElementException(
@@ -151,7 +163,7 @@ class AddsPages(BasePage):
                 )
             except Exception as e:
                 raise Exception(
-                    f"获取输入框值时发生错误（XPath列表第{index}个）: {str(e)}"
+                    f"获取复选框值时发生错误（XPath列表第{index}个）: {str(e)}"
                 )
         return values
 

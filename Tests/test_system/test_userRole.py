@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime, date
 from time import sleep
 
 import allure
@@ -1034,6 +1034,97 @@ class TestUserRolePage:
         eles2 = user.finds_elements(By.XPATH,
                                    f'(//table[@class="vxe-table--body"])[1]//tr/td[2]//span[text()="{name2}"]')
         assert len(eles1) == 0 and len(eles2) == 0
+        assert not user.has_fail_message()
+
+    @allure.story("添加全部数据成功，表格数据成功")
+    # @pytest.mark.run(order=1)
+    def test_user_addall(self, login_to_userrole):
+        driver = login_to_userrole  # WebDriver 实例
+        user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
+        adds = AddsPages(driver)
+
+        user.click_button('(//span[text()="用户权限管理"])[1]')
+        user.wait_for_loading_to_disappear()
+        user.click_all_button('新增')
+        input_value = '11testVG'
+
+        text_list = [
+            '//div[label[text()="用户代码"]]//input',
+            '//div[label[text()="用户名称"]]//input',
+            '//div[label[text()="用户组"]]//input',
+            '//div[label[text()="SSOCode"]]//input',
+            '//div[label[text()="备注"]]//input',
+        ]
+        adds.batch_modify_input(text_list, input_value)
+        pa_list = [
+            '//div[label[text()="密码"]]//input',
+            '//div[label[text()="确认密码"]]//input',
+        ]
+        adds.batch_modify_input(pa_list, '1234Qwer')
+
+        emil_list = [
+            '//div[label[text()="邮箱地址"]]//input'
+        ]
+        adds.batch_modify_input(emil_list, '1121@qq.com')
+
+        select_list = [
+            {"select": '//div[label[text()="用户类型"]]//i', "value": '//li[text()="计划用户"]'},
+            {"select": '//div[label[text()="账户类型"]]//i', "value": '//li[text()="域账户"]'},
+            {"select": '//div[label[text()="指定登录方式"]]//i', "value": '//li[text()="账号密码"]'},]
+        adds.batch_modify_select_input(select_list)
+
+        checkbox_list = [
+            '//div[label[text()="允许多地同时登录"]]/div/label',
+            '//div[label[text()="是否锁定"]]/div/label',
+            '//div[label[text()="是否禁用"]]/div/label',
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span)[2]',
+        ]
+        adds.batch_click_input(checkbox_list)
+
+        input_num_value = '13712367899'
+
+        num_list = [
+            '//div[label[text()="密码有效天数"]]//input',
+            '//div[label[text()="电话"]]//input',
+        ]
+        adds.batch_modify_input(num_list, input_num_value)
+
+        time_xpath_list = [
+            '//div[label[text()="用户有效日期"]]//input',
+        ]
+        adds.click_button(time_xpath_list[0])
+        adds.click_button(
+            '//div[@class="ivu-date-picker-cells"]/span[@class="ivu-date-picker-cells-cell ivu-date-picker-cells-cell-today ivu-date-picker-cells-focused"]/following-sibling::span')
+
+
+
+        select_input_list = [item["select"].replace("//i", "//input") for item in select_list]
+        all_value = text_list + select_input_list + num_list + time_xpath_list + emil_list
+        len_num = len(all_value)
+        sleep(2)
+        before_all_value = adds.batch_acquisition_input(all_value)
+        before_checkbox_list = adds.get_checkbox_value(checkbox_list)
+
+        user.click_all_button('保存')
+        user.get_find_message()
+        user.right_refresh('用户权限管理')
+        user.select_input(input_value)
+        user.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span[text()="{input_value}"])')
+        user.click_all_button('编辑')
+
+        after_all_value = adds.batch_acquisition_input(all_value)
+        after_checkbox_list = adds.get_checkbox_value(checkbox_list)
+        user.click_all_button('取消')
+        logging.info(f"before_all_value: {before_all_value}, after_all_value: {after_all_value}")
+        ele = user.finds_elements(By.XPATH, f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span[text()="{input_value}"])')
+        if len(ele) == 1:
+            user.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span[text()="{input_value}"])')
+            user.click_all_button('删除')  # 点击删除
+            user.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+            user.get_find_message()
+            user.right_refresh('用户权限管理')
+        assert before_all_value == after_all_value and before_checkbox_list == after_checkbox_list
+        assert all(before_all_value), "列表中存在为空或为假值的元素！"
         assert not user.has_fail_message()
 
     @allure.story("已删除的用户不能登录")

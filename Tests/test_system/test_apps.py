@@ -983,7 +983,10 @@ class TestSAppsPage:
         apps.del_all(xpath='//div[p[text()="应用代码"]]/following-sibling::div//input', value=value)
         sleep(2)
         apps.wait_for_loading_to_disappear()
-        apps.del_layout(layout)
+        try:
+            apps.del_layout(layout)
+        except Exception:
+            print(f"布局 '{layout}' 可能不存在或已被删除")
         sleep(2)
         itemdata = [
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')

@@ -19,7 +19,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_registration():
     driver = None
     try:
@@ -68,6 +68,7 @@ class TestSRegistrationPage:
         reg = OtherPage(driver)  # 用 driver 初始化 OtherPage
         reg.click_registration_button()
         message = reg.get_error_message()
+        reg.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "请输入注册号码!"
         assert not reg.has_fail_message()
 
@@ -78,6 +79,7 @@ class TestSRegistrationPage:
         reg = OtherPage(driver)  # 用 driver 初始化 OtherPage
         reg.click_registration_button(value='11')
         message = reg.get_error_message()
+        reg.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "无效授权码"
         assert not reg.has_fail_message()
 

@@ -19,7 +19,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_online():
     driver = None
     try:
@@ -88,5 +88,22 @@ class TestSOnlinePage:
         eles = online.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[1]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        online.right_refresh("在线管理")
         assert all(name in text for text in list_)
+        assert not online.has_fail_message()
+
+    @allure.story("删除成功")
+    # @pytest.mark.run(order=1)
+    def test_online_delete(self, login_to_online):
+        driver = login_to_online  # WebDriver 实例
+        online = OtherPage(driver)  # 用 driver 初始化 OtherPage
+        online.wait_for_loading_to_disappear()
+        ele1 = online.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]/td[2]').text
+        online.click_button('//table[@class="vxe-table--body"]//tr[1]/td[2]')
+        online.click_all_button("删除")
+        online.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        online.get_find_message()
+        online.wait_for_loading_to_disappear()
+        ele2 = online.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]/td[2]').text
+        assert ele1 != ele2
         assert not online.has_fail_message()

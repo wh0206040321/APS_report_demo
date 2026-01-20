@@ -100,7 +100,7 @@ class UserRolePage(BasePage):
         self.click_button(
             '//div[@class="ivu-date-picker-cells"]/span[@class="ivu-date-picker-cells-cell ivu-date-picker-cells-cell-today ivu-date-picker-cells-focused"]/following-sibling::span')
         self.enter_texts('//div[div[p[text()="角色代码"]]]//input', role)
-        sleep(1)
+        sleep(3)
         self.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span)[2]')
 
     def update_user(self, before_name, after_name):

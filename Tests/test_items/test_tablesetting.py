@@ -537,6 +537,7 @@ class TestTableSettingPage:
         setting.wait_for_loading_to_disappear()
         cla = setting.get_find_element_xpath(xpath).get_attribute('class')
         setting.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        setting.right_refresh('物品')
         assert 'ivu-checkbox-wrapper-checked' not in cla
         assert not setting.has_fail_message()
 

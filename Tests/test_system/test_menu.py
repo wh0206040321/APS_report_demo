@@ -807,6 +807,123 @@ class TestSMenuPage:
         assert ele == "vxe-icon-funnel suffixIcon"
         assert not menu.has_fail_message()
 
+    @allure.story("模拟ctrl+i添加重复")
+    # @pytest.mark.run(order=1)
+    def test_menu_ctrlIrepeat(self, login_to_menu):
+        driver = login_to_menu  # WebDriver 实例
+        menu = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        menu.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        ele1 = menu.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
+            "innerText")
+        menu.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = menu.get_error_message()
+        menu.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert message == '记录已存在,请检查！'
+        assert not menu.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_menu_ctrlI(self, login_to_menu):
+        driver = login_to_menu  # WebDriver 实例
+        menu = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        menu.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        menu.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        menu.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加')
+        sleep(1)
+        ele1 = menu.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        menu.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        menu.get_find_message()
+        menu.select_input_menu('1没有数据添加')
+        ele2 = menu.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2 == '1没有数据添加'
+        assert not menu.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改")
+    # @pytest.mark.run(order=1)
+    def test_menu_ctrlM(self, login_to_menu):
+        driver = login_to_menu  # WebDriver 实例
+        menu = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        menu.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        menu.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        menu.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改')
+        ele1 = menu.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        menu.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        menu.get_find_message()
+        menu.select_input_menu('1没有数据修改')
+        ele2 = menu.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2
+        menu.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        menu.click_all_button('删除')
+        menu.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        message = menu.get_find_message()
+        menu.right_refresh('菜单组件')
+        assert message == "删除成功！"
+        assert not menu.has_fail_message()
+
+    @allure.story("模拟ctrl+c复制可查询")
+    # @pytest.mark.run(order=1)
+    def test_menu_ctrlC(self, login_to_menu):
+        driver = login_to_menu  # WebDriver 实例
+        menu = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        menu.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        before_data = menu.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+        menu.click_button('//div[div[span[text()=" 组件代码"]]]//input')
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        eles = menu.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        eles = [ele.text for ele in eles]
+        menu.right_refresh('菜单组件')
+        assert all(before_data in ele for ele in eles)
+        assert not menu.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_menu_shift(self, login_to_menu):
+        driver = login_to_menu  # WebDriver 实例
+        menu = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        menu.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = menu.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        num = menu.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        menu.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert len(num) == 2
+        assert not menu.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+m编辑")
+    # @pytest.mark.run(order=1)
+    def test_menu_ctrls(self, login_to_menu):
+        driver = login_to_menu  # WebDriver 实例
+        menu = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        menu.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = menu.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        num = menu.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        menu.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = menu.get_find_message()
+        assert len(num) == 2 and message == "保存成功"
+        assert not menu.has_fail_message()
+
     @allure.story("删除测试数据成功，删除布局成功")
     # @pytest.mark.run(order=1)
     def test_menu_delsuccess(self, login_to_menu):
