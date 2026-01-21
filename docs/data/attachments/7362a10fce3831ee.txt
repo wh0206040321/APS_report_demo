@@ -1,0 +1,17 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//table[@class="vxe-table--body"]//tr[1]//td[1])[2]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//table[@class="vxe-table--body"]//tr[1]//td[1])[2]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li//span[text()="隐藏行"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //table[@class="vxe-table--body"]//tr[1]//td[2]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //span[@class="hiddenRowIcon hiddenRowIcon_Top"]/i
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //table[@class="vxe-table--body"]//tr[2]//td[2]
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //table[@class="vxe-table--body"]//tr[2]//td[2]，等待超时 10s
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//table[@class="vxe-table--body"]//tr[1]//td[1])[2]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//table[@class="vxe-table--body"]//tr[1]//td[1])[2]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li//span[text()="隐藏行"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //table[@class="vxe-table--body"]//tr[1]//td[2]
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //table[@class="vxe-table--body"]//tr[1]//td[2]，等待超时 10s
