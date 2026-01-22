@@ -1,0 +1,21 @@
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //div[@class="tabsDivItemCon"]/div[text()=" 右键添加切换布局 "]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//table[@class="vxe-table--header"]//tr/th[2])[1]//p
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//table[@class="vxe-table--header"]//tr/th[2])[1]//p
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li//span[text()="添加新布局"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[text()=" 显示设置 "])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//div[./div[text()="是否可见:"]])[1]/label/span
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[./div[text()="是否可见:"]])[1]/label/span
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@class="demo-drawer-footer"])[3]/button[2]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="tabsDivItemCon"]/div[text()=" 测试布局A "]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="scroll-body"]/div[.//div[text()=" 物品 "]]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()=" 刷新"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//table[@class="vxe-table--header"]//tr/th[2])[1]//p
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//table[@class="vxe-table--header"]//tr/th[2])[1]//p
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //li//span[text()="布局列表"]

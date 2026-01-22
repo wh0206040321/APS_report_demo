@@ -1,0 +1,6 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[text()=" 主页设置 "]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[text()=" 模板 "]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]，等待超时 10s
