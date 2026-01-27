@@ -1,0 +1,130 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//p[text()="新增"]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[33mWARNING [0m root:base_page.py:97 ⚠️ clear() 清空失败：Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=142.0.7444.60); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff7a57dfe35
+	0x7ff7a57dfe90
+	0x7ff7a556139d
+	0x7ff7a556918f
+	0x7ff7a556c1ef
+	0x7ff7a556c2af
+	0x7ff7a55bc04d
+	0x7ff7a55af24e
+	0x7ff7a55e265a
+	0x7ff7a55ac7a6
+	0x7ff7a560b61b
+	0x7ff7a55aac6d
+	0x7ff7a55abae3
+	0x7ff7a5aaa10d
+	0x7ff7a5aa448a
+	0x7ff7a5ac5157
+	0x7ff7a57fa81e
+	0x7ff7a580262f
+	0x7ff7a57e9324
+	0x7ff7a57e94df
+	0x7ff7a57cee88
+	0x7ffc59d27374
+	0x7ffc5a9fcc91
+，尝试使用 JS 清空
+[33mWARNING [0m root:base_page.py:102 ❌ JS 清空也失败：Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=142.0.7444.60); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff7a57dfe35
+	0x7ff7a57dfe90
+	0x7ff7a556139d
+	0x7ff7a556918f
+	0x7ff7a556c582
+	0x7ff7a560c9bf
+	0x7ff7a55e265a
+	0x7ff7a560b61b
+	0x7ff7a55aac6d
+	0x7ff7a55abae3
+	0x7ff7a5aaa10d
+	0x7ff7a5aa448a
+	0x7ff7a5ac5157
+	0x7ff7a57fa81e
+	0x7ff7a580262f
+	0x7ff7a57e9324
+	0x7ff7a57e94df
+	0x7ff7a57cee88
+	0x7ffc59d27374
+	0x7ffc5a9fcc91
+
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//label[text()="模板名称"])[1]/parent::div//div[@class="ivu-select-selection"]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()="小日程"]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@class="vxe-modal--footer"]//span[text()="确定"])
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//p[text()="新增"]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[33mWARNING [0m root:base_page.py:97 ⚠️ clear() 清空失败：Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=142.0.7444.60); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff7a57dfe35
+	0x7ff7a57dfe90
+	0x7ff7a556139d
+	0x7ff7a556918f
+	0x7ff7a556c1ef
+	0x7ff7a556c2af
+	0x7ff7a55bc04d
+	0x7ff7a55af24e
+	0x7ff7a55e265a
+	0x7ff7a55ac7a6
+	0x7ff7a560b61b
+	0x7ff7a55aac6d
+	0x7ff7a55abae3
+	0x7ff7a5aaa10d
+	0x7ff7a5aa448a
+	0x7ff7a5ac5157
+	0x7ff7a57fa81e
+	0x7ff7a580262f
+	0x7ff7a57e9324
+	0x7ff7a57e94df
+	0x7ff7a57cee88
+	0x7ffc59d27374
+	0x7ffc5a9fcc91
+，尝试使用 JS 清空
+[33mWARNING [0m root:base_page.py:102 ❌ JS 清空也失败：Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=142.0.7444.60); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff7a57dfe35
+	0x7ff7a57dfe90
+	0x7ff7a556139d
+	0x7ff7a556918f
+	0x7ff7a556c582
+	0x7ff7a560c9bf
+	0x7ff7a55e265a
+	0x7ff7a560b61b
+	0x7ff7a55aac6d
+	0x7ff7a55abae3
+	0x7ff7a5aaa10d
+	0x7ff7a5aa448a
+	0x7ff7a5ac5157
+	0x7ff7a57fa81e
+	0x7ff7a580262f
+	0x7ff7a57e9324
+	0x7ff7a57e94df
+	0x7ff7a57cee88
+	0x7ffc59d27374
+	0x7ffc5a9fcc91
+
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//label[text()="模板名称"])[1]/parent::div//div[@class="ivu-select-selection"]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()="小日程"]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@class="vxe-modal--footer"]//span[text()="确定"])
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功

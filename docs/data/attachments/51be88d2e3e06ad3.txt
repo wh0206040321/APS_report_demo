@@ -1,0 +1,20 @@
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[div[p[text()="应用代码"]]]//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //table[@class="vxe-table--body"]//tr/td[2]//span[text()="1新增应用"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//p[text()="编辑"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="d-flex"]/div[label[text()="显示菜单"]]/div/label/span
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="d-flex"]/div[label[text()="显示菜单"]]/div/label/span
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="d-flex background-color-fff"]/div[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="scroll-outer"]//div[text()=" 应用管理 "]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="scroll-body"]/div[.//div[text()=" 应用管理 "]]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()=" 刷新"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="1新增菜单"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//span[text()="ABCDAA"])[1]/ancestor::li[1]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//span[text()="ABCDAA"]/ancestor::li[1]/ul//span[@class="menuItemSpan"])[2]
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //div[@class="ivu-modal-content"]//div[text()=" 对不起,在处理您的请求期间,产生了一个服务器内部错误! "]
