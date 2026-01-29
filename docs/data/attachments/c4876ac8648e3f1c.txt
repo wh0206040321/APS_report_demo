@@ -1,0 +1,32 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //table[@class="vxe-table--body"]//tr[2]//td[2]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//table[@class="vxe-table--body"]//tr[1]/td[2])[2]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[33mWARNING [0m root:base_page.py:97 ⚠️ clear() 清空失败：Message: invalid element state: Element is not currently interactable and may not be manipulated
+  (Session info: chrome=142.0.7444.60)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff60eabfe35
+	0x7ff60eabfe90
+	0x7ff60e84139d
+	0x7ff60e84918f
+	0x7ff60e84c1ef
+	0x7ff60e84c2af
+	0x7ff60e88fcea
+	0x7ff60e8c265a
+	0x7ff60e88c7a6
+	0x7ff60e8eb61b
+	0x7ff60e88ac6d
+	0x7ff60e88bae3
+	0x7ff60ed8a10d
+	0x7ff60ed8448a
+	0x7ff60eda5157
+	0x7ff60eada81e
+	0x7ff60eae262f
+	0x7ff60eac9324
+	0x7ff60eac94df
+	0x7ff60eaaee88
+	0x7ffc59d27374
+	0x7ffc5a9fcc91
+，尝试使用 JS 清空
+[32mINFO    [0m root:base_page.py:100 ✅ JS 清空成功
