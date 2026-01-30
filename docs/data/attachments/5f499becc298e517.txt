@@ -1,9 +1,0 @@
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[p[text()="更新时间"]]/div[1]
-[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
-[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[p[text()="更新时间"]]/div[1]
-[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
-[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
-[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//span[contains(text(),"条记录")])[1]
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]//td[2]
-[1m[31mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
