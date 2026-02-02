@@ -1,0 +1,20 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[text()=" 模板 "]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[./span[text()=" 测试模版confirm "]]/span[text()=" 加载模板 "]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="ivu-tabs-tab"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@id="homeCanvasBox"]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//div[@class="menuList"])[1]/div[.//span[text()="数字"]]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="scroll-body"]/div[.//div[text()=" 主页设置 "]]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()=" 刷新"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //button[./span[text()="保存"]]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //div[@id="homeCanvasBox"]/div
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[text()=" 模板 "]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[./span[text()=" 测试模版confirm "]]/span[text()=" 加载模板 "]
+[31m[1mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击

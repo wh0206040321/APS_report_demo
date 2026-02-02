@@ -1,0 +1,52 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="ivu-select-head-flex"]/input
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()="金属（演示）"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //button[contains(@class, "ivu-btn-primary")]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="计划控制塔"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="计划控制塔"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="订单进度"])[1]
+[31m[1mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
+[32mINFO    [0m root:driver_manager.py:56 🛑 已从实例池移除并关闭 driver：2166809885088
+[33mWARNING [0m conftest:conftest.py:114 [DEBUG] fixture_setup failed: login_to_orderstatus
+[32mINFO    [0m conftest:conftest.py:97 [DEBUG] try_capture for Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref, driver_id=2166803647312, alive=True
+[32mINFO    [0m conftest:conftest.py:76 [Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref] 截图已保存：D:\PycharmProjects\APS\report\screenshots\Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref_20260203_064616.png
+[32mINFO    [0m conftest:conftest.py:79 [Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref] 截图时间：2026-02-03 06:46:16
+[32mINFO    [0m conftest:conftest.py:101 [DEBUG] 截图成功: Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref, 文件路径: D:\PycharmProjects\APS\report\screenshots\Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref_20260203_064616.png
+[32mINFO    [0m conftest:conftest.py:97 [DEBUG] try_capture for Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref, driver_id=2166803657728, alive=True
+[32mINFO    [0m conftest:conftest.py:76 [Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref] 截图已保存：D:\PycharmProjects\APS\report\screenshots\Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref_20260203_064616.png
+[32mINFO    [0m conftest:conftest.py:79 [Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref] 截图时间：2026-02-03 06:46:16
+[32mINFO    [0m conftest:conftest.py:101 [DEBUG] 截图成功: Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref, 文件路径: D:\PycharmProjects\APS\report\screenshots\Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref_20260203_064616.png
+[32mINFO    [0m conftest:conftest.py:97 [DEBUG] try_capture for Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref, driver_id=2166796501632, alive=True
+[32mINFO    [0m conftest:conftest.py:76 [Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref] 截图已保存：D:\PycharmProjects\APS\report\screenshots\Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref_20260203_064616.png
+[32mINFO    [0m conftest:conftest.py:79 [Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref] 截图时间：2026-02-03 06:46:16
+[32mINFO    [0m conftest:conftest.py:101 [DEBUG] 截图成功: Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref, 文件路径: D:\PycharmProjects\APS\report\screenshots\Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref_20260203_064616.png
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="ivu-select-head-flex"]/input
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()="金属（演示）"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //button[contains(@class, "ivu-btn-primary")]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="计划控制塔"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="计划控制塔"])[1]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="订单进度"])[1]
+[31m[1mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
+[32mINFO    [0m root:driver_manager.py:56 🛑 已从实例池移除并关闭 driver：2166810251168
+[33mWARNING [0m conftest:conftest.py:114 [DEBUG] fixture_setup failed: login_to_orderstatus
+[32mINFO    [0m conftest:conftest.py:97 [DEBUG] try_capture for Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref, driver_id=2166803647312, alive=True
+[32mINFO    [0m conftest:conftest.py:76 [Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref] 截图已保存：D:\PycharmProjects\APS\report\screenshots\Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref_20260203_064648.png
+[32mINFO    [0m conftest:conftest.py:79 [Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref] 截图时间：2026-02-03 06:46:48
+[32mINFO    [0m conftest:conftest.py:101 [DEBUG] 截图成功: Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref, 文件路径: D:\PycharmProjects\APS\report\screenshots\Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref_20260203_064648.png
+[32mINFO    [0m conftest:conftest.py:97 [DEBUG] try_capture for Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref, driver_id=2166803657728, alive=True
+[32mINFO    [0m conftest:conftest.py:76 [Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref] 截图已保存：D:\PycharmProjects\APS\report\screenshots\Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref_20260203_064648.png
+[32mINFO    [0m conftest:conftest.py:79 [Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref] 截图时间：2026-02-03 06:46:48
+[32mINFO    [0m conftest:conftest.py:101 [DEBUG] 截图成功: Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref, 文件路径: D:\PycharmProjects\APS\report\screenshots\Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref_20260203_064648.png
+[32mINFO    [0m conftest:conftest.py:97 [DEBUG] try_capture for Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref, driver_id=2166796501632, alive=True
+[32mINFO    [0m conftest:conftest.py:76 [Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref] 截图已保存：D:\PycharmProjects\APS\report\screenshots\Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref_20260203_064648.png
+[32mINFO    [0m conftest:conftest.py:79 [Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref] 截图时间：2026-02-03 06:46:48
+[32mINFO    [0m conftest:conftest.py:101 [DEBUG] 截图成功: Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref, 文件路径: D:\PycharmProjects\APS\report\screenshots\Tests_test_system_test_orderstatus.py__TestsOrderStatusPage__test_orderstatus_ref_20260203_064648.png

@@ -1,0 +1,5 @@
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[p[text()="应用代码"]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[p[text()="应用代码"]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[p[text()="应用代码"]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[p[text()="应用代码"]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:driver_manager.py:56 🛑 已从实例池移除并关闭 driver：2164680141184
