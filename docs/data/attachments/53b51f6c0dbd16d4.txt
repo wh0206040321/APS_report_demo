@@ -1,0 +1,2 @@
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //input[@placeholder="搜索相关事务名称或描述关键词"]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //input[@placeholder="搜索相关事务名称或描述关键词"]
