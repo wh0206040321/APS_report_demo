@@ -75,11 +75,13 @@ class RolePage(BasePage):
         )
 
     def wait_for_loadingbox(self, timeout=30):
+        sleep(2)
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH, '//div[@class="loadingbox"]')
             )
         )
+        sleep(2)
 
     def click_all_button(self, name):
         """点击按钮."""

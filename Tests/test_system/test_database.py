@@ -150,11 +150,9 @@ class TestSDateBasePage:
             '//div[label[text()="类型"]]//i',
             '//li[text()="整型"]',
         ]
-        data.add_table_code(button_name='编辑', code=code, field_code=name, fieldbutton_name='编辑')
-        add.batch_modify_input(xpath_list[:2], code)
-        data.click_confirm()
+        data.add_table_code(button_name='编辑', code=code, field_code=name, field_code2=code, fieldbutton_name='编辑')
+        data.click_all_button("保存")
         message = data.get_error_message()
-        data.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         data.click_all_button("取消")
         assert message == "字段代码或者字段名称已经存在，不能再次创建！"
         assert not data.has_fail_message()
@@ -170,23 +168,20 @@ class TestSDateBasePage:
         xpath_list = [
             '//div[label[text()="字段代码"]]//input',
             '//div[label[text()="字段名称"]]//input',
-            '//div[label[text()="类型"]]//i',
-            '//li[text()="整型"]',
+            '//table[@class="vxe-table--body"]//tr/td[4]//input',
+            '//div[text()="整型"]',
         ]
-        data.add_table_code(button_name='编辑', code=code, field_code=name, fieldbutton_name='编辑')
-        add.batch_modify_input(xpath_list[:2], code + name)
+        data.add_table_code(button_name='编辑', code=code, field_code=name, field_code2=code + name,
+                            fieldbutton_name='编辑')
         data.click_button(xpath_list[2])
         data.click_button(xpath_list[3])
-        data.click_confirm()
         data.click_all_button("保存")
         message = data.get_find_message()
         data.select_input_database("表代码", code)
         data.click_button(f'(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]//span[text()="{code}"]')
-        data.click_all_button("编辑")
         sleep(2)
         eles = data.get_find_element_xpath(f'(//table[@class="vxe-table--body"])[3]//tr/td[2]//span[text()="{code+name}"]').text
-        elesint = data.get_find_element_xpath(f'(//table[@class="vxe-table--body"])[3]//tr[td[3][//span[text()="{code+name}"]]]/td[4]').text
-        data.click_all_button("取消")
+        elesint = data.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{code+name}"]]/td[4]').text
         assert eles == code+name and elesint == 'int'
         assert message == "保存成功"
         assert not data.has_fail_message()

@@ -606,10 +606,11 @@ class TestCalendarPage:
         calendar.click_button(
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
         )
+        calendar.wait_for_loading_to_disappear()
 
         # 勾选框
+        calendar.click_button('//table[@class="vxe-table--header"]//tr/th[2]//span[contains(@class,"vxe-cell--checkbox")]')
         random_int = random.randint(1, 6)
-        sleep(1)
         calendar.click_button(f'//table[@class="vxe-table--body"]//tr[{random_int}]/td[2]/div/span/span')
         sleep(1)
 
@@ -790,7 +791,7 @@ class TestCalendarPage:
         calendar.hover("包含")
         sleep(1)
         calendar.select_input(first_char)
-        sleep(1)
+        sleep(2)
         eles = calendar.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
@@ -803,6 +804,7 @@ class TestCalendarPage:
     def test_calendar_select4(self, login_to_calendar):
         driver = login_to_calendar  # WebDriver 实例
         calendar = Calendar(driver)  # 用 driver 初始化 Calendar
+        calendar.right_refresh('生产日历')
         name = calendar.get_find_element_xpath(
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
         ).get_attribute('innerText')
@@ -811,11 +813,10 @@ class TestCalendarPage:
         calendar.hover("符合开头")
         sleep(1)
         calendar.select_input(first_char)
-        sleep(1)
+        sleep(2)
         eles = calendar.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
-        calendar.right_refresh('生产日历')
         assert all(str(item).startswith(first_char) for item in list_)
         assert not calendar.has_fail_message()
 
@@ -824,6 +825,7 @@ class TestCalendarPage:
     def test_calendar_select5(self, login_to_calendar):
         driver = login_to_calendar  # WebDriver 实例
         calendar = Calendar(driver)  # 用 driver 初始化 Calendar
+        calendar.right_refresh('生产日历')
         name = calendar.get_find_element_xpath(
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
         ).get_attribute('innerText')
@@ -832,7 +834,7 @@ class TestCalendarPage:
         calendar.hover("符合结尾")
         sleep(1)
         calendar.select_input(last_char)
-        sleep(1)
+        sleep(2)
         eles = calendar.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
@@ -894,11 +896,60 @@ class TestCalendarPage:
         ele2 = calendar.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
             "innerText")
         assert ele1 == ele2
-        calendar.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        assert not calendar.has_fail_message()
+
+    @allure.story("模拟多选删除")
+    # @pytest.mark.run(order=1)
+    def test_calendar_shiftdel(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = Calendar(driver)  # 用 driver 初始化 Calendar
+        calendar.right_refresh('生产日历')
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]']
+        calendar.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = calendar.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        calendar.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        calendar.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改1')
+        sleep(2)
+        calendar.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        calendar.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        calendar.enter_texts('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input', '1没有数据修改12')
+        sleep(1)
+        ele1 = calendar.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').text
+        ele2 = calendar.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input').get_attribute("value")
+        calendar.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        calendar.get_find_message()
+        calendar.click_flagdata()
+        ele11 = calendar.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        ele22 = calendar.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[2]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele11 and ele2 == ele22
+        assert not calendar.has_fail_message()
+        before_data = calendar.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[3]//td[1])[1]']
+        calendar.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = calendar.get_find_element_xpath(elements[2])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
         calendar.click_del_button()
         calendar.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         message = calendar.get_find_message()
+        calendar.wait_for_loading_to_disappear()
+        after_data = calendar.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        after_count = int(re.search(r'\d+', after_data).group())
         assert message == "删除成功！"
+        assert before_count - after_count == 3, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
         assert not calendar.has_fail_message()
 
     @allure.story("模拟ctrl+c复制可查询")

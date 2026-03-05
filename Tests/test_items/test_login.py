@@ -50,7 +50,7 @@ class TestLoginPage:
         login_pa.click_button(
             '//button[@type="button" and @class="ivu-btn ivu-btn-primary ivu-btn-long ivu-btn-large"]'
         )  # 点击登录按钮
-        element = login_pa.get_find_element('//div[text()=" 用户名或密码无效 "]').text
+        element = login_pa.get_find_element('//div[text()=" 用户名或密码无效 "]').get_attribute("innerText").strip()
         assert element == "用户名或密码无效"
         assert not login_pa.has_fail_message()
 

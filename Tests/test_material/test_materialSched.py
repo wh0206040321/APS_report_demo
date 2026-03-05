@@ -17,7 +17,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_materialSched():
     driver = None
     try:
@@ -69,6 +69,7 @@ class TestMaterialSchedPage:
 
         sched.click_name_ok()  # 点击确定
         message = sched.get_error_message()
+        sched.click_button('(//button[span[text()="取消"]])[2]')
         # 检查元素是否包含子节点
         assert message == "请输入"
         assert not sched.has_fail_message()
@@ -87,6 +88,7 @@ class TestMaterialSchedPage:
 
         sched.click_name_ok()  # 点击确定
         message = sched.get_error_message()
+        sched.click_button('(//button[span[text()="取消"]])[2]')
         # 检查元素是否包含子节点
         assert message == "请输入"
         assert not sched.has_fail_message()
@@ -108,6 +110,7 @@ class TestMaterialSchedPage:
 
         sched.click_name_ok()  # 点击确定
         message = sched.get_error_message()
+        sched.click_button('(//button[span[text()="取消"]])[2]')
         # 检查元素是否包含子节点
         assert message == "物控方案已存在"
         assert not sched.has_fail_message()
@@ -172,7 +175,7 @@ class TestMaterialSchedPage:
             '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="22"]'
         )
         sched.click_del_schedbutton()  # 点击删除
-        sched.click_button('(//button[@class="ivu-btn ivu-btn-primary"])[2]')
+        sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
 
         # 点击保存
         sched.click_save_button()
@@ -422,7 +425,7 @@ class TestMaterialSchedPage:
             '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="33"]'
         )
         sched.click_del_schedbutton()  # 点击删除
-        sched.click_button('(//button[@class="ivu-btn ivu-btn-primary"])[2]')
+        sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
 
         # 点击保存
         sched.click_save_button()
@@ -430,6 +433,7 @@ class TestMaterialSchedPage:
             By.XPATH,
             '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="22"]',
         )
+        sched.right_refresh_1('物控方案管理')
         assert len(ele) == 0
         assert not sched.has_fail_message()
 
@@ -486,6 +490,7 @@ class TestMaterialSchedPage:
     def test_materialsched_attribute1(self, login_to_materialSched):
         driver = login_to_materialSched  # WebDriver 实例
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        sched.right_refresh_1('物控方案管理')
         adds = AddsPages(driver)
         name = "排产方案(订单级)复制"
         # 选择排产方案(订单级)复制方案
@@ -530,7 +535,123 @@ class TestMaterialSchedPage:
 
         sched.click_button('//div[text()=" 齐套指标输出 "]')
         after_value = sched.get_find_element_xpath('//div[div[text()="用户自定义指标项输出 "]]/div[2]').text
+        sched.right_refresh('物控方案管理')
         assert all_value1 == all_value2 and after_value in before_value
+        assert not sched.has_fail_message()
+
+    @allure.story("方案设置点击存储过程执行点击不报错")
+    # @pytest.mark.run(order=1)
+    def test_materialsched_click1(self, login_to_materialSched):
+        driver = login_to_materialSched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        sched.right_refresh_1('物控方案管理')
+        ele = sched.get_find_element_xpath(
+            '//span[text()="物控方案库"]/parent::span/preceding-sibling::span'
+        ).get_attribute('class')
+        if 'ivu-tree-arrow-open' not in ele:
+            sched.click_button(
+                '//span[text()="物控方案库"]/parent::span/preceding-sibling::span'
+            )
+        sleep(1)
+        name = [
+            "方案属性设置点击不报错",
+        ]
+        ele = sched.finds_elements(By.XPATH, f'//label[text()="{name[0]}"]')
+        if len(ele) == 0:
+            sched.add_copy_sched(name)
+        element = sched.get_find_element_xpath(
+            f'//span[text()="{name[0]}"]/parent::span/preceding-sibling::span'
+        )
+        driver.execute_script("arguments[0].scrollIntoView();", element)
+        sched.click_button(f'//span[@class="ivu-tree-title"]/span[text()="{name[0]}"]')
+        sched.click_button('//div[p[text()=" 内部命令 "]]/div//label[text()="执行存储过程"]')
+        sched.click_add_commandbutton()
+
+        ele = sched.get_find_element_xpath(
+            f'//span[text()="{name[0]}"]/parent::span/preceding-sibling::span'
+        ).get_attribute('class')
+        if 'ivu-tree-arrow-open' not in ele:
+            sched.click_button(
+                f'//span[text()="{name[0]}"]/parent::span/preceding-sibling::span'
+            )
+        sched.click_button(f'//span[text()="{name[0]}"]/parent::span/parent::li//ul//span[text()="执行存储过程"]')
+        sched.click_attribute_button()
+        fields = {
+            '存储过程名称': '存储过程',
+            '存储过程参数值(;)': '存储过程',
+            '备注': '存储过程',
+        }
+        # 遍历并操作每个字段
+        for label_text, input_value in fields.items():
+            # 输入框XPath
+            input_xpath = f'//div[div[text()="{label_text} "]]/div[2]//input'
+
+            # 点击并输入
+            sched.click_button(input_xpath)
+            sched.enter_texts(input_xpath, input_value)
+
+        # 特殊处理：下拉选择
+        sched.click_button('//div[div[text()="存储过程返回值 "]]/div[2]//input[@class="ivu-select-input"]')
+        sched.click_button('//li[text()="一个返回值"]')
+        sched.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
+        sched.click_save_button()
+        ele = sched.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        assert len(ele) == 0
+        assert not sched.has_fail_message()
+
+    @allure.story("方案设置点击运行接口点击不报错")
+    # @pytest.mark.run(order=1)
+    def test_materialsched_click2(self, login_to_materialSched):
+        driver = login_to_materialSched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        ele = sched.get_find_element_xpath(
+            '//span[text()="物控方案库"]/parent::span/preceding-sibling::span'
+        ).get_attribute('class')
+        if 'ivu-tree-arrow-open' not in ele:
+            sched.click_button(
+                '//span[text()="物控方案库"]/parent::span/preceding-sibling::span'
+            )
+        sleep(1)
+        name = [
+            "方案属性设置点击不报错",
+        ]
+        ele = sched.finds_elements(By.XPATH, f'//label[text()="{name[0]}"]')
+        if len(ele) == 0:
+            sched.add_copy_sched(name)
+        element = sched.get_find_element_xpath(
+            f'//span[text()="{name[0]}"]/parent::span/preceding-sibling::span'
+        )
+        driver.execute_script("arguments[0].scrollIntoView();", element)
+        sched.click_button(f'//span[@class="ivu-tree-title"]/span[text()="{name[0]}"]')
+        sched.click_button('//div[p[text()=" 内部命令 "]]/div//label[text()="运行接口"]')
+        sched.click_add_commandbutton()
+
+        ele = sched.get_find_element_xpath(
+            f'//span[text()="{name[0]}"]/parent::span/preceding-sibling::span'
+        ).get_attribute('class')
+        if 'ivu-tree-arrow-open' not in ele:
+            sched.click_button(
+                f'//span[text()="{name[0]}"]/parent::span/preceding-sibling::span'
+            )
+        sched.click_button(f'//span[text()="{name[0]}"]/parent::span/parent::li//ul//span[text()="运行接口"]')
+        sched.click_attribute_button()
+        dropdown_fields = ['接口名称', '用户', '排产单元']
+
+        for field in dropdown_fields:
+            sleep(1)
+            # 点击下拉框
+            sched.click_button(f'//div[div[text()="{field} "]]/div[2]//input[@class="ivu-select-input"]')
+            # 选择第2个选项
+            sched.click_button(f'//div[div[text()="{field} "]]/div[2]/div/div[2]//li[2]')
+            sched.click_button('//div[div[text()="用户 "]]/div[1]')
+
+        # 备注字段
+        sched.click_button('//div[div[text()="备注 "]]/div[2]//input')
+        sched.enter_texts('//div[div[text()="备注 "]]/div[2]//input', '测试')
+        sched.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
+        sched.click_save_button()
+        ele = sched.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        assert len(ele) == 0
         assert not sched.has_fail_message()
 
     @allure.story("删除测试方案")
@@ -538,7 +659,7 @@ class TestMaterialSchedPage:
     def test_materialsched_delsched3(self, login_to_materialSched):
         driver = login_to_materialSched  # WebDriver 实例
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
-        name = ["排产方案(订单级)复制"]
+        name = ["排产方案(订单级)复制", '方案属性设置点击不报错']
         sched.del_all_sched(name)
         ele = driver.find_elements(
             By.XPATH,

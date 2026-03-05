@@ -19,7 +19,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")   # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_materialsubstitution():
     driver = None
     try:
@@ -77,6 +77,7 @@ class TestSMaterialSubstitutionPage:
         sleep(1)
         material.click_confirm()
         message = material.get_error_message()
+        material.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "校验不通过，请检查标红的表单字段！"
         assert layout == name
         assert not material.has_fail_message()
@@ -93,6 +94,7 @@ class TestSMaterialSubstitutionPage:
         adds.batch_modify_select_input(select_list)
         material.click_confirm()
         message = material.get_error_message()
+        material.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "校验不通过，请检查标红的表单字段！"
         assert not material.has_fail_message()
 
@@ -159,6 +161,7 @@ class TestSMaterialSubstitutionPage:
     def test_materialsubstitution_updatesingle(self, login_to_materialsubstitution):
         driver = login_to_materialsubstitution  # WebDriver 实例
         material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
+        material.right_refresh('物料替代')
         material.click_update()
         material.click_button('//div[@id="g8b1op6y-vfpx"]/i')
         material.click_button('//div[@id="db2x9abu-154j"]//input')
@@ -185,6 +188,7 @@ class TestSMaterialSubstitutionPage:
     def test_materialsubstitution_updategroup(self, login_to_materialsubstitution):
         driver = login_to_materialsubstitution  # WebDriver 实例
         material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
+        material.right_refresh('物料替代')
         material.click_flagdata()
         material.click_button('(//table[@class="vxe-table--body"]//tr[td[4]//span[text()="成组替代"]]/td[2])[1]')
         sleep(1)
@@ -199,7 +203,7 @@ class TestSMaterialSubstitutionPage:
 
         before_data1 = material.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[td[3]//button]/td[2]').text
         before_data2 = material.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[td[6]//button]/td[2]').text
-        material.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
+        material.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
 
         material.enter_texts('//div[@id="hji97w60-v76b"]//input', 8)
         material.click_confirm()
@@ -226,6 +230,7 @@ class TestSMaterialSubstitutionPage:
         material.click_select_button()
 
         eles = material.loop_judgment('//table[@class="vxe-table--body"]//tr/td[4]')
+        material.click_reset_button()
         assert all('单料替代' == ele for ele in eles)
         assert not material.has_fail_message()
 
@@ -241,6 +246,7 @@ class TestSMaterialSubstitutionPage:
         name = material.get_find_element_xpath('//div[@id="g7yqlm5y-a4w0"]//input').get_attribute("value")
 
         eles = material.loop_judgment('//table[@class="vxe-table--body"]//tr/td[5]')
+        material.click_reset_button()
         assert all(name == ele for ele in eles)
         assert not material.has_fail_message()
 
@@ -256,6 +262,7 @@ class TestSMaterialSubstitutionPage:
         name = material.get_find_element_xpath('//div[@id="53txfv56-a74l"]//input').get_attribute("value")
 
         eles = material.loop_judgment('//table[@class="vxe-table--body"]//tr/td[7]')
+        material.click_reset_button()
         assert all(name == ele for ele in eles)
         assert not material.has_fail_message()
 
@@ -271,6 +278,7 @@ class TestSMaterialSubstitutionPage:
         name = material.get_find_element_xpath('//div[@id="8dsqasad-wy1m"]//input').get_attribute("value")
 
         eles = material.loop_judgment('//table[@class="vxe-table--body"]//tr/td[10]')
+        material.click_reset_button()
         assert all(name == ele for ele in eles)
         assert not material.has_fail_message()
 
@@ -290,6 +298,8 @@ class TestSMaterialSubstitutionPage:
 
         eles1 = material.loop_judgment('//table[@class="vxe-table--body"]//tr/td[5]')
         eles2 = material.loop_judgment('//table[@class="vxe-table--body"]//tr/td[7]')
+        material.click_reset_button()
+        material.right_refresh('物料替代')
         assert all(name1 == ele for ele in eles1) and all(name2 == ele for ele in eles2)
         assert not material.has_fail_message()
 
@@ -305,6 +315,7 @@ class TestSMaterialSubstitutionPage:
         sleep(2)
         eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[4]')
         list_ = [ele.text for ele in eles]
+        material.right_refresh('物料替代')
         assert all(name in text for text in list_), f"表格内容不符合预期，实际值: {list_}"
         assert not material.has_fail_message()
 
@@ -313,9 +324,8 @@ class TestSMaterialSubstitutionPage:
     def test_materialsubstitution_select2(self, login_to_materialsubstitution):
         driver = login_to_materialsubstitution  # WebDriver 实例
         material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
-        material.wait_for_loading_to_disappear()
+        material.click_button('//div[div[span[text()=" 替代场景"]]]//i[contains(@class,"suffixIcon")]')
         sleep(1)
-        material.click_button('//div[div[span[text()=" 替代场景"]]]/div[3]//i')
         eles = material.get_find_element_xpath(
             '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
             "class")
@@ -323,8 +333,9 @@ class TestSMaterialSubstitutionPage:
             material.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
             material.click_button('//div[@class="filter-btn-bar"]/button')
         sleep(1)
-        material.click_button('//div[div[span[text()=" 替代场景"]]]/div[3]//i')
+        material.click_button('//div[div[span[text()=" 替代场景"]]]//input')
         eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        material.right_refresh('物料替代')
         assert len(eles) == 0
         assert not material.has_fail_message()
 
@@ -333,18 +344,20 @@ class TestSMaterialSubstitutionPage:
     def test_materialsubstitution_select3(self, login_to_materialsubstitution):
         driver = login_to_materialsubstitution  # WebDriver 实例
         material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
-        material.wait_for_loading_to_disappear()
-        name = "ECN"
-        sleep(1)
-        material.click_button('//div[div[span[text()=" 替代场景"]]]/div[3]//i')
+        name = material.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        material.click_button('//div[div[span[text()=" 替代场景"]]]//i[contains(@class,"suffixIcon")]')
         material.hover("包含")
         sleep(1)
-        material.select_input_substitution(name)
+        material.select_input('替代场景', first_char)
         sleep(1)
         eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
-        assert all(name in text for text in list_)
+        material.right_refresh('物料替代')
+        assert all(first_char in text for text in list_)
         assert not material.has_fail_message()
 
     @allure.story("过滤条件查询，设置符合开头查询成功")
@@ -352,18 +365,20 @@ class TestSMaterialSubstitutionPage:
     def test_materialsubstitution_select4(self, login_to_materialsubstitution):
         driver = login_to_materialsubstitution  # WebDriver 实例
         material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
-        name = "常规"
-        material.wait_for_loading_to_disappear()
-        sleep(1)
-        material.click_button('//div[div[span[text()=" 替代场景"]]]/div[3]//i')
+        name = material.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        material.click_button('//div[div[span[text()=" 替代场景"]]]//i[contains(@class,"suffixIcon")]')
         material.hover("符合开头")
         sleep(1)
-        material.select_input_substitution(name)
+        material.select_input('替代场景', first_char)
         sleep(1)
         eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
-        assert all(str(item).startswith(name) for item in list_)
+        material.right_refresh('物料替代')
+        assert all(str(item).startswith(first_char) for item in list_)
         assert not material.has_fail_message()
 
     @allure.story("过滤条件查询，设置符合结尾查询成功")
@@ -371,18 +386,20 @@ class TestSMaterialSubstitutionPage:
     def test_materialsubstitution_select5(self, login_to_materialsubstitution):
         driver = login_to_materialsubstitution  # WebDriver 实例
         material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
-        material.wait_for_loading_to_disappear()
-        name = "同步替代"
-        sleep(1)
-        material.click_button('//div[div[span[text()=" 替代场景"]]]/div[3]//i')
+        name = material.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        last_char = name[-1:] if name else ""
+        material.click_button('//div[div[span[text()=" 替代场景"]]]//i[contains(@class,"suffixIcon")]')
         material.hover("符合结尾")
         sleep(1)
-        material.select_input_substitution(name)
+        material.select_input('替代场景', last_char)
         sleep(1)
         eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.text for ele in eles]
-        assert all(str(item).endswith(name) for item in list_)
+        material.right_refresh('物料替代')
+        assert all(str(item).endswith(last_char) for item in list_)
         assert not material.has_fail_message()
 
     @allure.story("清除筛选效果成功")
@@ -390,20 +407,192 @@ class TestSMaterialSubstitutionPage:
     def test_materialsubstitution_clear(self, login_to_materialsubstitution):
         driver = login_to_materialsubstitution  # WebDriver 实例
         material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
-        material.wait_for_loading_to_disappear()
         name = "3"
         sleep(1)
-        material.click_button('//div[div[span[text()=" 替代场景"]]]/div[3]//i')
+        material.click_button('//div[div[span[text()=" 替代场景"]]]//i[contains(@class,"suffixIcon")]')
         material.hover("包含")
         sleep(1)
-        material.select_input_substitution(name)
+        material.select_input('替代场景', name)
         sleep(1)
-        material.click_button('//div[div[span[text()=" 替代场景"]]]/div[3]//i')
+        material.click_button('//div[div[span[text()=" 替代场景"]]]//i[contains(@class,"suffixIcon")]')
         material.hover("清除所有筛选条件")
         sleep(1)
-        ele = material.get_find_element_xpath('//div[div[span[text()=" 替代场景"]]]/div[3]//i').get_attribute(
+        ele = material.get_find_element_xpath(
+            '//div[div[span[text()=" 替代场景"]]]//i[contains(@class,"suffixIcon")]').get_attribute(
             "class")
+        material.right_refresh('物料替代')
         assert ele == "vxe-icon-funnel suffixIcon"
+        assert not material.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加重复")
+    # @pytest.mark.run(order=1)
+    def test_materialsubstitution_ctrlIrepeat(self, login_to_materialsubstitution):
+        driver = login_to_materialsubstitution  # WebDriver 实例
+        material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
+        material.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        ele1 = material.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
+            "innerText")
+        material.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = material.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        material.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        material.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert message == '记录已存在,请检查！'
+        assert not material.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_materialsubstitution_ctrlI(self, login_to_materialsubstitution):
+        driver = login_to_materialsubstitution  # WebDriver 实例
+        material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
+        material.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        material.wait_for_loading_to_disappear()
+        sleep(1)
+        material.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        material.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[8])[2]//input', '64')
+        sleep(1)
+        ele1 = material.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[8])[2]//input').get_attribute(
+            "value")
+        material.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        material.get_find_message()
+        material.select_input('替代组号', '64')
+        ele2 = material.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[8])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2 == '64'
+        assert not material.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改")
+    # @pytest.mark.run(order=1)
+    def test_materialsubstitution_ctrlM(self, login_to_materialsubstitution):
+        driver = login_to_materialsubstitution  # WebDriver 实例
+        material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
+        material.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        material.wait_for_loading_to_disappear()
+        sleep(1)
+        material.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        material.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[8])[2]//input', '65')
+        ele1 = material.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[8])[2]//input').get_attribute(
+            "value")
+        material.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        material.get_find_message()
+        material.select_input('替代组号', '65')
+        ele2 = material.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[8])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2
+        assert not material.has_fail_message()
+
+    @allure.story("模拟多选删除")
+    # @pytest.mark.run(order=1)
+    def test_materialsubstitution_shiftdel(self, login_to_materialsubstitution):
+        driver = login_to_materialsubstitution  # WebDriver 实例
+        material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
+        material.right_refresh('物料替代')
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        material.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = material.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        sleep(1)
+        material.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        material.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[8])[2]//input', '651')
+        material.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        material.enter_texts('(//table[@class="vxe-table--body"]//tr[2]/td[8])[2]//input', '6512')
+        sleep(1)
+        ele1 = material.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[8])[2]').text
+        ele2 = material.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[2]/td[8])[2]//input').get_attribute("value")
+        material.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        material.get_find_message()
+        material.select_input('替代组号', '651')
+        ele11 = material.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[8])[1]').get_attribute(
+            "innerText")
+        ele22 = material.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[2]/td[8])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele11 and ele2 == ele22
+        assert not material.has_fail_message()
+        material.select_input('替代组号', '65')
+        before_data = material.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[3]//td[1])[2]']
+        material.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = material.get_find_element_xpath(elements[2])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        material.click_all_button('删除')
+        material.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        message = material.get_find_message()
+        material.wait_for_loading_to_disappear()
+        after_data = material.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        after_count = int(re.search(r'\d+', after_data).group())
+        assert message == "删除成功！"
+        assert before_count - after_count == 3, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
+        assert not material.has_fail_message()
+
+    @allure.story("模拟ctrl+c复制可查询")
+    # @pytest.mark.run(order=1)
+    def test_materialsubstitution_ctrlC(self, login_to_materialsubstitution):
+        driver = login_to_materialsubstitution  # WebDriver 实例
+        material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
+        material.right_refresh('物料替代')
+        material.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        before_data = material.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+        material.click_button('//div[div[span[text()=" 替代场景"]]]//input')
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        eles = [ele.text for ele in eles]
+        material.right_refresh('物料替代')
+        assert all(before_data in ele for ele in eles)
+        assert not material.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_materialsubstitution_shift(self, login_to_materialsubstitution):
+        driver = login_to_materialsubstitution  # WebDriver 实例
+        material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        material.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = material.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        num = material.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        material.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert len(num) == 2
+        assert not material.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+m编辑")
+    # @pytest.mark.run(order=1)
+    def test_materialsubstitution_ctrls(self, login_to_materialsubstitution):
+        driver = login_to_materialsubstitution  # WebDriver 实例
+        material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        material.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = material.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        num = material.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        material.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = material.get_find_message()
+        assert len(num) == 2 and message == "保存成功"
         assert not material.has_fail_message()
 
     @allure.story("删除数据删除布局成功")

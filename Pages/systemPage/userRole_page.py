@@ -102,6 +102,7 @@ class UserRolePage(BasePage):
         self.enter_texts('//div[div[p[text()="角色代码"]]]//input', role)
         sleep(3)
         self.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span)[2]')
+        sleep(1)
 
     def update_user(self, before_name, after_name):
         """修改用户管理."""

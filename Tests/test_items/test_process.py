@@ -1,5 +1,6 @@
 import logging
 import random
+import re
 from datetime import date
 from time import sleep
 
@@ -257,16 +258,17 @@ class TestProcessPage:
     def test_process_textverify(self, login_to_process):
         driver = login_to_process  # WebDriver 实例
         process = ProcessPage(driver)  # 用 driver 初始化 ProcessPage
-        name = "111111111111111133331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111"
-        process.adds_process(name, name)
+        name = ["111111111111111133331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111"]
+        process.adds_process(name[0], name[0])
         sleep(1)
         adddata = process.get_find_element_xpath(
-            f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[2]'
+            f'(//span[text()="{name[0]}"])[1]/ancestor::tr[1]/td[2]'
         ).text
         num_ = process.get_find_element_xpath(
-            f'(//span[text()="{name}"])[1]/ancestor::tr[1]/td[5]'
+            f'(//span[text()="{name[0]}"])[1]/ancestor::tr[1]/td[5]'
         ).text
-        assert adddata == name and num_ == '9999999999', f"预期数据是{name}，实际得到{adddata}"
+        assert adddata == name[0] and num_ == '9999999999', f"预期数据是{name[0]}，实际得到{adddata}"
+        process.del_all(name[0], '//p[text()="工序代码"]/ancestor::div[2]//input')
         assert not process.has_fail_message()
 
     @allure.story("添加测试数据成功")
@@ -1144,7 +1146,8 @@ class TestProcessPage:
         ele1 = process.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
             "innerText")
         process.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
-        message = process.get_error_message()
+        message = process.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        process.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
         process.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == '记录已存在,请检查！'
         assert not process.has_fail_message()
@@ -1188,12 +1191,61 @@ class TestProcessPage:
         ele2 = process.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
             "innerText")
         assert ele1 == ele2
-        process.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        assert not process.has_fail_message()
+
+    @allure.story("模拟多选删除")
+    # @pytest.mark.run(order=1)
+    def test_process_shiftdel(self, login_to_process):
+        driver = login_to_process  # WebDriver 实例
+        process = ProcessPage(driver)  # 用 driver 初始化 ProcessPage
+        process.right_refresh('工序')
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]']
+        process.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = process.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        process.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        process.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改1')
+        sleep(2)
+        process.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        process.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        process.enter_texts('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input', '1没有数据修改12')
+        sleep(1)
+        ele1 = process.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').text
+        ele2 = process.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input').get_attribute("value")
+        process.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        process.get_find_message()
+        process.select_input('1没有数据修改1')
+        ele11 = process.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        ele22 = process.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[2]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele11 and ele2 == ele22
+        assert not process.has_fail_message()
+        process.select_input('1没有数据修改')
+        before_data = process.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[3]//td[1])[1]']
+        process.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = process.get_find_element_xpath(elements[2])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
         process.click_del_button()
         process.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         message = process.get_find_message()
-        process.right_refresh('工序')
+        process.wait_for_loading_to_disappear()
+        after_data = process.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        after_count = int(re.search(r'\d+', after_data).group())
         assert message == "删除成功！"
+        assert before_count - after_count == 3, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
         assert not process.has_fail_message()
 
     @allure.story("模拟ctrl+c复制可查询")
@@ -1201,6 +1253,7 @@ class TestProcessPage:
     def test_process_ctrlC(self, login_to_process):
         driver = login_to_process  # WebDriver 实例
         process = ProcessPage(driver)  # 用 driver 初始化 ProcessPage
+        process.right_refresh('工序')
         process.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
         before_data = process.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
         sleep(1)
@@ -1219,8 +1272,8 @@ class TestProcessPage:
     def test_process_shift(self, login_to_process):
         driver = login_to_process  # WebDriver 实例
         process = ProcessPage(driver)  # 用 driver 初始化 ProcessPage
-        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
-                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
         process.click_button(elements[0])
         # 第二个单元格 Shift+点击（选择范围）
         cell2 = process.get_find_element_xpath(elements[1])
@@ -1237,8 +1290,8 @@ class TestProcessPage:
     def test_process_ctrls(self, login_to_process):
         driver = login_to_process  # WebDriver 实例
         process = ProcessPage(driver)  # 用 driver 初始化 ProcessPage
-        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
-                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
         process.click_button(elements[0])
         # 第二个单元格 Shift+点击（选择范围）
         cell2 = process.get_find_element_xpath(elements[1])
@@ -1260,12 +1313,14 @@ class TestProcessPage:
 
         value = ['111', '11测试全部数据', '1测试A', '111111111111111133331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111']
         process.del_all(value, '//p[text()="工序代码"]/ancestor::div[2]//input')
+
+        process.del_layout(layout)
+        process.right_refresh('工序')
+        sleep(1)
         itemdata = [
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
             for v in value[:4]
         ]
-        process.del_layout(layout)
-        sleep(1)
         # 再次查找页面上是否有目标 div，以验证是否删除成功
         after_layout = driver.find_elements(
             By.XPATH, f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'

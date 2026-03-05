@@ -1,5 +1,6 @@
 import logging
 import random
+import re
 from datetime import date
 from time import sleep
 
@@ -13,6 +14,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from Pages.itemsPage.adds_page import AddsPages
 from Pages.itemsPage.spec1_page import Spec1Page
 from Pages.itemsPage.login_page import LoginPage
 from Utils.data_driven import DateDriver
@@ -818,104 +820,72 @@ class TestSpecPage:
     def test_spec_addall(self, login_to_spec1):
         driver = login_to_spec1  # WebDriver 实例
         spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
-        data_list = ["全部数据", "20"]
-        spec.click_add_button()  # 检查点击添加
-        spec.add_input_all(data_list[0], data_list[1])
+        adds = AddsPages(driver)
+        input_value = '11测试全部数据'
+        spec.click_add_button()
+        text_list = [
+            '//label[text()="代码"]/following-sibling::div//input',
+            '//label[text()="名称"]/following-sibling::div//input',
+            '//label[text()="备注"]/following-sibling::div//input',
+        ]
+        adds.batch_modify_input(text_list, input_value)
+
+        select_list = [
+            {"select": '//label[text()="显示颜色"]/following-sibling::div//i',
+             "value": '//span[text()="RGB(128,128,255)"]'},
+        ]
+        adds.batch_modify_select_input(select_list)
+
+        input_num_value = '1'
+        num_xpath_list3 = [
+            f'//label[text()="{label}{i}"]/following-sibling::div//input'
+            for i in range(1, 8)
+            for label in ["单批上限", "合批上限", "合批期间"]
+        ]
+
+        num_list = [
+            '//label[text()="显示顺序"]/following-sibling::div//input',
+        ]
+        num_list.extend(num_xpath_list3)
+        adds.batch_modify_input(num_list, input_num_value)
+
+        select_input_list = [item["select"].replace("//i", "//input") for item in select_list]
+        all_value = text_list + select_input_list + num_list
+        len_num = len(all_value)
+        before_all_value = adds.batch_acquisition_input(all_value)
+        spec.click_confirm()
+        driver.refresh()
+        spec.wait_for_loading_to_disappear()
+        num = adds.go_settings_page()
         sleep(1)
         spec.enter_texts(
-            '//p[text()="代码"]/ancestor::div[2]//input', data_list[0]
+            '//p[text()="代码"]/ancestor::div[2]//input', input_value
         )
-        # 缩放到最小（例如 25%）
-        driver.execute_script("document.body.style.zoom='0.4'")
         sleep(1)
-
-        row_xpath = f'//tr[./td[2][.//span[text()="{data_list[0]}"]]]'
-        # 获取目标行
-        target_row = driver.find_element(By.XPATH, row_xpath)
-
-        # 获取该行下所有 td 元素
-        td_elements = target_row.find_elements(By.XPATH, "./td")
-        td_count = len(td_elements)
-        print(f"该行共有 {td_count} 个 <td> 元素")
-        columns_text = []
-        # 遍历每个 td[i]
-        # 遍历每个 td[i] 并提取文本
-        for i in range(2, td_count + 1):
-            td_xpath = f'{row_xpath}/td[{i}]'
-            sleep(0.2)
-            try:
-                td = driver.find_element(By.XPATH, td_xpath)
-                text = td.text.strip()
-                print(f"第 {i} 个单元格内容：{text}")
-                columns_text.append(text)
-            except StaleElementReferenceException:
-                print(f"⚠️ 第 {i} 个单元格引用失效，尝试重新查找")
-                sleep(0.2)
-                td = driver.find_element(By.XPATH, td_xpath)
-                text = td.text.strip()
-                columns_text.append(text)
-
-        print(columns_text)
-        bef_text = ['全部数据', '全部数据', '2', '20', '全部数据', f'{DateDriver().username}', date.today().strftime("%Y/%m/%d"), '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20']
-        spec.right_refresh('生产特征1')
-        assert len(columns_text) == len(bef_text), f"长度不一致：actual={len(columns_text)}, expected={len(bef_text)}"
-        for i, (a, e) in enumerate(zip(columns_text, bef_text)):
-            if i == 6:
-                assert str(e) in str(a), f"第7项包含断言失败：'{e}' not in '{a}'"
-            else:
-                assert a == e, f"第{i + 1}项不一致：actual='{a}', expected='{e}'"
-        assert not spec.has_fail_message()
-
-    @allure.story("重新打开浏览器，数据还存在")
-    # @pytest.mark.run(order=1)
-    def test_spec_restart(self, login_to_spec1):
-        driver = login_to_spec1  # WebDriver 实例
-        spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
-        code = '全部数据'
-        spec.enter_texts(
-            '//p[text()="代码"]/ancestor::div[2]//input', code
-        )
-        # 缩放到最小（例如 25%）
-        driver.execute_script("document.body.style.zoom='0.4'")
+        spec.click_button(
+            f'(//div[@class="vxe-table--main-wrapper"])[2]//table[@class="vxe-table--body"]//tr/td[2][.//span[text()="{input_value}"]]')
         sleep(1)
-
-        row_xpath = f'//tr[./td[2][.//span[text()="{code}"]]]'
-        # 获取目标行
-        target_row = driver.find_element(By.XPATH, row_xpath)
-
-        # 获取该行下所有 td 元素
-        td_elements = target_row.find_elements(By.XPATH, "./td")
-        td_count = len(td_elements)
-        print(f"该行共有 {td_count} 个 <td> 元素")
-        columns_text = []
-        # 遍历每个 td[i]
-        # 遍历每个 td[i] 并提取文本
-        for i in range(2, td_count + 1):
-            td_xpath = f'{row_xpath}/td[{i}]'
-            sleep(0.2)
-            try:
-                td = driver.find_element(By.XPATH, td_xpath)
-                text = td.text.strip()
-                print(f"第 {i} 个单元格内容：{text}")
-                columns_text.append(text)
-            except StaleElementReferenceException:
-                print(f"⚠️ 第 {i} 个单元格引用失效，尝试重新查找")
-                sleep(0.2)
-                td = driver.find_element(By.XPATH, td_xpath)
-                text = td.text.strip()
-                columns_text.append(text)
-
-        print(columns_text)
-        bef_text = ['全部数据', '全部数据', '2', '20', '全部数据', f'{DateDriver().username}', date.today().strftime("%Y/%m/%d"), '20', '20', '20',
-                    '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20', '20',
-                    '20', '20']
-        spec.right_refresh('生产特征1')
-        assert len(columns_text) == len(bef_text), f"长度不一致：actual={len(columns_text)}, expected={len(bef_text)}"
-        for i, (a, e) in enumerate(zip(columns_text, bef_text)):
-            if i == 6:
-                assert str(e) in str(a), f"第7项包含断言失败：'{e}' not in '{a}'"
-            else:
-                assert a == e, f"第{i + 1}项不一致：actual='{a}', expected='{e}'"
+        spec.click_edi_button()
+        after_all_value = adds.batch_acquisition_input(all_value)
+        username = spec.get_find_element_xpath('//label[text()="更新者"]/following-sibling::div//input').get_attribute(
+            "value")
+        updatatime = spec.get_find_element_xpath(
+            '//label[text()="更新时间"]/following-sibling::div//input').get_attribute("value")
+        today_str = date.today().strftime('%Y/%m/%d')
+        spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        logging.info(f"before_all_value: {before_all_value}, after_all_value: {after_all_value}")
+        ele = spec.finds_elements(By.XPATH,
+                                  f'(//div[@class="vxe-table--main-wrapper"])[2]//table[@class="vxe-table--body"]//tr/td[2][.//span[text()="{input_value}"]]')
+        if len(ele) == 1:
+            spec.click_button(
+                f'(//div[@class="vxe-table--main-wrapper"])[2]//table[@class="vxe-table--body"]//tr/td[2][.//span[text()="{input_value}"]]')
+            spec.click_del_button()  # 点击删除
+            spec.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+            spec.wait_for_loading_to_disappear()
+            spec.right_refresh('生产特征1')
+        assert before_all_value == after_all_value and username == DateDriver().username and today_str in updatatime and int(
+            num) == (int(len_num) + 2)
+        assert all(before_all_value), "列表中存在为空或为假值的元素！"
         assert not spec.has_fail_message()
 
     @allure.story("过滤条件查询，一个不选，显示正常")
@@ -923,7 +893,6 @@ class TestSpecPage:
     def test_spec_select2(self, login_to_spec1):
         driver = login_to_spec1  # WebDriver 实例
         spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
-        driver.execute_script("document.body.style.zoom='1'")
         spec.right_refresh('生产特征1')
         spec.click_button('//p[text()="代码"]/ancestor::div[2]/div[3]//i')
         sleep(1)
@@ -1034,7 +1003,8 @@ class TestSpecPage:
         ele1 = spec.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
             "innerText")
         spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
-        message = spec.get_error_message()
+        message = spec.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        spec.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
         spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == '记录已存在,请检查！'
         assert not spec.has_fail_message()
@@ -1078,12 +1048,61 @@ class TestSpecPage:
         ele2 = spec.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
             "innerText")
         assert ele1 == ele2
-        spec.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        assert not spec.has_fail_message()
+
+    @allure.story("模拟多选删除")
+    # @pytest.mark.run(order=1)
+    def test_spec_shiftdel(self, login_to_spec1):
+        driver = login_to_spec1  # WebDriver 实例
+        spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
+        spec.right_refresh('生产特征1')
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        spec.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = spec.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        spec.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        spec.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改1')
+        sleep(2)
+        spec.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        spec.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        spec.enter_texts('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input', '1没有数据修改12')
+        sleep(1)
+        ele1 = spec.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').text
+        ele2 = spec.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input').get_attribute("value")
+        spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        spec.get_find_message()
+        spec.select_input('1没有数据修改1')
+        ele11 = spec.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        ele22 = spec.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[2]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele11 and ele2 == ele22
+        assert not spec.has_fail_message()
+        spec.select_input('1没有数据修改')
+        before_data = spec.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[3]//td[1])[2]']
+        spec.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = spec.get_find_element_xpath(elements[2])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
         spec.click_del_button()
         spec.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         message = spec.get_find_message()
-        spec.right_refresh('生产特征1')
+        spec.wait_for_loading_to_disappear()
+        after_data = spec.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        after_count = int(re.search(r'\d+', after_data).group())
         assert message == "删除成功！"
+        assert before_count - after_count == 3, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
         assert not spec.has_fail_message()
 
     @allure.story("模拟ctrl+c复制可查询")
@@ -1091,6 +1110,7 @@ class TestSpecPage:
     def test_spec_ctrlC(self, login_to_spec1):
         driver = login_to_spec1  # WebDriver 实例
         spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
+        spec.right_refresh('生产特征1')
         spec.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
         before_data = spec.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
         sleep(1)
@@ -1146,21 +1166,21 @@ class TestSpecPage:
     def test_spec_delsuccess1(self, login_to_spec1):
         driver = login_to_spec1  # WebDriver 实例
         spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
-        driver.execute_script("document.body.style.zoom='1'")
         layout = "测试布局A"
 
-        value = ['全部数据', '111', '1测试A', '1111111111111111333311222211112222211111111133331111111444441111111111111111111111111111111111111111']
+        value = ['111', '1测试A', '1111111111111111333311222211112222211111111133331111111444441111111111111111111111111111111111111111']
         spec.del_all(value, '//p[text()="代码"]/ancestor::div[2]//input')
-        data = [
-            driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
-            for v in value[:4]
-        ]
+
         try:
             spec.del_layout(layout)
         except TimeoutException:
             print(f"布局 '{layout}' 可能不存在或已被删除")
         spec.right_refresh('生产特征1')
         sleep(1)
+        data = [
+            driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
+            for v in value[:3]
+        ]
         # 再次查找页面上是否有目标 div，以验证是否删除成功
         after_layout = driver.find_elements(
             By.XPATH, f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'

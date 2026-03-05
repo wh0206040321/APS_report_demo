@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from time import sleep
 
 import allure
@@ -15,7 +16,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_materialplan():
     driver = None
     try:
@@ -123,4 +124,80 @@ class TestMaterialPlanPage:
 
         assert success_element1.text == "完成"
         assert success_element3.text == "完成"
+        assert not plan.has_fail_message()
+
+    @allure.story("日志信息过滤查询成功")
+    # @pytest.mark.run(order=1)
+    def test_plan_select_materialplan(self, login_to_materialplan):
+        driver = login_to_materialplan
+        plan = PlanPage(driver)
+        wait = WebDriverWait(driver, 60)
+        date_driver = DateDriver()
+
+        plan.click_button('(//div[@class="d-flex"])[2]/p[text()=" 完成 "]')
+        plan.wait_for_loading_to_disappear()
+        # 过滤条件查询，一个不选，显示正常
+        plan.click_button('//div[div[p[text()="日志信息"]]]//i[contains(@class,"suffixIcon")]')
+        sleep(1)
+        eles = plan.get_find_element_xpath(
+            '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
+            "class")
+        if eles == "ivu-checkbox ivu-checkbox-checked":
+            plan.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            plan.click_button('//div[@class="filter-btn-bar"]/button')
+        sleep(1)
+        plan.click_button('//div[div[p[text()="日志信息"]]]//input')
+        eles = plan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        plan.click_button('//div[div[p[text()="日志信息"]]]//i[contains(@class,"suffixIcon")]')
+        plan.hover("清除所有筛选条件")
+        assert len(eles) == 0
+
+        # 过滤条件查询，设置包含条件查询成功
+        plan.click_button('//div[div[p[text()="日志信息"]]]//i[contains(@class,"suffixIcon")]')
+        plan.hover("包含")
+        sleep(1)
+        plan.select_input_material('BOM')
+        sleep(1)
+        eles = plan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[9]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        assert all('BOM' in text for text in list_)
+
+        # 过滤条件查询，设置符合开头查询成功
+        name = plan.get_find_element_xpath(
+            '//table[@class="vxe-table--body"]//tr//td[3]'
+        ).get_attribute('innerText')
+        first_char = '检查'
+        plan.click_button('//div[div[p[text()="日志信息"]]]//i[contains(@class,"suffixIcon")]')
+        plan.hover("符合开头")
+        sleep(1)
+        plan.select_input_material(first_char)
+        sleep(1)
+        eles = plan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[9]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        assert all(str(item).startswith(first_char) for item in list_)
+
+        # 过滤条件查询，设置符合结尾查询成功
+        name = plan.get_find_element_xpath(
+            '//table[@class="vxe-table--body"]//tr//td[3]'
+        ).get_attribute('innerText')
+        last_char = '。'
+        plan.click_button('//div[div[p[text()="日志信息"]]]//i[contains(@class,"suffixIcon")]')
+        plan.hover("符合结尾")
+        sleep(1)
+        plan.select_input_material(last_char)
+        sleep(1)
+        eles = plan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[9]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        assert all(str(item).endswith(last_char) for item in list_)
+
+        # 清除筛选效果成功
+        plan.click_button('//div[div[p[text()="日志信息"]]]//i[contains(@class,"suffixIcon")]')
+        plan.hover("清除所有筛选条件")
+        sleep(1)
+        ele = plan.get_find_element_xpath('//div[div[p[text()="日志信息"]]]//i[contains(@class,"suffixIcon")]').get_attribute(
+            "class")
+        assert ele == "vxe-icon-funnel suffixIcon"
         assert not plan.has_fail_message()

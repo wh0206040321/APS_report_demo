@@ -20,7 +20,7 @@ from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 from Utils.shared_data_util import SharedDataUtil
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_calendar():
     driver = None
     try:
@@ -88,6 +88,7 @@ class TestMaterialCalendarPage:
         border_color = input_box.value_of_css_property("border-color")
         bordername_color = inputshift_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        calendar.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -124,6 +125,7 @@ class TestMaterialCalendarPage:
         sleep(1)
         bordername_color = inputshift_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        calendar.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert bordername_color == expected_color, f"预期边框颜色为{bordername_color}"
         assert not calendar.has_fail_message()
 
@@ -154,6 +156,7 @@ class TestMaterialCalendarPage:
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
+        calendar.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert border_color == expected_color, f"预期边框颜色为{border_color}"
         assert not calendar.has_fail_message()
 
@@ -168,7 +171,7 @@ class TestMaterialCalendarPage:
         calendar.click_button(
             '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
         )
-        calendar.click_button(f'//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span/span')
+        calendar.click_button(f'(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span/span)[last()]')
         calendar.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
         )
@@ -183,6 +186,7 @@ class TestMaterialCalendarPage:
         )
         calendar.click_confirm_button()
         message = calendar.get_error_message()
+        calendar.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "请先填写表单"
         assert not calendar.has_fail_message()
 
@@ -208,6 +212,7 @@ class TestMaterialCalendarPage:
         calendarnum = calendar.get_find_element_xpath(
             '//label[text()="资源量"]/ancestor::div[1]//input[1]'
         ).get_attribute("value")
+        calendar.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert calendarnum == "113", f"预期{calendarnum}"
         assert not calendar.has_fail_message()
 
@@ -289,7 +294,7 @@ class TestMaterialCalendarPage:
         )
         # 勾选框
         calendar.wait_for_loading_to_disappear()
-        calendar.click_button(f'//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span/span')
+        calendar.click_button(f'(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span/span)[last()]')
 
         calendar.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
@@ -363,7 +368,7 @@ class TestMaterialCalendarPage:
         )
         # 勾选框
         calendar.wait_for_loading_to_disappear()
-        calendar.click_button(f'//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span/span')
+        calendar.click_button(f'(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span/span)[last()]')
 
         calendar.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
@@ -454,8 +459,6 @@ class TestMaterialCalendarPage:
         )
         sleep(1)
         # 缩放到最小（例如 60%）
-        driver.execute_script("document.body.style.zoom='0.6'")
-        sleep(1)
 
         row_xpath = '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]'
         # 获取目标行
@@ -512,8 +515,6 @@ class TestMaterialCalendarPage:
         )
         sleep(1)
         # 缩放到最小（例如 60%）
-        driver.execute_script("document.body.style.zoom='0.6'")
-        sleep(1)
 
         row_xpath = '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]'
         # 获取目标行
@@ -657,7 +658,7 @@ class TestMaterialCalendarPage:
         calendar.click_button(
             '(//span[@class="vxe-checkbox--icon vxe-icon-checkbox-checked-fill"])[1]'
         )
-        calendar.click_button(f'//table[@class="vxe-table--body"]//tr[{random_int}]/td[2]/div/span/span')
+        calendar.click_button(f'(//table[@class="vxe-table--body"]//tr[{random_int}]/td[2]/div/span/span)[last()]')
         sleep(1)
 
         calendar.click_button(
@@ -747,7 +748,284 @@ class TestMaterialCalendarPage:
         calendarcode = calendar.get_find_element_xpath(
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
         ).text
+        calendar.right_refresh('收货日历')
         assert calendarcode == ele
+        assert not calendar.has_fail_message()
+
+    @allure.story("过滤条件查询，一个不选，显示正常")
+    # @pytest.mark.run(order=1)
+    def test_materialcalendar_select2(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = MaterialCalendar(driver)  # 用 driver 初始化 MaterialCalendar
+        calendar.click_button('//div[div[p[text()="收货场所"]]]//i[contains(@class,"suffixIcon")]')
+        sleep(1)
+        eles = calendar.get_find_element_xpath(
+            '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
+            "class")
+        if eles == "ivu-checkbox ivu-checkbox-checked":
+            calendar.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            calendar.click_button('//div[@class="filter-btn-bar"]/button')
+        sleep(1)
+        calendar.click_button('//div[div[p[text()="收货场所"]]]//input')
+        eles = calendar.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        calendar.right_refresh('收货日历')
+        assert len(eles) == 0
+        assert not calendar.has_fail_message()
+
+    @allure.story("过滤条件查询，设置包含条件查询成功")
+    # @pytest.mark.run(order=1)
+    def test_materialcalendar_select3(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = MaterialCalendar(driver)  # 用 driver 初始化 MaterialCalendar
+        name = calendar.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        calendar.click_button('//div[div[p[text()="收货场所"]]]//i[contains(@class,"suffixIcon")]')
+        calendar.hover("包含")
+        sleep(1)
+        calendar.select_input_standard('收货场所', first_char)
+        sleep(1)
+        eles = calendar.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        calendar.right_refresh('收货日历')
+        assert all(first_char.lower() in text.lower() for text in list_)
+        assert not calendar.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合开头查询成功")
+    # @pytest.mark.run(order=1)
+    def test_materialcalendar_select4(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = MaterialCalendar(driver)  # 用 driver 初始化 MaterialCalendar
+        calendar.right_refresh('收货日历')
+        name = calendar.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        calendar.click_button('//div[div[p[text()="收货场所"]]]//i[contains(@class,"suffixIcon")]')
+        calendar.hover("符合开头")
+        sleep(1)
+        calendar.select_input_standard('收货场所', first_char)
+        sleep(1)
+        eles = calendar.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        assert all(str(item).lower().startswith(first_char.lower()) for item in list_)
+        calendar.right_refresh('收货日历')
+        assert not calendar.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合结尾查询成功")
+    # @pytest.mark.run(order=1)
+    def test_materialcalendar_select5(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = MaterialCalendar(driver)  # 用 driver 初始化 MaterialCalendar
+        calendar.right_refresh('收货日历')
+        name = calendar.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        last_char = name[-1:] if name else ""
+        calendar.click_button('//div[div[p[text()="收货场所"]]]//i[contains(@class,"suffixIcon")]')
+        calendar.hover("符合结尾")
+        sleep(1)
+        calendar.select_input_standard('收货场所', last_char)
+        sleep(1)
+        eles = calendar.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        assert all(str(item).lower().endswith(last_char.lower()) for item in list_)
+        calendar.right_refresh('收货日历')
+        assert not calendar.has_fail_message()
+
+    @allure.story("清除筛选效果成功")
+    # @pytest.mark.run(order=1)
+    def test_materialcalendar_clear(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = MaterialCalendar(driver)  # 用 driver 初始化 MaterialCalendar
+        calendar.right_refresh('收货日历')
+        name = "3"
+        sleep(1)
+        calendar.click_button('//div[div[p[text()="收货场所"]]]//i[contains(@class,"suffixIcon")]')
+        calendar.hover("包含")
+        sleep(1)
+        calendar.select_input_standard('收货场所', name)
+        sleep(1)
+        calendar.click_button('//div[div[p[text()="收货场所"]]]//i[contains(@class,"suffixIcon")]')
+        calendar.hover("清除所有筛选条件")
+        sleep(1)
+        ele = calendar.get_find_element_xpath(
+            '//div[div[p[text()="收货场所"]]]//i[contains(@class,"suffixIcon")]').get_attribute(
+            "class")
+        calendar.right_refresh('收货日历')
+        assert ele == "vxe-icon-funnel suffixIcon"
+        assert not calendar.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加重复")
+    # @pytest.mark.run(order=1)
+    def test_materialcalendar_ctrlIrepeat(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = MaterialCalendar(driver)  # 用 driver 初始化 MaterialCalendar
+        calendar.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        ele1 = calendar.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
+            "innerText")
+        calendar.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = calendar.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        calendar.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        calendar.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert message == '记录已存在,请检查！'
+        assert not calendar.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_materialcalendar_ctrlI(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = MaterialCalendar(driver)  # 用 driver 初始化 MaterialCalendar
+        calendar.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        calendar.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        calendar.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加')
+        sleep(1)
+        ele1 = calendar.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        calendar.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        calendar.get_find_message()
+        calendar.select_input_standard('收货场所', '1没有数据添加')
+        ele2 = calendar.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2 == '1没有数据添加'
+        assert not calendar.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改")
+    # @pytest.mark.run(order=1)
+    def test_materialcalendar_ctrlM(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = MaterialCalendar(driver)  # 用 driver 初始化 MaterialCalendar
+        calendar.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        calendar.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        calendar.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改')
+        ele1 = calendar.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        calendar.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        calendar.get_find_message()
+        calendar.select_input_standard('收货场所', '1没有数据修改')
+        ele2 = calendar.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2
+        assert not calendar.has_fail_message()
+
+    @allure.story("模拟多选删除")
+    # @pytest.mark.run(order=1)
+    def test_materialcalendar_shiftdel(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = MaterialCalendar(driver)  # 用 driver 初始化 MaterialCalendar
+        calendar.right_refresh('收货日历')
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]']
+        calendar.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = calendar.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        sleep(1)
+        calendar.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        calendar.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改1')
+        calendar.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        calendar.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        calendar.enter_texts('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input', '1没有数据修改12')
+        sleep(1)
+        ele1 = calendar.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').text
+        ele2 = calendar.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input').get_attribute("value")
+        calendar.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        calendar.get_find_message()
+        calendar.select_input_standard('收货场所', '1没有数据修改1')
+        ele11 = calendar.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        ele22 = calendar.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[2]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele11 and ele2 == ele22
+        assert not calendar.has_fail_message()
+        calendar.select_input_standard('收货场所', '1没有数据修改')
+        before_data = calendar.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[3]//td[1])[1]']
+        calendar.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = calendar.get_find_element_xpath(elements[2])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        calendar.click_del_button()
+        calendar.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        message = calendar.get_find_message()
+        calendar.wait_for_loading_to_disappear()
+        after_data = calendar.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        after_count = int(re.search(r'\d+', after_data).group())
+        assert message == "删除成功！"
+        assert before_count - after_count == 3, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
+        assert not calendar.has_fail_message()
+
+    @allure.story("模拟ctrl+c复制可查询")
+    # @pytest.mark.run(order=1)
+    def test_materialcalendar_ctrlC(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = MaterialCalendar(driver)  # 用 driver 初始化 MaterialCalendar
+        calendar.right_refresh('收货日历')
+        calendar.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        before_data = calendar.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+        calendar.click_button('//div[div[p[text()="收货场所"]]]//input')
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        eles = calendar.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        eles = [ele.text for ele in eles]
+        calendar.right_refresh('收货日历')
+        assert all(before_data in ele for ele in eles)
+        assert not calendar.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_materialcalendar_shift(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = MaterialCalendar(driver)  # 用 driver 初始化 MaterialCalendar
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
+        calendar.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = calendar.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        num = calendar.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        calendar.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert len(num) == 2
+        assert not calendar.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+m编辑")
+    # @pytest.mark.run(order=1)
+    def test_materialcalendar_ctrls(self, login_to_calendar):
+        driver = login_to_calendar  # WebDriver 实例
+        calendar = MaterialCalendar(driver)  # 用 driver 初始化 MaterialCalendar
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
+        calendar.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = calendar.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        num = calendar.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        calendar.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = calendar.get_find_message()
+        assert len(num) == 2 and message == "保存成功"
         assert not calendar.has_fail_message()
 
     @allure.story("删除数据，删除布局成功")

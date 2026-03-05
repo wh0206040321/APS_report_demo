@@ -180,7 +180,7 @@ class OrderPage(BasePage):
 
     def get_find_message(self):
         """获取错误信息"""
-        message = WebDriverWait(self.driver, 10).until(
+        message = WebDriverWait(self.driver, 15).until(
             EC.visibility_of_element_located(
                 (By.XPATH, '//div[@class="el-message el-message--success"]/p')
             )
@@ -363,7 +363,7 @@ class OrderPage(BasePage):
             self.click_button(f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]')
             self.click_del_button()  # 检查点击删除
             self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-            sleep(1)
+            self.get_find_message()
             self.wait_for_loading_to_disappear()
 
     def select_order_data(self, name):

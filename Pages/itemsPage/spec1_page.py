@@ -72,6 +72,12 @@ class Spec1Page(BasePage):
             )
         )
 
+    def click_confirm(self):
+        """点击确定"""
+        self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_disappear()
+        sleep(0.5)
+
     def get_find_message(self):
         """获取错误信息"""
         message = WebDriverWait(self.driver, 10).until(
@@ -236,7 +242,13 @@ class Spec1Page(BasePage):
 
     def click_spec_num(self, num):
         """点击指定生产特征数字"""
-        self.click_button(f'(//span[text()="生产特征{num}"])[1]')
+        try:
+            self.click_button(f'(//span[text()="生产特征{num}"])[1]')
+        except Exception as e:
+            self.click_button('(//span[text()="计划管理"])[1]')
+            self.click_button('(//span[text()="计划生产特征"])[1]')
+            self.click_button(f'(//span[text()="生产特征{num}"])[1]')
+        self.wait_for_loading_to_disappear()
 
     def click_all_button(self, name):
         """点击按钮."""

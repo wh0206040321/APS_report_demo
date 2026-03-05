@@ -20,7 +20,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_interfaceconfiguration():
     driver = None
     try:
@@ -70,6 +70,7 @@ class TestSInterfaceConfigurationPage:
         interface.click_all_button("新增")
         interface.click_confirm()
         message = interface.get_error_message()
+        interface.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "请填写信息"
         assert not interface.has_fail_message()
 
@@ -89,6 +90,7 @@ class TestSInterfaceConfigurationPage:
             interfaceconfiguration.click_button(xpath)
         interfaceconfiguration.click_confirm()
         message = interfaceconfiguration.get_error_message()
+        interfaceconfiguration.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "请填写信息"
         assert not interfaceconfiguration.has_fail_message()
 
@@ -163,6 +165,8 @@ class TestSInterfaceConfigurationPage:
 
         interfaceconfiguration.click_confirm()
         message = interfaceconfiguration.finds_elements(By.XPATH, '//div[text()=" 接口名称重复定义。 "]')
+        interfaceconfiguration.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        interfaceconfiguration.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert len(message) == 1
         assert not interfaceconfiguration.has_fail_message()
 
@@ -241,6 +245,7 @@ class TestSInterfaceConfigurationPage:
         sleep(1)
         interfaceconfiguration.click_button('//div[p[text()="接口名称"]]/following-sibling::div//input')
         eles = interfaceconfiguration.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        interfaceconfiguration.right_refresh('接口配置分发')
         assert len(eles) == 0
         assert not interfaceconfiguration.has_fail_message()
 
@@ -259,6 +264,7 @@ class TestSInterfaceConfigurationPage:
         eles = interfaceconfiguration.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[4]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        interfaceconfiguration.right_refresh('接口配置分发')
         assert len(list_) > 0
         assert all(text == '' or name in text for text in list_)
         assert not interfaceconfiguration.has_fail_message()
@@ -278,6 +284,7 @@ class TestSInterfaceConfigurationPage:
         eles = interfaceconfiguration.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[4]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        interfaceconfiguration.right_refresh('接口配置分发')
         assert len(list_) > 0
         assert all(item == '' or str(item).startswith(name) for item in list_)
         assert not interfaceconfiguration.has_fail_message()
@@ -297,6 +304,7 @@ class TestSInterfaceConfigurationPage:
         eles = interfaceconfiguration.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[4]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        interfaceconfiguration.right_refresh('接口配置分发')
         assert len(list_) > 0
         assert all(item == '' or str(item).endswith(name) for item in list_)
         assert not interfaceconfiguration.has_fail_message()

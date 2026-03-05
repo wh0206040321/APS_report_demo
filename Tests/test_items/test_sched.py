@@ -1498,20 +1498,6 @@ class TestSchedPage:
         assert "ME.Parent.Work_StartTime+5h" in before_div_text == after_div_text
         assert not sched.has_fail_message()
 
-    @allure.story("删除测试方案")
-    # @pytest.mark.run(order=1)
-    def test_sched_delsched3(self, login_to_sched):
-        driver = login_to_sched  # WebDriver 实例
-        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
-        name = ["排产方案(订单级)复制"]
-        sched.del_all_sched(name)
-        ele = driver.find_elements(
-            By.XPATH,
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="22"]',
-        )
-        assert len(ele) == 0
-        assert not sched.has_fail_message()
-
     @allure.story("添加复制测试方案，配置同步使用")
     # @pytest.mark.run(order=1)
     def test_sched_addrepeatsuccess2(self, login_to_sched):
@@ -1525,5 +1511,193 @@ class TestSchedPage:
         sched.add_copy_sched(name)
         eles = sched.finds_elements(By.XPATH, '//span[@class="ivu-tree-title"]')
         all_texts = [ele.text for ele in eles]
+        sched.right_refresh_1('计划方案管理')
         assert all(n in all_texts for n in name), f"不是所有名称都存在。现有的元素: {all_texts}"
+        assert not sched.has_fail_message()
+
+    @allure.story("方案设置点击属性编辑点击不报错")
+    # @pytest.mark.run(order=1)
+    def test_sched_click1(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        name = [
+            "方案属性设置点击不报错",
+        ]
+        ele = sched.finds_elements(By.XPATH, f'//label[text()="{name[0]}"]')
+        if len(ele) == 0:
+            sched.add_copy_sched(name)
+        sched.right_refresh_1('计划方案管理')
+        ele = sched.get_find_element_xpath(
+            '//span[text()="计划方案库"]/preceding-sibling::span'
+        ).get_attribute('class')
+        if 'ivu-tree-arrow-open' not in ele:
+            sched.click_button(
+                '//span[text()="计划方案库"]/preceding-sibling::span'
+            )
+        sleep(1)
+        sched.click_button(f'//span[@class="ivu-tree-title"][text()="{name[0]}"]')
+        sched.click_button('//div[p[text()=" 内部命令 "]]/div//label[text()="属性编辑"]')
+        sched.click_add_commandbutton()
+
+        ele = sched.get_find_element_xpath(
+            f'//span[text()="{name[0]}"]/preceding-sibling::span'
+        ).get_attribute('class')
+        if 'ivu-tree-arrow-open' not in ele:
+            sched.click_button(
+                f'//span[text()="{name[0]}"]/preceding-sibling::span'
+            )
+        sched.click_button(f'//span[text()="{name[0]}"]/parent::li//ul//span[text()="属性编辑"]')
+        sched.click_attribute_button()
+        tabs = ['订单属性  ', '工作属性  ', '资源属性  ', '品目属性  ']  # None表示当前页
+
+        for tab in tabs:
+            sched.click_button(f'//li[text()="{tab}"]')
+            # 执行添加日历操作
+            sched.click_button('//div[p[text()="对象属性设置"]]//i[@class="ivu-icon ivu-icon-md-add"]')
+            sched.click_button('//div[p[text()="对象属性设置"]]//i[contains(@class,"ivu-input-icon")]')
+            sched.wait_for_loading_to_disappear()
+            element = sched.get_find_element_xpath('//span[text()="添加覆盖日历。"]')
+            ActionChains(driver).double_click(element).perform()
+            sleep(1)
+            sched.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
+
+        sched.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        sched.click_save_button()
+        ele = sched.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        assert len(ele) == 0
+        assert not sched.has_fail_message()
+
+    @allure.story("方案设置点击删除数据点击不报错")
+    # @pytest.mark.run(order=1)
+    def test_sched_click2(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        sched.right_refresh_1('计划方案管理')
+        ele = sched.get_find_element_xpath(
+            '//span[text()="计划方案库"]/preceding-sibling::span'
+        ).get_attribute('class')
+        if 'ivu-tree-arrow-open' not in ele:
+            sched.click_button(
+                '//span[text()="计划方案库"]/preceding-sibling::span'
+            )
+        sleep(1)
+        name = [
+            "方案属性设置点击不报错",
+        ]
+        ele = sched.finds_elements(By.XPATH, f'//label[text()="{name[0]}"]')
+        if len(ele) == 0:
+            sched.add_copy_sched(name)
+        sched.click_button(f'//span[@class="ivu-tree-title"][text()="{name[0]}"]')
+        sched.click_button('//div[p[text()=" 内部命令 "]]/div//label[text()="删除数据"]')
+        sched.click_add_commandbutton()
+
+        ele = sched.get_find_element_xpath(
+            f'//span[text()="{name[0]}"]/preceding-sibling::span'
+        ).get_attribute('class')
+        if 'ivu-tree-arrow-open' not in ele:
+            sched.click_button(
+                f'//span[text()="{name[0]}"]/preceding-sibling::span'
+            )
+        sched.click_button(f'//span[text()="{name[0]}"]/parent::li//ul//span[text()="删除数据"]')
+        sched.click_attribute_button()
+        sched.click_button('(//i[@class="ivu-icon ivu-icon-md-add"])[last()]')
+
+        sched.click_button('//div[@class="flex-1 overflow-hidden"]//input[@class="ivu-select-input"]')
+        sched.click_button('//div[@class="flex-1 overflow-hidden"]//li[2]')
+
+        sched.click_button('//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请输入"]/preceding-sibling::i')
+        sched.wait_for_loading_to_disappear()
+        element = sched.get_find_element_xpath('//span[text()="添加覆盖日历。"]')
+        ActionChains(driver).double_click(element).perform()
+        sleep(1)
+        sched.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
+        sleep(2)
+        input_value = sched.get_find_element_xpath('//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请输入"]').get_attribute("value")
+
+        sched.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        sched.click_save_button()
+        ele = sched.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        assert 'AddOCalendar(Me.OperationMainRes,#2006/10/01 00:00:00#,#2006/10/15 00:00:00#,1)' in input_value
+        assert len(ele) == 0
+        assert not sched.has_fail_message()
+
+    @allure.story("方案设置点击执行存储过程点击不报错")
+    # @pytest.mark.run(order=1)
+    def test_sched_click3(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        sched.right_refresh_1('计划方案管理')
+        ele = sched.get_find_element_xpath(
+            '//span[text()="计划方案库"]/preceding-sibling::span'
+        ).get_attribute('class')
+        if 'ivu-tree-arrow-open' not in ele:
+            sched.click_button(
+                '//span[text()="计划方案库"]/preceding-sibling::span'
+            )
+        sleep(1)
+        name = [
+            "方案属性设置点击不报错",
+        ]
+        ele = sched.finds_elements(By.XPATH, f'//label[text()="{name[0]}"]')
+        if len(ele) == 0:
+            sched.add_copy_sched(name)
+        sched.click_button(f'//span[@class="ivu-tree-title"][text()="{name[0]}"]')
+        sched.click_button('//div[p[text()=" 内部命令 "]]/div//label[text()="执行存储过程"]')
+        sched.click_add_commandbutton()
+
+        ele = sched.get_find_element_xpath(
+            f'//span[text()="{name[0]}"]/preceding-sibling::span'
+        ).get_attribute('class')
+        if 'ivu-tree-arrow-open' not in ele:
+            sched.click_button(
+                f'//span[text()="{name[0]}"]/preceding-sibling::span'
+            )
+        sched.click_button(f'//span[text()="{name[0]}"]/parent::li//ul//span[text()="执行存储过程"]')
+        sched.click_attribute_button()
+        for row in range(1, 4):
+            input_xpath = f'(//table[@class="vxe-table--body"])[last()]//tr[{row}]/td[3]//input'
+            sched.click_button(input_xpath)
+            sched.enter_texts(input_xpath, str(row))
+
+        rows_and_options = [
+            (4, 1),  # 第4行选第1个选项
+            (5, 2)  # 第5行选第2个选项
+        ]
+
+        for row_num, option_num in rows_and_options:
+            # 点击下拉框
+            dropdown_xpath = f'(//table[@class="vxe-table--body"])[last()]//tr[{row_num}]/td[3]//input'
+            sched.click_button(dropdown_xpath)
+            sleep(1)
+
+            # 点击对应选项
+            option_xpath = f'(//div[text()="制造订单"])[{option_num}]'
+            sched.click_button(option_xpath)
+            sleep(1)
+
+        for i in range(7, 10):
+            sched.click_button(f'//table[@class="vxe-table--body"]//tr[{i}]/td[3]//i')
+            sched.wait_for_loading_to_disappear()
+            element = sched.get_find_element_xpath('//span[text()="添加覆盖日历。"]')
+            ActionChains(driver).double_click(element).perform()
+            sleep(1)
+            sched.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
+        sched.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        sched.click_save_button()
+        ele = sched.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        assert len(ele) == 0
+        assert not sched.has_fail_message()
+
+    @allure.story("删除测试方案")
+    # @pytest.mark.run(order=1)
+    def test_sched_delsched3(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        name = ["排产方案(订单级)复制", '方案属性设置点击不报错']
+        sched.del_all_sched(name)
+        ele = driver.find_elements(
+            By.XPATH,
+            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="22"]',
+        )
+        assert len(ele) == 0
         assert not sched.has_fail_message()

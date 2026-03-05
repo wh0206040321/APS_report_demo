@@ -80,6 +80,8 @@ class TestTableSettingPage:
     def test_tablesetting_rightclickcopy(self, login_to_tablesetting):
         driver = login_to_tablesetting  # WebDriver 实例
         setting = SettingPage(driver)  # 用 driver 初始化 SettingPage
+        driver.execute_script("document.body.style.zoom='0.9'")
+        sleep(1)
         setting.click_right_click_row('(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]', '复制')
         setting.click_button('//p[text()="物料代码"]/ancestor::div[2]//input')
         ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
@@ -422,11 +424,12 @@ class TestTableSettingPage:
     def test_tablesetting_order_unhiderow2(self, login_to_tablesetting):
         driver = login_to_tablesetting  # WebDriver 实例
         setting = SettingPage(driver)  # 用 driver 初始化 SettingPage
-        setting.realistic_right_click('(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]', '隐藏行')
+        # setting.realistic_right_click('(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]', '隐藏行')
 
         after_ = setting.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]//td[2]').text
-        setting.click_button('//span[@class="hiddenRowIcon hiddenRowIcon_Top"]/i')
-        before_ = setting.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
+        ele = setting.get_find_element_xpath('//span[@class="hiddenRowIcon hiddenRowIcon_Top"]/i')
+        ActionChains(driver).move_to_element(ele).click().perform()
+        before_ = setting.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[3]//td[2]').text
         setting.right_refresh('制造订单')
         assert after_ == before_
         assert not setting.has_fail_message()
@@ -537,7 +540,7 @@ class TestTableSettingPage:
         setting.wait_for_loading_to_disappear()
         cla = setting.get_find_element_xpath(xpath).get_attribute('class')
         setting.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
-        setting.right_refresh('物品')
+        setting.right_refresh('制造订单')
         assert 'ivu-checkbox-wrapper-checked' not in cla
         assert not setting.has_fail_message()
 
@@ -547,13 +550,14 @@ class TestTableSettingPage:
         driver = login_to_tablesetting  # WebDriver 实例
         setting = SettingPage(driver)  # 用 driver 初始化 SettingPage
         setting.click_button('//div[div[text()=" 制造订单 "]]/span')
+        setting.right_refresh('物品')
         setting.click_right_click_row('(//table[@class="vxe-table--header"]//tr/th[2])[1]//p', '复制')
         setting.click_button('//p[text()="物料代码"]/ancestor::div[2]//input')
         ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
         sleep(1)
         ele = setting.get_find_element_xpath('//p[text()="物料代码"]/ancestor::div[2]//input').get_attribute('value')
         setting.right_refresh('物品')
-        assert ele == '物品代码'
+        assert ele == '物料代码'
         assert not setting.has_fail_message()
 
     @allure.story("右键设置固定列成功")

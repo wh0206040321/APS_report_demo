@@ -2,6 +2,7 @@ import logging
 from time import sleep
 
 import allure
+import pyautogui
 import pytest
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver import Keys
@@ -11,8 +12,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
 
+from Pages.itemsPage.item_page import ItemPage
 from Pages.itemsPage.login_page import LoginPage
 from Pages.itemsPage.setting_page import SettingPage
+from Pages.systemPage.userRole_page import UserRolePage
 from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
@@ -326,9 +329,8 @@ class TestSettingPage:
             sleep(1)
             setting.click_confirm_button()
 
-        driver.refresh()
+        setting.right_refresh('物品')
         sleep(1)
-        setting.wait_for_loading_to_disappear()
         name = setting.get_find_element_xpath(
             f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
         )
@@ -368,8 +370,7 @@ class TestSettingPage:
         sleep(1)
         name = setting.get_find_element_xpath(
             f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
-        ).get_attribute('innerText')
-        setting.click_button('(//div[@class="demo-drawer-footer"]//span[text()="取消"])[2]')
+        ).get_attribute('innerText').strip()
         assert name == layout
         assert not setting.has_fail_message()
 
@@ -1183,6 +1184,7 @@ class TestSettingPage:
         # 打开下拉框
         setting.click_button('//div[text()="日期"]')
         setting.click_button('(//div[@class="demo-drawer-footer"])[3]/button[2]')
+        setting.wait_for_el_loading_mask()
         setting.wait_for_loading_to_disappear()
         # 断言布局名称与预期相符
         setting.click_button('//p[text()="交货期"]/following-sibling::div[1]')
@@ -1204,6 +1206,7 @@ class TestSettingPage:
         driver = login_to_setting  # WebDriver 实例
         setting = SettingPage(driver)  # 用 driver 初始化 SettingPage
         setting.click_button('//div[@class="queryBtn"]/button[2]')
+        sleep(1)
         ele = setting.get_find_element_xpath('//div[@class="ivu-date-picker-rel"]//input').get_attribute("value")
         setting.right_refresh('制造订单')
         assert ele == ""
@@ -1252,14 +1255,6 @@ class TestSettingPage:
             '//div[@class="single-page"]//table[@class="vxe-table--body"]//tr[2]/td[9]'
         ).get_attribute('innerText')
 
-        # 删除导航栏物品页面
-        setting.click_button(
-            '//div[@class="scroll-body" and .//div[text()=" 物品 "]]//div[./div[text()=" 物品 "]]'
-        )
-        setting.click_button(
-            '//div[@class="scroll-body" and .//div[text()=" 物品 "]]//div[./div[text()=" 物品 "]]/span'
-        )
-        sleep(1)
         # 获取目标 div 元素，这里的目标是具有特定文本的 div
         target_div = setting.get_find_element_xpath(
             f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
@@ -1366,11 +1361,11 @@ class TestSettingPage:
         setting.click_button(f'(//span[text()=" 在导航中显示布局 "])[{index + 1}]')
         setting.click_button('(//div[@class="demo-drawer-footer"])[2]/button[2]')
         setting.get_find_message()
+        setting.wait_for_loading_to_disappear()
         sleep(1)
         name = setting.get_find_element_xpath(
             f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
         ).get_attribute('innerText')
-        setting.click_button('(//div[@class="ivu-drawer-body"]//span[text()="取消"])[2]')
         setting.right_refresh('物品')
         assert name == layout
         assert not setting.has_fail_message()
@@ -1470,6 +1465,7 @@ class TestSettingPage:
         setting.click_button('(//button[@class="ivu-btn ivu-btn-primary"])[last()]')
         message = setting.get_error_message()
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         setting.click_button(f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]')
         setting.click_setting_button()
@@ -1491,6 +1487,7 @@ class TestSettingPage:
             # 如果已选中，直接点击确定按钮保存设置
             setting.click_confirm_button()
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert message == "请输入图表名称"
         assert not setting.has_fail_message()
@@ -1507,6 +1504,7 @@ class TestSettingPage:
         setting.click_last_button()
         name = setting.get_find_element_xpath('//div[@class="statisticalListItemTitle"]/span').text
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert name == f"{statistics} "f"(数据源:{layout})"
         assert not setting.has_fail_message()
@@ -1522,6 +1520,7 @@ class TestSettingPage:
         ele = setting.get_find_element_xpath('//div[@class="statisticalListItemTitle"]/span').text
         # 刷新当前页面
         driver.refresh()
+        setting.wait_for_loadingbox()
         sleep(1)
         setting.add_layout()
         setting.enter_texts(
@@ -1559,6 +1558,7 @@ class TestSettingPage:
         sleep(1)
         eles = driver.find_elements(By.XPATH, '//div[.//span[text()="统计图1 "] and @class="statisticalListItemTitle"]')
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert len(eles) == 1 and ele == "统计图1 (数据源:测试布局A)" and name == layout
         assert not setting.has_fail_message()
@@ -1575,6 +1575,7 @@ class TestSettingPage:
         setting.click_last_button()
         name = setting.get_find_element_xpath(f'//div[@class="statisticalListItemTitle"]/span[contains(text(),"{statistics}")]').text
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert name == f"{statistics} "f"(数据源:{layout})"
         assert not setting.has_fail_message()
@@ -1594,6 +1595,7 @@ class TestSettingPage:
         name = setting.get_find_element_xpath(
             f'//div[@class="statisticalListItemTitle"]/span[contains(text(),"{statistics}")]').text
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert name == f"{statistics} "f"(数据源:{layout})"
         assert not setting.has_fail_message()
@@ -1611,6 +1613,7 @@ class TestSettingPage:
         name = setting.get_find_element_xpath(
             f'//div[@class="statisticalListItemTitle"]/span[contains(text(),"{statistics}")]').text
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert name == f"{statistics} "f"(数据源:{layout})"
         assert not setting.has_fail_message()
@@ -1625,8 +1628,9 @@ class TestSettingPage:
         setting.click_button(f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]')
         setting.add_statistics(num=1, name=statistics, code2="物料优先度 (itemPriority)", code3="物料种类 (type)")
         setting.click_button('(//button[@class="ivu-btn ivu-btn-primary"])[last()]')
-        message = setting.get_error_message()
+        message = setting.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert message == "记录已存在,请检查！"
         assert not setting.has_fail_message()
@@ -1644,6 +1648,7 @@ class TestSettingPage:
         name = setting.get_find_element_xpath(
             f'//div[@class="statisticalListItemTitle"]/span[contains(text(),"{statistics}")]').text
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert name == f"{statistics} "f"(数据源:{layout})"
         assert not setting.has_fail_message()
@@ -1661,6 +1666,7 @@ class TestSettingPage:
         name = setting.get_find_element_xpath(
             f'//div[@class="statisticalListItemTitle"]/span[contains(text(),"{statistics}")]').text
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert name == f"{statistics} "f"(数据源:{layout})"
         assert not setting.has_fail_message()
@@ -1678,6 +1684,7 @@ class TestSettingPage:
         name = setting.get_find_element_xpath(
             f'//div[@class="statisticalListItemTitle"]/span[contains(text(),"{statistics}")]').text
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert name == f"{statistics} "f"(数据源:{layout})"
         assert not setting.has_fail_message()
@@ -1695,6 +1702,7 @@ class TestSettingPage:
         name = setting.get_find_element_xpath(
             f'//div[@class="statisticalListItemTitle"]/span[contains(text(),"{statistics}")]').text
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert name == f"{statistics} "f"(数据源:{layout})"
         assert not setting.has_fail_message()
@@ -1712,6 +1720,7 @@ class TestSettingPage:
         name = setting.get_find_element_xpath(
             f'//div[@class="statisticalListItemTitle"]/span[contains(text(),"{statistics}")]').text
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert name == f"{statistics} "f"(数据源:{layout})"
         assert not setting.has_fail_message()
@@ -1729,6 +1738,7 @@ class TestSettingPage:
         name = setting.get_find_element_xpath(
             f'//div[@class="statisticalListItemTitle"]/span[contains(text(),"{statistics}")]').text
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert name == f"{statistics} "f"(数据源:{layout})"
         assert not setting.has_fail_message()
@@ -1746,6 +1756,7 @@ class TestSettingPage:
         name = setting.get_find_element_xpath(
             f'//div[@class="statisticalListItemTitle"]/span[contains(text(),"{statistics}")]').text
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert name == f"{statistics} "f"(数据源:{layout})"
         assert not setting.has_fail_message()
@@ -1763,6 +1774,7 @@ class TestSettingPage:
         name = setting.get_find_element_xpath(
             f'//div[@class="statisticalListItemTitle"]/span[contains(text(),"{statistics}")]').text
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert name == f"{statistics} "f"(数据源:{layout})"
         assert not setting.has_fail_message()
@@ -1788,8 +1800,9 @@ class TestSettingPage:
         ele.send_keys(Keys.DELETE)
         setting.enter_texts('//span[text()="图表名"]/following-sibling::div[1]//input', "统计图2")
         setting.click_button('(//button[@class="ivu-btn ivu-btn-primary"])[last()]')
-        message = setting.get_error_message()
+        message = setting.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert message == "记录已存在,请检查！"
         assert not setting.has_fail_message()
@@ -1821,6 +1834,7 @@ class TestSettingPage:
         name = setting.get_find_element_xpath(
             f'//div[@class="statisticalListItemTitle"]/span[contains(text(),"{statistics}")]').text
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert name == f"{statistics} "f"(数据源:{layout})"
         assert not setting.has_fail_message()
@@ -1856,10 +1870,12 @@ class TestSettingPage:
 
         sleep(3)
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.click_button(f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]')
         setting.click_button('//div[@class="toolTabsDiv"]/div[2]/div[4]//i')
         ele = driver.find_elements(By.XPATH, '//div[@class="statisticalListItemTitle"]/span[contains(text(),"统计图")]')
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert len(ele) == 0
         assert not setting.has_fail_message()
@@ -1884,6 +1900,7 @@ class TestSettingPage:
         driver = login_to_setting  # WebDriver 实例
         setting = SettingPage(driver)  # 用 driver 初始化 SettingPage
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         layout = "测试布局A"
         sleep(1)
@@ -1902,6 +1919,7 @@ class TestSettingPage:
         driver = login_to_setting  # WebDriver 实例
         setting = SettingPage(driver)  # 用 driver 初始化 SettingPage
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         layout = "测试布局A"
         sleep(1)
@@ -1921,6 +1939,7 @@ class TestSettingPage:
         driver = login_to_setting  # WebDriver 实例
         setting = SettingPage(driver)  # 用 driver 初始化 SettingPage
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         layout = "测试布局A"
         lable = "标签1"
@@ -1935,8 +1954,8 @@ class TestSettingPage:
         setting.enter_texts('//div[text()="标签名："]/following-sibling::div/input', "标签2")
 
         setting.click_button('(//button[@class="ivu-btn ivu-btn-primary"])[last()]')
-        mess = setting.get_error_message()
-        assert mess == "记录已存在,请检查！"
+        message = setting.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        assert message == "记录已存在,请检查！"
         assert not setting.has_fail_message()
 
     @allure.story("修改标签名，修改成功，添加查询数据")
@@ -1945,6 +1964,7 @@ class TestSettingPage:
         driver = login_to_setting  # WebDriver 实例
         setting = SettingPage(driver)  # 用 driver 初始化 SettingPage
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         layout = "测试布局A"
         lable = "标签1"
@@ -1995,6 +2015,7 @@ class TestSettingPage:
         driver = login_to_setting  # WebDriver 实例
         setting = SettingPage(driver)  # 用 driver 初始化 SettingPage
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         layout = "测试布局A"
         lable = "标签3"
@@ -2014,6 +2035,7 @@ class TestSettingPage:
 
         setting.get_find_message()
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.click_button(f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]')
         sleep(1)
         eles = driver.find_elements(By.XPATH, '//div[@class="labelItemDIv"]')
@@ -2026,6 +2048,7 @@ class TestSettingPage:
         driver = login_to_setting  # WebDriver 实例
         setting = SettingPage(driver)  # 用 driver 初始化 SettingPage
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         layout = "测试布局A"
         lable = "标签3"
@@ -2045,6 +2068,7 @@ class TestSettingPage:
 
         setting.get_find_message()
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.click_button(f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]')
         sleep(1)
         setting.click_button(f'//div[@class="labelItemDIv" and text()="{lable}"]')
@@ -2080,6 +2104,7 @@ class TestSettingPage:
 
         sleep(1)
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.click_button(f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]')
         sleep(1)
         eles = driver.find_elements(By.XPATH, '//div[@class="labelItemDIv"]')
@@ -2104,6 +2129,7 @@ class TestSettingPage:
         message = setting.get_find_message()
         ele = driver.find_elements(By.XPATH, f'//div[@class="labelItem"]/div[text()=" {lable} "]')
         driver.refresh()
+        setting.wait_for_loadingbox()
         setting.wait_for_loading_to_disappear()
         assert ele == []
         assert message == "保存成功"
@@ -2128,9 +2154,8 @@ class TestSettingPage:
         # 3> 执行方法
         action.perform()
         setting.click_button('(//div[@class="demo-drawer-footer"])[2]/button[2]')
-        sleep(1)
-        driver.refresh()
-        sleep(2)
+        setting.get_find_message()
+        setting.wait_for_loading_to_disappear()
         before_name = setting.get_find_element_xpath('//div[@class="tabsDivItemCon"]/div[2]')
         assert before_name.text == afert_name
         assert not setting.has_fail_message()
@@ -2143,7 +2168,7 @@ class TestSettingPage:
         layout = "测试布局B"
         setting.wait_for_loading_to_disappear()
         setting.click_button('//i[@id="tabsDrawerIcon"]')
-        sleep(1)
+        sleep(3)
 
         # 获取目标 div 元素，这里的目标是具有特定文本的 div
         target_div = setting.get_find_element_xpath(
@@ -2167,11 +2192,11 @@ class TestSettingPage:
         )
         ele.send_keys(Keys.CONTROL, 'a')
         ele.send_keys(Keys.DELETE)
-        setting.enter_texts(f'//div[@id="container"]/div[.//text()="{layout}"]//input', "修改布局")
+        ele.send_keys("修改布局")
 
         setting.click_button('(//div[@class="demo-drawer-footer"])[2]/button[2]')
-        sleep(1)
-        driver.refresh()
+        setting.get_find_message()
+        setting.wait_for_loading_to_disappear()
         name = setting.get_find_element_xpath(
             f'//div[@class="tabsDivItemCon"]/div[text()=" 修改布局 "]'
         ).text
@@ -2186,7 +2211,7 @@ class TestSettingPage:
         layout = "修改布局"
         sleep(2)
         setting.click_button('//i[@id="tabsDrawerIcon"]')
-        sleep(1)
+        sleep(3)
 
         # 获取目标 div 元素，这里的目标是具有特定文本的 div
         target_div = setting.get_find_element_xpath(
@@ -2209,7 +2234,8 @@ class TestSettingPage:
         )
         ele.send_keys(Keys.CONTROL, 'a')
         ele.send_keys(Keys.DELETE)
-        setting.enter_texts(f'//div[@id="container"]/div[.//text()="{layout}"]//input', "测试布局A")
+        sleep(1)
+        ele.send_keys("测试布局A")
 
         setting.click_button('(//div[@class="demo-drawer-footer"])[2]/button[2]')
         sleep(1)
@@ -2251,6 +2277,7 @@ class TestSettingPage:
         setting.click_button('(//div[@class="demo-drawer-footer"])[2]/button[2]')
         sleep(1)
         driver.refresh()
+        setting.wait_for_loadingbox()
         # 再次查找页面上是否有目标 div，以验证是否删除成功
         after_layout = driver.find_elements(
             By.XPATH, f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
@@ -2290,6 +2317,7 @@ class TestSettingPage:
         setting.click_button('(//div[@class="demo-drawer-footer"])[2]/button[2]')
         sleep(2)
         driver.refresh()
+        setting.wait_for_loadingbox()
         # 再次查找页面上是否有目标 div，以验证是否删除成功
         after_layout = driver.find_elements(
             By.XPATH, f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]'
@@ -2325,8 +2353,7 @@ class TestSettingPage:
         setting.hover(layout)
         setting.click_button(f'(//li[text()="复制"])[{index + 1}]')
         setting.click_button('(//div[@class="demo-drawer-footer"])[2]/button[2]')
-        sleep(1)
-        driver.refresh()
+        setting.get_find_message()
         setting.wait_for_loading_to_disappear()
         eles = setting.finds_elements(By.XPATH, '//div[@class="tabsDivItemCon"]/div')
         sleep(1)
@@ -2367,10 +2394,291 @@ class TestSettingPage:
 
         setting.click_button('(//div[@class="demo-drawer-footer"])[2]/button[2]')
         sleep(1)
-        driver.refresh()
+        setting.right_refresh('物品')
         # 再次查找页面上是否有目标 div，以验证是否删除成功
         after_layout = driver.find_elements(
             By.XPATH, f'//div[@class="tabsDivItemCon"]/div[text()=" {first_long_name} "]'
         )
         assert after_layout == []
+        assert not setting.has_fail_message()
+
+    @allure.story("分享布局成功-分享范围用户组")
+    # @pytest.mark.run(order=1)
+    def test_setting_share_layout1(self, login_to_setting):
+        driver = login_to_setting  # WebDriver 实例
+        setting = SettingPage(driver)  # 用 driver 初始化 SettingPage
+        user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
+        item = ItemPage(driver)
+        page = LoginPage(driver)
+        date_driver = DateDriver()
+        layout = "1分享布局1"
+
+        list_ = ["系统管理", "系统设置", "用户权限管理"]
+        for v in list_:
+            setting.click_button(f'(//span[text()="{v}"])[1]')
+        name = '1shareLayout'
+        password = 'Qw123456'
+        role = 'admin'
+        user.select_input(name)
+        ele = user.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr[1]/td[2]//span[text()="{name}"]')
+        user.right_refresh()
+        if len(ele) == 0:
+            user.add_user(name, password, role)
+            user.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span)[2]')
+            user.enter_texts('//div[div[p[text()="计划单元名称"]]]//input', date_driver.planning)
+            sleep(3)
+            user.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span)[2]')
+            sleep(1)
+            user.click_all_button("保存")
+            message = user.get_find_message()
+            user.select_input(name)
+            ele = user.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]')
+            assert message == "保存成功" and len(ele) == 1
+
+        setting.click_button('//div[@class="labelTitle"][text()=" 物品 "]')
+
+        item.add_layout(layout)
+        item.get_find_message()
+        setting.wait_for_loading_to_disappear()
+        sleep(1)
+        setting.click_button('//i[@id="tabsDrawerIcon"]')
+        sleep(1)
+        # 获取目标 div 元素，这里的目标是具有特定文本的 div
+        target_div = setting.get_find_element_xpath(
+            f'//div[@id="container"]/div[.//text()="{layout}"]'
+        )
+
+        # 获取父容器下所有 div
+        # 这一步是为了确定目标 div 在其父容器中的位置
+        parent_div = setting.get_find_element_xpath(f'//div[@id="container"]')
+        all_children = parent_div.find_elements(By.XPATH, "./div")
+
+        # 获取目标 div 的位置索引（从0开始）
+        # 这里是为了后续操作，比如点击目标 div 相关的按钮
+        index = all_children.index(target_div)
+        print(f"目标 div 是第 {index + 1} 个 div")  # 输出 3（如果从0开始则是2）
+        setting.hover(layout)
+        setting.click_button(f'(//li[text()="共享布局"])[{index + 1}]')
+        sleep(1)
+        cla = setting.get_find_element_xpath('//div[label[text()="分享范围"]]//label[text()="角色组"]/span').get_attribute("class")
+        sleep(1)
+        if "ivu-radio-checked" not in cla:
+            setting.click_button('//div[label[text()="分享范围"]]//label[text()="角色组"]/span')
+        setting.enter_texts('//input[@placeholder="按回车键添加用户"]', role)
+        sleep(1)
+        pyautogui.press('enter')
+        sleep(2)
+        setting.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        setting.get_find_message()
+        setting.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[2]')
+
+        setting.click_button('//div[@class="flex-alignItems-center"]')
+        setting.click_button('//ul/li/div[text()=" 注销 "]')
+        page.login(name, password, date_driver.planning)
+        err = user.finds_elements(By.XPATH,
+                                  f'//div[@class="ivu-modal-body"]//div[text()="当前用户已经登录此单元，是否继续登录？"]')
+        if len(err) == 1:
+            user.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        user.wait_for_loadingbox()
+        list_ = ["计划管理", "计划基础数据", "物品"]
+        for v in list_:
+            user.click_button(f'(//span[text()="{v}"])[1]')
+        user.wait_for_loading_to_disappear()
+        setting.click_button('//i[@id="tabsDrawerIcon"]')
+        setting.click_button('//div[p[text()="布局列表"]]/span')
+        setting.hover_layout(layout)
+        message = setting.get_find_message()
+        setting.wait_for_loading_to_disappear()
+        ele = setting.finds_elements(By.XPATH, f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]')
+        setting.click_button('//div[@class="flex-alignItems-center"]')
+        setting.click_button('//ul/li/div[text()=" 注销 "]')
+        page.login(date_driver.username, date_driver.password, date_driver.planning)
+        user.wait_for_loadingbox()
+        list_ = ["计划管理", "计划基础数据", "物品"]
+        for v in list_:
+            user.click_button(f'(//span[text()="{v}"])[1]')
+        user.wait_for_loading_to_disappear()
+        assert message == "新增成功！" and len(ele) == 1
+        assert not setting.has_fail_message()
+
+    @allure.story("分享布局成功-分享范围角色")
+    # @pytest.mark.run(order=1)
+    def test_setting_share_layout2(self, login_to_setting):
+        driver = login_to_setting  # WebDriver 实例
+        setting = SettingPage(driver)  # 用 driver 初始化 SettingPage
+        user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
+        item = ItemPage(driver)
+        page = LoginPage(driver)
+        date_driver = DateDriver()
+        layout = "1分享布局2"
+        name = '1shareLayout'
+        password = 'Qw123456'
+
+        item.add_layout(layout)
+        item.get_find_message()
+        setting.wait_for_loading_to_disappear()
+        sleep(1)
+        setting.click_button('//i[@id="tabsDrawerIcon"]')
+        sleep(1)
+        # 获取目标 div 元素，这里的目标是具有特定文本的 div
+        target_div = setting.get_find_element_xpath(
+            f'//div[@id="container"]/div[.//text()="{layout}"]'
+        )
+
+        # 获取父容器下所有 div
+        # 这一步是为了确定目标 div 在其父容器中的位置
+        parent_div = setting.get_find_element_xpath(f'//div[@id="container"]')
+        all_children = parent_div.find_elements(By.XPATH, "./div")
+
+        # 获取目标 div 的位置索引（从0开始）
+        # 这里是为了后续操作，比如点击目标 div 相关的按钮
+        index = all_children.index(target_div)
+        print(f"目标 div 是第 {index + 1} 个 div")  # 输出 3（如果从0开始则是2）
+        setting.hover(layout)
+        setting.click_button(f'(//li[text()="共享布局"])[{index + 1}]')
+        sleep(1)
+        cla = setting.get_find_element_xpath(
+            '//div[label[text()="分享范围"]]//label[text()="角色组"]/span').get_attribute("class")
+        sleep(1)
+        if "ivu-radio-checked" in cla:
+            setting.click_button('//div[label[text()="分享范围"]]//label[text()="指定用户"]/span')
+        setting.enter_texts('//input[@placeholder="按回车键添加用户"]', name)
+        sleep(1)
+        pyautogui.press('enter')
+        sleep(2)
+        setting.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        setting.get_find_message()
+        setting.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[2]')
+
+        setting.click_button('//div[@class="flex-alignItems-center"]')
+        setting.click_button('//ul/li/div[text()=" 注销 "]')
+        page.login(name, password, date_driver.planning)
+        user.wait_for_loadingbox()
+        list_ = ["计划管理", "计划基础数据", "物品"]
+        for v in list_:
+            user.click_button(f'(//span[text()="{v}"])[1]')
+        user.wait_for_loading_to_disappear()
+        setting.click_button('//i[@id="tabsDrawerIcon"]')
+        setting.click_button('//div[p[text()="布局列表"]]/span')
+        setting.hover_layout(layout)
+        message = setting.get_find_message()
+        setting.wait_for_loading_to_disappear()
+        ele = setting.finds_elements(By.XPATH, f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]')
+        setting.click_button('//div[@class="flex-alignItems-center"]')
+        setting.click_button('//ul/li/div[text()=" 注销 "]')
+        page.login(date_driver.username, date_driver.password, date_driver.planning)
+        user.wait_for_loadingbox()
+        list_ = ["计划管理", "计划基础数据", "物品"]
+        for v in list_:
+            user.click_button(f'(//span[text()="{v}"])[1]')
+        user.wait_for_loading_to_disappear()
+        assert message == "新增成功！" and len(ele) == 1
+        assert not setting.has_fail_message()
+
+    @allure.story("取消分享布局成功")
+    # @pytest.mark.run(order=1)
+    def test_setting_share_layout3(self, login_to_setting):
+        driver = login_to_setting  # WebDriver 实例
+        setting = SettingPage(driver)  # 用 driver 初始化 SettingPage
+        user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
+        item = ItemPage(driver)
+        page = LoginPage(driver)
+        date_driver = DateDriver()
+        layout = "1分享布局2"
+        name = '1shareLayout'
+        password = 'Qw123456'
+
+        setting.click_button('//i[@id="tabsDrawerIcon"]')
+        sleep(1)
+        setting.click_button('//div[p[text()="布局列表"]]/span')
+        sleep(2)
+        container = setting.get_find_element_xpath(
+            f'//div[span[text()="{layout}"]]'
+        )
+        sleep(3)
+        ActionChains(driver).move_to_element(container).perform()
+        # 2️⃣ 等待图标可见
+        delete_icon = WebDriverWait(driver, 5).until(
+            EC.visibility_of_element_located((
+                By.XPATH,
+                f'//div[span[text()="{layout}"]]//button[.//span[text()="取消分享"]]'
+            ))
+        )
+        # 3️⃣ 再点击图标
+        delete_icon.click()
+        setting.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        setting.get_find_message()
+        ele = setting.finds_elements(By.XPATH, f'//div[span[text()="{layout}"]]')
+        assert len(ele) == 0
+        setting.click_button('//div[div[text()="布局共享池"]]//i[@title="关闭"]')
+        setting.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[2]')
+        sleep(1)
+
+        setting.click_button('//div[@class="flex-alignItems-center"]')
+        setting.click_button('//ul/li/div[text()=" 注销 "]')
+        page.login(name, password, date_driver.planning)
+        user.wait_for_loadingbox()
+        list_ = ["计划管理", "计划基础数据", "物品"]
+        for v in list_:
+            user.click_button(f'(//span[text()="{v}"])[1]')
+        user.wait_for_loading_to_disappear()
+        setting.click_button('//i[@id="tabsDrawerIcon"]')
+        setting.click_button('//div[p[text()="布局列表"]]/span')
+        sleep(1)
+        ele = setting.finds_elements(By.XPATH, f'//div[span[text()="{layout}"]]')
+        assert len(ele) == 0
+        setting.click_button('//div[div[text()="布局共享池"]]//i[@title="关闭"]')
+        setting.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[2]')
+        sleep(1)
+
+        setting.click_button('//div[@class="flex-alignItems-center"]')
+        setting.click_button('//ul/li/div[text()=" 注销 "]')
+        page.login(date_driver.username, date_driver.password, date_driver.planning)
+        user.wait_for_loadingbox()
+        list_ = ["计划管理", "计划基础数据", "物品"]
+        for v in list_:
+            user.click_button(f'(//span[text()="{v}"])[1]')
+        user.wait_for_loading_to_disappear()
+        assert not setting.has_fail_message()
+
+    @allure.story("删除布局删除用户成功")
+    # @pytest.mark.run(order=1)
+    def test_setting_share_dellayout(self, login_to_setting):
+        driver = login_to_setting  # WebDriver 实例
+        setting = SettingPage(driver)  # 用 driver 初始化 SettingPage
+        user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
+        item = ItemPage(driver)
+        layout1 = "1分享布局1"
+        layout2 = "1分享布局2"
+        name = '1shareLayout'
+        item.right_refresh('物品')
+        setting.click_button(f'//div[@class="tabsDivItemCon"]/div[text()=" {layout2} "]')
+        sleep(1)
+        item.del_layout(layout2)
+        item.right_refresh('物品')
+        sleep(2)
+        setting.click_button(f'//div[@class="tabsDivItemCon"]/div[text()=" {layout1} "]')
+        sleep(1)
+        item.del_layout(layout1)
+        item.right_refresh('物品')
+        after_layout1 = driver.find_elements(
+            By.XPATH, f'//div[@class="tabsDivItemCon"]/div[text()=" {layout1} "]'
+        )
+        after_layout2 = driver.find_elements(
+            By.XPATH, f'//div[@class="tabsDivItemCon"]/div[text()=" {layout2} "]'
+        )
+        assert len(after_layout1) == 0 and len(after_layout2) == 0
+        list_ = ["系统管理", "系统设置", "用户权限管理"]
+        for v in list_:
+            setting.click_button(f'(//span[text()="{v}"])[1]')
+
+        user.wait_for_loading_to_disappear()
+        user.select_input(name)
+        sleep(1)
+        user.click_button(f'//table[@class="vxe-table--body"]//tr[1]/td[2]//span[text()="{name}"]')
+        sleep(1)
+        user.click_all_button("删除")
+        user.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        message = user.get_find_message()
+        assert message == "删除成功！"
         assert not setting.has_fail_message()

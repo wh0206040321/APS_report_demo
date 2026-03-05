@@ -20,7 +20,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_acceptdata():
     driver = None
     try:
@@ -70,6 +70,7 @@ class TestSAcceptDataPage:
         acceptdata.click_all_button("新增")
         acceptdata.click_confirm()
         message = acceptdata.get_error_message()
+        acceptdata.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "请填写信息"
         assert not acceptdata.has_fail_message()
 
@@ -89,6 +90,7 @@ class TestSAcceptDataPage:
             acceptdata.click_button(xpath)
         acceptdata.click_confirm()
         message = acceptdata.get_error_message()
+        acceptdata.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "请填写信息"
         assert not acceptdata.has_fail_message()
 
@@ -178,6 +180,7 @@ class TestSAcceptDataPage:
 
         acceptdata.click_confirm()
         message = acceptdata.get_error_message()
+        acceptdata.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "接口名称不能重复"
         assert not acceptdata.has_fail_message()
 
@@ -255,6 +258,7 @@ class TestSAcceptDataPage:
         acceptdata.click_button('//span[text()="查询"]')
         acceptdata.click_button('//span[text()="导出"]')
         ele = acceptdata.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        acceptdata.click_button('//div[div[text()="系统提示"]]//i[@title="关闭"]')
         assert len(ele) == 0
         assert not acceptdata.has_fail_message()
 
@@ -274,6 +278,7 @@ class TestSAcceptDataPage:
         sleep(1)
         acceptdata.click_button('//div[p[text()="接口名称"]]/following-sibling::div//input')
         eles = acceptdata.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        acceptdata.right_refresh('接收数据')
         assert len(eles) == 0
         assert not acceptdata.has_fail_message()
 
@@ -292,6 +297,7 @@ class TestSAcceptDataPage:
         eles = acceptdata.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        acceptdata.right_refresh('接收数据')
         assert len(list_) > 0
         assert all(text == '' or name in text for text in list_)
         assert not acceptdata.has_fail_message()
@@ -311,6 +317,7 @@ class TestSAcceptDataPage:
         eles = acceptdata.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        acceptdata.right_refresh('接收数据')
         assert len(list_) > 0
         assert all(item == '' or str(item).startswith(name) for item in list_)
         assert not acceptdata.has_fail_message()
@@ -330,6 +337,7 @@ class TestSAcceptDataPage:
         eles = acceptdata.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        acceptdata.right_refresh('接收数据')
         assert len(list_) > 0
         assert all(item == '' or str(item).endswith(name) for item in list_)
         assert not acceptdata.has_fail_message()
@@ -352,6 +360,7 @@ class TestSAcceptDataPage:
         sleep(1)
         ele = acceptdata.get_find_element_xpath('//div[p[text()="接口名称"]]/following-sibling::div//i').get_attribute(
             "class")
+        acceptdata.right_refresh('接收数据')
         assert ele == "vxe-icon-funnel suffixIcon"
         assert not acceptdata.has_fail_message()
 
@@ -366,6 +375,7 @@ class TestSAcceptDataPage:
             acceptdata.click_all_button('删除')
             acceptdata.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
             message = acceptdata.get_find_message()
+            sleep(1)
             ele = acceptdata.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[3]//span[text()="{name}"]')
             assert len(ele) == 0
             assert message == "删除成功！"

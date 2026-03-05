@@ -1,5 +1,6 @@
 import logging
 import random
+import re
 from time import sleep
 
 import allure
@@ -1144,7 +1145,8 @@ class TestMasterPage:
         ele1 = master.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
             "innerText")
         master.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
-        message = master.get_error_message()
+        message = master.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        master.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
         master.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == '记录已存在,请检查！'
         assert not master.has_fail_message()
@@ -1188,12 +1190,61 @@ class TestMasterPage:
         ele2 = master.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
             "innerText")
         assert ele1 == ele2
-        master.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        assert not master.has_fail_message()
+
+    @allure.story("模拟多选删除")
+    # @pytest.mark.run(order=1)
+    def test_master_shiftdel(self, login_to_master):
+        driver = login_to_master  # WebDriver 实例
+        master = MasterPage(driver)  # 用 driver 初始化 Spec1Page
+        master.right_refresh('工艺产能')
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        master.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = master.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        master.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        master.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改1')
+        sleep(2)
+        master.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        master.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        master.enter_texts('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input', '1没有数据修改12')
+        sleep(1)
+        ele1 = master.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').text
+        ele2 = master.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input').get_attribute("value")
+        master.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        master.get_find_message()
+        master.select_input('1没有数据修改1')
+        ele11 = master.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        ele22 = master.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[2]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele11 and ele2 == ele22
+        assert not master.has_fail_message()
+        master.select_input('1没有数据修改')
+        before_data = master.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[3]//td[1])[2]']
+        master.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = master.get_find_element_xpath(elements[2])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
         master.click_del_button()
         master.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         message = master.get_find_message()
-        master.right_refresh('工艺产能')
+        master.wait_for_loading_to_disappear()
+        after_data = master.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        after_count = int(re.search(r'\d+', after_data).group())
         assert message == "删除成功！"
+        assert before_count - after_count == 3, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
         assert not master.has_fail_message()
 
     @allure.story("模拟ctrl+c复制可查询")
@@ -1201,6 +1252,7 @@ class TestMasterPage:
     def test_master_ctrlC(self, login_to_master):
         driver = login_to_master  # WebDriver 实例
         master = MasterPage(driver)  # 用 driver 初始化 MasterPage
+        master.right_refresh('工艺产能')
         master.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
         before_data = master.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
         sleep(1)

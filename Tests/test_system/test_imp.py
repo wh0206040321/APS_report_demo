@@ -23,7 +23,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_imp():
     driver = None
     try:
@@ -73,6 +73,7 @@ class TestImpPage:
         imp.click_impall_button("新增")
         imp.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         message = imp.get_error_message()
+        imp.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "请输入方案且不能与其他方案相同"
         assert not imp.has_fail_message()
 
@@ -85,8 +86,8 @@ class TestImpPage:
         imp.add_imp(name)
         message = imp.get_find_message()
         sleep(2)
-        value = imp.get_find_element_xpath('//div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//input[@class="ivu-select-input"]')
-        assert message == "新增成功！" and value.get_attribute("value") == name
+        value = imp.get_find_element_xpath('//div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//input[@class="ivu-select-input"]').get_attribute("value")
+        assert message == "新增成功！" and value == name
         assert not imp.has_fail_message()
 
     @allure.story("文本框的校验")
@@ -111,12 +112,13 @@ class TestImpPage:
         name = "1导入设置方案"
         imp.add_imp(name)
         message = imp.get_error_message()
+        imp.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "请输入方案且不能与其他方案相同"
         assert not imp.has_fail_message()
 
     @allure.story("不勾选任何，点击保存不允许保存")
     # @pytest.mark.run(order=1)
-    def test_imp_addrepeat(self, login_to_imp):
+    def test_imp_notallowed(self, login_to_imp):
         driver = login_to_imp  # WebDriver 实例
         imp = ImpPage(driver)  # 用 driver 初始化 ImpPage
         name = "1导入设置方案"
@@ -128,6 +130,7 @@ class TestImpPage:
         sleep(1)
         imp.click_impall_button("保存")
         message = imp.get_error_message()
+        imp.click_impall_button("取消")
         assert message == "请选择导入节点"
         assert not imp.has_fail_message()
 
@@ -148,7 +151,7 @@ class TestImpPage:
         ActionChains(driver).context_click(ele).perform()
         imp.click_button('//li[text()="映射编辑"]')
         sleep(1)
-        imp.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        imp.click_button('(//div[@class="vxe-modal--footer"]//span[text()="取消"])[last()]')
         imp.click_impall_button("保存")
         message = imp.get_find_message()
         eles = imp.finds_elements(By.XPATH, f'//ul[@class="ivu-tree-children"]//span[@class="valueSpan" and text()="{kh}"]')
@@ -225,7 +228,7 @@ class TestImpPage:
             sleep(1)
 
         imp.click_button(
-            '//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
         imp.click_impall_button("保存")
         message = imp.get_find_message()
         imp.click_button('//span[text()=" 执行方案"]')
@@ -247,12 +250,15 @@ class TestImpPage:
         driver = login_to_imp  # WebDriver 实例
         imp = ImpPage(driver)  # 用 driver 初始化 ImpPage
         add = AddsPages(driver)
+        pyautogui.press('esc')
+        driver.refresh()
         name = "1导入设置方案"
         copyname = '1同步导入1'
         imp.copy_()
         sleep(1)
         list_ = ['//div[label[text()="源方案"]]//div[@class="ivu-select-selection"]', '//div[label[text()="目的方案"]]//input[@type="text"]']
         box_color = add.get_border_color(list_)
+        imp.click_button('(//div[@class="ivu-modal-footer"]//span[text()="取消"])[last()]')
         assert all(color == "rgb(237, 64, 20)" for color in box_color), f"预期{box_color}"
         assert not imp.has_fail_message()
 
@@ -268,6 +274,7 @@ class TestImpPage:
         sleep(1)
         list_ = ['//div[label[text()="目的方案"]]//input[@type="text"]']
         box_color = add.get_border_color(list_)
+        imp.click_button('(//div[@class="ivu-modal-footer"]//span[text()="取消"])[last()]')
         assert all(color == "rgb(237, 64, 20)" for color in box_color), f"预期{box_color}"
         assert not imp.has_fail_message()
 
@@ -283,6 +290,7 @@ class TestImpPage:
         sleep(2)
         list_ = ['//div[label[text()="源方案"]]//div[@class="ivu-select-selection"]']
         box_color = add.get_border_color(list_)
+        imp.click_button('(//div[@class="ivu-modal-footer"]//span[text()="取消"])[last()]')
         assert all(color == "rgb(237, 64, 20)" for color in box_color), f"预期{box_color}"
         assert not imp.has_fail_message()
 
@@ -294,6 +302,7 @@ class TestImpPage:
         name = "1导入设置方案"
         imp.copy_(name=name, copy_name=name)
         message = imp.get_error_message()
+        imp.click_button('(//div[@class="ivu-modal-footer"]//span[text()="取消"])[last()]')
         assert message == '名称不能重复'
         assert not imp.has_fail_message()
 
@@ -313,6 +322,8 @@ class TestImpPage:
         imp.click_button(
             '//div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//input[@class="ivu-select-input"]')
         ele = imp.finds_elements(By.XPATH, f'//ul/li[text()="{copyname}"]')
+        imp.click_button(
+            '//div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//input[@class="ivu-select-input"]')
         assert message == '复制成功' and len(ele) == 2
         assert not imp.has_fail_message()
 

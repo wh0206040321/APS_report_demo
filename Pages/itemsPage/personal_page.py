@@ -129,7 +129,8 @@ class PersonalPage(BasePage):
 
         # 确认
         self.click_button('//div[@class="demo-drawer-footer"]/button[2]')
-        sleep(3)
+        self.get_find_message()
+        sleep(2)
         # 获取并返回特定元素的文本，用于验证语言是否已成功切换
         ele = self.get_find_element('//div[@class="vxe-pulldown--content"]//input').get_attribute("placeholder")
         return ele
@@ -149,7 +150,7 @@ class PersonalPage(BasePage):
         """
         list_ = ["系统管理", "单元设置", "环境设置"]
         for v in list_:
-            sleep(0.5)
+            sleep(1)
             self.click_button(f'(//span[text()="{v}"])[1]')
         sleep(2)
         radio = self.get_find_element('//label[text()=" 服务器"]/span')

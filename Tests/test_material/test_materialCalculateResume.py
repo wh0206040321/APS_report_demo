@@ -20,7 +20,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_materialCalculateResume():
     driver = None
     try:
@@ -74,6 +74,7 @@ class TestSMaterialCalculateResumePage:
         name = material.get_find_element_xpath('//div[span[text()="物控计算单号:"]]//input[@class="ivu-select-input"]').get_attribute("value")
         ele = material.get_find_element_xpath(f'(//table[@class="vxe-table--body"])[1]//tr[1]/td[3]').text
         ele1 = material.finds_elements(By.XPATH, f'(//table[@class="vxe-table--body"])[1]//tr[2]/td[3]')
+        material.right_refresh('物控计算履历')
         assert name == ele and len(ele1) == 0
         assert not material.has_fail_message()
 
@@ -87,6 +88,7 @@ class TestSMaterialCalculateResumePage:
         name = material.get_find_element_xpath(
             '//div[span[text()="物控方案名称:"]]//input[@class="ivu-select-input"]').get_attribute("value")
         eles = material.loop_judgment('//table[@class="vxe-table--body"]//tr/td[5]')
+        material.right_refresh('物控计算履历')
         assert all(name == ele for ele in eles)
         assert not material.has_fail_message()
 
@@ -171,22 +173,127 @@ class TestSMaterialCalculateResumePage:
         assert len(ele) == 0
         assert not material.has_fail_message()
 
-    # @allure.story("删除数据成功")
-    # # @pytest.mark.run(order=1)
-    # def test_materialCalculateResume_del(self, login_to_materialCalculateResume):
-    #     driver = login_to_materialCalculateResume  # WebDriver 实例
-    #     material = MaterialControlDefinition(driver)  # 用 driver 初始化 MaterialControlDefinition
-    #     before_data = material.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
-    #     before_count = int(re.search(r'\d+', before_data).group())
-    #     material.click_button('(//button[span[text()="删除"]])[1]')
-    #     material.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
-    #     material.get_find_message()
-    #     sleep(1)
-    #     after_data = material.get_find_element_xpath(
-    #         '(//span[contains(text(),"条记录")])[1]'
-    #     ).text
-    #     after_count = int(re.search(r'\d+', after_data).group())
-    #     assert before_count - after_count == 1, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
-    #     assert not material.has_fail_message()
+    @allure.story("过滤条件查询，一个不选，显示正常")
+    # @pytest.mark.run(order=1)
+    def test_materialCalculateResume_select2(self, login_to_materialCalculateResume):
+        driver = login_to_materialCalculateResume  # WebDriver 实例
+        material = MaterialControlDefinition(driver)  # 用 driver 初始化 MaterialControlDefinition
+        material.right_refresh('物控计算履历')
+        material.click_button('//div[div[p[text()="物控计算单号"]]]//i[contains(@class,"suffixIcon")]')
+        sleep(1)
+        eles = material.get_find_element_xpath(
+            '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
+            "class")
+        if eles == "ivu-checkbox ivu-checkbox-checked":
+            material.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            material.click_button('//div[@class="filter-btn-bar"]/button')
+        sleep(1)
+        material.click_button('//div[div[p[text()="物控计算单号"]]]//input')
+        eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        material.right_refresh('物控计算履历')
+        assert len(eles) == 0
+        assert not material.has_fail_message()
+
+    @allure.story("过滤条件查询，设置包含条件查询成功")
+    # @pytest.mark.run(order=1)
+    def test_materialCalculateResume_select3(self, login_to_materialCalculateResume):
+        driver = login_to_materialCalculateResume  # WebDriver 实例
+        material = MaterialControlDefinition(driver)  # 用 driver 初始化 MaterialControlDefinition
+        name = material.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[3]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        material.click_button('//div[div[p[text()="物控计算单号"]]]//i[contains(@class,"suffixIcon")]')
+        material.hover("包含")
+        sleep(1)
+        material.select_input(first_char)
+        sleep(1)
+        eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        material.right_refresh('物控计算履历')
+        assert all(first_char in text for text in list_)
+        assert not material.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合开头查询成功")
+    # @pytest.mark.run(order=1)
+    def test_materialCalculateResume_select4(self, login_to_materialCalculateResume):
+        driver = login_to_materialCalculateResume  # WebDriver 实例
+        material = MaterialControlDefinition(driver)  # 用 driver 初始化 MaterialControlDefinition
+        name = material.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[3]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        material.click_button('//div[div[p[text()="物控计算单号"]]]//i[contains(@class,"suffixIcon")]')
+        material.hover("符合开头")
+        sleep(1)
+        material.select_input(first_char)
+        sleep(1)
+        eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        material.right_refresh('物控计算履历')
+        assert all(str(material).startswith(first_char) for material in list_)
+        assert not material.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合结尾查询成功")
+    # @pytest.mark.run(order=1)
+    def test_materialCalculateResume_select5(self, login_to_materialCalculateResume):
+        driver = login_to_materialCalculateResume  # WebDriver 实例
+        material = MaterialControlDefinition(driver)  # 用 driver 初始化 MaterialControlDefinition
+        name = material.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[3]'
+        ).get_attribute('innerText')
+        last_char = name[-1:] if name else ""
+        material.click_button('//div[div[p[text()="物控计算单号"]]]//i[contains(@class,"suffixIcon")]')
+        material.hover("符合结尾")
+        sleep(1)
+        material.select_input(last_char)
+        sleep(1)
+        eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        material.right_refresh('物控计算履历')
+        assert all(str(material).endswith(last_char) for material in list_)
+        assert not material.has_fail_message()
+
+    @allure.story("清除筛选效果成功")
+    # @pytest.mark.run(order=1)
+    def test_materialCalculateResume_clear(self, login_to_materialCalculateResume):
+        driver = login_to_materialCalculateResume  # WebDriver 实例
+        material = MaterialControlDefinition(driver)  # 用 driver 初始化 MaterialControlDefinition
+        name = "3"
+        sleep(1)
+        material.click_button('//div[div[p[text()="物控计算单号"]]]//i[contains(@class,"suffixIcon")]')
+        material.hover("包含")
+        sleep(1)
+        material.select_input(name)
+        sleep(1)
+        material.click_button('//div[div[p[text()="物控计算单号"]]]//i[contains(@class,"suffixIcon")]')
+        material.hover("清除所有筛选条件")
+        sleep(1)
+        ele = material.get_find_element_xpath('//div[div[p[text()="物控计算单号"]]]//i[contains(@class,"suffixIcon")]').get_attribute(
+            "class")
+        material.right_refresh('物控计算履历')
+        assert ele == "vxe-icon-funnel suffixIcon"
+        assert not material.has_fail_message()
+
+    @allure.story("删除数据成功")
+    # @pytest.mark.run(order=1)
+    def test_materialCalculateResume_del(self, login_to_materialCalculateResume):
+        driver = login_to_materialCalculateResume  # WebDriver 实例
+        material = MaterialControlDefinition(driver)  # 用 driver 初始化 MaterialControlDefinition
+        before_data = material.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+        material.click_button('(//button[span[text()="删除"]])[1]')
+        material.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        material.get_find_message()
+        material.wait_for_loading_to_disappear()
+        after_data = material.get_find_element_xpath(
+            '(//span[contains(text(),"条记录")])[1]'
+        ).text
+        after_count = int(re.search(r'\d+', after_data).group())
+        assert before_count - after_count == 1, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
+        assert not material.has_fail_message()
 
 

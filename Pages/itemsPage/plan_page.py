@@ -66,6 +66,15 @@ class PlanPage(BasePage):
         self.enter_texts(xpath, name)
         sleep(1)
 
+    def select_input_material(self, name):
+        """选择输入框."""
+        xpath = '//div[div[p[text()="日志信息"]]]//input'
+        ele = self.get_find_element_xpath(xpath)
+        ele.send_keys(Keys.CONTROL + "a")
+        ele.send_keys(Keys.DELETE)
+        self.enter_texts(xpath, name)
+        sleep(1)
+
     def hover(self, name=""):
         # 悬停模版容器触发图标显示
         container = self.get_find_element_xpath(

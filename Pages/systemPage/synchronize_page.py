@@ -73,6 +73,7 @@ class SynchronizePage(BasePage):
                 (By.XPATH, '//div[@class="loadingbox"]')
             )
         )
+        sleep(1)
 
     def click_synchronize_button(self):
         """点击同步按钮."""

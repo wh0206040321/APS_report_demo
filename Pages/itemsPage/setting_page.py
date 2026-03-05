@@ -78,9 +78,19 @@ class SettingPage(BasePage):
 
     def wait_for_el_loading_mask(self, timeout=10):
         WebDriverWait(self.driver, timeout).until(
-            EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
+            lambda driver: all(
+                not element.is_displayed()
+                for element in driver.find_elements(By.CLASS_NAME, "el-loading-mask")
+            )
         )
         sleep(1)
+
+    def wait_for_loadingbox(self, timeout=30):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located(
+                (By.XPATH, '//div[@class="loadingbox"]')
+            )
+        )
 
     def click_confirm_button(self):
         """点击确认按钮."""
@@ -97,6 +107,7 @@ class SettingPage(BasePage):
         """添加布局."""
         self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[2]//i')
         self.click_button('//li[text()="添加新布局"]')
+        self.wait_for_el_loading_mask()
         self.enter_texts(
             '//div[text()="当前布局:"]/following-sibling::div//input', f"{layout}"
         )
@@ -180,7 +191,7 @@ class SettingPage(BasePage):
 
     def get_find_message(self):
         """获取错误信息"""
-        message = WebDriverWait(self.driver, 10).until(
+        message = WebDriverWait(self.driver, 60).until(
             EC.visibility_of_element_located(
                 (By.XPATH, '//div[@class="el-message el-message--success"]/p')
             )
@@ -268,6 +279,23 @@ class SettingPage(BasePage):
             EC.visibility_of_element_located((
                 By.XPATH,
                 f'//div[@id="container"]//span[text()="{name}"]/ancestor::div[1]/div'
+            ))
+        )
+        # 3️⃣ 再点击图标
+        delete_icon.click()
+
+    def hover_layout(self, name=""):
+        # 分享布局悬停模版容器触发图标显示
+        container = self.get_find_element_xpath(
+            f'//div[span[text()="{name}"]]'
+        )
+        sleep(3)
+        ActionChains(self.driver).move_to_element(container).perform()
+        # 2️⃣ 等待图标可见
+        delete_icon = WebDriverWait(self.driver, 5).until(
+            EC.visibility_of_element_located((
+                By.XPATH,
+                f'//div[span[text()="{name}"]]//i'
             ))
         )
         # 3️⃣ 再点击图标

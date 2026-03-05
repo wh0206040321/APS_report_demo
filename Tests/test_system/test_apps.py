@@ -1,9 +1,11 @@
 import logging
 import os
+import re
 from datetime import datetime
 from time import sleep
 
 import allure
+import pyautogui
 import pytest
 from selenium.webdriver import Keys
 from selenium.webdriver.common.action_chains import ActionChains
@@ -368,497 +370,6 @@ class TestSAppsPage:
         assert ele == "10000"
         assert not apps.has_fail_message()
 
-    # @allure.story("查询应用代码成功")
-    # # @pytest.mark.run(order=1)
-    # def test_apps_selectsuccess(self, login_to_apps):
-    #     driver = login_to_apps  # WebDriver 实例
-    #     apps = AppsPage(driver)  # 用 driver 初始化 ExpressionPage
-    #     name = "Item"
-    #     # 点击查询
-    #     apps.click_all_button("查询")
-    #     sleep(1)
-    #     # 定位名称输入框
-    #     element_to_double_click = driver.find_element(
-    #         By.XPATH,
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[4]',
-    #     )
-    #     # 创建一个 ActionChains 对象
-    #     actions = ActionChains(driver)
-    #     # 双击命令
-    #     actions.double_click(element_to_double_click).perform()
-    #     sleep(1)
-    #     # 点击物料代码
-    #     apps.click_button('//div[text()="应用代码" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击比较关系框
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[5]//input'
-    #     )
-    #     sleep(1)
-    #     # 点击=
-    #     apps.click_button('//div[text()="=" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击输入数值
-    #     apps.enter_texts(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[6]//input',
-    #         name,
-    #     )
-    #     sleep(1)
-    #
-    #     # 点击确认
-    #     apps.click_button(
-    #         '(//div[@class="demo-drawer-footer"])[3]/button[2]'
-    #     )
-    #     sleep(2)
-    #     # 定位第一行是否为name
-    #     itemcode = apps.get_find_element_xpath(
-    #         '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]'
-    #     ).text
-    #     # 定位第二行没有数据
-    #     itemcode2 = driver.find_elements(
-    #         By.XPATH,
-    #         '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
-    #     )
-    #     assert itemcode == name and len(itemcode2) == 0
-    #     assert not apps.has_fail_message()
-    #
-    # @allure.story("没有数据时显示正常")
-    # # @pytest.mark.run(order=1)
-    # def test_apps_selectnodatasuccess(self, login_to_apps):
-    #     driver = login_to_apps  # WebDriver 实例
-    #     apps = AppsPage(driver)  # 用 driver 初始化 ExpressionPage
-    #
-    #     # 点击查询
-    #     apps.click_all_button("查询")
-    #     sleep(1)
-    #     # 定位名称输入框
-    #     element_to_double_click = driver.find_element(
-    #         By.XPATH,
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[4]',
-    #     )
-    #     # 创建一个 ActionChains 对象
-    #     actions = ActionChains(driver)
-    #     # 双击命令
-    #     actions.double_click(element_to_double_click).perform()
-    #     sleep(1)
-    #     # 点击物料代码
-    #     apps.click_button('//div[text()="应用代码" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击比较关系框
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[5]//input'
-    #     )
-    #     sleep(1)
-    #     # 点击=
-    #     apps.click_button('//div[text()="=" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击输入数值
-    #     apps.enter_texts(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[6]//input',
-    #         "没有数据",
-    #     )
-    #     sleep(1)
-    #
-    #     # 点击确认
-    #     apps.click_button(
-    #         '(//div[@class="demo-drawer-footer"])[3]/button[2]'
-    #     )
-    #     sleep(2)
-    #     itemcode = driver.find_elements(
-    #         By.XPATH,
-    #         '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
-    #     )
-    #     assert len(itemcode) == 0
-    #     assert not apps.has_fail_message()
-    #
-    # @allure.story("查询应用名称包含计划成功")
-    # # @pytest.mark.run(order=1)
-    # def test_apps_selectnamesuccess(self, login_to_apps):
-    #     driver = login_to_apps  # WebDriver 实例
-    #     apps = AppsPage(driver)  # 用 driver 初始化 ExpressionPage
-    #
-    #     name = "计划"
-    #     # 点击查询
-    #     apps.click_all_button("查询")
-    #     sleep(1)
-    #     # 定位名称输入框
-    #     element_to_double_click = driver.find_element(
-    #         By.XPATH,
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[4]',
-    #     )
-    #     # 创建一个 ActionChains 对象
-    #     actions = ActionChains(driver)
-    #     # 双击命令
-    #     actions.double_click(element_to_double_click).perform()
-    #     sleep(1)
-    #     # 点击物料名称
-    #     apps.click_button('//div[text()="应用名称" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击比较关系框
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[5]//input'
-    #     )
-    #     sleep(1)
-    #     # 点击=
-    #     apps.click_button('//div[text()="包含" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击输入数值
-    #     apps.enter_texts(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[6]//input',
-    #         name,
-    #     )
-    #     sleep(1)
-    #
-    #     # 点击确认
-    #     apps.click_button(
-    #         '(//div[@class="demo-drawer-footer"])[3]/button[2]'
-    #     )
-    #     sleep(2)
-    #     eles = apps.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
-    #     assert len(eles) > 0
-    #     assert all(name in ele for ele in eles)
-    #     assert not apps.has_fail_message()
-    #
-    # @allure.story("查询排序>5")
-    # # @pytest.mark.run(order=1)
-    # def test_apps_selectsuccess1(self, login_to_apps):
-    #     driver = login_to_apps  # WebDriver 实例
-    #     apps = AppsPage(driver)  # 用 driver 初始化 ExpressionPage
-    #
-    #     num = 5
-    #     # 点击查询
-    #     apps.click_all_button("查询")
-    #     sleep(1)
-    #     # 定位名称输入框
-    #     element_to_double_click = driver.find_element(
-    #         By.XPATH,
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[4]',
-    #     )
-    #     # 创建一个 ActionChains 对象
-    #     actions = ActionChains(driver)
-    #     # 双击命令
-    #     actions.double_click(element_to_double_click).perform()
-    #     sleep(1)
-    #     # 点击物料优先度
-    #     apps.click_button('//div[text()="排序" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击比较关系框
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[5]//input'
-    #     )
-    #     sleep(1)
-    #     # 点击=
-    #     apps.click_button('//div[text()=">" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击输入数值
-    #     apps.enter_texts(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[6]//input',
-    #         num,
-    #     )
-    #     sleep(1)
-    #
-    #     # 点击确认
-    #     apps.click_button(
-    #         '(//div[@class="demo-drawer-footer"])[3]/button[2]'
-    #     )
-    #     sleep(2)
-    #     eles = apps.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[8]')
-    #     assert len(eles) > 0
-    #     assert all(int(ele) > num for ele in eles)
-    #     assert not apps.has_fail_message()
-    #
-    # @allure.story("查询应用名称包含物料并且排序>3")
-    # # @pytest.mark.run(order=1)
-    # def test_apps_selectsuccess2(self, login_to_apps):
-    #     driver = login_to_apps  # WebDriver 实例
-    #     apps = AppsPage(driver)  # 用 driver 初始化 ExpressionPage
-    #
-    #     name = "物料"
-    #     num = 3
-    #     # 点击查询
-    #     apps.click_all_button("查询")
-    #     sleep(1)
-    #
-    #     # 定位名称输入框
-    #     element_to_double_click = driver.find_element(
-    #         By.XPATH,
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[4]',
-    #     )
-    #     # 创建一个 ActionChains 对象
-    #     actions = ActionChains(driver)
-    #     # 双击命令
-    #     actions.double_click(element_to_double_click).perform()
-    #     sleep(1)
-    #     # 点击物料名称
-    #     apps.click_button('//div[text()="应用名称" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击（
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[3]'
-    #     )
-    #     apps.click_button('//div[text()="(" and contains(@optid,"opt_")]')
-    #     # 点击比较关系框
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[5]//input'
-    #     )
-    #     sleep(1)
-    #     # 点击包含
-    #     apps.click_button('//div[text()="包含" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击输入数值
-    #     apps.enter_texts(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[6]//input',
-    #         name,
-    #     )
-    #
-    #     # 点击（
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[7]'
-    #     )
-    #     apps.click_button('//div[text()=")" and contains(@optid,"opt_")]')
-    #
-    #     double_click = driver.find_element(
-    #         By.XPATH,
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[2]',
-    #     )
-    #     # 双击命令
-    #     actions.double_click(double_click).perform()
-    #     # 定义and元素的XPath
-    #     and_xpath = '//div[text()="and" and contains(@optid,"opt_")]'
-    #
-    #     try:
-    #         # 首先尝试直接查找并点击and元素
-    #         and_element = WebDriverWait(driver, 2).until(
-    #             EC.presence_of_element_located((By.XPATH, and_xpath))
-    #         )
-    #         and_element.click()
-    #     except:
-    #         # 如果直接查找失败，进入循环双击操作
-    #         max_attempts = 5
-    #         attempt = 0
-    #         and_found = False
-    #
-    #         while attempt < max_attempts and not and_found:
-    #             try:
-    #                 # 执行双击操作
-    #                 actions.double_click(double_click).perform()
-    #                 sleep(1)
-    #
-    #                 # 再次尝试查找and元素
-    #                 and_element = WebDriverWait(driver, 2).until(
-    #                     EC.presence_of_element_located((By.XPATH, and_xpath))
-    #                 )
-    #                 and_element.click()
-    #                 and_found = True
-    #             except:
-    #                 attempt += 1
-    #                 sleep(1)
-    #
-    #         if not and_found:
-    #             raise Exception(f"在{max_attempts}次尝试后仍未找到并点击到'and'元素")
-    #
-    #     # 点击（
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[3]'
-    #     )
-    #     apps.click_button('//div[text()="(" and contains(@optid,"opt_")]')
-    #     # 点击物料优先度
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[4]'
-    #     )
-    #     apps.click_button('//div[text()="排序" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击比较关系框
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[5]//input'
-    #     )
-    #     # 点击>
-    #     apps.click_button('//div[text()=">" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击输入数值
-    #     apps.enter_texts(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[6]//input',
-    #         num,
-    #     )
-    #     # 点击（
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[7]'
-    #     )
-    #     apps.click_button('//div[text()=")" and contains(@optid,"opt_")]')
-    #
-    #     sleep(1)
-    #
-    #     # 点击确认
-    #     apps.click_button(
-    #         '(//div[@class="demo-drawer-footer"])[3]/button[2]'
-    #     )
-    #     sleep(2)
-    #     eles1 = apps.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[8]')
-    #     eles2 = apps.loop_judgment('(//table[@class="vxe-table--body"])[2]//tr/td[3]')
-    #     assert len(eles1) > 0 and len(eles2) > 0
-    #     assert all(int(ele) > num for ele in eles1) and all(name in ele for ele in eles2)
-    #     assert not apps.has_fail_message()
-    #
-    # @allure.story("查询应用名称包含物料或排序≥4")
-    # # @pytest.mark.run(order=1)
-    # def test_apps_selectsuccess3(self, login_to_apps):
-    #     driver = login_to_apps  # WebDriver 实例
-    #     apps = AppsPage(driver)  # 用 driver 初始化 ExpressionPage
-    #
-    #     name = "物料"
-    #     num = 4
-    #     # 点击查询
-    #     apps.click_all_button("查询")
-    #     sleep(1)
-    #
-    #     # 定位名称输入框
-    #     element_to_double_click = driver.find_element(
-    #         By.XPATH,
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[4]',
-    #     )
-    #     # 创建一个 ActionChains 对象
-    #     actions = ActionChains(driver)
-    #     # 双击命令
-    #     actions.double_click(element_to_double_click).perform()
-    #     sleep(1)
-    #     # 点击物料名称
-    #     apps.click_button('//div[text()="应用名称" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击（
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[3]'
-    #     )
-    #     apps.click_button('//div[text()="(" and contains(@optid,"opt_")]')
-    #     # 点击比较关系框
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[5]//input'
-    #     )
-    #     sleep(1)
-    #     # 点击包含
-    #     apps.click_button('//div[text()="包含" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击输入数值
-    #     apps.enter_texts(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[6]//input',
-    #         name,
-    #     )
-    #
-    #     # 点击（
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[7]'
-    #     )
-    #     apps.click_button('//div[text()=")" and contains(@optid,"opt_")]')
-    #
-    #     sleep(1)
-    #     double_click = driver.find_element(
-    #         By.XPATH,
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[2]',
-    #     )
-    #     # 双击命令
-    #     sleep(1)
-    #     actions.double_click(double_click).perform()
-    #     # 定义or元素的XPath
-    #     or_xpath = '//div[text()="or" and contains(@optid,"opt_")]'
-    #
-    #     try:
-    #         # 首先尝试直接查找并点击or元素
-    #         and_element = WebDriverWait(driver, 2).until(
-    #             EC.presence_of_element_located((By.XPATH, or_xpath))
-    #         )
-    #         and_element.click()
-    #     except:
-    #         # 如果直接查找失败，进入循环双击操作
-    #         max_attempts = 5
-    #         attempt = 0
-    #         or_found = False
-    #
-    #         while attempt < max_attempts and not or_found:
-    #             try:
-    #                 # 执行双击操作
-    #                 actions.double_click(double_click).perform()
-    #                 sleep(1)
-    #
-    #                 # 再次尝试查找or元素
-    #                 or_element = WebDriverWait(driver, 2).until(
-    #                     EC.presence_of_element_located((By.XPATH, or_xpath))
-    #                 )
-    #                 or_element.click()
-    #                 or_found = True
-    #             except:
-    #                 attempt += 1
-    #                 sleep(1)
-    #
-    #         if not or_found:
-    #             raise Exception(f"在{max_attempts}次尝试后仍未找到并点击到'or'元素")
-    #
-    #     # 点击（
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[3]'
-    #     )
-    #     apps.click_button('//div[text()="(" and contains(@optid,"opt_")]')
-    #     # 点击物料优先度
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[4]'
-    #     )
-    #     apps.click_button('//div[text()="排序" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击比较关系框
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[5]//input'
-    #     )
-    #     # 点击>
-    #     apps.click_button('//div[text()="≥" and contains(@optid,"opt_")]')
-    #     sleep(1)
-    #     # 点击输入数值0
-    #     apps.enter_texts(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[6]//input',
-    #         num,
-    #     )
-    #     # 点击（
-    #     apps.click_button(
-    #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[7]'
-    #     )
-    #     apps.click_button('//div[text()=")" and contains(@optid,"opt_")]')
-    #
-    #     sleep(1)
-    #
-    #     # 点击确认
-    #     apps.click_button(
-    #         '(//div[@class="demo-drawer-footer"])[3]/button[2]'
-    #     )
-    #     sleep(1)
-    #     # 获取目标表格第2个 vxe 表格中的所有数据行
-    #     xpath_rows = '(//table[contains(@class, "vxe-table--body")])[2]//tr[contains(@class,"vxe-body--row")]'
-    #
-    #     # 先拿到总行数
-    #     base_rows = driver.find_elements(By.XPATH, xpath_rows)
-    #     total = len(base_rows)
-    #
-    #     valid_count = 0
-    #     for idx in range(total):
-    #         try:
-    #             # 每次都按索引重新定位这一行
-    #             row = driver.find_elements(By.XPATH, xpath_rows)[idx]
-    #             tds = row.find_elements(By.TAG_NAME, "td")
-    #             td3 = tds[2].text.strip()
-    #             td8_raw = tds[7].text.strip()
-    #             td8_raw = int(td8_raw) if td8_raw else 0
-    #
-    #             assert name in td3 or td8_raw >= num, f"第 {idx + 1} 行不符合：td3={td3}, td8={td8_raw}"
-    #             valid_count += 1
-    #
-    #         except StaleElementReferenceException:
-    #             # 如果行元素失效，再重试一次
-    #             row = driver.find_elements(By.XPATH, xpath_rows)[idx]
-    #             tds = row.find_elements(By.TAG_NAME, "td")
-    #             td3 = tds[2].text.strip()
-    #             td8_raw = tds[7].text.strip()
-    #             td8_raw = int(td8_raw) if td8_raw else 0
-    #             assert name in td3 or td8_raw >= num, f"第 {idx + 1} 行不符合：td3={td3}, td8={td8_raw}"
-    #             valid_count += 1
-    #     assert not apps.has_fail_message()
-    #     print(f"符合条件的行数：{valid_count}")
-
     @allure.story("过滤查组件名称成功")
     # @pytest.mark.run(order=1)
     def test_apps_select1(self, login_to_apps):
@@ -972,6 +483,264 @@ class TestSAppsPage:
         assert ele == "vxe-icon-funnel suffixIcon"
         assert not apps.has_fail_message()
 
+    @allure.story("模拟ctrl+i添加重复")
+    # @pytest.mark.run(order=1)
+    def test_apps_ctrlIrepeat(self, login_to_apps):
+        driver = login_to_apps  # WebDriver 实例
+        apps = AppsPage(driver)  # 用 driver 初始化 AppsPage
+        apps.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        ele1 = apps.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
+            "innerText")
+        apps.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = apps.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        apps.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        apps.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert message == '记录已存在,请检查！'
+        assert not apps.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_apps_ctrlI(self, login_to_apps):
+        driver = login_to_apps  # WebDriver 实例
+        apps = AppsPage(driver)  # 用 driver 初始化 AppsPage
+        apps.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        apps.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        apps.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加')
+        sleep(1)
+        ele1 = apps.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        apps.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        apps.get_find_message()
+        apps.select_input('1没有数据添加')
+        ele2 = apps.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2 == '1没有数据添加'
+        assert not apps.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改")
+    # @pytest.mark.run(order=1)
+    def test_apps_ctrlM(self, login_to_apps):
+        driver = login_to_apps  # WebDriver 实例
+        apps = AppsPage(driver)  # 用 driver 初始化 AppsPage
+        apps.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        apps.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        apps.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[3])[2]//input', '1没有数据修改')
+        ele1 = apps.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[3])[2]//input').get_attribute(
+            "value")
+        apps.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        apps.get_find_message()
+        apps.wait_for_loading_to_disappear()
+        apps.enter_texts('//div[div[p[text()="应用名称"]]]//input', '1没有数据修改')
+        ele2 = apps.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[3])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2
+        assert not apps.has_fail_message()
+
+    @allure.story("模拟多选删除")
+    # @pytest.mark.run(order=1)
+    def test_apps_shiftdel(self, login_to_apps):
+        driver = login_to_apps  # WebDriver 实例
+        apps = AppsPage(driver)  # 用 driver 初始化 AppsPage
+        apps.right_refresh('应用管理')
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]']
+        apps.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = apps.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        apps.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        apps.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加1')
+        sleep(2)
+        apps.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        apps.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        apps.enter_texts('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input', '1没有数据添加12')
+        sleep(1)
+        ele1 = apps.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').text
+        ele2 = apps.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input').get_attribute("value")
+        apps.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        apps.get_find_message()
+        apps.select_input('1没有数据添加1')
+        ele11 = apps.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        ele22 = apps.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[2]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele11 and ele2 == ele22
+        assert not apps.has_fail_message()
+        apps.select_input('1没有数据添加')
+        before_data = apps.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[3]//td[1])[1]']
+        apps.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = apps.get_find_element_xpath(elements[2])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        apps.click_all_button('删除')
+        apps.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        message = apps.get_find_message()
+        apps.wait_for_loading_to_disappear()
+        after_data = apps.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        after_count = int(re.search(r'\d+', after_data).group())
+        assert message == "删除成功！"
+        assert before_count - after_count == 3, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
+        assert not apps.has_fail_message()
+
+    @allure.story("模拟ctrl+c复制可查询")
+    # @pytest.mark.run(order=1)
+    def test_apps_ctrlC(self, login_to_apps):
+        driver = login_to_apps  # WebDriver 实例
+        apps = AppsPage(driver)  # 用 driver 初始化 AppsPage
+        apps.right_refresh('应用管理')
+        apps.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        before_data = apps.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+        apps.click_button('//div[div[p[text()="应用代码"]]]//input')
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        eles = apps.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        eles = [ele.text for ele in eles]
+        apps.right_refresh('应用管理')
+        assert all(before_data in ele for ele in eles)
+        assert not apps.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_apps_shift(self, login_to_apps):
+        driver = login_to_apps  # WebDriver 实例
+        apps = AppsPage(driver)  # 用 driver 初始化 AppsPage
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
+        apps.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = apps.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        num = apps.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        apps.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert len(num) == 2
+        assert not apps.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+m编辑")
+    # @pytest.mark.run(order=1)
+    def test_apps_ctrls(self, login_to_apps):
+        driver = login_to_apps  # WebDriver 实例
+        apps = AppsPage(driver)  # 用 driver 初始化 AppsPage
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
+        apps.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = apps.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        num = apps.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        apps.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = apps.get_find_message()
+        assert len(num) == 2 and message == "保存成功"
+        assert not apps.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改,编辑对话框应用代码不可编辑")
+    # @pytest.mark.run(order=1)
+    def test_apps_ctrlMDisabled(self, login_to_apps):
+        driver = login_to_apps  # WebDriver 实例
+        apps = AppsPage(driver)  # 用 driver 初始化 AppsPage
+        apps.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        apps.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        ele1 = apps.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "disabled")
+        apps.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert ele1
+        assert not apps.has_fail_message()
+
+    @allure.story("上传已有的应用成功")
+    # @pytest.mark.run(order=1)
+    def test_apps_upload1(self, login_to_apps):
+        driver = login_to_apps  # WebDriver 实例
+        apps = AppsPage(driver)  # 用 driver 初始化 AppsPage
+        dir_ = 'apptest1'
+        apps.click_all_button('导入')
+        # 清理 .crdownload 文件，避免上传未完成的文件
+        current_dir = os.path.dirname(__file__)
+        download_path = os.path.join(current_dir, "downloads")
+        for f in os.listdir(download_path):
+            if f.endswith(".crdownload"):
+                os.remove(os.path.join(download_path, f))
+
+        sleep(2)
+        # 1. 准备上传文件路径
+        upload_file = os.path.join(download_path, f"{dir_}.json")
+        assert os.path.isfile(upload_file), f"❌ 上传文件不存在: {upload_file}"
+
+        # 2. 定位上传控件并执行上传
+        apps.get_find_element_xpath('(//input[@type="file"])[2]')
+        pyautogui.write(upload_file)
+        sleep(3)
+        pyautogui.press('enter')
+        sleep(1)
+        pyautogui.press('enter')
+        ele = apps.get_find_element_xpath('//table[@class="vxe-table--body"]//tr/td[2]//label/span').get_attribute("class")
+        if 'ivu-checkbox-checked' not in ele:
+            apps.click_button('//table[@class="vxe-table--body"]//tr/td[2]//label/span')
+
+        apps.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
+        but = apps.finds_elements(By.XPATH, '//div[@class="ivu-modal-body"]//span[text()="确定"]')
+        if len(but) == 1:
+            apps.click_button('//div[@class="ivu-modal-body"]//span[text()="确定"]')
+        message = apps.get_find_message()
+        assert message == '编辑成功！'
+        assert not apps.has_fail_message()
+
+    @allure.story("上传没有的应用成功")
+    # @pytest.mark.run(order=1)
+    def test_apps_upload2(self, login_to_apps):
+        driver = login_to_apps  # WebDriver 实例
+        apps = AppsPage(driver)  # 用 driver 初始化 AppsPage
+        dir_ = '11AA'
+        apps.click_all_button('导入')
+        # 清理 .crdownload 文件，避免上传未完成的文件
+        current_dir = os.path.dirname(__file__)
+        download_path = os.path.join(current_dir, "downloads")
+        for f in os.listdir(download_path):
+            if f.endswith(".crdownload"):
+                os.remove(os.path.join(download_path, f))
+
+        sleep(2)
+        # 1. 准备上传文件路径
+        upload_file = os.path.join(download_path, f"{dir_}.json")
+        assert os.path.isfile(upload_file), f"❌ 上传文件不存在: {upload_file}"
+
+        # 2. 定位上传控件并执行上传
+        apps.get_find_element_xpath('(//input[@type="file"])[2]')
+        pyautogui.write(upload_file)
+        sleep(3)
+        pyautogui.press('enter')
+        sleep(1)
+        pyautogui.press('enter')
+        ele = apps.get_find_element_xpath('//table[@class="vxe-table--body"]//tr/td[2]//label/span').get_attribute(
+            "class")
+        if 'ivu-checkbox-checked' not in ele:
+            apps.click_button('//table[@class="vxe-table--body"]//tr/td[2]//label/span')
+
+        apps.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
+        message = apps.get_find_message()
+        assert message == '新增成功！'
+        assert not apps.has_fail_message()
+
     @allure.story("删除测试数据成功，删除布局成功")
     # @pytest.mark.run(order=1)
     def test_apps_delsuccess(self, login_to_apps):
@@ -979,10 +748,9 @@ class TestSAppsPage:
         apps = AppsPage(driver)  # 用 driver 初始化 ExpressionPage
         layout = "测试布局A"
 
-        value = ['appstest1']
+        value = ['appstest1', '11AA']
         apps.del_all(xpath='//div[p[text()="应用代码"]]/following-sibling::div//input', value=value)
-        sleep(2)
-        apps.wait_for_loading_to_disappear()
+        apps.right_refresh()
         try:
             apps.del_layout(layout)
         except Exception:

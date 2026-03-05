@@ -1,9 +1,11 @@
 import random
+import re
 from time import sleep
 
 import allure
 import pytest
 from selenium import webdriver
+from selenium.webdriver import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -16,7 +18,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, all_driver_instances
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_item():
     """初始化并返回 driver"""
     driver_path = DateDriver().driver_path
@@ -64,7 +66,7 @@ class TestItemPage:
         whs_code_box = self.item.get_find_element_xpath(
             "//div[@id='u2tgl5h9-otp1']//input"
         )
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
@@ -94,7 +96,7 @@ class TestItemPage:
         self.item.enter_texts(
             "//div[@id='p34nag46-7evf']//input", "text1231"
         )
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         input_box = self.item.get_find_element_xpath(
             "//div[@id='u2tgl5h9-otp1']//input"
         )
@@ -119,8 +121,8 @@ class TestItemPage:
         self.item.enter_texts("//div[@id='ywz9q11i-sp3b']//input", "111")
         self.item.enter_texts("//div[@id='u2tgl5h9-otp1']//input", "111")
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
-        sleep(1)
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.wait_for_loading_to_disappear()
         adddata = self.item.get_find_element_xpath(
             '//tr[./td[2][.//span[text()="111"]]]/td[2]'
         ).text
@@ -137,7 +139,7 @@ class TestItemPage:
         self.item.enter_texts("//div[@id='ywz9q11i-sp3b']//input", "111")
         self.item.enter_texts("//div[@id='u2tgl5h9-otp1']//input", "111")
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
         # 获取重复弹窗文字
         error_popup = self.item.get_find_element_xpath(
@@ -164,7 +166,7 @@ class TestItemPage:
         # 定位内容为‘111’的行
         itemdata = self.item.get_find_element_xpath(
             '//tr[./td[2][.//span[text()="111"]]]/td[2]'
-        ).text
+        ).get_attribute('innerText')
         assert itemdata == "111", f"预期{itemdata}"
         assert not self.item.has_fail_message()
 
@@ -178,8 +180,8 @@ class TestItemPage:
         self.item.enter_texts("//div[@id='ywz9q11i-sp3b']//input", "1测试A")
         self.item.enter_texts("//div[@id='u2tgl5h9-otp1']//input", "1测试A")
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
-        sleep(1)
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.wait_for_loading_to_disappear()
         adddata = self.item.get_find_element_xpath(
             '//tr[./td[2][.//span[text()="1测试A"]]]/td[2]'
         ).text
@@ -199,12 +201,12 @@ class TestItemPage:
         self.item.enter_texts("//div[@id='uqtb82o5-7f7f']//input", "111")
         self.item.enter_texts("//div[@id='mhj7cxc6-rywr']//input", "111")
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
         # 获取重复弹窗文字
         error_popup = self.item.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
-        ).text
+        ).get_attribute('innerText')
         self.item.click_button('//button[@type="button"]/span[text()="关闭"]')
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert error_popup == "记录已存在,请检查！", f"预期数据{error_popup}"
@@ -226,8 +228,9 @@ class TestItemPage:
             "//div[@id='2gqlayrh-vwyr']//input", f"{text}"
         )
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
-        sleep(3)
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.get_find_message()
+        self.item.wait_for_loading_to_disappear()
         # 定位表格内容
         itemdata = self.item.get_find_element_xpath(
             '//tr[./td[2][.//span[contains(text(),"1测试A")]]]/td[2]'
@@ -246,8 +249,9 @@ class TestItemPage:
         # 物料代码输入
         self.item.enter_texts("//div[@id='2gqlayrh-vwyr']//input", "1测试A")
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
-        sleep(1)
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.get_find_message()
+        self.item.wait_for_loading_to_disappear()
         # 定位表格内容
         itemdata = self.item.get_find_element_xpath(
             '//tr[./td[2][.//span[text()="1测试A"]]]/td[2]'
@@ -309,8 +313,9 @@ class TestItemPage:
 
         sleep(1)
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
-        sleep(1)
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.get_find_message()
+        self.item.wait_for_loading_to_disappear()
         # 选中工厂代码
         self.item.click_button('//tr[./td[2][.//span[text()="222"]]]/td[2]')
         # 点击编辑按钮
@@ -341,7 +346,6 @@ class TestItemPage:
     #     filter_results = self.item.filter_method('//span[text()=" 工厂代码"]/ancestor::div[3]//span//span//span')
     #     assert filter_results
     #     assert not self.item.has_fail_message()
-
 
     @allure.story("查询工厂代码成功")
     # @pytest.mark.run(order=1)
@@ -391,6 +395,7 @@ class TestItemPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
+        item.right_refresh('仓库库位')
         assert itemcode == "222" and len(itemcode2) == 0
         assert not item.has_fail_message()
 
@@ -435,191 +440,161 @@ class TestItemPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
         )
+        self.item.right_refresh('仓库库位')
         assert len(itemcode) == 0
-        assert not self.item.has_fail_message()
-
-    @allure.story("删除数据成功")
-    # @pytest.mark.run(order=1)
-    def test_warehouselocation_delsuccess3(self, login_to_item):
-        # 定位内容为‘111’的行
-        self.item.click_button('//tr[./td[2][.//span[text()="222"]]]/td[2]')
-        self.item.click_del_button()  # 点击删除
-        sleep(1)
-        # 点击确定
-        # 找到共同的父元素
-        parent = self.item.get_find_element_class("ivu-modal-confirm-footer")
-
-        # 获取所有button子元素
-        all_buttons = parent.find_elements(By.TAG_NAME, "button")
-
-        # 选择需要的button 第二个确定按钮
-        second_button = all_buttons[1]
-        second_button.click()
-        self.item.click_ref_button()
-        sleep(1)
-        # 定位内容为‘111’的行
-        itemdata = self.driver.find_elements(
-            By.XPATH, '//tr[./td[2][.//span[text()="222"]]]/td[2]'
-        )
-        assert len(itemdata) == 0
         assert not self.item.has_fail_message()
 
     # @allure.story("查询物料名字成功")
     # @pytest.mark.run(order=1)
     # def test_warehouselocation_selectnamesuccess(self, login_to_item):
-    #     driver = login_to_item  # WebDriver 实例
-    #     item = ItemPage(driver)  # 用 driver 初始化 ItemPage
     #
     #     # 点击查询
-    #     item.click_sel_button()
+    #     self.item.click_sel_button()
     #     sleep(1)
     #     # 定位名称输入框
-    #     element_to_double_click = driver.find_element(
+    #     element_to_double_click = self.driver.find_element(
     #         By.XPATH,
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[4]',
     #     )
     #     # 创建一个 ActionChains 对象
-    #     actions = ActionChains(driver)
+    #     actions = ActionChains(self.driver)
     #     # 双击命令
     #     actions.double_click(element_to_double_click).perform()
     #     sleep(1)
     #     # 点击物料名称
-    #     item.click_button('//div[text()="物料名称" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()="物料名称" and contains(@optid,"opt_")]')
     #     sleep(1)
     #     # 点击比较关系框
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[5]//input'
     #     )
     #     sleep(1)
     #     # 点击=
-    #     item.click_button('//div[text()="=" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()="=" and contains(@optid,"opt_")]')
     #     sleep(1)
     #     # 点击输入数值
-    #     item.enter_texts(
+    #     self.item.enter_texts(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[6]//input',
     #         "M1",
     #     )
     #     sleep(1)
     #
     #     # 点击确认
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//button[@class="ivu-btn ivu-btn-primary"]/span[text()="确定"])[3]'
     #     )
     #     sleep(1)
     #     # 定位第一行是否为M1
-    #     itemcode = item.get_find_element_xpath(
+    #     itemcode = self.item.get_find_element_xpath(
     #         '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[3]'
     #     ).text
     #     # 定位第二行没有数据
-    #     itemcode2 = driver.find_elements(
+    #     itemcode2 = self.driver.find_elements(
     #         By.XPATH,
     #         '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[3]',
     #     )
+    #     self.item.click_ref_button()
     #     assert itemcode == "M1" and len(itemcode2) == 0
-    #     assert not item.has_fail_message()
-
+    #     assert not self.item.has_fail_message()
+    #
     # @allure.story("查询物料优先度>60")
     # @pytest.mark.run(order=1)
     # def test_warehouselocation_selectsuccess1(self, login_to_item):
-    #     driver = login_to_item  # WebDriver 实例
-    #     item = ItemPage(driver)  # 用 driver 初始化 ItemPage
-    #
     #     # 点击查询
-    #     item.click_sel_button()
+    #     self.item.click_sel_button()
     #     sleep(1)
     #     # 定位名称输入框
-    #     element_to_double_click = driver.find_element(
+    #     element_to_double_click = self.driver.find_element(
     #         By.XPATH,
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[4]',
     #     )
     #     # 创建一个 ActionChains 对象
-    #     actions = ActionChains(driver)
+    #     actions = ActionChains(self.driver)
     #     # 双击命令
     #     actions.double_click(element_to_double_click).perform()
     #     sleep(1)
     #     # 点击物料优先度
-    #     item.click_button('//div[text()="物料优先度" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()="物料优先度" and contains(@optid,"opt_")]')
     #     sleep(1)
     #     # 点击比较关系框
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[5]//input'
     #     )
     #     sleep(1)
     #     # 点击=
-    #     item.click_button('//div[text()=">" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()=">" and contains(@optid,"opt_")]')
     #     sleep(1)
     #     # 点击输入数值
-    #     item.enter_texts(
+    #     self.item.enter_texts(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[6]//input',
     #         "60",
     #     )
     #     sleep(1)
     #
     #     # 点击确认
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//button[@class="ivu-btn ivu-btn-primary"]/span[text()="确定"])[3]'
     #     )
     #     sleep(1)
     #     # 定位第一行物料优先度
-    #     itemcode = item.get_find_element_xpath(
+    #     itemcode = self.item.get_find_element_xpath(
     #         '(//table[contains(@class, "vxe-table--body")])[2]//tr[contains(@class,"vxe-body--row")][1]/td[6]'
     #     ).text
     #     # 定位第二行数据
-    #     itemcode2 = item.get_find_element_xpath(
+    #     itemcode2 = self.item.get_find_element_xpath(
     #         '(//table[contains(@class, "vxe-table--body")])[2]//tr[contains(@class,"vxe-body--row")][2]/td[6]'
     #     ).text
+    #     self.item.click_ref_button()
     #     assert int(itemcode) > 60 and int(itemcode2) > 60
-    #     assert not item.has_fail_message()
-
+    #     assert not self.item.has_fail_message()
+    #
     # @allure.story("查询物料名称包含材料并且物料优先度>70")
     # @pytest.mark.run(order=1)
     # def test_warehouselocation_selectsuccess2(self, login_to_item):
-    #     driver = login_to_item  # WebDriver 实例
-    #     item = ItemPage(driver)  # 用 driver 初始化 ItemPage
     #
     #     # 点击查询
-    #     item.click_sel_button()
+    #     self.item.click_sel_button()
     #     sleep(1)
     #
     #     # 定位名称输入框
-    #     element_to_double_click = driver.find_element(
+    #     element_to_double_click = self.driver.find_element(
     #         By.XPATH,
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[4]',
     #     )
     #     # 创建一个 ActionChains 对象
-    #     actions = ActionChains(driver)
+    #     actions = ActionChains(self.driver)
     #     # 双击命令
     #     actions.double_click(element_to_double_click).perform()
     #     sleep(1)
     #     # 点击物料名称
-    #     item.click_button('//div[text()="物料名称" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()="物料名称" and contains(@optid,"opt_")]')
     #     sleep(1)
     #     # 点击（
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[3]'
     #     )
-    #     item.click_button('//div[text()="(" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()="(" and contains(@optid,"opt_")]')
     #     # 点击比较关系框
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[5]//input'
     #     )
     #     sleep(1)
     #     # 点击包含
-    #     item.click_button('//div[text()="包含" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()="包含" and contains(@optid,"opt_")]')
     #     sleep(1)
     #     # 点击输入数值
-    #     item.enter_texts(
+    #     self.item.enter_texts(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[6]//input',
     #         "材料",
     #     )
     #
     #     # 点击（
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[7]'
     #     )
-    #     item.click_button('//div[text()=")" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()=")" and contains(@optid,"opt_")]')
     #
-    #     double_click = driver.find_element(
+    #     double_click = self.driver.find_element(
     #         By.XPATH,
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[2]',
     #     )
@@ -630,7 +605,7 @@ class TestItemPage:
     #
     #     try:
     #         # 首先尝试直接查找并点击and元素
-    #         and_element = WebDriverWait(driver, 2).until(
+    #         and_element = WebDriverWait(self.driver, 2).until(
     #             EC.presence_of_element_located((By.XPATH, and_xpath))
     #         )
     #         and_element.click()
@@ -647,7 +622,7 @@ class TestItemPage:
     #                 sleep(1)
     #
     #                 # 再次尝试查找and元素
-    #                 and_element = WebDriverWait(driver, 2).until(
+    #                 and_element = WebDriverWait(self.driver, 2).until(
     #                     EC.presence_of_element_located((By.XPATH, and_xpath))
     #                 )
     #                 and_element.click()
@@ -660,107 +635,106 @@ class TestItemPage:
     #             raise Exception(f"在{max_attempts}次尝试后仍未找到并点击到'and'元素")
     #
     #     # 点击（
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[3]'
     #     )
-    #     item.click_button('//div[text()="(" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()="(" and contains(@optid,"opt_")]')
     #     # 点击物料优先度
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[4]'
     #     )
-    #     item.click_button('//div[text()="物料优先度" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()="物料优先度" and contains(@optid,"opt_")]')
     #     sleep(1)
     #     # 点击比较关系框
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[5]//input'
     #     )
     #     # 点击>
-    #     item.click_button('//div[text()=">" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()=">" and contains(@optid,"opt_")]')
     #     sleep(1)
     #     # 点击输入数值
-    #     item.enter_texts(
+    #     self.item.enter_texts(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[6]//input',
     #         "70",
     #     )
     #     # 点击（
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[7]'
     #     )
-    #     item.click_button('//div[text()=")" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()=")" and contains(@optid,"opt_")]')
     #
     #     sleep(1)
     #
     #     # 点击确认
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//button[@class="ivu-btn ivu-btn-primary"]/span[text()="确定"])[3]'
     #     )
     #     sleep(1)
     #     # 定位第一行物料优先度
-    #     itemcode = item.get_find_element_xpath(
+    #     itemcode = self.item.get_find_element_xpath(
     #         '(//table[contains(@class, "vxe-table--body")])[2]//tr[contains(@class,"vxe-body--row")][1]/td[6]'
     #     ).text
-    #     itemname = item.get_find_element_xpath(
+    #     itemname = self.item.get_find_element_xpath(
     #         '(//table[contains(@class, "vxe-table--body")])[2]//tr[contains(@class,"vxe-body--row")][1]/td[3]'
     #     ).text
     #     # 定位第二行没有数据
-    #     itemcode2 = driver.find_elements(
+    #     itemcode2 = self.driver.find_elements(
     #         By.XPATH,
     #         '(//table[contains(@class, "vxe-table--body")])[2]//tr[contains(@class,"vxe-body--row")][2]/td[10]',
     #     )
+    #     self.item.click_ref_button()
     #     # 判断第一行物料优先度>70 并且 物料名称为材料B 并且第二行没有数据
     #     assert int(itemcode) > 70 and itemname == "材料B" and len(itemcode2) == 0
-    #     assert not item.has_fail_message()
-
+    #     assert not self.item.has_fail_message()
+    #
     # @allure.story("查询物料名称包含材料或物料优先度>70")
     # @pytest.mark.run(order=1)
     # def test_warehouselocation_selectsuccess3(self, login_to_item):
-    #     driver = login_to_item  # WebDriver 实例
-    #     item = ItemPage(driver)  # 用 driver 初始化 ItemPage
     #
     #     # 点击查询
-    #     item.click_sel_button()
+    #     self.item.click_sel_button()
     #     sleep(1)
     #
     #     # 定位名称输入框
-    #     element_to_double_click = driver.find_element(
+    #     element_to_double_click = self.driver.find_element(
     #         By.XPATH,
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[4]',
     #     )
     #     # 创建一个 ActionChains 对象
-    #     actions = ActionChains(driver)
+    #     actions = ActionChains(self.driver)
     #     # 双击命令
     #     actions.double_click(element_to_double_click).perform()
     #     sleep(1)
     #     # 点击物料名称
-    #     item.click_button('//div[text()="物料名称" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()="物料名称" and contains(@optid,"opt_")]')
     #     sleep(1)
     #     # 点击（
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[3]'
     #     )
-    #     item.click_button('//div[text()="(" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()="(" and contains(@optid,"opt_")]')
     #     # 点击比较关系框
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[5]//input'
     #     )
     #     sleep(1)
     #     # 点击包含
-    #     item.click_button('//div[text()="包含" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()="包含" and contains(@optid,"opt_")]')
     #     sleep(1)
     #     # 点击输入数值
-    #     item.enter_texts(
+    #     self.item.enter_texts(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[6]//input',
     #         "材料",
     #     )
     #
     #     # 点击（
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[1]/td[7]'
     #     )
-    #     item.click_button('//div[text()=")" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()=")" and contains(@optid,"opt_")]')
     #
     #     sleep(1)
-    #     double_click = driver.find_element(
+    #     double_click = self.driver.find_element(
     #         By.XPATH,
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[2]',
     #     )
@@ -772,7 +746,7 @@ class TestItemPage:
     #
     #     try:
     #         # 首先尝试直接查找并点击or元素
-    #         and_element = WebDriverWait(driver, 2).until(
+    #         and_element = WebDriverWait(self.driver, 2).until(
     #             EC.presence_of_element_located((By.XPATH, or_xpath))
     #         )
     #         and_element.click()
@@ -789,7 +763,7 @@ class TestItemPage:
     #                 sleep(1)
     #
     #                 # 再次尝试查找or元素
-    #                 or_element = WebDriverWait(driver, 2).until(
+    #                 or_element = WebDriverWait(self.driver, 2).until(
     #                     EC.presence_of_element_located((By.XPATH, or_xpath))
     #                 )
     #                 or_element.click()
@@ -802,54 +776,74 @@ class TestItemPage:
     #             raise Exception(f"在{max_attempts}次尝试后仍未找到并点击到'or'元素")
     #
     #     # 点击（
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[3]'
     #     )
-    #     item.click_button('//div[text()="(" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()="(" and contains(@optid,"opt_")]')
     #     # 点击物料优先度
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[4]'
     #     )
-    #     item.click_button('//div[text()="物料优先度" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()="物料优先度" and contains(@optid,"opt_")]')
     #     sleep(1)
     #     # 点击比较关系框
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[5]//input'
     #     )
     #     # 点击>
-    #     item.click_button('//div[text()=">" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()=">" and contains(@optid,"opt_")]')
     #     sleep(1)
     #     # 点击输入数值70
-    #     item.enter_texts(
+    #     self.item.enter_texts(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[6]//input',
     #         "70",
     #     )
     #     # 点击（
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//div[@class="vxe-table--render-wrapper"])[3]/div[1]/div[2]//tr[2]/td[7]'
     #     )
-    #     item.click_button('//div[text()=")" and contains(@optid,"opt_")]')
+    #     self.item.click_button('//div[text()=")" and contains(@optid,"opt_")]')
     #
     #     sleep(1)
     #
     #     # 点击确认
-    #     item.click_button(
+    #     self.item.click_button(
     #         '(//button[@class="ivu-btn ivu-btn-primary"]/span[text()="确定"])[3]'
     #     )
     #     sleep(1)
     #     # 定位第一行物料优先度
-    #     itemcode = item.get_find_element_xpath(
+    #     itemcode = self.item.get_find_element_xpath(
     #         '(//table[contains(@class, "vxe-table--body")])[2]//tr[contains(@class,"vxe-body--row")][1]/td[6]'
     #     ).text
-    #     itemname = item.get_find_element_xpath(
+    #     itemname = self.item.get_find_element_xpath(
     #         '(//table[contains(@class, "vxe-table--body")])[2]//tr[contains(@class,"vxe-body--row")][1]/td[3]'
     #     ).text
     #     # 定位第二行数据
-    #     itemcode2 = item.get_find_element_xpath(
+    #     itemcode2 = self.item.get_find_element_xpath(
     #         '(//table[contains(@class, "vxe-table--body")])[2]//tr[contains(@class,"vxe-body--row")][2]/td[3]'
     #     ).text
+    #     self.item.click_ref_button()
     #     assert "材料" in itemname and int(itemcode) < 70 and "材料" in itemcode2
-    #     assert not item.has_fail_message()
+    #     assert not self.item.has_fail_message()
+
+    @allure.story("删除数据成功")
+    # @pytest.mark.run(order=1)
+    def test_warehouselocation_delsuccess3(self, login_to_item):
+        # 定位内容为‘111’的行
+        self.item.click_button('//tr[./td[2][.//span[text()="222"]]]/td[2]')
+        self.item.click_del_button()  # 点击删除
+        sleep(1)
+        # 点击确定
+        self.item.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.item.get_find_message()
+        self.item.click_ref_button()
+        sleep(1)
+        # 定位内容为‘111’的行
+        itemdata = self.driver.find_elements(
+            By.XPATH, '//tr[./td[2][.//span[text()="222"]]]/td[2]'
+        )
+        assert len(itemdata) == 0
+        assert not self.item.has_fail_message()
 
     @allure.story("删除数据成功")
     # @pytest.mark.run(order=1)
@@ -860,15 +854,8 @@ class TestItemPage:
         self.item.click_del_button()  # 点击删除
         sleep(1)
         # 点击确定
-        # 找到共同的父元素
-        parent = self.item.get_find_element_class("ivu-modal-confirm-footer")
-
-        # 获取所有button子元素
-        all_buttons = parent.find_elements(By.TAG_NAME, "button")
-
-        # 选择需要的button 第二个确定按钮
-        second_button = all_buttons[1]
-        second_button.click()
+        self.item.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.item.get_find_message()
         self.item.click_ref_button()
         sleep(1)
         # 定位内容为‘111’的行
@@ -956,8 +943,8 @@ class TestItemPage:
 
         sleep(1)
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
-        sleep(1)
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.wait_for_loading_to_disappear()
         # 选中工厂代码
         self.item.click_button('//tr[./td[2][.//span[text()="111"]]]/td[2]')
         # 点击编辑按钮
@@ -973,12 +960,269 @@ class TestItemPage:
         print('input_values', input_values)
         print('date_values', date_values)
         print('item_sel', item_sel)
-        sleep(1)
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
                 len(input_xpath_list) == len(input_values)
                 and item_sel == "否"
                 and len(date_xpath_list) == len(date_values)
         )
+        assert not self.item.has_fail_message()
+
+    @allure.story("过滤条件查询，一个不选，显示正常")
+    # @pytest.mark.run(order=1)
+    def test_warehouselocation_select2(self, login_to_item):
+        self.item.click_button('//div[div[span[text()=" 工厂代码"]]]//i[contains(@class,"suffixIcon")]')
+        sleep(1)
+        eles = self.item.get_find_element_xpath(
+            '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
+            "class")
+        if eles == "ivu-checkbox ivu-checkbox-checked":
+            self.item.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            self.item.click_button('//div[@class="filter-btn-bar"]/button')
+        sleep(1)
+        self.item.click_button('//div[div[span[text()=" 工厂代码"]]]//input')
+        eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        self.item.right_refresh('仓库库位')
+        assert len(eles) == 0
+        assert not self.item.has_fail_message()
+
+    @allure.story("过滤条件查询，设置包含条件查询成功")
+    # @pytest.mark.run(order=1)
+    def test_warehouselocation_select3(self, login_to_item):
+
+        name = self.item.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        self.item.click_button('//div[div[span[text()=" 工厂代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.hover("包含")
+        sleep(1)
+        self.item.select_input('工厂代码', first_char)
+        sleep(1)
+        eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        self.item.right_refresh('仓库库位')
+        assert all(first_char in text for text in list_)
+        assert not self.item.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合开头查询成功")
+    # @pytest.mark.run(order=1)
+    def test_warehouselocation_select4(self, login_to_item):
+
+        name = self.item.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        self.item.click_button('//div[div[span[text()=" 工厂代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.hover("符合开头")
+        sleep(1)
+        self.item.select_input('工厂代码', first_char)
+        sleep(1)
+        eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        self.item.right_refresh('仓库库位')
+        assert all(str(item).startswith(first_char) for item in list_)
+        assert not self.item.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合结尾查询成功")
+    # @pytest.mark.run(order=1)
+    def test_warehouselocation_select5(self, login_to_item):
+
+        name = self.item.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        last_char = name[-1:] if name else ""
+        self.item.click_button('//div[div[span[text()=" 工厂代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.hover("符合结尾")
+        sleep(1)
+        self.item.select_input('工厂代码', last_char)
+        sleep(1)
+        eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        self.item.right_refresh('仓库库位')
+        assert all(str(item).endswith(last_char) for item in list_)
+        assert not self.item.has_fail_message()
+
+    @allure.story("清除筛选效果成功")
+    # @pytest.mark.run(order=1)
+    def test_warehouselocation_clear(self, login_to_item):
+
+        name = "3"
+        sleep(1)
+        self.item.click_button('//div[div[span[text()=" 工厂代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.hover("包含")
+        sleep(1)
+        self.item.select_input('工厂代码', name)
+        sleep(1)
+        self.item.click_button('//div[div[span[text()=" 工厂代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.hover("清除所有筛选条件")
+        sleep(1)
+        ele = self.item.get_find_element_xpath('//div[div[span[text()=" 工厂代码"]]]//i[contains(@class,"suffixIcon")]').get_attribute(
+            "class")
+        self.item.right_refresh('仓库库位')
+        assert ele == "vxe-icon-funnel suffixIcon"
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加重复")
+    # @pytest.mark.run(order=1)
+    def test_warehouselocation_ctrlIrepeat(self, login_to_item):
+
+        self.item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        ele1 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
+            "innerText")
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = self.item.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        self.item.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert message == '记录已存在,请检查！'
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_warehouselocation_ctrlI(self, login_to_item):
+
+        self.item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加')
+        sleep(1)
+        ele1 = self.item.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.get_find_message()
+        self.item.wait_for_loading_to_disappear()
+        self.item.select_input('工厂代码', '1没有数据添加')
+        ele2 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2 == '1没有数据添加'
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改")
+    # @pytest.mark.run(order=1)
+    def test_warehouselocation_ctrlM(self, login_to_item):
+
+        self.item.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改')
+        ele1 = self.item.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.get_find_message()
+        self.item.select_input('工厂代码', '1没有数据修改')
+        ele2 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟多选删除")
+    # @pytest.mark.run(order=1)
+    def test_warehouselocation_shiftdel(self, login_to_item):
+        self.item.right_refresh('仓库库位')
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        self.item.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = self.item.get_find_element_xpath(elements[1])
+        ActionChains(self.driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        sleep(1)
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改1')
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input', '1没有数据修改12')
+        sleep(1)
+        ele1 = self.item.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').text
+        ele2 = self.item.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input').get_attribute("value")
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.get_find_message()
+        self.item.select_input('工厂代码', '1没有数据修改1')
+        ele11 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        ele22 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[2]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele11 and ele2 == ele22
+        assert not self.item.has_fail_message()
+        self.item.select_input('工厂代码', '1没有数据修改')
+        before_data = self.item.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[3]//td[1])[2]']
+        self.item.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = self.item.get_find_element_xpath(elements[2])
+        ActionChains(self.driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        self.item.click_del_button()
+        self.item.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        message = self.item.get_find_message()
+        self.item.wait_for_loading_to_disappear()
+        after_data = self.item.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        after_count = int(re.search(r'\d+', after_data).group())
+        assert message == "删除成功！"
+        assert before_count - after_count == 3, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟ctrl+c复制可查询")
+    # @pytest.mark.run(order=1)
+    def test_warehouselocation_ctrlC(self, login_to_item):
+        self.item.right_refresh('仓库库位')
+        self.item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        before_data = self.item.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
+        sleep(1)
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+        self.item.click_button('//div[div[span[text()=" 工厂代码"]]]//input')
+        sleep(1)
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        eles = [ele.text for ele in eles]
+        self.item.right_refresh('仓库库位')
+        assert all(before_data in ele for ele in eles)
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_warehouselocation_shift(self, login_to_item):
+
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        self.item.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = self.item.get_find_element_xpath(elements[1])
+        ActionChains(self.driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        num = self.item.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert len(num) == 2
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+m编辑")
+    # @pytest.mark.run(order=1)
+    def test_warehouselocation_ctrls(self, login_to_item):
+
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        self.item.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = self.item.get_find_element_xpath(elements[1])
+        ActionChains(self.driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        num = self.item.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = self.item.get_find_message()
+        assert len(num) == 2 and message == "保存成功"
         assert not self.item.has_fail_message()
 
     @allure.story("删除数据成功")
@@ -989,15 +1233,8 @@ class TestItemPage:
         self.item.click_del_button()  # 点击删除
         sleep(1)
         # 点击确定
-        # 找到共同的父元素
-        parent = self.item.get_find_element_class("ivu-modal-confirm-footer")
-
-        # 获取所有button子元素
-        all_buttons = parent.find_elements(By.TAG_NAME, "button")
-
-        # 选择需要的button 第二个确定按钮
-        second_button = all_buttons[1]
-        second_button.click()
+        self.item.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.item.get_find_message()
         self.item.click_ref_button()
         sleep(1)
         layout = self.driver.find_elements(By.CLASS_NAME, "tabsDivItem")

@@ -212,7 +212,7 @@ class TestRolePage:
         sleep(1)
         role.click_button(f'(//table[@class="vxe-table--body"]//span[text()="{date_driver.username}"])[1]')
         role.click_button(f'//div[contains(text(),"{date_driver.planning}")]')
-
+        sleep(1)
         role.click_button(f'//ul/li[text()="{module}"]')
         role.wait_for_loadingbox()
         num_ = len(role.finds_elements(By.XPATH, f'//div[@class="listDivCon"]/div'))

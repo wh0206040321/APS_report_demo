@@ -20,7 +20,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_interfaceexecution():
     driver = None
     try:
@@ -112,6 +112,7 @@ class TestsInterfaceExecutionPage:
         interface.click_button('//button[span[text()="接口参数"]]')
         text = interface.finds_elements(By.XPATH, '//div[text()="接口参数编辑"]')
         ele = interface.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        interface.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert len(ele) == 0 and len(text) == 1
         assert not interface.has_fail_message()
 
@@ -126,6 +127,7 @@ class TestsInterfaceExecutionPage:
         interface.click_button('//button[span[text()="查询"]]')
         interface.wait_for_loading_to_disappear()
         ele = interface.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        interface.click_button('//div[@class="vxe-modal--footer"]//span[text()="关闭"]')
         assert len(ele) == 0
         assert not interface.has_fail_message()
 
@@ -137,9 +139,11 @@ class TestsInterfaceExecutionPage:
         interface.wait_for_loading_to_disappear()
         interface.mover_right()
         interface.click_button('//button[span[text()="运行日志"]]')
-        interface.click_button('//button[span[text()="查询"]]')
+        interface.click_button('(//button[span[text()="查询"]])[2]')
         interface.wait_for_loading_to_disappear()
         ele = interface.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        interface.click_button('(//div[@class="vxe-modal--footer"]//span[text()="关闭"])[2]')
+        interface.right_refresh("接口执行")
         assert len(ele) == 0
         assert not interface.has_fail_message()
 
@@ -159,6 +163,7 @@ class TestsInterfaceExecutionPage:
         sleep(1)
         interface.click_button('//div[p[text()="接口名称"]]/following-sibling::div//input')
         eles = interface.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        interface.right_refresh("接口执行")
         assert len(eles) == 0
         assert not interface.has_fail_message()
 
@@ -177,6 +182,7 @@ class TestsInterfaceExecutionPage:
         eles = interface.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[5]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        interface.right_refresh("接口执行")
         assert len(list_) > 0
         assert all(text == '' or name in text for text in list_)
         assert not interface.has_fail_message()
@@ -196,6 +202,7 @@ class TestsInterfaceExecutionPage:
         eles = interface.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[5]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        interface.right_refresh("接口执行")
         assert len(list_) > 0
         assert all(item == '' or str(item).startswith(name) for item in list_)
         assert not interface.has_fail_message()
@@ -215,6 +222,7 @@ class TestsInterfaceExecutionPage:
         eles = interface.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[5]')
         sleep(1)
         list_ = [ele.text for ele in eles]
+        interface.right_refresh("接口执行")
         assert len(list_) > 0
         assert all(item == '' or str(item).endswith(name) for item in list_)
         assert not interface.has_fail_message()

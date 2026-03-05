@@ -83,6 +83,7 @@ class Coverage(BasePage):
         return message.text
 
     def wait_for_loading_to_disappear(self, timeout=10):
+        sleep(1)
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
@@ -235,6 +236,7 @@ class Coverage(BasePage):
         self.click_button(
             '//span[text()=" 更新时间"]/following-sibling::div'
         )
+        sleep(0.5)
 
     def hover(self, name=""):
         # 悬停模版容器触发图标显示

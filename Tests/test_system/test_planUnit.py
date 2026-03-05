@@ -1,4 +1,5 @@
 import logging
+import re
 from datetime import datetime
 from time import sleep
 
@@ -88,13 +89,14 @@ class TestPlanUnitPage:
         ).text
 
         unit.click_all_button("新增")
+        sleep(2)
         list_ = [
             '(//label[text()="计划单元"])[1]/parent::div//input',
             '(//label[text()="计划单元名称"])[1]/parent::div//input',
             '(//label[text()="模板名称"])[1]/parent::div//div[@class="ivu-select-selection"]',
         ]
         unit.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])')
-        sleep(1)
+        sleep(3)
         value_list = add.get_border_color(list_)
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         expected_color = "rgb(237, 64, 20)"  # 红色的 rgb 值
@@ -821,7 +823,8 @@ class TestPlanUnitPage:
         ele1 = unit.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
             "innerText")
         unit.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
-        message = unit.get_error_message()
+        message = unit.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        unit.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
         unit.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == '记录已存在,请检查！'
         assert not unit.has_fail_message()
@@ -855,22 +858,71 @@ class TestPlanUnitPage:
         unit.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
         ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
         unit.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
-        unit.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改')
+        unit.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[3])[2]//input', '1没有数据修改')
         ele1 = unit.get_find_element_xpath(
-            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[3])[2]//input').get_attribute(
             "value")
         unit.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         unit.get_find_message()
-        unit.select_input('1没有数据修改')
-        ele2 = unit.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+        unit.select_input('1没有数据添加')
+        ele2 = unit.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[3])[1]').get_attribute(
             "innerText")
         assert ele1 == ele2
-        unit.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        assert not unit.has_fail_message()
+
+    @allure.story("模拟多选删除")
+    # @pytest.mark.run(order=1)
+    def test_unit_shiftdel(self, login_to_planUnit):
+        driver = login_to_planUnit  # WebDriver 实例
+        unit = PlanUnitPage(driver)  # 用 driver 初始化 PlanUnitPage
+        unit.right_refresh('计划单元')
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]']
+        unit.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = unit.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        unit.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        unit.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加1')
+        sleep(2)
+        unit.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        unit.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        unit.enter_texts('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input', '1没有数据添加12')
+        sleep(1)
+        ele1 = unit.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').text
+        ele2 = unit.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input').get_attribute("value")
+        unit.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        unit.get_find_message()
+        unit.select_input('1没有数据添加1')
+        ele11 = unit.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        ele22 = unit.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[2]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele11 and ele2 == ele22
+        assert not unit.has_fail_message()
+        unit.select_input('1没有数据添加')
+        before_data = unit.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[3]//td[1])[1]']
+        unit.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = unit.get_find_element_xpath(elements[2])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
         unit.click_all_button('删除')
         unit.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         message = unit.get_find_message()
-        unit.right_refresh('计划单元')
+        unit.wait_for_loading_to_disappear()
+        after_data = unit.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        after_count = int(re.search(r'\d+', after_data).group())
         assert message == "删除成功！"
+        assert before_count - after_count == 3, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
         assert not unit.has_fail_message()
 
     @allure.story("模拟ctrl+c复制可查询")
@@ -878,6 +930,7 @@ class TestPlanUnitPage:
     def test_unit_ctrlC(self, login_to_planUnit):
         driver = login_to_planUnit  # WebDriver 实例
         unit = PlanUnitPage(driver)  # 用 driver 初始化 PlanUnitPage
+        unit.right_refresh('计划单元')
         unit.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
         before_data = unit.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
         sleep(1)
@@ -896,8 +949,8 @@ class TestPlanUnitPage:
     def test_unit_shift(self, login_to_planUnit):
         driver = login_to_planUnit  # WebDriver 实例
         unit = PlanUnitPage(driver)  # 用 driver 初始化 PlanUnitPage
-        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
-                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
         unit.click_button(elements[0])
         # 第二个单元格 Shift+点击（选择范围）
         cell2 = unit.get_find_element_xpath(elements[1])
@@ -914,8 +967,8 @@ class TestPlanUnitPage:
     def test_unit_ctrls(self, login_to_planUnit):
         driver = login_to_planUnit  # WebDriver 实例
         unit = PlanUnitPage(driver)  # 用 driver 初始化 PlanUnitPage
-        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
-                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[2]']
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
         unit.click_button(elements[0])
         # 第二个单元格 Shift+点击（选择范围）
         cell2 = unit.get_find_element_xpath(elements[1])
@@ -928,12 +981,30 @@ class TestPlanUnitPage:
         assert len(num) == 2 and message == "保存成功"
         assert not unit.has_fail_message()
 
+    @allure.story("模拟ctrl+m修改,编辑对话框计划单元和模版名称不可编辑")
+    # @pytest.mark.run(order=1)
+    def test_unit_ctrlMDisabled(self, login_to_planUnit):
+        driver = login_to_planUnit  # WebDriver 实例
+        unit = PlanUnitPage(driver)  # 用 driver 初始化 PlanUnitPage
+        unit.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        unit.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        ele1 = unit.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "disabled")
+        ele2 = unit.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[4])[2]//input').get_attribute(
+            "disabled")
+        unit.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert ele1 and ele2
+        assert not unit.has_fail_message()
+
     @allure.story("下载成功")
     # @pytest.mark.run(order=1)
     def test_unit_download(self, login_to_planUnit):
         driver = login_to_planUnit  # WebDriver 实例
         unit = PlanUnitPage(driver)  # 用 driver 初始化 PlanUnitPage
-        unit.right_refresh()
+        driver.refresh()
         name = "1测试A"
 
         unit.select_input(name)

@@ -1,9 +1,11 @@
 import random
+import re
 from time import sleep
 
 import allure
 import pytest
 from selenium import webdriver
+from selenium.webdriver import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -16,7 +18,7 @@ from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, all_driver_instances
 
 
-@pytest.fixture  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
+@pytest.fixture(scope="module")  # (scope="class")这个参数表示整个测试类共用同一个浏览器，默认一个用例执行一次
 def login_to_item():
     """初始化并返回 driver"""
     driver_path = DateDriver().driver_path
@@ -65,13 +67,13 @@ class TestItemPage:
             "//div[@id='04m2qyfz-z28h']//input"
         )
 
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         bordername_color = inputname_box.value_of_css_property("border-color")
         expected_color = "rgb(255, 0, 0)"  # 红色的 rgb 值
-        self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -88,9 +90,9 @@ class TestItemPage:
         self.item.click_button("//div[@id='rpfclioo-7p50']//i")
         sleep(2)
         self.item.click_button('(//span[text()="钟锦鹏"])[1]')
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[6]')
+        self.item.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         sleep(1)
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         input_box = self.item.get_find_element_xpath(
             "//div[@id='04m2qyfz-z28h']//input"
         )
@@ -98,7 +100,7 @@ class TestItemPage:
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
         expected_color = "rgb(255, 0, 0)"  # 红色的 rgb 值
-        self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             border_color == expected_color
         ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
@@ -115,12 +117,12 @@ class TestItemPage:
         self.item.click_button("//div[@id='rpfclioo-7p50']//i")
         sleep(2)
         self.item.click_button('(//table[@class="vxe-table--body"]//tr[1])[2]/td[2]')
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[6]')
+        self.item.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
 
         self.item.click_button("//div[@id='04m2qyfz-z28h']//i")
         sleep(2)
         self.item.click_button('(//table[@class="vxe-table--body"]//tr[1])[2]/td[2]')
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[6]')
+        self.item.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         ele1 = self.item.get_find_element_xpath(
             "//div[@id='rpfclioo-7p50']//input"
         ).get_attribute("value")
@@ -131,7 +133,7 @@ class TestItemPage:
             "//div[@id='lo2km34z-5dbg']//input"
         ).get_attribute("value")
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
         adddata = self.item.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{ele1}"]]]/td[2]'
@@ -158,18 +160,20 @@ class TestItemPage:
         self.item.click_button("//div[@id='rpfclioo-7p50']//i")
         sleep(2)
         self.item.click_button('(//table[@class="vxe-table--body"]//tr[1])[2]/td[2]')
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[6]')
+        self.item.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
 
         self.item.click_button("//div[@id='04m2qyfz-z28h']//i")
         sleep(2)
         self.item.click_button('(//table[@class="vxe-table--body"]//tr[1])[2]/td[2]')
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[6]')
+        self.item.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(3)
         # 获取重复弹窗文字
         error_popup = self.item.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
-        ).text
+        ).get_attribute('innerText')
+        self.item.click_button('//button[@type="button"]/span[text()="关闭"]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             error_popup == "记录已存在,请检查！"
         ), f"预期数据是记录已存在,请检查，实际得到{error_popup}"
@@ -187,7 +191,7 @@ class TestItemPage:
         self.item.click_del_button()  # 点击删除
         sleep(1)
         # 点击取消
-        self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
+        self.item.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="取消"]')
         sleep(1)
         # 定位内容为‘111’的行
         itemdata = self.item.get_find_element_xpath(
@@ -204,7 +208,8 @@ class TestItemPage:
         self.item.enter_texts("//div[@id='04m2qyfz-z28h']//input", "1")
         self.item.enter_texts("//div[@id='lo2km34z-5dbg']//input", "777")
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.wait_for_loading_to_disappear()
         sleep(1)
         adddata = self.item.get_find_element_xpath(
             '//tr[./td[2][.//span[text()="zhong11"]]]/td[2]'
@@ -231,7 +236,8 @@ class TestItemPage:
         self.item.click_button("//div[@id='2pj1qda7-bju3']//i")
         self.item.wait_for_loading_to_disappear()
         self.item.click_button('(//table[@class="vxe-table--body"]//tr[1])[2]/td[2]')
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[6]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        sleep(2)
         self.item.click_button("//div[@id='kwy45no3-x5iq']//i")
         self.item.wait_for_loading_to_disappear()
         self.item.click_button('(//table[@class="vxe-table--body"]//tr[1])[2]/td[2]')
@@ -239,16 +245,19 @@ class TestItemPage:
         # self.item.click_button("//div[@id='kwy45no3-x5iq']//i")
         # sleep(2)
         # self.item.click_button('(//span[text()="111"])[1]')
-        # self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        # self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
 
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[6]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        sleep(2)
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(2)
         # 获取重复弹窗文字
         error_popup = self.item.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
-        ).text
+        ).get_attribute('innerText')
+        self.item.click_button('//button[@type="button"]/span[text()="关闭"]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert error_popup == "记录已存在,请检查！", f"预期数据{error_popup}"
         assert not self.item.has_fail_message()
 
@@ -260,15 +269,8 @@ class TestItemPage:
         self.item.click_del_button()  # 点击删除
         sleep(1)
         # 点击确定
-        # 找到共同的父元素
-        parent = self.item.get_find_element_class("ivu-modal-confirm-footer")
-
-        # 获取所有button子元素
-        all_buttons = parent.find_elements(By.TAG_NAME, "button")
-
-        # 选择需要的button 第二个确定按钮
-        second_button = all_buttons[1]
-        second_button.click()
+        self.item.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        self.item.get_find_message()
         self.item.click_ref_button()
         sleep(1)
         # 定位内容为‘111’的行
@@ -303,8 +305,9 @@ class TestItemPage:
 
         sleep(1)
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
+        self.item.wait_for_loading_to_disappear()
         # 选中物料员代码
         self.item.click_button('//tr[./td[2][.//span[text()="111"]]]/td[2]')
         # 点击编辑按钮
@@ -313,7 +316,7 @@ class TestItemPage:
         # 批量获取输入框的value
         input_values = self.item.batch_acquisition_input(input_xpath_list, text_str)
         print('input_values', input_values)
-        sleep(1)
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             len(input_xpath_list) == len(input_values)
         )
@@ -359,7 +362,8 @@ class TestItemPage:
 
         sleep(1)
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.wait_for_loading_to_disappear()
         sleep(1)
         # 选中物料员代码
         self.item.click_button('//tr[./td[2][.//span[text()="test111"]]]/td[2]')
@@ -370,7 +374,7 @@ class TestItemPage:
         input_values = self.item.batch_acquisition_input(input_xpath_list2, text_str)
         print('input_values', input_values)
         sleep(1)
-        self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             len(input_xpath_list) == len(input_values)
         )
@@ -424,6 +428,7 @@ class TestItemPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[2]/td[2]',
         )
+        self.item.click_ref_button()
         assert itemcode == "test111" and len(itemcode2) == 0
         assert not item.has_fail_message()
 
@@ -468,7 +473,256 @@ class TestItemPage:
             By.XPATH,
             '(//table[contains(@class, "vxe-table--body")])[2]//tr[1]/td[2]',
         )
+        self.item.click_ref_button()
         assert len(itemcode) == 0
+        assert not self.item.has_fail_message()
+
+    @allure.story("过滤条件查询，一个不选，显示正常")
+    # @pytest.mark.run(order=1)
+    def test_materialDelUserMap_select2(self, login_to_item):
+        self.item.click_button('//div[div[span[text()=" 用户"]]]//i[contains(@class,"suffixIcon")]')
+        sleep(1)
+        eles = self.item.get_find_element_xpath(
+            '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
+            "class")
+        if eles == "ivu-checkbox ivu-checkbox-checked":
+            self.item.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            self.item.click_button('//div[@class="filter-btn-bar"]/button')
+        sleep(1)
+        self.item.click_button('//div[div[span[text()=" 用户"]]]//input')
+        eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        self.item.right_refresh('用户与物料员对照')
+        assert len(eles) == 0
+        assert not self.item.has_fail_message()
+
+    @allure.story("过滤条件查询，设置包含条件查询成功")
+    # @pytest.mark.run(order=1)
+    def test_materialDelUserMap_select3(self, login_to_item):
+        name = self.item.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        self.item.click_button('//div[div[span[text()=" 用户"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.hover("包含")
+        sleep(1)
+        self.item.select_input('用户', first_char)
+        sleep(1)
+        eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        self.item.right_refresh('用户与物料员对照')
+        assert all(first_char.lower() in text.lower() for text in list_)
+        assert not self.item.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合开头查询成功")
+    # @pytest.mark.run(order=1)
+    def test_materialDelUserMap_select4(self, login_to_item):
+        name = self.item.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        self.item.click_button('//div[div[span[text()=" 用户"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.hover("符合开头")
+        sleep(1)
+        self.item.select_input('用户', first_char)
+        sleep(1)
+        eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        self.item.right_refresh('用户与物料员对照')
+        assert all(str(item).lower().startswith(first_char.lower()) for item in list_)
+        assert not self.item.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合结尾查询成功")
+    # @pytest.mark.run(order=1)
+    def test_materialDelUserMap_select5(self, login_to_item):
+        name = self.item.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        last_char = name[-1:] if name else ""
+        self.item.click_button('//div[div[span[text()=" 用户"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.hover("符合结尾")
+        sleep(1)
+        self.item.select_input('用户', last_char)
+        sleep(1)
+        eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        self.item.right_refresh('用户与物料员对照')
+        assert all(str(item).lower().endswith(last_char.lower()) for item in list_)
+        assert not self.item.has_fail_message()
+
+    @allure.story("清除筛选效果成功")
+    # @pytest.mark.run(order=1)
+    def test_materialDelUserMap_clear(self, login_to_item):
+        name = "3"
+        sleep(1)
+        self.item.click_button('//div[div[span[text()=" 用户"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.hover("包含")
+        sleep(1)
+        self.item.select_input('用户', name)
+        sleep(1)
+        self.item.click_button('//div[div[span[text()=" 用户"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.hover("清除所有筛选条件")
+        sleep(1)
+        ele = self.item.get_find_element_xpath(
+            '//div[div[span[text()=" 用户"]]]//i[contains(@class,"suffixIcon")]').get_attribute(
+            "class")
+        self.item.right_refresh('用户与物料员对照')
+        assert ele == "vxe-icon-funnel suffixIcon"
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加重复")
+    # @pytest.mark.run(order=1)
+    def test_materialDelUserMap_ctrlIrepeat(self, login_to_item):
+        self.item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        ele1 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
+            "innerText")
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = self.item.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        self.item.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert message == '记录已存在,请检查！'
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_materialDelUserMap_ctrlI(self, login_to_item):
+        self.item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加')
+        sleep(1)
+        ele1 = self.item.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.get_find_message()
+        self.item.select_input('用户', '1没有数据添加')
+        ele2 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2 == '1没有数据添加'
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改")
+    # @pytest.mark.run(order=1)
+    def test_materialDelUserMap_ctrlM(self, login_to_item):
+        self.item.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改')
+        ele1 = self.item.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.get_find_message()
+        self.item.select_input('用户', '1没有数据修改')
+        ele2 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟多选删除")
+    # @pytest.mark.run(order=1)
+    def test_materialDelUserMap_shiftdel(self, login_to_item):
+        self.item.right_refresh('用户与物料员对照')
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]']
+        self.item.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = self.item.get_find_element_xpath(elements[1])
+        ActionChains(self.driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        sleep(1)
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改1')
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input', '1没有数据修改12')
+        sleep(1)
+        ele1 = self.item.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').text
+        ele2 = self.item.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input').get_attribute("value")
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.get_find_message()
+        self.item.select_input('用户', '1没有数据修改1')
+        ele11 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        ele22 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[2]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele11 and ele2 == ele22
+        assert not self.item.has_fail_message()
+        self.item.select_input('用户', '1没有数据修改')
+        before_data = self.item.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[3]//td[1])[1]']
+        self.item.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = self.item.get_find_element_xpath(elements[2])
+        ActionChains(self.driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        self.item.click_del_button()
+        self.item.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        message = self.item.get_find_message()
+        self.item.wait_for_loading_to_disappear()
+        after_data = self.item.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        after_count = int(re.search(r'\d+', after_data).group())
+        assert message == "删除成功！"
+        assert before_count - after_count == 3, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟ctrl+c复制可查询")
+    # @pytest.mark.run(order=1)
+    def test_materialDelUserMap_ctrlC(self, login_to_item):
+        self.item.right_refresh('用户与物料员对照')
+        self.item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        before_data = self.item.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
+        sleep(1)
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+        self.item.click_button('//div[div[span[text()=" 用户"]]]//input')
+        sleep(1)
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        eles = [ele.text for ele in eles]
+        self.item.right_refresh('用户与物料员对照')
+        assert all(before_data in ele for ele in eles)
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_materialDelUserMap_shift(self, login_to_item):
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
+        self.item.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = self.item.get_find_element_xpath(elements[1])
+        ActionChains(self.driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        num = self.item.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert len(num) == 2
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+m编辑")
+    # @pytest.mark.run(order=1)
+    def test_materialDelUserMap_ctrls(self, login_to_item):
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
+        self.item.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = self.item.get_find_element_xpath(elements[1])
+        ActionChains(self.driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        num = self.item.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = self.item.get_find_message()
+        assert len(num) == 2 and message == "保存成功"
         assert not self.item.has_fail_message()
 
     @allure.story("删除数据成功")

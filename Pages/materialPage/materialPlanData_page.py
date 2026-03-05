@@ -57,11 +57,11 @@ class MaterialPlanData(BasePage):
         self.click_button('//li[text()=" 刷新"]')
         self.wait_for_loading_to_disappear()
 
-    def wait_for_loading_to_disappear(self, timeout=10):
+    def wait_for_loading_to_disappear(self, timeout=15):
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
-                 "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
+                 "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[1]")
             )
         )
 
@@ -75,6 +75,7 @@ class MaterialPlanData(BasePage):
     def click_select_button(self):
         """点击查询按钮."""
         self.click_button(f'//button[span[text()="查询"]]')
+        self.wait_for_loading_to_disappear()
 
     def click_export_button(self):
         """点击导出按钮."""
@@ -175,3 +176,12 @@ class MaterialPlanData(BasePage):
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         self.wait_for_loading_to_disappear()
+
+    def select_input(self, xpath_name, name):
+        """选择输入框."""
+        xpath = f'//div[div[p[text()="{xpath_name}"]]]//input'
+        ele = self.get_find_element_xpath(xpath)
+        ele.send_keys(Keys.CONTROL + "a")
+        ele.send_keys(Keys.DELETE)
+        self.enter_texts(xpath, name)
+        sleep(1)

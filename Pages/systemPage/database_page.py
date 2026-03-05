@@ -127,7 +127,7 @@ class DateBasePage(BasePage):
         """点击查询按钮"""
         self.click_button('//div[text()=" 查询 "]')
 
-    def add_table_code(self, button_name='', code='', field_code='', fieldbutton_name=''):
+    def add_table_code(self, button_name='', code='', field_code='', field_code2='', fieldbutton_name=''):
         """添加表"""
         add = AddsPages(self.driver)
         xpath_list = [
@@ -157,14 +157,16 @@ class DateBasePage(BasePage):
             sleep(1)
             self.click_all_button("保存")
         if fieldbutton_name == '编辑':
-            self.select_input_database("字段代码", field_code)
-            sleep(1)
-            self.click_button(f'(//table[@class="vxe-table--body"])[3]//tr[1]/td[2]//span[text()="{field_code}"]')
-            self.click_field_button(fieldbutton_name)
+            self.click_button('//label[text()="备注"]')
+            self.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{field_code}"])[last()]')
+            ele = self.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr/td[2]//input')
+            ele.send_keys(Keys.CONTROL, "a")
+            ele.send_keys(Keys.DELETE)
+            self.enter_texts('//table[@class="vxe-table--body"]//tr/td[2]//input', field_code2)
         if fieldbutton_name == '删除':
-            self.select_input_database("字段代码", field_code)
-            sleep(1)
-            self.click_button(f'(//table[@class="vxe-table--body"])[3]//tr[1]/td[2]//span[text()="{field_code}"]')
+            self.click_button('//label[text()="备注"]')
+            sleep(2)
+            self.click_button(f'(//table[@class="vxe-table--body"])[3]//tr/td[2]//span[text()="{field_code}"]')
             self.click_field_button(fieldbutton_name)
             self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
             sleep(1)

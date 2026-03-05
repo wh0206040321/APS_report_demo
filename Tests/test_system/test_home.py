@@ -83,14 +83,14 @@ class TestHomePage:
             text = home.click_save_template_button(name="初始模版使用", button="确定")
             assert text == 1
         home.click_button('//div[@class="ivu-tabs-tab" and text()=" 页面设置 "]')
-        value = home.get_find_element_xpath(
-            '//div[p[text()="关联角色"]]/div//input').get_attribute("value")
-        if "admin" not in value:
+        home.click_button('//div[p[text()="关联角色"]]/div[contains(@class,"el-select")]')
+        sleep(3)
+        values = home.finds_elements(By.XPATH, '//div[@class="el-scrollbar"]//ul/li[contains(@class,"selected")]/span')
+        values_list = [value.text for value in values]
+        if "admin" not in values_list:
+            home.click_button('//li[span[text()="admin"]]')
             home.click_button(
-                '//div[p[text()="关联角色"]]//i[@class="ivu-icon ivu-icon-ios-arrow-down ivu-select-arrow"]')
-            home.click_button('//li[text()="admin "]')
-            home.click_button(
-                '//div[p[text()="关联角色"]]//i[@class="ivu-icon ivu-icon-ios-arrow-down ivu-select-arrow"]')
+                '//div[p[text()="关联角色"]]/div[contains(@class,"el-select")]')
         home.clear_all_button("确定")
         home.click_button('//div[text()=" 组件 "]')
         home.drag_component(index="4")
@@ -409,19 +409,20 @@ class TestHomePage:
             home.click_button('//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]')
             home.wait_for_el_loading_mask()
         home.click_button('//div[text()=" 页面设置 "]')
-        value = home.get_find_element_xpath(
-            '//div[p[text()="关联角色"]]/div//input').get_attribute("value")
-        if "admin" in value:
+        home.click_button('//div[p[text()="关联角色"]]/div[contains(@class,"el-select")]')
+        sleep(3)
+        values = home.finds_elements(By.XPATH, '//div[@class="el-scrollbar"]//ul/li[contains(@class,"selected")]/span')
+        values_list = [value.text for value in values]
+        if "admin" in values_list:
             home.click_save_button()
             home.get_find_message()
             PersonalPage(driver).go_setting_page()
             sleep(3)
             elem2 = len(driver.find_elements(By.XPATH, '//div[p[text()=" 主页启动模板: "]]/div/div[contains(@class,"demo-upload-list")]'))
         else:
-            home.click_button('//div[p[text()="关联角色"]]//i[@class="ivu-icon ivu-icon-ios-arrow-down ivu-select-arrow"]')
-            home.click_button('//li[text()="admin "]')
+            home.click_button('//li[span[text()="admin"]]')
             home.click_button(
-                '//div[p[text()="关联角色"]]//i[@class="ivu-icon ivu-icon-ios-arrow-down ivu-select-arrow"]')
+                '//div[p[text()="关联角色"]]/div[contains(@class,"el-select")]')
             home.click_save_button()
             home.get_find_message()
             PersonalPage(driver).go_setting_page()
@@ -477,12 +478,14 @@ class TestHomePage:
             home.click_button('//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]')
         home.wait_for_el_loading_mask()
         home.click_button('//div[text()=" 页面设置 "]')
-        value = home.get_find_element_xpath(
-            '//div[p[text()="关联角色"]]/div//input').get_attribute("value")
+        home.click_button('//div[p[text()="关联角色"]]/div[contains(@class,"el-select")]')
+        sleep(3)
+        values = home.finds_elements(By.XPATH, '//div[@class="el-scrollbar"]//ul/li[contains(@class,"selected")]/span')
+        values_list = [value.text for value in values]
         home.wait_for_el_loading_mask()
-        if "admin" in value:
-            home.click_button('//div[p[text()="关联角色"]]//div[span[text()="admin "]]/i')
+        if "admin" in values_list:
             elem2 = (elem1 - 1)
+            home.click_button('//li[span[text()="admin"]]')
         else:
             elem2 = elem1
         home.click_save_button()
@@ -494,7 +497,7 @@ class TestHomePage:
         assert elem2 == after_eles
         assert not home.has_fail_message()
 
-    @allure.story("主页模版中没有改模版不会显示该模版")
+    @allure.story("主页模版中没有该模版不会显示该模版")
     # @pytest.mark.run(order=1)
     def test_home_default_boot4(self, login_to_home):
         driver = login_to_home  # WebDriver 实例

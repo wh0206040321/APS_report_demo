@@ -170,7 +170,7 @@ class MaterialCalendar(BasePage):
             )
             self.wait_for_loading_to_disappear()
             # 勾选框
-            self.click_button(f'//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span/span')
+            self.click_button(f'(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span/span)[last()]')
 
             self.click_button(
                 '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
@@ -243,4 +243,31 @@ class MaterialCalendar(BasePage):
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         self.wait_for_loading_to_disappear()
+
+    def select_input_standard(self, xpath_name, name):
+        """选择输入框."""
+        xpath = f'//div[div[p[text()="{xpath_name}"]]]//input'
+        ele = self.get_find_element_xpath(xpath)
+        ele.send_keys(Keys.CONTROL + "a")
+        ele.send_keys(Keys.DELETE)
+        self.enter_texts(xpath, name)
+        sleep(1)
+
+    def hover(self, name=""):
+        # 悬停模版容器触发图标显示
+        container = self.get_find_element_xpath(
+            f'//span[@class="position-absolute font12 right10"]'
+        )
+        ActionChains(self.driver).move_to_element(container).perform()
+
+        # 2️⃣ 等待图标可见
+        delete_icon = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located((
+                By.XPATH,
+                f'//ul/li[contains(text(),"{name}")]'
+            ))
+        )
+
+        # 3️⃣ 再点击图标
+        delete_icon.click()
 

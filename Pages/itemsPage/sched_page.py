@@ -110,6 +110,15 @@ class SchedPage(BasePage):
         self.wait_for_el_loading_mask()
         sleep(1)
 
+    def right_refresh_1(self, name):
+        """右键刷新."""
+        but = self.get_find_element_xpath(f'//div[@class="scroll-body"]/div[.//div[text()=" {name} "]]')
+        but.click()
+        # 右键点击
+        ActionChains(self.driver).context_click(but).perform()
+        self.click_button('//li[text()=" 刷新"]')
+        self.wait_for_el_loading_mask()
+
     def get_find_message(self):
         """获取错误信息"""
         message = WebDriverWait(self.driver, 10).until(
@@ -151,7 +160,7 @@ class SchedPage(BasePage):
             self.click_button(
                 '//label[text()="选择复制的方案"]/following-sibling::div/div'
             )  # 点击下拉框
-            self.click_button('//li[text()="排产方案(订单级)"]')
+            self.click_button('//div[label[text()="选择复制的方案"]]//ul[@class="ivu-select-dropdown-list"]/li[1]')
             self.click_name_ok()  # 点击确定
             self.click_save_button()  # 点击保存
 
@@ -188,7 +197,10 @@ class SchedPage(BasePage):
                 ele = self.get_find_element_xpath(f'(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span)[1]').get_attribute('class')
                 if 'is--checked'not in ele:
                     self.click_button(f'(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span)[1]')
-                self.click_button(f'(//button[@class="ivu-btn ivu-btn-primary"])[3]')
+                try:
+                    self.click_button(f'(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
+                except Exception as e:
+                    self.click_button(f'(//div[@class="vxe-modal--footer"]//span[text()="确定"])[3]')
             except NoSuchElementException:
                 print(f"未找到元素: {xpath}")
             except Exception as e:
@@ -209,3 +221,11 @@ class SchedPage(BasePage):
         self.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[3]')
         self.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         sleep(1)
+
+    def wait_for_loading_to_disappear(self, timeout=10):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located(
+                (By.XPATH,
+                 "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[1]")
+            )
+        )

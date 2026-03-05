@@ -32,7 +32,7 @@ class ExpressionPage(BasePage):
 
     def get_find_message(self):
         """获取错误信息"""
-        message = WebDriverWait(self.driver, 10).until(
+        message = WebDriverWait(self.driver, 120).until(
             EC.visibility_of_element_located(
                 (By.XPATH, '//div[@class="el-message el-message--success"]/p')
             )
@@ -183,6 +183,7 @@ class ExpressionPage(BasePage):
                 self.click_button(f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
                 self.click_all_button("删除")  # 点击删除
                 self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+                self.get_find_message()
                 sleep(1)
                 self.wait_for_loading_to_disappear()
                 ele = self.get_find_element_xpath(xpath)

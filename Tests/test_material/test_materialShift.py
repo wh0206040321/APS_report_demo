@@ -1,9 +1,11 @@
 import random
+import re
 from time import sleep
 
 import allure
 import pytest
 from selenium import webdriver
+from selenium.webdriver import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -55,14 +57,14 @@ class TestItemPage:
         # 点击新增按钮
         self.item.click_add_button()
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
         message = WebDriverWait(self.driver, 10).until(
             EC.visibility_of_element_located(
                 (By.XPATH, "//p[text()='请填写信息']")
             )
         )
-        self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         # 检查元素是否包含子节点
         assert message.text == "请填写信息"
         assert not self.item.has_fail_message()
@@ -77,7 +79,7 @@ class TestItemPage:
             "//label[text()='代码']/following-sibling::div//input", "111"
         )
 
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
 
         sleep(1)
         # 点击修改按钮
@@ -87,7 +89,7 @@ class TestItemPage:
         # 批量获取输入框的value
         input_values = self.item.batch_acquisition_input(['//label[text()="代码"]/following-sibling::div//input'], "111")
         print('input_values', input_values)
-        self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
                 len(input_values) == 1
         )
@@ -119,7 +121,7 @@ class TestItemPage:
             "//label[text()='代码']/following-sibling::div//input", "222"
         )
 
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
 
         sleep(1)
         # 批量获取输入框的value
@@ -146,7 +148,7 @@ class TestItemPage:
         )
         sleep(1)
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
         # 选中刚刚编辑的数据
         self.item.click_button('//tr[./td[2][.//span[text()="333"]]]/td[2]')
@@ -156,7 +158,7 @@ class TestItemPage:
         # 批量获取输入框的value
         input_values = self.item.batch_acquisition_input(["//label[text()='代码']/following-sibling::div//input"], text_str)
         sleep(1)
-        self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
                 len(input_values) == 1
         )
@@ -175,14 +177,14 @@ class TestItemPage:
             "//label[text()='代码']/following-sibling::div//input", "333"
         )
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
         # 获取重复弹窗文字
         error_popup = self.item.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'
         ).text
         self.item.click_button('//button[@type="button"]/span[text()="关闭"]')
-        self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert error_popup == "记录已存在,请检查！", f"预期数据{error_popup}"
         assert not self.item.has_fail_message()
 
@@ -251,7 +253,7 @@ class TestItemPage:
         self.item.click_button("//span[text()='添加']")
         sleep(1)
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
         # 选中刚刚编辑的数据行
         self.item.click_button('//tr[./td[2][.//span[text()="11"]]]/td[2]')
@@ -264,7 +266,7 @@ class TestItemPage:
             '//span[text()="11:11:11-22:22:22"]'
         ).text
         sleep(1)
-        self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
             len(input_xpath_list) == len(input_values) and time_text == "11:11:11-22:22:22"
         )
@@ -340,7 +342,7 @@ class TestItemPage:
         self.item.click_button("//span[text()='添加']")
         sleep(1)
         # 点击确定
-        self.item.click_button('(//button[@type="button"]/span[text()="确定"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
         # 选中刚刚编辑的数据行
         self.item.click_button('//tr[./td[2][.//span[text()="22"]]]/td[2]')
@@ -353,7 +355,7 @@ class TestItemPage:
             '//span[text()="11:11:11-22:22:22"]'
         ).text
         sleep(1)
-        self.item.click_button('(//button[@type="button"]/span[text()="取消"])[5]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert (
                 len(input_xpath_list) == len(input_values) and time_text == "11:11:11-22:22:22"
         )
@@ -464,6 +466,255 @@ class TestItemPage:
         # 点击刷新
         self.item.click_ref_button()
         assert len(itemcode) == 0
+        assert not self.item.has_fail_message()
+
+    @allure.story("过滤条件查询，一个不选，显示正常")
+    # @pytest.mark.run(order=1)
+    def test_materialShift_select2(self, login_to_item):
+        self.item.click_button('//div[div[p[text()="班次代码"]]]//i[contains(@class,"suffixIcon")]')
+        sleep(1)
+        eles = self.item.get_find_element_xpath(
+            '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
+            "class")
+        if eles == "ivu-checkbox ivu-checkbox-checked":
+            self.item.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
+            self.item.click_button('//div[@class="filter-btn-bar"]/button')
+        sleep(1)
+        self.item.click_button('//div[div[p[text()="班次代码"]]]//input')
+        eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        self.item.right_refresh('收货班次')
+        assert len(eles) == 0
+        assert not self.item.has_fail_message()
+
+    @allure.story("过滤条件查询，设置包含条件查询成功")
+    # @pytest.mark.run(order=1)
+    def test_materialShift_select3(self, login_to_item):
+        name = self.item.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        self.item.click_button('//div[div[p[text()="班次代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.hover("包含")
+        sleep(1)
+        self.item.select_input_standard('班次代码', first_char)
+        sleep(1)
+        eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        self.item.right_refresh('收货班次')
+        assert all(first_char.lower() in text.lower() for text in list_)
+        assert not self.item.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合开头查询成功")
+    # @pytest.mark.run(order=1)
+    def test_materialShift_select4(self, login_to_item):
+        name = self.item.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        first_char = name[:1] if name else ""
+        self.item.click_button('//div[div[p[text()="班次代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.hover("符合开头")
+        sleep(1)
+        self.item.select_input_standard('班次代码', first_char)
+        sleep(1)
+        eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        self.item.right_refresh('收货班次')
+        assert all(str(item).lower().startswith(first_char.lower()) for item in list_)
+        assert not self.item.has_fail_message()
+
+    @allure.story("过滤条件查询，设置符合结尾查询成功")
+    # @pytest.mark.run(order=1)
+    def test_materialShift_select5(self, login_to_item):
+        name = self.item.get_find_element_xpath(
+            '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
+        ).get_attribute('innerText')
+        last_char = name[-1:] if name else ""
+        self.item.click_button('//div[div[p[text()="班次代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.hover("符合结尾")
+        sleep(1)
+        self.item.select_input_standard('班次代码', last_char)
+        sleep(1)
+        eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
+        sleep(1)
+        list_ = [ele.text for ele in eles]
+        self.item.right_refresh('收货班次')
+        assert all(str(item).lower().endswith(last_char.lower()) for item in list_)
+        assert not self.item.has_fail_message()
+
+    @allure.story("清除筛选效果成功")
+    # @pytest.mark.run(order=1)
+    def test_materialShift_clear(self, login_to_item):
+        name = "3"
+        sleep(1)
+        self.item.click_button('//div[div[p[text()="班次代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.hover("包含")
+        sleep(1)
+        self.item.select_input_standard('班次代码', name)
+        sleep(1)
+        self.item.click_button('//div[div[p[text()="班次代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.hover("清除所有筛选条件")
+        sleep(1)
+        ele = self.item.get_find_element_xpath(
+            '//div[div[p[text()="班次代码"]]]//i[contains(@class,"suffixIcon")]').get_attribute(
+            "class")
+        self.item.right_refresh('收货班次')
+        assert ele == "vxe-icon-funnel suffixIcon"
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加重复")
+    # @pytest.mark.run(order=1)
+    def test_materialShift_ctrlIrepeat(self, login_to_item):
+        self.item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        ele1 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
+            "innerText")
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = self.item.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        self.item.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert message == '记录已存在,请检查！'
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_materialShift_ctrlI(self, login_to_item):
+        self.item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加')
+        sleep(1)
+        ele1 = self.item.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.get_find_message()
+        self.item.select_input_standard('班次代码', '1没有数据添加')
+        ele2 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2 == '1没有数据添加'
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改")
+    # @pytest.mark.run(order=1)
+    def test_materialShift_ctrlM(self, login_to_item):
+        self.item.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改')
+        ele1 = self.item.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.get_find_message()
+        self.item.select_input_standard('班次代码', '1没有数据修改')
+        ele2 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟多选删除")
+    # @pytest.mark.run(order=1)
+    def test_materialShift_shiftdel(self, login_to_item):
+        self.item.right_refresh('收货班次')
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]']
+        self.item.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = self.item.get_find_element_xpath(elements[1])
+        ActionChains(self.driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        sleep(1)
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改1')
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input', '1没有数据修改12')
+        sleep(1)
+        ele1 = self.item.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').text
+        ele2 = self.item.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input').get_attribute("value")
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.item.get_find_message()
+        self.item.select_input_standard('班次代码', '1没有数据修改1')
+        ele11 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        ele22 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[2]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele11 and ele2 == ele22
+        assert not self.item.has_fail_message()
+        self.item.select_input_standard('班次代码', '1没有数据修改')
+        before_data = self.item.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[3]//td[1])[1]']
+        self.item.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = self.item.get_find_element_xpath(elements[2])
+        ActionChains(self.driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        self.item.click_del_button()
+        self.item.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        message = self.item.get_find_message()
+        self.item.wait_for_loading_to_disappear()
+        after_data = self.item.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        after_count = int(re.search(r'\d+', after_data).group())
+        assert message == "删除成功！"
+        assert before_count - after_count == 3, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟ctrl+c复制可查询")
+    # @pytest.mark.run(order=1)
+    def test_materialShift_ctrlC(self, login_to_item):
+        self.item.right_refresh('收货班次')
+        self.item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        before_data = self.item.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
+        sleep(1)
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+        self.item.click_button('//div[div[p[text()="班次代码"]]]//input')
+        sleep(1)
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        eles = [ele.text for ele in eles]
+        self.item.right_refresh('收货班次')
+        assert all(before_data in ele for ele in eles)
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_materialShift_shift(self, login_to_item):
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
+        self.item.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = self.item.get_find_element_xpath(elements[1])
+        ActionChains(self.driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        num = self.item.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert len(num) == 2
+        assert not self.item.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+m编辑")
+    # @pytest.mark.run(order=1)
+    def test_materialShift_ctrls(self, login_to_item):
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
+        self.item.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = self.item.get_find_element_xpath(elements[1])
+        ActionChains(self.driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        num = self.item.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = self.item.get_find_message()
+        assert len(num) == 2 and message == "保存成功"
         assert not self.item.has_fail_message()
 
     @allure.story("删除数据成功")

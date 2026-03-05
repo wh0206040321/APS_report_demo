@@ -154,6 +154,7 @@ class MaterialControlDefinition(BasePage):
         self.click_all_button("新增")
         sleep(1)
         self.click_button('//div[div[text()="标准需求设置-新增"]]//i[@title="最大化"]')
+        sleep(1)
         input_list = [
             '//div[div[text()=" 需求来源编码: "]]//input',
             '//div[div[text()=" 需求来源名称: "]]//input',
@@ -266,6 +267,7 @@ class MaterialControlDefinition(BasePage):
         self.click_button(f'(//div[@class="ivu-tabs-nav"])[2]/div[text()=" {name} "]')
         self.click_button('(//button[span[text()="查询"]])[2]')
         self.wait_for_loading_to_disappear()
+        self.click_button('//div[@class="vxe-modal--footer"]//span[text()="关闭"]')
 
     def del_all(self, xpath, value=[]):
         for index, v in enumerate(value, start=1):
@@ -355,3 +357,12 @@ class MaterialControlDefinition(BasePage):
         # 点击确认删除的按钮
         self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         self.wait_for_loading_to_disappear()
+
+    def select_input(self, name):
+        """选择输入框."""
+        xpath = '//p[text()="物控计算单号"]/ancestor::div[2]//input'
+        ele = self.get_find_element_xpath(xpath)
+        ele.send_keys(Keys.CONTROL + "a")
+        ele.send_keys(Keys.DELETE)
+        self.enter_texts(xpath, name)
+        sleep(1)

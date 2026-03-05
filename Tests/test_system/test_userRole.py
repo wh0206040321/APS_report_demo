@@ -194,7 +194,7 @@ class TestUserRolePage:
     def test_user_verify1(self, login_to_userrole):
         driver = login_to_userrole  # WebDriver 实例
         user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
-        name = '1用户w+.?=-+a_1'
+        name = '@1用户w+.?=-+a_1Z'
         list_ = [
             '//div[label[text()="用户代码"]]//input',
             '//div[label[text()="用户名称"]]//input'
@@ -205,7 +205,7 @@ class TestUserRolePage:
         sleep(0.5)
         ele = user.get_find_element_xpath(list_[0]).get_attribute("value")
         user.click_all_button("取消")
-        assert ele == '1wa_1'
+        assert ele == '@1w.a_1Z'
         assert not user.has_fail_message()
 
     @allure.story("校验密码和确认密码不符合标准,密码长度最小为8")
@@ -1111,7 +1111,7 @@ class TestUserRolePage:
         user.select_input(input_value)
         user.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]/div/span[text()="{input_value}"])')
         user.click_all_button('编辑')
-
+        sleep(5)
         after_all_value = adds.batch_acquisition_input(all_value)
         after_checkbox_list = adds.get_checkbox_value(checkbox_list)
         user.click_all_button('取消')

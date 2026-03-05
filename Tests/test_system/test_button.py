@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 from datetime import datetime
 from time import sleep
 
@@ -517,6 +518,224 @@ class TestSButtonPage:
         assert ele == "vxe-icon-funnel suffixIcon"
         assert not button.has_fail_message()
 
+    @allure.story("模拟ctrl+i添加重复")
+    # @pytest.mark.run(order=1)
+    def test_button_ctrlIrepeat(self, login_to_button):
+        driver = login_to_button  # WebDriver 实例
+        button = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        button.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        ele1 = button.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
+            "innerText")
+        button.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = button.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        button.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        button.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert message == '记录已存在,请检查！'
+        assert not button.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_button_ctrlI(self, login_to_button):
+        driver = login_to_button  # WebDriver 实例
+        button = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        button.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        button.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        button.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加')
+        sleep(1)
+        ele1 = button.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        button.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        button.get_find_message()
+        button.select_input_button('1没有数据添加')
+        ele2 = button.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2 == '1没有数据添加'
+        assert not button.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改")
+    # @pytest.mark.run(order=1)
+    def test_button_ctrlM(self, login_to_button):
+        driver = login_to_button  # WebDriver 实例
+        button = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        button.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        button.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        button.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[3])[2]//input', '1没有数据修改')
+        ele1 = button.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[3])[2]//input').get_attribute(
+            "value")
+        button.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        button.get_find_message()
+        button.wait_for_loading_to_disappear()
+        button.enter_texts('//div[p[text()="按钮名称"]]/following-sibling::div//input', '1没有数据修改')
+        ele2 = button.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[3])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2
+        assert not button.has_fail_message()
+
+    @allure.story("模拟多选删除")
+    # @pytest.mark.run(order=1)
+    def test_button_shiftdel(self, login_to_button):
+        driver = login_to_button  # WebDriver 实例
+        button = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        button.right_refresh('工具栏按钮管理')
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]']
+        button.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = button.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        button.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        button.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加1')
+        sleep(2)
+        button.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        button.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        button.enter_texts('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input', '1没有数据添加12')
+        sleep(1)
+        ele1 = button.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').text
+        ele2 = button.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input').get_attribute("value")
+        button.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        button.get_find_message()
+        button.select_input_button('1没有数据添加1')
+        ele11 = button.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        ele22 = button.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[2]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele11 and ele2 == ele22
+        assert not button.has_fail_message()
+        button.select_input_button('1没有数据添加')
+        before_data = button.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[3]//td[1])[1]']
+        button.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = button.get_find_element_xpath(elements[2])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        button.click_all_button('删除')
+        button.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        message = button.get_find_message()
+        button.wait_for_loading_to_disappear()
+        after_data = button.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        after_count = int(re.search(r'\d+', after_data).group())
+        assert message == "删除成功！"
+        assert before_count - after_count == 3, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
+        assert not button.has_fail_message()
+
+    @allure.story("模拟ctrl+c复制可查询")
+    # @pytest.mark.run(order=1)
+    def test_button_ctrlC(self, login_to_button):
+        driver = login_to_button  # WebDriver 实例
+        button = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        button.right_refresh('工具栏按钮管理')
+
+        button.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        before_data = button.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+        button.click_button('//div[p[text()="按钮代码"]]/following-sibling::div//input')
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        eles = button.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        eles = [ele.text for ele in eles]
+        button.right_refresh('工具栏按钮管理')
+        assert all(before_data in ele for ele in eles)
+        assert not button.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_button_shift(self, login_to_button):
+        driver = login_to_button  # WebDriver 实例
+        button = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
+        button.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = button.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        num = button.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        button.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert len(num) == 2
+        assert not button.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+m编辑")
+    # @pytest.mark.run(order=1)
+    def test_button_ctrls(self, login_to_button):
+        driver = login_to_button  # WebDriver 实例
+        button = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
+        button.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = button.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        num = button.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        button.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = button.get_find_message()
+        assert len(num) == 2 and message == "保存成功"
+        assert not button.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改,编辑对话框应用代码不可编辑")
+    # @pytest.mark.run(order=1)
+    def test_button_ctrlMDisabled(self, login_to_button):
+        driver = login_to_button  # WebDriver 实例
+        button = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        button.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        button.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        ele1 = button.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "disabled")
+        button.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert ele1
+        assert not button.has_fail_message()
+
+    @allure.story("新增的按钮在应用按钮管理出现")
+    # @pytest.mark.run(order=1)
+    def test_button_addtest(self, login_to_button):
+        driver = login_to_button  # WebDriver 实例
+        button = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        name = '1addbuttontest'
+        button.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        button.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        button.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', name)
+        sleep(1)
+        ele1 = button.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        button.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        button.get_find_message()
+        button.select_input_button(name)
+        ele2 = button.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2 == name
+        button.click_button('(//span[text()="应用管理"])[1]')
+        button.wait_for_loading_to_disappear()
+        button.click_button(f'//table[@class="vxe-table--body"]//tr[1]/td[2]')
+        button.click_all_button("按钮管理")
+        button.wait_for_loading_to_disappear()
+        button.enter_texts('//div[p[text()="按钮名称"]]/following-sibling::div//input', name)
+        ele = button.finds_elements(By.XPATH,f'//table[@class="vxe-table--body"]//tr/td[3]//span[text()="{name}"]')
+        button.click_button('(//div[@class="vxe-modal--footer"]//span[text()="取消"])[last()]')
+        button.click_button('//div[div[text()=" 应用管理 "]]/span')
+        button.right_refresh('工具栏按钮管理')
+        assert len(ele) == 1
+        assert not button.has_fail_message()
+
     @allure.story("删除测试数据成功，删除布局成功")
     # @pytest.mark.run(order=1)
     def test_button_delsuccess(self, login_to_button):
@@ -524,7 +743,7 @@ class TestSButtonPage:
         button = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
         layout = "测试布局A"
         button.wait_for_loading_to_disappear()
-        value = ['Abutton1', 'Abutton2']
+        value = ['1addbuttontest', 'Abutton1', 'Abutton2']
         button.del_all(xpath='//div[p[text()="按钮代码"]]/following-sibling::div//input', value=value)
         itemdata = [
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')

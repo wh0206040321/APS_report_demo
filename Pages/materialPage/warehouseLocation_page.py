@@ -1,7 +1,7 @@
 import random
 from time import sleep
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver import Keys
+from selenium.webdriver import Keys, ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -160,6 +160,7 @@ class WarehouseLocationPage(BasePage):
     def click_ref_button(self):
         """点击刷新按钮."""
         self.click(By.XPATH, '//p[text()="刷新"]')
+        self.wait_for_loading_to_disappear()
 
     def enter_texts(self, xpath, text):
         """输入文字."""
@@ -168,6 +169,15 @@ class WarehouseLocationPage(BasePage):
     def click_button(self, xpath):
         """点击按钮."""
         self.click(By.XPATH, xpath)
+
+    def right_refresh(self, name):
+        """右键刷新."""
+        but = self.get_find_element_xpath(f'//div[@class="scroll-body"]/div[.//div[text()=" {name} "]]')
+        but.click()
+        # 右键点击
+        ActionChains(self.driver).context_click(but).perform()
+        self.click_button('//li[text()=" 刷新"]')
+        self.wait_for_loading_to_disappear()
 
     def batch_modify_input(self, xpath_list=[], new_value=""):
         """批量修改输入框"""
@@ -418,3 +428,247 @@ class WarehouseLocationPage(BasePage):
                 print(f"操作 {xpath} 时出错: {str(e)}")
 
         return values
+
+    def del_all(self, value=[], xpath=""):
+        for index, v in enumerate(value, start=1):
+            try:
+                self.enter_texts(xpath, v)
+                sleep(0.5)
+                self.click_button(f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
+                self.click_del_button()  # 点击删除
+                self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+                self.wait_for_loading_to_disappear()
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)
+            except NoSuchElementException:
+                print(f"未找到元素: {v}")
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)
+            except Exception as e:
+                print(f"操作 {v} 时出错: {str(e)}")
+                ele = self.get_find_element_xpath(xpath)
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.DELETE)
+
+    def batch_modify_inputs(self, xpath_list=[], new_value=""):
+        """批量修改输入框"""
+        for xpath in xpath_list:
+            try:
+                sleep(0.1)
+                ele = self.get_find_element_xpath(xpath)
+                # 清空数字输入框
+                ele.send_keys(Keys.CONTROL, "a")
+                ele.send_keys(Keys.BACK_SPACE)
+                self.enter_texts(xpath, new_value)
+            except NoSuchElementException:
+                print(f"未找到元素: {xpath}")
+            except Exception as e:
+                print(f"操作 {xpath} 时出错: {str(e)}")
+
+    def batch_modify_dialog_boxs(self, xpath_list=[], new_value=""):
+        """批量修改对话框"""
+        for xpath in xpath_list:
+            try:
+                self.click_button(xpath)
+                self.wait_for_loading_to_disappear()
+                self.click_button(new_value)
+                sleep(0.2)
+                self.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
+                sleep(1)
+            except NoSuchElementException:
+                print(f"未找到元素: {xpath}")
+            except Exception as e:
+                print(f"操作 {xpath} 时出错: {str(e)}")
+
+    def batch_modify_code_box(self, xpath_list=[], new_value=""):
+        """批量修改代码对话框双击"""
+        for xpath in xpath_list:
+            try:
+                self.click_button(xpath)
+                self.wait_for_loading_to_disappear()
+                ActionChains(self.driver).double_click(self.get_find_element_xpath(new_value)).perform()
+                sleep(1)
+                self.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[last()]//span[text()="确定"]')
+            except NoSuchElementException:
+                print(f"未找到元素: {xpath}")
+            except Exception as e:
+                print(f"操作 {xpath} 时出错: {str(e)}")
+
+    def batch_modify_select_input(self, xpath_list=[]):
+        """批量修改下拉框"""
+        for idx, d in enumerate(xpath_list, start=1):
+            self.click_button(d['select'])
+            self.click_button(d['value'])
+
+    def batch_click_input(self, xpath_list=[]):
+        """批量点击"""
+        for index, xpath in enumerate(xpath_list, start=1):
+            try:
+                self.click_button(xpath)
+                sleep(0.5)
+            except NoSuchElementException:
+                print(f"未找到元素: {xpath}")
+            except Exception as e:
+                print(f"操作 {xpath} 时出错: {str(e)}")
+
+    def batch_modify_time_input(self, xpath_list=[]):
+        """批量修改时间"""
+        for index, xpath in enumerate(xpath_list, start=1):
+            try:
+                self.click_button(xpath)
+                self.click_button(f'(//span[@class="ivu-date-picker-cells-cell ivu-date-picker-cells-cell-today ivu-date-picker-cells-focused"])[1]')
+                self.click_button(f'(//div[@class="ivu-picker-confirm"])[{index}]/button[3]')
+                sleep(0.5)
+            except NoSuchElementException:
+                print(f"未找到元素: {xpath}")
+            except Exception as e:
+                print(f"操作 {xpath} 时出错: {str(e)}")
+
+    def batch_acquisition_inputs(self, xpath_list=[], text_value=""):
+        """批量获取输入框"""
+        values = []
+        for index, xpath in enumerate(xpath_list, 1):
+            try:
+                value = self.get_find_element_xpath(xpath).get_attribute("value")
+                values.append(value)
+
+            except TimeoutException:
+                raise NoSuchElementException(
+                    f"元素未找到（XPath列表第{index}个）: {xpath}"
+                )
+            except Exception as e:
+                raise Exception(
+                    f"获取输入框值时发生错误（XPath列表第{index}个）: {str(e)}"
+                )
+
+        return values
+
+    def batch_acquisition_texts(self, xpath_list=[], text_value=""):
+        """批量获取输入框"""
+        values = []
+        for index, xpath in enumerate(xpath_list, 1):
+            try:
+                value = self.get_find_element_xpath(xpath).text
+                values.append(value)
+
+            except TimeoutException:
+                raise NoSuchElementException(
+                    f"元素未找到（XPath列表第{index}个）: {xpath}"
+                )
+            except Exception as e:
+                raise Exception(
+                    f"获取输入框值时发生错误（XPath列表第{index}个）: {str(e)}"
+                )
+
+        return values
+
+    def get_checkbox_value(self, xpath_list=[]):
+        """获取复选框 class 判断是否选中"""
+        values = []
+        for index, xpath in enumerate(xpath_list, 1):
+            try:
+                element = self.get_find_element_xpath(xpath)
+                class_value = element.get_attribute("class")
+                # is_checked = "is--checked" in class_value
+                values.append(class_value)
+
+            except TimeoutException:
+                raise NoSuchElementException(
+                    f"元素未找到（XPath列表第{index}个）: {xpath}"
+                )
+            except Exception as e:
+                raise Exception(
+                    f"获取复选框值时发生错误（XPath列表第{index}个）: {str(e)}"
+                )
+        return values
+
+    def get_border_color(self, xpath_list=[], text_value=""):
+        """获取边框颜色"""
+        values = []
+        for index, xpath in enumerate(xpath_list, 1):
+            try:
+                value = self.get_find_element_xpath(xpath).value_of_css_property("border-color")
+                values.append(value)
+
+            except TimeoutException:
+                raise NoSuchElementException(
+                    f"元素未找到（XPath列表第{index}个）: {xpath}"
+                )
+            except Exception as e:
+                raise Exception(
+                    f"获取输入框值时发生错误（XPath列表第{index}个）: {str(e)}"
+                )
+
+        return values
+
+    def batch_modify_map_inputs(self, xpath_value_map: dict):
+        """通过字典批量修改输入框（键为XPath，值为输入内容）"""
+        for xpath, value in xpath_value_map.items():
+            self.enter_texts(xpath, value)
+
+    def go_settings_page(self):
+        """
+        进入设置页面
+        """
+        self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[3]//i')
+        self.wait_for_el_loading_mask()
+        sleep(1)
+        self.click_button('//div[text()=" 显示设置 "]')
+        sleep(5)
+        ele = self.get_find_element_xpath('(//div[@class="vxe-table--body-wrapper body--wrapper"])[4]')
+        self.driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", ele)
+        sleep(1)
+        ele = self.finds_elements(By.XPATH, '(//div[@class="vxe-table--fixed-left-wrapper"])[3]//table[@class="vxe-table--body"]//tr[last()]//div')
+        num1 = ele[0].text
+        if num1:
+            num = self.get_find_element_xpath('(//div[@class="vxe-table--fixed-left-wrapper"])[3]//table[@class="vxe-table--body"]//tr[last()]//div').text
+        else:
+            num = self.get_find_element_xpath(
+                '(//div[@class="vxe-table--fixed-left-wrapper"])[2]//table[@class="vxe-table--body"]//tr[last()]//div').text
+        sleep(0.5)
+        try:
+            self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="取消"])[2]')
+        except Exception:
+            # 如果第一个点不了，就点另一个
+            self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="取消"])[3]')
+
+        self.wait_for_loading_to_disappear()
+        return num
+
+    def hover(self, name=""):
+        # 悬停模版容器触发图标显示
+        container = self.get_find_element_xpath(
+            f'//span[@class="position-absolute font12 right10"]'
+        )
+        ActionChains(self.driver).move_to_element(container).perform()
+
+        # 2️⃣ 等待图标可见
+        delete_icon = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located((
+                By.XPATH,
+                f'//ul/li[contains(text(),"{name}")]'
+            ))
+        )
+
+        # 3️⃣ 再点击图标
+        delete_icon.click()
+
+    def select_input(self, xpath_name, name):
+        """选择输入框."""
+        xpath = f'//div[div[span[text()=" {xpath_name}"]]]//input'
+        ele = self.get_find_element_xpath(xpath)
+        ele.send_keys(Keys.CONTROL + "a")
+        ele.send_keys(Keys.DELETE)
+        self.enter_texts(xpath, name)
+        sleep(1)
+
+    def select_input_standard(self, xpath_name, name):
+        """选择输入框."""
+        xpath = f'//div[div[p[text()="{xpath_name}"]]]//input'
+        ele = self.get_find_element_xpath(xpath)
+        ele.send_keys(Keys.CONTROL + "a")
+        ele.send_keys(Keys.DELETE)
+        self.enter_texts(xpath, name)
+        sleep(1)

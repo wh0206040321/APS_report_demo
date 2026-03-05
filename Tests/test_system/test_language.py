@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 from datetime import datetime
 from time import sleep
 
@@ -553,6 +554,178 @@ class TestSLanguagePage:
         ele = language.get_find_element_xpath('//div[div[span[text()=" 键"]]]/div[3]//i').get_attribute(
             "class")
         assert ele == "vxe-icon-funnel suffixIcon"
+        assert not language.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加重复")
+    # @pytest.mark.run(order=1)
+    def test_language_ctrlIrepeat(self, login_to_language):
+        driver = login_to_language  # WebDriver 实例
+        language = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        language.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        ele1 = language.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
+            "innerText")
+        language.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = language.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        language.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        language.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert message == '记录已存在,请检查！'
+        assert not language.has_fail_message()
+
+    @allure.story("模拟ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_language_ctrlI(self, login_to_language):
+        driver = login_to_language  # WebDriver 实例
+        language = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        language.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        language.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        language.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '11没有数据添加')
+        sleep(1)
+        ele1 = language.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        language.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        language.get_find_message()
+        language.wait_for_loading_to_disappear()
+        language.select_input_language('11没有数据添加')
+        ele2 = language.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2 == '11没有数据添加'
+        assert not language.has_fail_message()
+
+    @allure.story("模拟ctrl+m修改")
+    # @pytest.mark.run(order=1)
+    def test_language_ctrlM(self, login_to_language):
+        driver = login_to_language  # WebDriver 实例
+        language = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        language.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        language.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        language.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '11没有数据修改')
+        ele1 = language.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            "value")
+        language.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        language.get_find_message()
+        language.wait_for_loading_to_disappear()
+        language.select_input_language('11没有数据修改')
+        ele2 = language.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele2
+        assert not language.has_fail_message()
+
+    @allure.story("模拟多选删除")
+    # @pytest.mark.run(order=1)
+    def test_language_shiftdel(self, login_to_language):
+        driver = login_to_language  # WebDriver 实例
+        language = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+
+        language.right_refresh('多语言资源')
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]']
+        language.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = language.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        language.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        language.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '11没有数据修改1')
+        sleep(2)
+        language.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        language.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+        language.enter_texts('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input', '11没有数据修改12')
+        sleep(1)
+        ele1 = language.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').text
+        ele2 = language.get_find_element_xpath(
+            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input').get_attribute("value")
+        language.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        language.get_find_message()
+        language.wait_for_loading_to_disappear()
+        language.select_input_language('11没有数据修改1')
+        ele11 = language.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
+            "innerText")
+        ele22 = language.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[2]/td[2])[1]').get_attribute(
+            "innerText")
+        assert ele1 == ele11 and ele2 == ele22
+        assert not language.has_fail_message()
+        language.select_input_language('11没有数据修改')
+        before_data = language.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+        elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]',
+                    '(//table[@class="vxe-table--body"]//tr[3]//td[1])[1]']
+        language.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = language.get_find_element_xpath(elements[2])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        language.click_all_button('删除')
+        language.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        message = language.get_find_message()
+        language.wait_for_loading_to_disappear()
+        after_data = language.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        after_count = int(re.search(r'\d+', after_data).group())
+        assert message == "删除成功！"
+        assert before_count - after_count == 3, f"删除失败: 删除前 {before_count}, 删除后 {after_count}"
+        assert not language.has_fail_message()
+
+    @allure.story("模拟ctrl+c复制可查询")
+    # @pytest.mark.run(order=1)
+    def test_language_ctrlC(self, login_to_language):
+        driver = login_to_language  # WebDriver 实例
+        language = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        language.right_refresh('多语言资源')
+        language.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        before_data = language.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+        language.click_button('//div[div[span[text()=" 键"]]]//input')
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        eles = language.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
+        eles = [ele.text for ele in eles]
+        language.right_refresh('多语言资源')
+        assert all(before_data in ele for ele in eles)
+        assert not language.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+i添加")
+    # @pytest.mark.run(order=1)
+    def test_language_shift(self, login_to_language):
+        driver = login_to_language  # WebDriver 实例
+        language = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
+        language.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = language.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        num = language.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        language.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert len(num) == 2
+        assert not language.has_fail_message()
+
+    @allure.story("模拟Shift+点击可多选ctrl+m编辑")
+    # @pytest.mark.run(order=1)
+    def test_language_ctrls(self, login_to_language):
+        driver = login_to_language  # WebDriver 实例
+        language = ExpressionPage(driver)  # 用 driver 初始化 ExpressionPage
+        elements = ['//table[@class="vxe-table--body"]//tr[1]//td[1]',
+                    '//table[@class="vxe-table--body"]//tr[2]//td[1]']
+        language.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = language.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        num = language.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
+        language.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = language.get_find_message()
+        assert len(num) == 2 and message == "保存成功"
         assert not language.has_fail_message()
 
     @allure.story("删除测试数据成功，删除布局成功")

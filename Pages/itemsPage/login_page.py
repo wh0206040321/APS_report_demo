@@ -26,7 +26,13 @@ class LoginPage(BasePage):
 
     def select_planning_unit(self, planning_unit):
         self.click_button('//div[@class="ivu-select-head-flex"]/input')
-        self.click_button(f'//li[text()="{planning_unit}"]')
+        sleep(0.2)
+        try:
+            self.click_button(f'//li[text()="{planning_unit}"]')
+        except Exception as e:
+            self.click_button('//div[@class="ivu-select-head-flex"]/input')
+            sleep(0.2)
+            self.click_button(f'//li[text()="{planning_unit}"]')
 
     def login(self, username, password, planning_unit, timeout=60):
         """完整的登录流程"""
