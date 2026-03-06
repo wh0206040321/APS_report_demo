@@ -1,0 +1,91 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="新增"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //label[text()="显示颜色"]/following-sibling::div//i
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //span[text()="RGB(128,128,255)"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="代码"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="名称"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="备注"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="显示颜色"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="显示顺序"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="单批上限1"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批上限1"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批期间1"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="单批上限2"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批上限2"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批期间2"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="单批上限3"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批上限3"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批期间3"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="单批上限4"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批上限4"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批期间4"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="单批上限5"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批上限5"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批期间5"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="单批上限6"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批上限6"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批期间6"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="单批上限7"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批上限7"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批期间7"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="vxe-modal--footer"]//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="toolTabsDiv"]/div[2]/div[3]//i
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[text()=" 显示设置 "]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//div[@class="vxe-table--body-wrapper body--wrapper"])[4]
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = (//div[@class="vxe-table--fixed-left-wrapper"])[3]//table[@class="vxe-table--body"]//tr[last()]//div
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//div[@class="vxe-table--fixed-left-wrapper"])[3]//table[@class="vxe-table--body"]//tr[last()]//div
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@class="demo-drawer-footer"])[2]//span[text()="确定"]
+[1m[31mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@class="demo-drawer-footer"])[3]//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@class="vxe-table--main-wrapper"])[2]//table[@class="vxe-table--body"]//tr/td[2][.//span[text()="11测试全部数据"]]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="编辑"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="代码"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="名称"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="备注"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="显示颜色"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="显示顺序"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="单批上限1"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批上限1"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批期间1"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="单批上限2"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批上限2"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批期间2"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="单批上限3"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批上限3"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批期间3"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="单批上限4"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批上限4"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批期间4"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="单批上限5"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批上限5"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批期间5"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="单批上限6"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批上限6"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批期间6"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="单批上限7"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批上限7"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="合批期间7"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="更新者"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //label[text()="更新时间"]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="vxe-modal--footer"]//span[text()="取消"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:test_spec1.py:876 before_all_value: ['11测试全部数据', '11测试全部数据', '11测试全部数据', '3', '11', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1'], after_all_value: ['11测试全部数据', '11测试全部数据', '11测试全部数据', '3', '11', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1']
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = (//div[@class="vxe-table--main-wrapper"])[2]//table[@class="vxe-table--body"]//tr/td[2][.//span[text()="11测试全部数据"]]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@class="vxe-table--main-wrapper"])[2]//table[@class="vxe-table--body"]//tr/td[2][.//span[text()="11测试全部数据"]]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="删除"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="scroll-body"]/div[.//div[text()=" 生产特征1 "]]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()=" 刷新"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //div[@class="ivu-modal-content"]//div[text()=" 对不起,在处理您的请求期间,产生了一个服务器内部错误! "]

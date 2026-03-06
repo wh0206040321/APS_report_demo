@@ -1,6 +1,0 @@
-[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[div[p[text()="表代码"]]]//input
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//table[@class="vxe-table--body"])[1]//tr[1]/td[2]//span[text()="AAtest1"]
-[31m[1mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
-[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[div[p[text()="表代码"]]]//input
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//table[@class="vxe-table--body"])[1]//tr[1]/td[2]//span[text()="AAtest1"]
-[31m[1mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击

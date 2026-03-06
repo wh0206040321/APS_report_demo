@@ -1,9 +1,0 @@
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="物料欠料表"])[1]
-[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
-[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
-[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //table[@class="vxe-table--body"]//tr[2]/td[2]
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[span[text()="采购员编码:"]]//input[@placeholder="请选择"]
-[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
-[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //ul[@class="el-scrollbar__view el-select-dropdown__list"]//span[text()="　"]
-[31m[1mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击

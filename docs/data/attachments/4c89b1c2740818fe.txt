@@ -1,7 +1,0 @@
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //tr[./td[2][.//span[text()="1测试数据1"]]]/td[2]
-[31m[1mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
-[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[div[span[text()=" PO编码"]]]//input
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //tr[./td[2][.//span[text()="1测试数据2"]]]/td[2]
-[31m[1mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
-[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[div[span[text()=" PO编码"]]]//input
-[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="scroll-body"]/div[.//div[text()=" 采购PO "]]

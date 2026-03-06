@@ -1,0 +1,206 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //tr[./td[2][.//span[text()="333"]]]/td[2]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="编辑"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 产品编码 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 物料编号 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" BOM版本 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" BOM单位 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 位号 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 配套分组消息 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 备注 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符1 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符2 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符3 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符4 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符5 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符6 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符7 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符8 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符9 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符10 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 有效开始日期 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 有效结束日期 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期1 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期2 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期3 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期4 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期5 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期6 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期7 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期8 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期9 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期10 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" BOM用量 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 批量用量 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 损耗率 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 替代比例 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 优先度 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 最大替代组数 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 最大供应分组数 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值1 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值2 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值3 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值4 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值5 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值6 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值7 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值8 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值9 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值10 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[span[text()=" 供应分组字段 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@class="my-list vxe-list"]//span[text()="ID 行唯一标识"])[last()]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[span[text()=" 附加分组字段 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@class="my-list vxe-list"]//span[text()="ID 行唯一标识"])[last()]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[span[text()=" 库存周期类型 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@class="my-list vxe-list"]//span[text()="月"])[last()]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[span[text()=" 是否混料 "]]/following-sibling::label/span
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[span[text()=" 是否专属料 "]]/following-sibling::label/span
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[span[text()=" 是否必需满足 "]]/following-sibling::label/span
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 产品编码 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 物料编号 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" BOM版本 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" BOM单位 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 位号 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 配套分组消息 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 备注 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符1 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符2 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符3 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符4 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符5 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符6 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符7 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符8 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符9 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符10 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 有效开始日期 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 有效结束日期 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期1 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期2 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期3 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期4 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期5 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期6 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期7 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期8 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期9 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期10 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" BOM用量 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 批量用量 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 损耗率 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 替代比例 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 优先度 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 最大替代组数 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 最大供应分组数 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值1 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值2 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值3 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值4 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值5 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值6 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值7 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值8 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值9 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值10 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 供应分组字段 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 附加分组字段 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 库存周期类型 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 是否混料 "]]/following-sibling::label/span
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 是否专属料 "]]/following-sibling::label/span
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 是否必需满足 "]]/following-sibling::label/span
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="vxe-modal--footer"]//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="scroll-body"]/div[.//div[text()=" 物料BOM "]]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()=" 刷新"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="toolTabsDiv"]/div[2]/div[3]//i
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[text()=" 显示设置 "]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//div[@class="vxe-table--body-wrapper body--wrapper"])[4]
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = (//div[@class="vxe-table--fixed-left-wrapper"])[3]//table[@class="vxe-table--body"]//tr[last()]//div
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//div[@class="vxe-table--fixed-left-wrapper"])[3]//table[@class="vxe-table--body"]//tr[last()]//div
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@class="demo-drawer-footer"]//span[text()="取消"])[2]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[div[span[text()=" 产品编码"]]]//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@class="vxe-table--main-wrapper"])[2]//table[@class="vxe-table--body"]//tr/td[2][.//span[text()="11测试全部数据"]]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="编辑"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 产品编码 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 物料编号 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" BOM版本 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" BOM单位 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 位号 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 配套分组消息 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 备注 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符1 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符2 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符3 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符4 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符5 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符6 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符7 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符8 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符9 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符10 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 有效开始日期 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 有效结束日期 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期1 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期2 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期3 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期4 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期5 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期6 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期7 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期8 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期9 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期10 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" BOM用量 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 批量用量 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 损耗率 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 替代比例 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 优先度 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 最大替代组数 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 最大供应分组数 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值1 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值2 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值3 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值4 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值5 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值6 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值7 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值8 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值9 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数值10 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 供应分组字段 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 附加分组字段 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 库存周期类型 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 是否混料 "]]/following-sibling::label/span
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 是否专属料 "]]/following-sibling::label/span
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 是否必需满足 "]]/following-sibling::label/span
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 更新者 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 更新时间 "]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="vxe-modal--footer"]//span[text()="取消"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:test_materialBOM.py:339 before_all_value: ['11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '111', '111', '111', '1', '111', '111', '111', '111', '111', '111', '111', '111', '111', '111', '111', '111', '111', 'ID 行唯一标识', 'ID 行唯一标识', '月'], after_all_value: ['11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '11测试全部数据', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '2025/07/23 00:00:00', '111', '111', '111', '1', '111', '111', '', '111', '111', '111', '111', '111', '111', '111', '111', '111', '111', '', '', '']
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = (//div[@class="vxe-table--main-wrapper"])[2]//table[@class="vxe-table--body"]//tr/td[2][.//span[text()="11测试全部数据"]]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@class="vxe-table--main-wrapper"])[2]//table[@class="vxe-table--body"]//tr/td[2][.//span[text()="11测试全部数据"]]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="删除"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="scroll-body"]/div[.//div[text()=" 物料BOM "]]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()=" 刷新"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
