@@ -1,0 +1,114 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="新增"]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 物料代码 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 物料代码 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 仓库编码 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 仓库编码 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 库位编码 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 库位编码 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 工厂代码 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 工厂代码 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 批次号 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 批次号 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 供应商编号 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 供应商编号 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 供应商名称 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 供应商名称 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 备注 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 备注 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符1 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义字符1 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符2 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义字符2 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符3 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义字符3 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符4 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义字符4 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符5 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义字符5 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 库存日期 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 库存日期 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 有效截止日期 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 有效截止日期 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期1 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义日期1 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期2 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义日期2 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期3 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义日期3 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期4 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义日期4 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期5 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义日期5 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 库存数量 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 库存数量 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数字1 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义数字1 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数字2 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义数字2 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数字3 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义数字3 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数字4 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义数字4 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数字5 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义数字5 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 物料代码 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 物料代码 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="新增"]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 物料代码 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 物料代码 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 仓库编码 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 仓库编码 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 库位编码 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 库位编码 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 工厂代码 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 工厂代码 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 批次号 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 批次号 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 供应商编号 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 供应商编号 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 供应商名称 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 供应商名称 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 备注 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 备注 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符1 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义字符1 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符2 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义字符2 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符3 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义字符3 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符4 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义字符4 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义字符5 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义字符5 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 库存日期 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 库存日期 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 有效截止日期 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 有效截止日期 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期1 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义日期1 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期2 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义日期2 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期3 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义日期3 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期4 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义日期4 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义日期5 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义日期5 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 库存数量 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 库存数量 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数字1 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义数字1 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数字2 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义数字2 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数字3 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义数字3 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数字4 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义数字4 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 自定义数字5 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 自定义数字5 "]]/following-sibling::div//input，等待超时 10s
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[span[text()=" 物料代码 "]]/following-sibling::div//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[span[text()=" 物料代码 "]]/following-sibling::div//input，等待超时 10s

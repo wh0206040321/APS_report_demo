@@ -1,2 +1,0 @@
-[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版6"]
-[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="template-card__title"]/div[text()="测试事务模版6"]
