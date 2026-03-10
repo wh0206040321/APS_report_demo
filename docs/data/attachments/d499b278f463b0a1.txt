@@ -1,0 +1,5 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@id="canvasGird0"]//table[@class="vxe-table--body"])[1]//tr[1]/td[2]
+[1m[31mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@id="canvasGird0"]//table[@class="vxe-table--body"])[1]//tr[1]/td[2]
+[1m[31mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
+[32mINFO    [0m root:driver_manager.py:56 🛑 已从实例池移除并关闭 driver：2689724181632
