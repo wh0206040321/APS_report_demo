@@ -1,2 +1,0 @@
-[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]
-[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]，等待超时 10s

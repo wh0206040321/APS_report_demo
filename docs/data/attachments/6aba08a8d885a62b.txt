@@ -1,9 +1,0 @@
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="系统管理"])[1]
-[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
-[32mINFO    [0m root:base_page.py:26 查找元素：xpath = (//span[text()="系统设置"])[1]/ancestor::li[1]
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//span[text()="菜单组件"])[1]
-[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //tr[./td[2][.//span[text()="1新增菜单"]]]/td[2]
-[1m[31mERROR   [0m root:base_page.py:77 ❌ 元素未在 10 秒内变为可点击
-[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[div[span[text()=" 组件代码"]]]/div[3]//input
-[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="scroll-body"]/div[.//div[text()=" 菜单组件 "]]
