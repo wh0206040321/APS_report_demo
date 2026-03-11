@@ -1,0 +1,13 @@
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="工作代码"]/ancestor::div[2]/div[3]//i
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //span[@class="position-absolute font12 right10"]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //p[text()="工作代码"]/ancestor::div[2]//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //p[text()="工作代码"]/ancestor::div[2]/div[3]//i
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //span[@class="position-absolute font12 right10"]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //p[text()="工作代码"]/ancestor::div[2]/div[3]//i
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="scroll-body"]/div[.//div[text()=" 工作指示一览 "]]
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //li[text()=" 刷新"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //div[@class="ivu-modal-content"]//div[text()=" 对不起,在处理您的请求期间,产生了一个服务器内部错误! "]
+[32mINFO    [0m root:driver_manager.py:56 🛑 已从实例池移除并关闭 driver：2392068347776

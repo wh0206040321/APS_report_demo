@@ -1,0 +1,2 @@
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[div[p[text()="表代码"]]]//input
+[33mWARNING [0m root:base_page.py:32 ❌ 未找到元素：xpath = //div[div[p[text()="表代码"]]]//input，等待超时 10s

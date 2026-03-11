@@ -1,0 +1,26 @@
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[div[span[text()=" 组件代码"]]]//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //table[@class="vxe-table--body"]//tr/td[2]//span[text()="ABCDAA"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//p[text()="编辑"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@id="3srdw2xs-v6kc"]//i
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[div[text()="请选择图标"]]/following-sibling::div//div[@class="flex-wrap"]/div[2]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="vxe-modal--footer"]//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[div[span[text()=" 组件代码"]]]//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //table[@class="vxe-table--body"]//tr[td[2]//span[text()="ABCDAA"]]/td[3]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[div[span[text()=" 组件代码"]]]//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //table[@class="vxe-table--body"]//tr/td[2]//span[text()="ABCDAA"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//p[text()="编辑"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@id="3srdw2xs-v6kc"]//i
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[div[text()="请选择图标"]]/following-sibling::div//div[@class="flex-wrap"]/div[2]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="vxe-modal--footer"]//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[div[span[text()=" 组件代码"]]]//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //table[@class="vxe-table--body"]//tr[td[2]//span[text()="ABCDAA"]]/td[3]

@@ -1,0 +1,72 @@
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[p[text()="按钮代码"]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //table[@class="vxe-table--body"]//tr[1]/td[2]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//p[text()="编辑"]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[33mWARNING [0m root:base_page.py:97 ⚠️ clear() 清空失败：Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=142.0.7444.60); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff65d6ffe35
+	0x7ff65d6ffe90
+	0x7ff65d48139d
+	0x7ff65d48918f
+	0x7ff65d48c1ef
+	0x7ff65d48c2af
+	0x7ff65d4dc04d
+	0x7ff65d4cf24e
+	0x7ff65d50265a
+	0x7ff65d4cc7a6
+	0x7ff65d52b61b
+	0x7ff65d4cac6d
+	0x7ff65d4cbae3
+	0x7ff65d9ca10d
+	0x7ff65d9c448a
+	0x7ff65d9e5157
+	0x7ff65d71a81e
+	0x7ff65d72262f
+	0x7ff65d709324
+	0x7ff65d7094df
+	0x7ff65d6eee88
+	0x7ffcb3487374
+	0x7ffcb549cc91
+，尝试使用 JS 清空
+[33mWARNING [0m root:base_page.py:102 ❌ JS 清空也失败：Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=142.0.7444.60); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff65d6ffe35
+	0x7ff65d6ffe90
+	0x7ff65d48139d
+	0x7ff65d48918f
+	0x7ff65d48c582
+	0x7ff65d52c9bf
+	0x7ff65d50265a
+	0x7ff65d52b61b
+	0x7ff65d4cac6d
+	0x7ff65d4cbae3
+	0x7ff65d9ca10d
+	0x7ff65d9c448a
+	0x7ff65d9e5157
+	0x7ff65d71a81e
+	0x7ff65d72262f
+	0x7ff65d709324
+	0x7ff65d7094df
+	0x7ff65d6eee88
+	0x7ffcb3487374
+	0x7ffcb549cc91
+
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[label[text()="图标"]]//i[contains(@class,"ivu-ico")]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = (//div[@class="flex-wrap"])[2]/div[2]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[@class="vxe-modal--footer"]//span[text()="确定"]
+[33mWARNING [0m root:base_page.py:61 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:64 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[p[text()="按钮代码"]]/following-sibling::div//input
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //table[@class="vxe-table--body"]//tr[1]/td[3]
+[32mINFO    [0m root:base_page.py:26 查找元素：xpath = //div[@class="scroll-body"]/div[.//div[text()=" 工具栏按钮管理 "]]
