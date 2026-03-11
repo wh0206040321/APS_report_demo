@@ -465,9 +465,6 @@ class TestCalendarPage:
             '//p[text()="更新时间"]/following-sibling::div'
         )
         sleep(1)
-        # 缩放到最小（例如 60%）
-        driver.execute_script("document.body.style.zoom='0.6'")
-        sleep(1)
 
         row_xpath = '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]'
         # 获取目标行
@@ -522,9 +519,6 @@ class TestCalendarPage:
         calendar.click_button(
             '//p[text()="更新时间"]/following-sibling::div'
         )
-        sleep(1)
-        # 缩放到最小（例如 60%）
-        driver.execute_script("document.body.style.zoom='0.8'")
         sleep(1)
 
         row_xpath = '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[1]'
@@ -1013,6 +1007,7 @@ class TestCalendarPage:
         driver = login_to_calendar  # WebDriver 实例
         calendar = Calendar(driver)  # 用 driver 初始化 Calendar
         layout = "测试布局A"
+        calendar.right_refresh('生产日历')
 
         calendar.wait_for_loading_to_disappear()
         sleep(2)

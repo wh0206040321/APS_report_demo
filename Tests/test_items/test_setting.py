@@ -1241,7 +1241,9 @@ class TestSettingPage:
             '//div[@class="single-page"]//table[@class="vxe-table--body"]//tr[2]/td[9]'
         ).get_attribute('innerText')
         sleep(1)
-        time2 = '2025/01/01 00:00:00'
+        time2 = setting.get_find_element_xpath(
+            '//div[@class="single-page"]//table[@class="vxe-table--body"]//tr[1]/td[9]'
+        ).get_attribute('innerText')
         if time1 > time2:
             time = time2 + " - " + time1
         else:

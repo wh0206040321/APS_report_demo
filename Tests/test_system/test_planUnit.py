@@ -993,7 +993,7 @@ class TestPlanUnitPage:
             '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
             "disabled")
         ele2 = unit.get_find_element_xpath(
-            '(//table[@class="vxe-table--body"]//tr[1]/td[4])[2]//input').get_attribute(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[4])[2]//input[@type="text"]').get_attribute(
             "disabled")
         unit.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert ele1 and ele2

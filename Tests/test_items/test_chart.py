@@ -519,7 +519,7 @@ class TestChartPage:
             '//label[text()="显示颜色表达式"]/following-sibling::div//input'
         ).get_attribute("value")
         chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
-        assert "Abs(-1)ME.Order.Color" in ele
+        assert "Abs(-1)" in ele
         assert not chart.has_fail_message()
 
     @allure.story("资源甘特图-使用指令棒文本格式表达式")

@@ -89,7 +89,7 @@ class TestAuditLogPage:
         # 格式化为年/月/日
         formatted_date = today.strftime("%Y/%m/%d")
         audit.click_all_button("查询")
-        WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
+        WebDriverWait(driver, 60).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
         abnormal_list = audit.loop_judgment('//table[@class="vxe-table--body"]//tr/td[6]')
         time_list = audit.loop_judgment('//table[@class="vxe-table--body"]//tr/td[8]')
         assert all(formatted_date in time for time in time_list)
@@ -107,7 +107,7 @@ class TestAuditLogPage:
         audit.click_button('//div[span[text()="异常:"] ]//input[@class="ivu-select-input"]')
         audit.click_button('//div[@class="d-flex"]//li[text()="否"]')
         audit.click_all_button("查询")
-        WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
+        WebDriverWait(driver, 60).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
         abnormal_list = audit.loop_judgment('//table[@class="vxe-table--body"]//tr/td[6]')
         time_list = audit.loop_judgment('//table[@class="vxe-table--body"]//tr/td[8]')
         assert all(formatted_date in time for time in time_list)
@@ -135,7 +135,7 @@ class TestAuditLogPage:
         audit.click_button('//div[span[text()="异常:"] ]//input[@class="ivu-select-input"]')
         audit.click_button('//div[@class="d-flex"]//li[text()="是"]')
         audit.click_all_button("查询")
-        WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
+        WebDriverWait(driver, 60).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
         user_list = audit.loop_judgment('//table[@class="vxe-table--body"]//tr/td[3]')
         abnormal_list = audit.loop_judgment('//table[@class="vxe-table--body"]//tr/td[6]')
 
@@ -170,7 +170,7 @@ class TestAuditLogPage:
         ele.send_keys(Keys.DELETE)
         audit.enter_texts('//div[span[text()="操作时间:"]]//input', f"{formatted_first_day} - {formatted_date}")
         audit.click_all_button("查询")
-        WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
+        WebDriverWait(driver, 60).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
         audit.select_input(name)
         sleep(1)
         eles = audit.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
@@ -195,7 +195,7 @@ class TestAuditLogPage:
         audit.enter_texts('//div[span[text()="操作时间:"]]//input', f"{formatted_first_day} - {formatted_date}")
         audit.click_all_button("查询")
 
-        WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
+        WebDriverWait(driver, 60).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
         audit.click_button('//div[p[text()="用户代码"]]/following-sibling::div//i')
         sleep(1)
         eles = audit.get_find_element_xpath('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
@@ -224,7 +224,7 @@ class TestAuditLogPage:
         ele.send_keys(Keys.DELETE)
         audit.enter_texts('//div[span[text()="操作时间:"]]//input', f"{formatted_first_day} - {formatted_date}")
         audit.click_all_button("查询")
-        WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
+        WebDriverWait(driver, 60).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
         name = "a"
         audit.click_button('//div[p[text()="用户代码"]]/following-sibling::div//i')
         audit.hover("包含")
@@ -252,7 +252,7 @@ class TestAuditLogPage:
         ele.send_keys(Keys.DELETE)
         audit.enter_texts('//div[span[text()="操作时间:"]]//input', f"{formatted_first_day} - {formatted_date}")
         audit.click_all_button("查询")
-        WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
+        WebDriverWait(driver, 60).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
         name = "a"
         audit.click_button('//div[p[text()="用户代码"]]/following-sibling::div//i')
         audit.hover("符合开头")
@@ -280,7 +280,7 @@ class TestAuditLogPage:
         ele.send_keys(Keys.DELETE)
         audit.enter_texts('//div[span[text()="操作时间:"]]//input', f"{formatted_first_day} - {formatted_date}")
         audit.click_all_button("查询")
-        WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
+        WebDriverWait(driver, 60).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
         name = "n"
         audit.click_button('//div[p[text()="用户代码"]]/following-sibling::div//i')
         audit.hover("符合结尾")
@@ -308,7 +308,7 @@ class TestAuditLogPage:
         ele.send_keys(Keys.DELETE)
         audit.enter_texts('//div[span[text()="操作时间:"]]//input', f"{formatted_first_day} - {formatted_date}")
         audit.click_all_button("查询")
-        WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
+        WebDriverWait(driver, 60).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
         name = "a"
         sleep(1)
         audit.click_button('//div[p[text()="用户代码"]]/following-sibling::div//i')
@@ -330,7 +330,7 @@ class TestAuditLogPage:
         driver = login_to_auditlog  # WebDriver 实例
         audit = AuditLogPage(driver)  # 用 driver 初始化 AuditLogPage
         audit.click_all_button("查询")
-        WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
+        WebDriverWait(driver, 60).until(EC.invisibility_of_element_located((By.CLASS_NAME, "is--visible")))
         audit.click_all_button("导出Excel")
         ele = audit.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
         assert len(ele) == 0

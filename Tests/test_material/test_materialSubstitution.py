@@ -512,6 +512,7 @@ class TestSMaterialSubstitutionPage:
         material.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         material.get_find_message()
         material.select_input('替代组号', '651')
+        sleep(2)
         ele11 = material.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[8])[1]').get_attribute(
             "innerText")
         ele22 = material.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[2]/td[8])[1]').get_attribute(

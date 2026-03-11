@@ -59,6 +59,7 @@ class OrderPage(BasePage):
     def click_confirm_button(self):
         """点击确定按钮."""
         self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.wait_for_loading_to_button()
         sleep(1)
         self.wait_for_loading_to_disappear()
 
@@ -67,6 +68,11 @@ class OrderPage(BasePage):
         self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]')
         sleep(0.5)
         self.wait_for_loading_to_disappear()
+
+    def wait_for_loading_to_button(self, timeout=10):
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located((By.CLASS_NAME, "ivu-btn-loading"))
+        )
 
     def right_refresh(self, name):
         """右键刷新."""

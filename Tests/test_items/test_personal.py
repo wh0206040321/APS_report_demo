@@ -347,7 +347,7 @@ class TestPersonalPage:
         personal.click_button('//label[text()="悬浮"]/span')
         personal.click_button('//div[@class="demo-drawer-footer"]//span[text()="确定"]')
         message = personal.get_find_message()
-        sleep(1)
+        sleep(3)
         after_element = driver.find_element(By.XPATH, '//ul[@role="menubar"]')
         after_width = after_element.size['width']
         assert message == "保存成功"
@@ -469,6 +469,7 @@ class TestPersonalPage:
                 (By.XPATH, '(//div[@class="d-flex"])[3]/p[text()=" 完成 "]')
             )
         )
+        sleep(2)
         # 等待 2s，如果有 Alert，就接受掉
         try:
             WebDriverWait(driver, 5).until(EC.alert_is_present())
@@ -485,6 +486,7 @@ class TestPersonalPage:
         driver = login_to_personal  # WebDriver 实例
         personal = PersonalPage(driver)  # 用 driver 初始化 PersonalPage
         sleep(3)
+        pyautogui.press('esc')
         wait = WebDriverWait(driver, 20)
         personal.go_engine_page(name='ip')
         personal.go_setting_page()
@@ -502,6 +504,7 @@ class TestPersonalPage:
                 (By.XPATH, '(//div[@class="d-flex"])[3]/p[text()=" 完成 "]')
             )
         )
+        sleep(2)
         # 等待 2s，如果有 Alert，就接受掉
         try:
             WebDriverWait(driver, 5).until(EC.alert_is_present())
@@ -519,7 +522,8 @@ class TestPersonalPage:
         driver = login_to_personal  # WebDriver 实例
         personal = PersonalPage(driver)  # 用 driver 初始化 PersonalPage
         wait = WebDriverWait(driver, 100)
-
+        sleep(2)
+        pyautogui.press('esc')
         personal.go_setting_page()
 
         personal.click_button('//p[text()=" 本地引擎打开方式: "]/following-sibling::div//i')
@@ -537,6 +541,7 @@ class TestPersonalPage:
             )
         )
         # 等待 2s，如果有 Alert，就接受掉
+        sleep(2)
         try:
             WebDriverWait(driver, 2).until(EC.alert_is_present())
             driver.switch_to.alert.accept()
@@ -553,7 +558,8 @@ class TestPersonalPage:
         driver = login_to_personal  # WebDriver 实例
         personal = PersonalPage(driver)  # 用 driver 初始化 PersonalPage
         wait = WebDriverWait(driver, 100)
-
+        sleep(2)
+        pyautogui.press('esc')
         personal.go_setting_page()
 
         personal.click_button('//p[text()=" 本地引擎打开方式: "]/following-sibling::div//i')
@@ -571,6 +577,7 @@ class TestPersonalPage:
             )
         )
         # 等待 2s，如果有 Alert，就接受掉
+        sleep(2)
         try:
             WebDriverWait(driver, 2).until(EC.alert_is_present())
             driver.switch_to.alert.accept()

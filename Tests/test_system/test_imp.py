@@ -98,7 +98,7 @@ class TestImpPage:
         name = "111111111111111133331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111"
         imp.add_imp(name)
         message = imp.get_find_message()
-        sleep(2)
+        sleep(3)
         value = imp.get_find_element_xpath(
             '//div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//input[@class="ivu-select-input"]').get_attribute("value")
         assert message == "新增成功！" and value == name

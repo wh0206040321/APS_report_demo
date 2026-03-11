@@ -595,13 +595,18 @@ class TestSchedPage:
         sched.click_button(
             '//div[text()="分派规则"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
         )
+        ele = sched.get_find_element_xpath(
+            '((//div[text()="分派规则"])[3]/ancestor::div[1]/following-sibling::div[1]//input[@class="ivu-select-input"])[1]'
+        )
+        ele.send_keys(Keys.CONTROL, "a")
+        ele.send_keys(Keys.DELETE)
 
         ele = driver.find_elements(
             By.XPATH,
             '(//div[text()="分派规则"])[3]/ancestor::div[1]/following-sibling::div[1]//input[@class="ivu-select-input"]',
         )
         ele[0].click()
-        sched.click_button('//li[text()="OLD合批日期"]')
+        sched.click_button('//li[text()="订单优先度"]')
         sele_text1 = ele[0].get_attribute("value")
         ele[1].click()
         sched.click_button('//li[text()="降序"]')
@@ -618,8 +623,8 @@ class TestSchedPage:
         ).text
         sched.right_refresh('计划方案管理')
         assert (
-            before_input == after_input == 'ME.Order.UserDate1,d'
-            and sele_text1 == "OLD合批日期"
+            before_input == after_input and 'ME.Order.Priority,d' in before_input
+            and sele_text1 == "订单优先度"
             and sele_text2 == "降序"
         )
         assert not sched.has_fail_message()
@@ -637,13 +642,18 @@ class TestSchedPage:
         sched.click_button(
             '//div[text()="分派规则"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
         )
+        ele = sched.get_find_element_xpath(
+            '((//div[text()="分派规则"])[3]/ancestor::div[1]/following-sibling::div[1]//input[@class="ivu-select-input"])[1]'
+        )
+        ele.send_keys(Keys.CONTROL, "a")
+        ele.send_keys(Keys.DELETE)
 
         ele = driver.find_elements(
             By.XPATH,
             '(//div[text()="分派规则"])[3]/ancestor::div[1]/following-sibling::div[1]//input[@class="ivu-select-input"]',
         )
         ele[0].click()
-        sched.click_button('//li[text()="OLD订单类别"]')
+        sched.click_button('//li[text()="订单优先度"]')
         sele_text1 = ele[0].get_attribute("value")
         ele[1].click()
         sched.click_button('//li[text()="升序"]')
@@ -660,8 +670,8 @@ class TestSchedPage:
         ).text
         sched.right_refresh('计划方案管理')
         assert (
-            before_input == after_input == 'ME.Order.UserStr2,a'
-            and sele_text1 == "OLD订单类别"
+            before_input == after_input and 'ME.Order.Priority,a' in before_input
+            and sele_text1 == "订单优先度"
             and sele_text2 == "升序"
         )
         assert not sched.has_fail_message()
@@ -1201,7 +1211,7 @@ class TestSchedPage:
         sched.click_button(
             '(//input[@class="ivu-select-input" and @placeholder="请选择"])[1]'
         )
-        sched.click_button('//li[text()="AS相同物料优先"]')
+        sched.click_button('//li[text()="负荷均衡化"]')
         sched.click_button('(//input[@placeholder="请输入数字"])[2]')
         sched.enter_texts('(//input[@placeholder="请输入数字"])[2]', "1aQ!~_-1+=0.8")
 
@@ -1234,7 +1244,7 @@ class TestSchedPage:
         sleep(1)
         sched.right_refresh('计划方案管理')
         assert (
-            before_input_text == after_input_text == "AS相同物料优先"
+            before_input_text == after_input_text == "负荷均衡化"
             and before_input_num == after_input_num == "110.8"
             and input_after == "(集合)"
         )
