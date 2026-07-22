@@ -6,11 +6,11 @@ from time import sleep
 import allure
 import pytest
 from selenium.webdriver import Keys
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.common.action_chains import ActionChains
 
 from Pages.itemsPage.adds_page import AddsPages
 from Pages.itemsPage.personal_page import PersonalPage
@@ -77,7 +77,7 @@ class TestHomePage:
             text_ = home.get_find_element_xpath(xpath).get_attribute("innerText")
             if text_ == "加载模板":
                 home.click_button(xpath)
-                home.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+                home.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="切换不保存"]')
                 sleep(1)
         else:
             text = home.click_save_template_button(name="初始模版使用", button="确定")
@@ -86,6 +86,7 @@ class TestHomePage:
         home.click_button('//div[p[text()="关联角色"]]/div[contains(@class,"el-select")]')
         sleep(3)
         values = home.finds_elements(By.XPATH, '//div[@class="el-scrollbar"]//ul/li[contains(@class,"selected")]/span')
+        sleep(1)
         values_list = [value.text for value in values]
         if "admin" not in values_list:
             home.click_button('//li[span[text()="admin"]]')
@@ -226,7 +227,7 @@ class TestHomePage:
         home = HomePage(driver)  # 用 driver 初始化 HomePage
         driver.execute_script("document.body.style.zoom='1'")
         home.wait_for_el_loading_mask()
-        home.click_button('(//div[@class="d-flex m-b-7 toolBar"]//button)[2]')
+        home.click_button('(//div[contains(@class,"homeSetTop")]//button)[2]')
         home.enter_texts('//div[text()=" 名称 "]/following-sibling::div//input', "测试模版confirm")
         home.click_button(
             f'//div[@class="vxe-modal--footer"]//span[text()="确定"]')
@@ -244,7 +245,7 @@ class TestHomePage:
         home = HomePage(driver)  # 用 driver 初始化 HomePage
         home.click_template()
         home.click_button('//div[./span[text()=" 测试模版confirm "]]/span[text()=" 加载模板 "]')
-        home.click_button('//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="取消"]')
+        home.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="取消"]')
         home.click_save_button()
         num = home.count_div_elements()
         style = home.get_find_element_xpath('//div[./span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]').get_attribute("style")
@@ -260,13 +261,13 @@ class TestHomePage:
         home.drag_component(name="表格")
         home.click_template()
         home.click_button('//div[./span[text()=" 测试模版confirm "]]/span[text()=" 加载模板 "]')
-        home.click_button('//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]')
+        home.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="切换不保存"]')
         home.wait_for_el_loading_mask()
         num1 = home.count_div_elements()
         style = home.get_find_element_xpath(
             '//div[./span[text()=" 测试模版confirm "]]/span[text()=" 加载模板 "]').get_attribute("style")
         home.click_button('//div[./span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]')
-        home.click_button('//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]')
+        home.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="切换不保存"]')
         home.wait_for_el_loading_mask()
         num2 = home.count_div_elements()
         home.click_button('//div[text()=" 组件 "]')
@@ -285,13 +286,13 @@ class TestHomePage:
         home.click_save_button()
         home.get_find_message()
         home.click_button('//div[./span[text()=" 测试模版confirm "]]/span[text()=" 加载模板 "]')
-        home.click_button('//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]')
+        home.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="切换并保存"]')
         home.wait_for_el_loading_mask()
         num1 = home.count_div_elements()
         style = home.get_find_element_xpath(
             '//div[./span[text()=" 测试模版confirm "]]/span[text()=" 加载模板 "]').get_attribute("style")
         home.click_button('//div[./span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]')
-        home.click_button('//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]')
+        home.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="切换不保存"]')
         home.wait_for_el_loading_mask()
         num2 = home.count_div_elements()
         home.click_button('//div[text()=" 组件 "]')
@@ -308,7 +309,7 @@ class TestHomePage:
         home.click_template()
         home.click_button('//div[./span[text()=" 测试模版confirm "]]/span[text()=" 加载模板 "]')
         home.click_button(
-            '//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]')
+            '//div[@class="ivu-modal-confirm-footer"]//span[text()="切换不保存"]')
         home.wait_for_el_loading_mask()
         home.click_button('//div[@class="ivu-tabs-tab"]')
         home.drag_component(name="数字")
@@ -330,7 +331,7 @@ class TestHomePage:
         home.click_template()
         home.click_button('//div[./span[text()=" 测试模版confirm "]]/span[text()=" 加载模板 "]')
         home.click_button(
-            '//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]')
+            '//div[@class="ivu-modal-confirm-footer"]//span[text()="切换不保存"]')
         home.wait_for_el_loading_mask()
         home.click_button('//div[@class="ivu-tabs-tab"]')
         home.drag_component(name="数字")
@@ -402,11 +403,14 @@ class TestHomePage:
         elem1 = len(driver.find_elements(By.XPATH, '//div[p[text()=" 主页启动模板: "]]/div/div[contains(@class,"demo-upload-list")]'))
         home.click_button('//div[@class="demo-drawer-footer"]//span[text()="取消"]')
         home.click_template()
+        element = home.get_find_element_xpath(
+            '//div[span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]')
+        driver.execute_script("arguments[0].scrollIntoView();", element)
         sty = home.get_find_element_xpath(
             '//div[span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]').get_attribute("style")
         if sty != "display: none;":
             home.click_button('//div[span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]')
-            home.click_button('//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]')
+            home.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="切换不保存"]')
             home.wait_for_el_loading_mask()
         home.click_button('//div[text()=" 页面设置 "]')
         home.click_button('//div[p[text()="关联角色"]]/div[contains(@class,"el-select")]')
@@ -429,6 +433,7 @@ class TestHomePage:
             sleep(1)
             after_eles = len(driver.find_elements(By.XPATH, '//div[p[text()=" 主页启动模板: "]]/div/div[contains(@class,"demo-upload-list")]'))
             elem2 = (after_eles - 1)
+        home.click_button('//div[@class="demo-drawer-footer"]//span[text()="确定"]')
         assert elem1 == elem2
         assert not home.has_fail_message()
 
@@ -442,15 +447,23 @@ class TestHomePage:
             '//div[span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]').get_attribute("style")
         if sty != "display: none;":
             home.click_button('//div[span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]')
-            home.click_button('//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]')
+            home.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="切换不保存"]')
         home.wait_for_el_loading_mask()
+        sleep(5)
         num = home.count_div_elements()
         home.click_save_button()
-        home.get_find_message()
         PersonalPage(driver).go_setting_page()
         home.wait_for_el_loading_mask()
-        home.click_button('//div[p[text()=" 主页启动模板: "]]/div/div[contains(@class,"demo-upload-list")][last()]')
-        home.click_button('//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"]/button')
+        sleep(3)
+        # 1. 定位元素
+        element = driver.find_element(By.XPATH,
+                                      '//div[p[text()=" 主页启动模板: "]]/div/div[contains(@class,"demo-upload-list")][last()]')
+
+        x_offset = -25
+        y_offset = -25
+
+        # 4. 执行点击
+        ActionChains(driver).move_to_element_with_offset(element, x_offset, y_offset).click().perform()
         home.click_button('//div[@class="demo-drawer-footer"]//span[text()="确定"]')
         home.click_button('//div[@class="scroll-body"]//div[text()=" 主页 "]')
         sleep(1)
@@ -475,7 +488,7 @@ class TestHomePage:
             '//div[span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]').get_attribute("style")
         if sty != "display: none;":
             home.click_button('//div[span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]')
-            home.click_button('//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]')
+            home.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="切换不保存"]')
         home.wait_for_el_loading_mask()
         home.click_button('//div[text()=" 页面设置 "]')
         home.click_button('//div[p[text()="关联角色"]]/div[contains(@class,"el-select")]')
@@ -509,7 +522,7 @@ class TestHomePage:
             '//div[span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]').get_attribute("style")
         if sty != "display: none;":
             home.click_button('//div[span[text()=" 测试模版2confirm "]]/span[text()=" 加载模板 "]')
-            home.click_button('//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]')
+            home.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="切换不保存"]')
         home.wait_for_el_loading_mask()
         num = home.count_div_elements()
         home.click_save_button()
@@ -532,7 +545,7 @@ class TestHomePage:
         home.click_template()
         home.click_button(f'//div[./span[text()=" {name} "]]/span[text()=" 加载模板 "]')
         home.click_button(
-            '//div[div[text()="是否加载这个模板？加载后会覆盖当前内容。"]]/following-sibling::div//span[text()="确定"]')
+            '//div[@class="ivu-modal-confirm-footer"]//span[text()="切换不保存"]')
         home.wait_for_el_loading_mask()
         home.click_save_button()
         message = home.get_find_message()

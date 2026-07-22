@@ -109,6 +109,7 @@ class TestSMaterialRequirementsDefinitionPage:
                 "value": f'//div[@class="d-flex"]//table[@class="vxe-table--body"]//tr[td[3]//span[text()="{field}"]]/td[6]//li[{i}]'
             }
             table_list.append(entry)
+        sleep(2)
         material.click_button('//label[span[text()="制造"]]')
         adds.batch_modify_select_input(select_list)
         adds.batch_modify_input(input_list, '1测试数据1')

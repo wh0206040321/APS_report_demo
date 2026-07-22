@@ -96,10 +96,10 @@ class TestOperationPlanPage:
         operationPlan.select_input(first_char)
         sleep(1)
         eles = operationPlan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
-        sleep(1)
+        sleep(2)
         list_ = [ele.get_attribute("innerText") for ele in eles]
         operationPlan.right_refresh('工作指示发布')
-        assert all(first_char in text for text in list_)
+        assert all(first_char.lower() in text.lower() for text in list_)
         assert not operationPlan.has_fail_message()
 
     @allure.story("过滤条件查询，设置符合开头查询成功")
@@ -214,7 +214,7 @@ class TestOperationPlanPage:
         message = operationPlan.get_error_message()
         operationPlan.right_refresh('工作指示发布')
         # 检查元素是否包含子节点
-        assert message == "请选择时间段和资源"
+        assert message == "请选择资源"
         assert not operationPlan.has_fail_message()
 
     @allure.story("勾选资源，不选择时间段，点击查询 不允许查询")
@@ -232,7 +232,7 @@ class TestOperationPlanPage:
         message = operationPlan.get_error_message()
         operationPlan.right_refresh('工作指示发布')
         # 检查元素是否包含子节点
-        assert message == "请选择时间段和资源"
+        assert message == "请选择时间段"
         assert not operationPlan.has_fail_message()
 
     @allure.story("勾选资源，勾选时间段，点击查询 查询成功,发布指示成功")

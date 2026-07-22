@@ -143,7 +143,7 @@ class TestPSIPage:
         list_group = [
             '//div[p[text()=" 标签: "]]//input',
             '//div[p[text()=" 组化键: "]]//input',
-            '//div[p[text()=" 显示空数据: "]]//input',
+            '//div[p[text()=" 排序式: "]]//input',
             '//div[@class="vxe-modal--box"]//table[@class="vxe-table--body"]//tr/td[2]//input',
         ]
 

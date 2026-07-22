@@ -139,8 +139,9 @@ class TestSLanguagePage:
             '//div[@id="407yfa73-d3cx"]//input',
             '//div[@id="vr0fnkfs-s95j"]//input',
             '//div[@id="fhxti76o-86e4"]//input',
+            '//div[@id="zhgf5ox8-82wa"]//input',
         ]
-        add.batch_modify_input(xpath_list[:4], name)
+        add.batch_modify_input(xpath_list[:5], name)
         language.click_confirm()
         message = language.get_find_message()
         language.wait_for_loading_to_disappear()
@@ -164,8 +165,9 @@ class TestSLanguagePage:
             '//div[@id="407yfa73-d3cx"]//input',
             '//div[@id="vr0fnkfs-s95j"]//input',
             '//div[@id="fhxti76o-86e4"]//input',
+            '//div[@id="zhgf5ox8-82wa"]//input',
         ]
-        add.batch_modify_input(xpath_list[:4], name)
+        add.batch_modify_input(xpath_list[:5], name)
         language.click_confirm()
         sleep(1)
         message = language.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
@@ -188,10 +190,10 @@ class TestSLanguagePage:
         language.click_button('//table[@class="vxe-table--body"]//tr[1]/td[2]')
         language.click_all_button("编辑")
         xpath_list = [
-            '//div[@id="c7h1w27z-lgyo"]//input',
-            '//div[@id="wzcyncq8-0i93"]//input',
-            '//div[@id="kn72lcng-iorx"]//input',
-            '//div[@id="a5cvq73h-aok8"]//input',
+            '//div[@id="6yl10i2n-o0l5"]//input',
+            '//div[@id="2lm8koqj-vj10"]//input',
+            '//div[@id="dxcz2n40-wxwo"]//input',
+            '//div[@id="t9lml6ud-kw8y"]//input',
         ]
         add.batch_modify_input(xpath_list[:1], after_name)
         language.click_confirm()
@@ -217,8 +219,9 @@ class TestSLanguagePage:
             '//div[@id="407yfa73-d3cx"]//input',
             '//div[@id="vr0fnkfs-s95j"]//input',
             '//div[@id="fhxti76o-86e4"]//input',
+            '//div[@id="zhgf5ox8-82wa"]//input',
         ]
-        add.batch_modify_input(xpath_list[:4], name)
+        add.batch_modify_input(xpath_list[:5], name)
         language.click_confirm()
         message = language.get_find_message()
         language.wait_for_loading_to_disappear()
@@ -229,7 +232,7 @@ class TestSLanguagePage:
         assert message == "新增成功！"
         assert not language.has_fail_message()
 
-    @allure.story("修改中英日值成功")
+    @allure.story("修改中英日越南值成功")
     # @pytest.mark.run(order=1)
     def test_language_updatesuccess2(self, login_to_language):
         driver = login_to_language  # WebDriver 实例
@@ -243,11 +246,12 @@ class TestSLanguagePage:
         language.click_button('//table[@class="vxe-table--body"]//tr[1]/td[2]')
         language.click_all_button("编辑")
         xpath_list = [
-            '//div[@id="wzcyncq8-0i93"]//input',
-            '//div[@id="kn72lcng-iorx"]//input',
-            '//div[@id="a5cvq73h-aok8"]//input',
+            '//div[@id="t9lml6ud-kw8y"]//input',
+            '//div[@id="2lm8koqj-vj10"]//input',
+            '//div[@id="dxcz2n40-wxwo"]//input',
+            '//div[@id="ipzegp1h-t0oe"]//input',
         ]
-        add.batch_modify_input(xpath_list[:3], after_name)
+        add.batch_modify_input(xpath_list[:4], after_name)
         language.click_confirm()
         message = language.get_find_message()
         language.wait_for_loading_to_disappear()
@@ -256,7 +260,8 @@ class TestSLanguagePage:
         eles1 = language.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{before_name}"]]/td[3]').text
         eles2 = language.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{before_name}"]]/td[4]').text
         eles3 = language.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{before_name}"]]/td[5]').text
-        assert eles1 == eles2 == eles3 == after_name
+        eles4 = language.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr[td[2]//span[text()="{before_name}"]]/td[6]').text
+        assert eles1 == eles2 == eles3 == eles4 == after_name
         assert message == "编辑成功！"
         assert not language.has_fail_message()
 
@@ -274,10 +279,10 @@ class TestSLanguagePage:
         language.click_button('//table[@class="vxe-table--body"]//tr[1]/td[2]')
         language.click_all_button("编辑")
         xpath_list = [
-            '//div[@id="c7h1w27z-lgyo"]//input',
-            '//div[@id="wzcyncq8-0i93"]//input',
-            '//div[@id="kn72lcng-iorx"]//input',
-            '//div[@id="a5cvq73h-aok8"]//input',
+            '//div[@id="6yl10i2n-o0l5"]//input',
+            '//div[@id="2lm8koqj-vj10"]//input',
+            '//div[@id="dxcz2n40-wxwo"]//input',
+            '//div[@id="t9lml6ud-kw8y"]//input',
         ]
         add.batch_modify_input(xpath_list[:1], after_name)
         language.click_confirm()

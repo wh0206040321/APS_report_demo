@@ -95,6 +95,10 @@ class OrderPage(BasePage):
         以此判断加载遮罩是否消失。
         """
         WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
+        )
+        WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
                  "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
@@ -240,8 +244,9 @@ class OrderPage(BasePage):
         """添加布局."""
         self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[2]//i')
         self.click_button('//li[text()="添加新布局"]')
+        sleep(1)
         self.wait_for_el_loading_mask()
-        sleep(2)
+        sleep(3)
         self.enter_texts(
             '//div[text()="当前布局:"]/following-sibling::div//input', f"{layout}"
         )

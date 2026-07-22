@@ -268,7 +268,7 @@ class TestProcessPage:
             f'(//span[text()="{name[0]}"])[1]/ancestor::tr[1]/td[5]'
         ).text
         assert adddata == name[0] and num_ == '9999999999', f"预期数据是{name[0]}，实际得到{adddata}"
-        process.del_all(name[0], '//p[text()="工序代码"]/ancestor::div[2]//input')
+        process.del_all(name, '//p[text()="工序代码"]/ancestor::div[2]//input')
         assert not process.has_fail_message()
 
     @allure.story("添加测试数据成功")

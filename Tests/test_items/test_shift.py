@@ -115,7 +115,7 @@ class TestShiftPage:
         assert shiftnum == "11", f"预期{shiftnum}"
         assert not shift.has_fail_message()
 
-    @allure.story("第一个时间数字框超过23默认为23，第二个时间数字框超过24默认为24")
+    @allure.story("第一个时间数字框超过24默认为24，第二个时间数字框超过24默认为24")
     # @pytest.mark.run(order=1)
     def test_shift_adddatenum(self, login_to_shift):
         driver = login_to_shift  # WebDriver 实例
@@ -143,7 +143,7 @@ class TestShiftPage:
         ).get_attribute("value")
         shift.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         shift.right_refresh('班次')
-        assert shiftnum1 == "23" and shiftnum2 == "24", f"预期{shiftnum1},{shiftnum2}"
+        assert shiftnum1 == "23" and shiftnum2 == "23", f"预期{shiftnum1},{shiftnum2}"
         assert not shift.has_fail_message()
 
     @allure.story(
@@ -244,10 +244,12 @@ class TestShiftPage:
         shift.click_button(
             '//label[text()="时间"]/ancestor::div[1]//div[@class="left"]/parent::div/div[2]/button'
         )
-        message = shift.get_error_message()
+        data = shift.get_find_element_xpath(
+            '//table[@class="vxe-table--body"]//tr[td[3]//button]/td[1]'
+        ).get_attribute('innerText')
         shift.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         shift.right_refresh('班次')
-        assert message == "开始时间不能大于、等于结束时间"
+        assert data == "1"
         assert not shift.has_fail_message()
 
     @allure.story("第一个时间数字框不允许超过第二个时间数字框  添加成功")

@@ -102,6 +102,11 @@ class Calendar(BasePage):
         self.wait_for_loading_to_disappear()
 
     def wait_for_loading_to_disappear(self, timeout=10):
+
+        WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
+        )
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
@@ -129,7 +134,7 @@ class Calendar(BasePage):
         self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[2]//i')
         self.click_button('//li[text()="添加新布局"]')
         self.wait_for_el_loading_mask()
-        sleep(2)
+        sleep(3)
         self.enter_texts(
             '//div[text()="当前布局:"]/following-sibling::div//input', f"{layout}"
         )
@@ -168,12 +173,13 @@ class Calendar(BasePage):
             self.click_button(
                 '(//i[@class="ivu-icon ivu-icon-md-albums ivu-input-icon ivu-input-icon-normal"])[1]'
             )
+            self.wait_for_loading_to_disappear()
             # 勾选框
             sleep(1)
             self.click_button(f'//table[@class="vxe-table--body"]//tr[3]/td[2]/div/span/span')
             self.wait_for_loading_to_disappear()
             self.click_button(
-                '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+                '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
             )
             sleep(1)
             resource = self.get_find_element_xpath('//label[text()="资源"][1]/parent::div//input').get_attribute("value")
@@ -188,7 +194,7 @@ class Calendar(BasePage):
             self.wait_for_loading_to_disappear()
             self.click_button(f'(//table[@class="vxe-table--body"]//tr/td[2]//span[@class="vxe-cell--checkbox"])[{random_int1}]')
             self.click_button(
-                '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]/button[1]'
+                '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]'
             )
             sleep(1)
             shift = self.get_find_element_xpath('//label[text()="班次"][1]/parent::div//input').get_attribute("value")

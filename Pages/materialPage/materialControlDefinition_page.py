@@ -59,6 +59,10 @@ class MaterialControlDefinition(BasePage):
 
     def wait_for_loading_to_disappear(self, timeout=10):
         WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
+        )
+        WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
                  "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
@@ -183,7 +187,7 @@ class MaterialControlDefinition(BasePage):
             }
             table_list.append(entry)
 
-        self.click_button('//label[span[text()="制造"]]')
+        self.click_button('(//label[span[text()="制造"]])[last()]')
         adds.batch_modify_select_input(select_list)
         adds.batch_modify_input(input_list, value)
         self.double_click_th_dropdown_box(table_list)

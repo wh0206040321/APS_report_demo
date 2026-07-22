@@ -86,6 +86,10 @@ class MasterPage(BasePage):
 
     def wait_for_loading_to_disappear(self, timeout=10):
         WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
+        )
+        WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
                  "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
@@ -269,6 +273,7 @@ class MasterPage(BasePage):
         else:
             # 如果已选中，直接点击确定按钮保存设置
             self.click_button('(//div[@class="demo-drawer-footer"])[3]/button[2]')
+        self.wait_for_el_loading_mask()
 
     def del_layout(self, layout):
         # 获取目标 div 元素，这里的目标是具有特定文本的 div

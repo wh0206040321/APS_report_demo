@@ -139,7 +139,11 @@ class WarehouseLocationPage(BasePage):
         )
         sleep(1)
 
-    def wait_for_loading_to_disappear(self, timeout=10):
+    def wait_for_loading_to_disappear(self, timeout=60):
+        WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
+        )
         sleep(1)
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
@@ -343,7 +347,7 @@ class WarehouseLocationPage(BasePage):
 
     def get_find_message(self):
         """获取错误信息"""
-        message = WebDriverWait(self.driver, 10).until(
+        message = WebDriverWait(self.driver, 15).until(
             EC.visibility_of_element_located(
                 (By.XPATH, '//div[@class="el-message el-message--success"]/p')
             )

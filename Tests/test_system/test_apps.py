@@ -217,7 +217,7 @@ class TestSAppsPage:
         apps.click_button(f'(//div[@class="ivu-tabs"])[1]/div[2]//div[div/span[contains(text(),"{before_name}")]]//span[text()=" 加载模板 "]')
         apps.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         apps.go_template()
-        apps.click_button('//div[@class="d-flex background-color-fff"]/div[3]')
+        apps.click_button('//div[contains(@class,"AppSetTop")]/div[3]')
         before_name1 = apps.get_find_element_xpath(
             f'//div[label[text()="名称"]]//input[@placeholder="请输入"]'
         ).get_attribute("value")
@@ -536,6 +536,7 @@ class TestSAppsPage:
         apps.get_find_message()
         apps.wait_for_loading_to_disappear()
         apps.enter_texts('//div[div[p[text()="应用名称"]]]//input', '1没有数据修改')
+        sleep(1)
         ele2 = apps.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[3])[1]').get_attribute(
             "innerText")
         assert ele1 == ele2

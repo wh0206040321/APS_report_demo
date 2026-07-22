@@ -290,7 +290,7 @@ class TestSynchronizePage:
         for name in plan_name:
             elements = synchronize.finds_elements(
                 By.XPATH,
-                f'//span[text()="{name}" and @class="ivu-tree-title"]'
+                f'//span[@class="ivu-tree-title"]/span[text()="{name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
         synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
@@ -324,7 +324,7 @@ class TestSynchronizePage:
         for name in plan_name:
             elements = synchronize.finds_elements(
                 By.XPATH,
-                f'//span[text()="{name}" and @class="ivu-tree-title"]'
+                f'//span[@class="ivu-tree-title"]/span[text()="{name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
 
@@ -361,7 +361,7 @@ class TestSynchronizePage:
         for name in plan_name:
             elements = synchronize.finds_elements(
                 By.XPATH,
-                f'//span[text()="{name}" and @class="ivu-tree-title"]'
+                f'//span[@class="ivu-tree-title"]/span[text()="{name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
 
@@ -397,7 +397,7 @@ class TestSynchronizePage:
         for name in plan_name:
             elements = synchronize.finds_elements(
                 By.XPATH,
-                f'//span[text()="{name}" and @class="ivu-tree-title"]'
+                f'//span[@class="ivu-tree-title"]/span[text()="{name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
         synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
@@ -405,7 +405,7 @@ class TestSynchronizePage:
         for name in plan_name:
             elements = synchronize.finds_elements(
                 By.XPATH,
-                f'//span[text()="{name}" and @class="ivu-tree-title"]'
+                f'//span[@class="ivu-tree-title"]/span[text()="{name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
 
@@ -443,7 +443,7 @@ class TestSynchronizePage:
         for name in plan_name:
             elements = synchronize.finds_elements(
                 By.XPATH,
-                f'//span[text()="{name}" and @class="ivu-tree-title"]'
+                f'//span[@class="ivu-tree-title"]/span[text()="{name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
         synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
@@ -451,7 +451,7 @@ class TestSynchronizePage:
         for name in plan_name:
             elements = synchronize.finds_elements(
                 By.XPATH,
-                f'//span[text()="{name}" and @class="ivu-tree-title"]'
+                f'//span[@class="ivu-tree-title"]/span[text()="{name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
 

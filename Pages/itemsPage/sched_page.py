@@ -137,6 +137,11 @@ class SchedPage(BasePage):
         )
         return message.text
 
+    def get_error_messagetext(self):
+        """获取错误信息"""
+        message = self.get_find_element_xpath('//div[@class="ivu-form-item-error-tip"]')
+        return message.text
+
     def wait_for_el_loading_mask(self, timeout=15):
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))
@@ -212,6 +217,7 @@ class SchedPage(BasePage):
         )
         self.click_button('//div[@class="vxe-modal--body"]//i[@class="ivu-icon ivu-icon-md-add"]')
         self.click_button('(//i[@class="ivu-icon ivu-icon-md-albums"])[last()]')
+        sleep(2)
         ele = self.get_find_element_xpath(
             '//span[text()="绝对值函数"]'
         )
@@ -223,6 +229,10 @@ class SchedPage(BasePage):
         sleep(1)
 
     def wait_for_loading_to_disappear(self, timeout=10):
+        WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
+        )
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,

@@ -420,6 +420,9 @@ class TestItemPage:
     @allure.story("新增多条数据")
     # @pytest.mark.run(order=1)
     def test_materialBOM_adds(self, login_to_item):
+        div_box = self.item.finds_elements(By.XPATH, '//div[@class="el-skeleton is-animated"]')
+        if len(div_box) == 1:
+            self.item.right_refresh('物料BOM')
         self.item.click_add_button()  # 检查点击添加
         # 输入框要修改的值
         text_str = "1测试数据1"
@@ -640,6 +643,7 @@ class TestItemPage:
     def test_materialBOM_ctrlI(self, login_to_item):
         self.item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
         ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+
         self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
         self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加')
         sleep(1)
@@ -659,6 +663,7 @@ class TestItemPage:
     def test_materialBOM_ctrlM(self, login_to_item):
         self.item.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
         ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
+        self.item.wait_for_loading_to_disappear()
         self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
         self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改')
         ele1 = self.item.get_find_element_xpath(
@@ -750,7 +755,7 @@ class TestItemPage:
         # 第二个单元格 Shift+点击（选择范围）
         cell2 = self.item.get_find_element_xpath(elements[1])
         ActionChains(self.driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
-        sleep(1)
+        self.item.wait_for_loading_to_disappear()
         ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
         num = self.item.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
@@ -766,7 +771,7 @@ class TestItemPage:
         # 第二个单元格 Shift+点击（选择范围）
         cell2 = self.item.get_find_element_xpath(elements[1])
         ActionChains(self.driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
-        sleep(1)
+        self.item.wait_for_loading_to_disappear()
         ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
         num = self.item.finds_elements(By.XPATH, '(//table[@class="vxe-table--body"])[last()]//tr')
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')

@@ -59,6 +59,10 @@ class PlanUnitPage(BasePage):
 
     def wait_for_loading_to_disappear(self, timeout=10):
         WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
+        )
+        WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
                  "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
@@ -108,6 +112,7 @@ class PlanUnitPage(BasePage):
     def click_sel_button(self):
         """点击查询按钮."""
         self.click_button('//p[text()="查询"]')
+        self.wait_for_loading_to_disappear()
 
     def loop_judgment(self, xpath):
         """循环判断"""

@@ -60,35 +60,23 @@ def login_to_worktasks():
 @allure.feature("工作和任务表测试用例")
 @pytest.mark.run(order=19)
 class TestWorkTasksPage:
-    @allure.story("工作明细页面编辑制造数量成功")
+    @allure.story("工作明细页面编辑用户指定数量成功")
     # @pytest.mark.run(order=1)
     def test_workdetails_updateitem(self, login_to_worktasks):
         driver = login_to_worktasks  # WebDriver 实例
         word = WorkTasksPage(driver)  # 用 driver 初始化 WorkTasksPage
         word.click_button('(//span[text()="工作明细"])[1]')
         word.wait_for_loading_to_disappear()
-        before_value = word.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]/td[6]').text
         word.click_button('//table[@class="vxe-table--body"]//tr[1]/td[6]')
         word.click_all_button('编辑')
         sleep(1)
-        ele = word.get_find_element_xpath('//div[label[text()="制造数量"]]//input')
+        ele = word.get_find_element_xpath('//div[label[text()="用户指定数量"]]//input')
         ele.send_keys(Keys.CONTROL, "a")
         ele.send_keys(Keys.DELETE)
-        word.enter_texts('//div[label[text()="制造数量"]]//input', '1234')
+        word.enter_texts('//div[label[text()="用户指定数量"]]//input', '1234')
         word.click_confirm()
-        after_value = word.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]/td[6]').text
+        after_value = word.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]/td[7]').text
         assert after_value == '1234'
-
-        word.click_button('//table[@class="vxe-table--body"]//tr[1]/td[6]')
-        word.click_all_button('编辑')
-        sleep(1)
-        ele = word.get_find_element_xpath('//div[label[text()="制造数量"]]//input')
-        ele.send_keys(Keys.CONTROL, "a")
-        ele.send_keys(Keys.DELETE)
-        word.enter_texts('//div[label[text()="制造数量"]]//input', before_value)
-        word.click_confirm()
-        after_value = word.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]/td[6]').text
-        assert after_value == before_value
         assert not word.has_fail_message()
 
     @allure.story("工作明细页面查询工作代码成功")

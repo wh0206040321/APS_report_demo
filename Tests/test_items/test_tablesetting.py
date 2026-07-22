@@ -429,7 +429,7 @@ class TestTableSettingPage:
         after_ = setting.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[1]//td[2]').text
         ele = setting.get_find_element_xpath('//span[@class="hiddenRowIcon hiddenRowIcon_Top"]/i')
         ActionChains(driver).move_to_element(ele).click().perform()
-        sleep(2)
+        sleep(3)
         before_ = setting.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[3]//td[2]').text
         setting.right_refresh('制造订单')
         assert after_ == before_

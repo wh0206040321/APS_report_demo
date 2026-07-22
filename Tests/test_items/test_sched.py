@@ -69,10 +69,10 @@ class TestSchedPage:
         sched.click_add_schedbutton()  # 点击添加方案
 
         sched.click_name_ok()  # 点击确定
-        message = sched.get_error_message()
+        message = sched.get_error_messagetext()
         sched.click_button('(//button[span[text()="取消"]])[2]')
         # 检查元素是否包含子节点
-        assert message == "请输入"
+        assert message == "名称不能为空"
         assert not sched.has_fail_message()
 
     @allure.story("添加方案管理信息 只填写复制方案 不允许提交")
@@ -88,10 +88,10 @@ class TestSchedPage:
         sched.click_button('//li[text()="排产方案（工序级）"]')
 
         sched.click_name_ok()  # 点击确定
-        message = sched.get_error_message()
+        message = sched.get_error_messagetext()
         sched.click_button('(//button[span[text()="取消"]])[2]')
         # 检查元素是否包含子节点
-        assert message == "请输入"
+        assert message == "名称不能为空"
         assert not sched.has_fail_message()
 
     @allure.story("添加方案管理信息 添加重复 不允许提交")
@@ -133,17 +133,17 @@ class TestSchedPage:
         sleep(1)
 
         element = driver.find_element(
-            By.XPATH, f'//span[text()="{name}"]/preceding-sibling::span'
+            By.XPATH, f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span'
         )
         driver.execute_script("arguments[0].scrollIntoView();", element)
 
         # 判断下拉框为打开还是关闭
         sleep(1)
         sel = sched.get_find_element_xpath(
-            f'//span[text()="{name}"]/preceding-sibling::span'
+            f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span'
         )
         if "ivu-tree-arrow" in sel.get_attribute("class"):
-            sched.click_button(f'//span[text()="{name}"]/preceding-sibling::span')
+            sched.click_button(f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span')
 
         addtext = sched.get_find_element_xpath(
             '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[last()]'
@@ -237,7 +237,7 @@ class TestSchedPage:
         command_text = sched.get_find_element_xpath(command)
 
         element = driver.find_element(
-            By.XPATH, '//span[text()="33"]/preceding-sibling::span'
+            By.XPATH, '//span[text()="33"]/ancestor::span/preceding-sibling::span'
         )
         driver.execute_script("arguments[0].scrollIntoView();", element)
 
@@ -277,7 +277,7 @@ class TestSchedPage:
                 break  # 没有找到元素时退出循环
                 # 存在元素，点击删除按钮
             element = driver.find_element(
-                By.XPATH, '//span[text()="33"]/preceding-sibling::span'
+                By.XPATH, '//span[text()="33"]/ancestor::span/preceding-sibling::span'
             )
             driver.execute_script("arguments[0].scrollIntoView();", element)
             addul1[0].click()
@@ -312,7 +312,7 @@ class TestSchedPage:
         command_text[0].click()
 
         element = driver.find_element(
-            By.XPATH, '//span[text()="33"]/preceding-sibling::span'
+            By.XPATH, '//span[text()="33"]/ancestor::span/preceding-sibling::span'
         )
         driver.execute_script("arguments[0].scrollIntoView();", element)
 
@@ -367,7 +367,7 @@ class TestSchedPage:
         ).text
 
         element = driver.find_element(
-            By.XPATH, '//span[text()="33"]/preceding-sibling::span'
+            By.XPATH, '//span[text()="33"]/ancestor::span/preceding-sibling::span'
         )
         driver.execute_script("arguments[0].scrollIntoView();", element)
 
@@ -452,17 +452,17 @@ class TestSchedPage:
         sleep(1)
 
         element = driver.find_element(
-            By.XPATH, f'//span[text()="{name}"]/preceding-sibling::span'
+            By.XPATH, f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span'
         )
         driver.execute_script("arguments[0].scrollIntoView();", element)
 
         # 判断下拉框为打开还是关闭
         sleep(1)
         sel = sched.get_find_element_xpath(
-            f'//span[text()="{name}"]/preceding-sibling::span'
+            f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span'
         )
         if "ivu-tree-arrow" in sel.get_attribute("class"):
-            sched.click_button(f'//span[text()="{name}"]/preceding-sibling::span')
+            sched.click_button(f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span')
 
         addtext = sched.get_find_element_xpath(
             '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[last()]'
@@ -1538,25 +1538,25 @@ class TestSchedPage:
             sched.add_copy_sched(name)
         sched.right_refresh_1('计划方案管理')
         ele = sched.get_find_element_xpath(
-            '//span[text()="计划方案库"]/preceding-sibling::span'
+            '//span[text()="计划方案库"]/ancestor::span/preceding-sibling::span'
         ).get_attribute('class')
         if 'ivu-tree-arrow-open' not in ele:
             sched.click_button(
-                '//span[text()="计划方案库"]/preceding-sibling::span'
+                '//span[text()="计划方案库"]/ancestor::span/preceding-sibling::span'
             )
         sleep(1)
-        sched.click_button(f'//span[@class="ivu-tree-title"][text()="{name[0]}"]')
+        sched.click_button(f'//span[@class="ivu-tree-title"][span[text()="{name[0]}"]]')
         sched.click_button('//div[p[text()=" 内部命令 "]]/div//label[text()="属性编辑"]')
         sched.click_add_commandbutton()
 
         ele = sched.get_find_element_xpath(
-            f'//span[text()="{name[0]}"]/preceding-sibling::span'
+            f'//span[text()="{name[0]}"]/ancestor::span/preceding-sibling::span'
         ).get_attribute('class')
         if 'ivu-tree-arrow-open' not in ele:
             sched.click_button(
-                f'//span[text()="{name[0]}"]/preceding-sibling::span'
+                f'//span[text()="{name[0]}"]/ancestor::span/preceding-sibling::span'
             )
-        sched.click_button(f'//span[text()="{name[0]}"]/parent::li//ul//span[text()="属性编辑"]')
+        sched.click_button(f'//span[span[text()="{name[0]}"]]/parent::li//ul//span[text()="属性编辑"]')
         sched.click_attribute_button()
         tabs = ['订单属性  ', '工作属性  ', '资源属性  ', '品目属性  ']  # None表示当前页
 
@@ -1584,11 +1584,11 @@ class TestSchedPage:
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
         sched.right_refresh_1('计划方案管理')
         ele = sched.get_find_element_xpath(
-            '//span[text()="计划方案库"]/preceding-sibling::span'
+            '//span[text()="计划方案库"]/ancestor::span/preceding-sibling::span'
         ).get_attribute('class')
         if 'ivu-tree-arrow-open' not in ele:
             sched.click_button(
-                '//span[text()="计划方案库"]/preceding-sibling::span'
+                '//span[text()="计划方案库"]/ancestor::span/preceding-sibling::span'
             )
         sleep(1)
         name = [
@@ -1597,18 +1597,18 @@ class TestSchedPage:
         ele = sched.finds_elements(By.XPATH, f'//label[text()="{name[0]}"]')
         if len(ele) == 0:
             sched.add_copy_sched(name)
-        sched.click_button(f'//span[@class="ivu-tree-title"][text()="{name[0]}"]')
+        sched.click_button(f'//span[@class="ivu-tree-title"][span[text()="{name[0]}"]]')
         sched.click_button('//div[p[text()=" 内部命令 "]]/div//label[text()="删除数据"]')
         sched.click_add_commandbutton()
 
         ele = sched.get_find_element_xpath(
-            f'//span[text()="{name[0]}"]/preceding-sibling::span'
+            f'//span[text()="{name[0]}"]/ancestor::span/preceding-sibling::span'
         ).get_attribute('class')
         if 'ivu-tree-arrow-open' not in ele:
             sched.click_button(
-                f'//span[text()="{name[0]}"]/preceding-sibling::span'
+                f'//span[text()="{name[0]}"]/ancestor::span/preceding-sibling::span'
             )
-        sched.click_button(f'//span[text()="{name[0]}"]/parent::li//ul//span[text()="删除数据"]')
+        sched.click_button(f'//span[span[text()="{name[0]}"]]/parent::li//ul//span[text()="删除数据"]')
         sched.click_attribute_button()
         sched.click_button('(//i[@class="ivu-icon ivu-icon-md-add"])[last()]')
 
@@ -1638,11 +1638,11 @@ class TestSchedPage:
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
         sched.right_refresh_1('计划方案管理')
         ele = sched.get_find_element_xpath(
-            '//span[text()="计划方案库"]/preceding-sibling::span'
+            '//span[text()="计划方案库"]/ancestor::span/preceding-sibling::span'
         ).get_attribute('class')
         if 'ivu-tree-arrow-open' not in ele:
             sched.click_button(
-                '//span[text()="计划方案库"]/preceding-sibling::span'
+                '//span[text()="计划方案库"]/ancestor::span/preceding-sibling::span'
             )
         sleep(1)
         name = [
@@ -1651,18 +1651,18 @@ class TestSchedPage:
         ele = sched.finds_elements(By.XPATH, f'//label[text()="{name[0]}"]')
         if len(ele) == 0:
             sched.add_copy_sched(name)
-        sched.click_button(f'//span[@class="ivu-tree-title"][text()="{name[0]}"]')
+        sched.click_button(f'//span[@class="ivu-tree-title"][span[text()="{name[0]}"]]')
         sched.click_button('//div[p[text()=" 内部命令 "]]/div//label[text()="执行存储过程"]')
         sched.click_add_commandbutton()
 
         ele = sched.get_find_element_xpath(
-            f'//span[text()="{name[0]}"]/preceding-sibling::span'
+            f'//span[text()="{name[0]}"]/ancestor::span/preceding-sibling::span'
         ).get_attribute('class')
         if 'ivu-tree-arrow-open' not in ele:
             sched.click_button(
-                f'//span[text()="{name[0]}"]/preceding-sibling::span'
+                f'//span[text()="{name[0]}"]/ancestor::span/preceding-sibling::span'
             )
-        sched.click_button(f'//span[text()="{name[0]}"]/parent::li//ul//span[text()="执行存储过程"]')
+        sched.click_button(f'//span[span[text()="{name[0]}"]]/parent::li//ul//span[text()="执行存储过程"]')
         sched.click_attribute_button()
         for row in range(1, 4):
             input_xpath = f'(//table[@class="vxe-table--body"])[last()]//tr[{row}]/td[3]//input'

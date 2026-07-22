@@ -151,7 +151,7 @@ class TestUserRolePage:
     def test_user_addfail4(self, login_to_userrole):
         driver = login_to_userrole  # WebDriver 实例
         user = UserRolePage(driver)  # 用 driver 初始化 UserRolePage
-        name = '1用户代码1'
+        name = 'user11'
         password = 'Qw123456'
         add = AddsPages(driver)
         xpath_value_map = {
@@ -203,9 +203,10 @@ class TestUserRolePage:
         user.enter_texts(list_[0], name)
         user.click_button(list_[1])
         sleep(0.5)
-        ele = user.get_find_element_xpath(list_[0]).get_attribute("value")
+        ele1 = user.get_find_element_xpath(list_[0]).get_attribute("value")
+        ele2 = user.get_find_element_xpath('//div[@class="ivu-form-item-error-tip"]').text
         user.click_all_button("取消")
-        assert ele == '@1w.a_1Z'
+        assert ele1 == name and ele2 == "只能包含字母、数字、_、@ 和 ."
         assert not user.has_fail_message()
 
     @allure.story("校验密码和确认密码不符合标准,密码长度最小为8")

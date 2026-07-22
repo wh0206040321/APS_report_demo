@@ -180,9 +180,9 @@ class TestPersonalPage:
         personal = PersonalPage(driver)  # 用 driver 初始化 PersonalPage
         password = [f"{DateDriver.password}1", "Qq123456", "Qq123456"]
         personal.edit_password(password[0], password[1], password[2])
-        message = personal.get_error_message()
+        ele = driver.find_elements(By.XPATH, '//p[text()=" 修改失败 "]')
         personal.click_button('//div[div[text()="修改密码"]]//i[@title="关闭"]')
-        assert message == "修改失败"
+        assert len(ele) == 1
         assert not personal.has_fail_message()
 
     # @allure.story("修改密码成功")
@@ -193,7 +193,7 @@ class TestPersonalPage:
     #     newpassword = "Qq123456"
     #     password = [f"{DateDriver.password}", newpassword, newpassword]
     #     personal.edit_password(password[0], password[1], password[2])
-    #     message = personal.get_find_message().text
+    #     message = personal.get_find_message()
     #     if message == "修改成功":
     #         # 清空之前的共享数据
     #         SharedDataUtil.clear_data()
@@ -203,8 +203,9 @@ class TestPersonalPage:
     #         assert message == "修改成功"
     #     else:
     #         assert 1 != 1
+    #     personal.click_button('//div[div[text()="修改密码"]]//i[@title="关闭"]')
     #     assert not personal.has_fail_message()
-
+    #
     # @allure.story("新密码登录成功")
     # # @pytest.mark.run(order=1)
     # def test_personal_loginsuccess1(self, login_to_personal):
@@ -214,6 +215,7 @@ class TestPersonalPage:
     #     profile_icon = personal.get_find_element(
     #         f'//div[text()=" {DateDriver().planning} "]'
     #     )
+    #     personal.click_button('//div[div[text()="修改密码"]]//i[@title="关闭"]')
     #     assert profile_icon.is_displayed()  # 断言用户头像可见，表明登录成功
     #     assert not personal.has_fail_message()
     #
@@ -231,8 +233,9 @@ class TestPersonalPage:
     #     personal.click_button(
     #         '//button[@type="button" and @class="ivu-btn ivu-btn-primary ivu-btn-long ivu-btn-large"]'
     #     )  # 点击登录按钮
-    #     element = personal.get_find_element('//div[text()=" 用户名或密码无效 "]')
-    #     assert element.text == "用户名或密码无效"
+    #     element = personal.get_find_element('//div[text()=" 用户名或密码无效 "]').text
+    #     personal.click_button('//div[div[text()="修改密码"]]//i[@title="关闭"]')
+    #     assert element == "用户名或密码无效"
     #     assert not personal.has_fail_message()
     #
     # @allure.story("把密码修改回来")
@@ -246,7 +249,8 @@ class TestPersonalPage:
     #     personal.edit_password(pw[0], pw[1], pw[2])
     #     # 清空之前的共享数据
     #     SharedDataUtil.clear_data()
-    #     message = personal.get_find_message().text
+    #     message = personal.get_find_message()
+    #     personal.click_button('//div[div[text()="修改密码"]]//i[@title="关闭"]')
     #     assert message == "修改成功"
     #     assert not personal.has_fail_message()
 
@@ -622,7 +626,7 @@ class TestPersonalPage:
         personal = PersonalPage(driver)  # 用 driver 初始化 PersonalPage
         page = LoginPage(driver)
         date_driver = DateDriver()
-        num = 10
+        num = 30
         personal.go_exit(num)
         sleep(num)
         ele = driver.find_elements(By.XPATH, '//div[text()="由于您已经长时间没有操作，系统已自动退出！"]')

@@ -129,6 +129,7 @@ class TestSMenuPage:
         sleep(0.5)
         menu.click_confirm()
         message = menu.get_find_message()
+        menu.wait_for_loading_to_disappear()
         menu.select_input_menu(name)
         sleep(1)
         eles = menu.get_find_element_xpath(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{name}"]').text

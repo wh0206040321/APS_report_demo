@@ -82,9 +82,9 @@ class TestSAcceptDataPage:
         acceptdata.click_all_button("新增")
         xpath_list = [
             '//div[label[text()="源系统:"]]//input[@type="text"]',
-            '(//li[text()="SRM"])[2]',
+            '(//li[text()="SRM"])[1]',
             '//div[label[text()="目的系统:"]]//input[@type="text"]',
-            '(//li[text()="APS"])[1]'
+            '(//li[text()="APS"])[2]'
         ]
         for xpath in xpath_list:
             acceptdata.click_button(xpath)
@@ -113,8 +113,8 @@ class TestSAcceptDataPage:
         adds.batch_modify_input(text_list, input_value)
 
         select_list = [
-            {"select": '//div[label[text()="源系统:"]]//input[@type="text"]', "value": '(//li[text()="SRM"])[2]'},
-            {"select": '//div[label[text()="目的系统:"]]//input[@type="text"]', "value": '(//li[text()="APS"])[1]'},
+            {"select": '//div[label[text()="源系统:"]]//input[@type="text"]', "value": '(//li[text()="SRM"])[1]'},
+            {"select": '//div[label[text()="目的系统:"]]//input[@type="text"]', "value": '(//li[text()="APS"])[2]'},
             {"select": '//div[label[text()="数据单元:"]]//input[@type="text"]', "value": f'(//li[text()="{plan}"])[last()]'},
         ]
         adds.batch_modify_select_input(select_list)
@@ -160,8 +160,8 @@ class TestSAcceptDataPage:
         adds.batch_modify_input(text_list, input_value)
 
         select_list = [
-            {"select": '//div[label[text()="源系统:"]]//input[@type="text"]', "value": '(//li[text()="SRM"])[2]'},
-            {"select": '//div[label[text()="目的系统:"]]//input[@type="text"]', "value": '(//li[text()="APS"])[1]'},
+            {"select": '//div[label[text()="源系统:"]]//input[@type="text"]', "value": '(//li[text()="SRM"])[1]'},
+            {"select": '//div[label[text()="目的系统:"]]//input[@type="text"]', "value": '(//li[text()="APS"])[2]'},
             {"select": '//div[label[text()="数据单元:"]]//input[@type="text"]',
              "value": f'(//li[text()="{plan}"])[last()]'},
         ]
@@ -203,8 +203,8 @@ class TestSAcceptDataPage:
         adds.batch_modify_input(text_list, input_value)
 
         select_list = [
-            {"select": '//div[label[text()="源系统:"]]//input[@type="text"]', "value": '(//li[text()="SRM"])[2]'},
-            {"select": '//div[label[text()="目的系统:"]]//input[@type="text"]', "value": '(//li[text()="APS"])[1]'},
+            {"select": '//div[label[text()="源系统:"]]//input[@type="text"]', "value": '(//li[text()="SRM"])[1]'},
+            {"select": '//div[label[text()="目的系统:"]]//input[@type="text"]', "value": '(//li[text()="APS"])[2]'},
             {"select": '//div[label[text()="数据单元:"]]//input[@type="text"]',
              "value": f'(//li[text()="{plan}"])[last()]'},
         ]
@@ -375,7 +375,7 @@ class TestSAcceptDataPage:
             acceptdata.click_all_button('删除')
             acceptdata.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
             message = acceptdata.get_find_message()
-            sleep(1)
+            sleep(3)
             ele = acceptdata.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[3]//span[text()="{name}"]')
             assert len(ele) == 0
             assert message == "删除成功！"

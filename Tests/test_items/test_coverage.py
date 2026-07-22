@@ -527,7 +527,7 @@ class TestCoveragePage:
         coverage.click_button('//span[text()=" 更新时间"]/following-sibling::div')
         sleep(1)
         # 缩放到最小（例如 25%）
-        driver.execute_script("document.body.style.zoom='0.25'")
+        driver.execute_script("document.body.style.zoom='0.7'")
         sleep(1)
 
         row_xpath = '(//div[@id="canvasGird0"]//table[@class="vxe-table--body"])[1]//tr[1]'
@@ -572,7 +572,7 @@ class TestCoveragePage:
         bef_text = [f'{resource}', f'{start}', f'{end}', f'{data_list}', f'{selClass}', f'{start};{end}', f'{data_list}', date.today().strftime("%Y/%m/%d"), f'{formatted_date}',
                     '2', f'{data_list}', f'{data_list}',  f'{DateDriver.username}']
         assert len(columns_text) == len(bef_text), f"长度不一致：actual={len(columns_text)}, expected={len(bef_text)}"
-        for i, (a, e) in enumerate(zip(columns_text, bef_text),start=1):
+        for i, (a, e) in enumerate(zip(columns_text, bef_text), start=1):
             if i == 8:
                 assert str(e) in str(a), f"第8项包含断言失败：'{e}' not in '{a}'"
             elif i == 9:

@@ -83,6 +83,10 @@ class Coverage(BasePage):
         return message.text
 
     def wait_for_loading_to_disappear(self, timeout=10):
+        WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
+        )
         sleep(1)
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
@@ -216,12 +220,12 @@ class Coverage(BasePage):
             self.enter_texts('//div[@id="luvfyssv-uxe2"]//input', num)
             self.enter_texts('//div[@id="6ofb26y9-tous"]//input', num)
 
-            sel = self.get_find_element_xpath('//div[@class="checkBoxComp position-absolute"]/label/span')
+            sel = self.get_find_element_xpath('//div[@id="x0rqme62-jg1z"]/label/span')
             if sel.get_attribute("class") == "ivu-checkbox":
                 self.click_button(
-                    '//div[@class="checkBoxComp position-absolute"]/label'
+                    '//div[@id="x0rqme62-jg1z"]/label'
                 )
-            selClass = self.get_find_element_xpath('//div[@class="checkBoxComp position-absolute"]/label/span').get_attribute("class")
+            selClass = self.get_find_element_xpath('//div[@id="x0rqme62-jg1z"]/label/span').get_attribute("class")
 
             self.click_button(
                 '//div[@class="vxe-modal--footer"]//span[text()="确定"]'

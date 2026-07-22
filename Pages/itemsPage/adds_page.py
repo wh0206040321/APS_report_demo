@@ -30,6 +30,10 @@ class AddsPages(BasePage):
 
     def wait_for_loading_to_disappear(self, timeout=10):
         WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
+        )
+        WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
                  "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
@@ -58,8 +62,9 @@ class AddsPages(BasePage):
             try:
                 self.click_button(xpath)
                 self.wait_for_loading_to_disappear()
+                sleep(0.5)
                 self.click_button(new_value)
-                sleep(0.2)
+                sleep(0.5)
                 self.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[last()]//span[text()="确定"]')
             except NoSuchElementException:
                 print(f"未找到元素: {xpath}")

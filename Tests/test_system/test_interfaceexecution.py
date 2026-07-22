@@ -67,7 +67,7 @@ class TestsInterfaceExecutionPage:
     def test_interfaceexecution_addfail(self, login_to_interfaceexecution):
         driver = login_to_interfaceexecution  # WebDriver 实例
         interface = ImpPage(driver)  # 用 driver 初始化 ImpPage
-        interface.click_button('//button[span[text()="接口执行"]]')
+        interface.click_button('//button[span[text()="串行执行"]]')
         message = interface.get_error_message()
         assert message == "请选择执行的接口"
         assert not interface.has_fail_message()
@@ -81,7 +81,7 @@ class TestsInterfaceExecutionPage:
         interface.wait_for_loading_to_disappear()
         interface.click_button('//table[@class="vxe-table--header"]//th[2]/div/span[@class="vxe-cell--title"]')
         sleep(1)
-        interface.click_button('//button[span[text()="接口执行"]]')
+        interface.click_button('//button[span[text()="串行执行"]]')
         wait.until(
             EC.invisibility_of_element_located(
                 (By.XPATH, '//div[@class="vxe-modal--wrapper type--modal is--animat lock--view is--resize is--mask is--visible is--active"]')

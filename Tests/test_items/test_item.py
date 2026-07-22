@@ -363,7 +363,9 @@ class TestItemPage:
             '(//label[text()="物料代码"])[1]/parent::div//input', f"{text}"
         )
         # 点击确定
-        item.click_confirm()
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        item.get_find_message()
+        item.wait_for_loading_to_disappear()
         # 定位表格内容
         itemdata = item.get_find_element_xpath(
             f'//tr[./td[2][.//span[contains(text(),"{name}")]]]/td[2]'
@@ -384,7 +386,9 @@ class TestItemPage:
         # 物料代码输入
         item.enter_texts('(//label[text()="物料代码"])[1]/parent::div//input', f"{name}")
         # 点击确定
-        item.click_confirm()
+        item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        item.get_find_message()
+        item.wait_for_loading_to_disappear()
         # 定位表格内容
         itemdata = item.get_find_element_xpath(
             f'//tr[./td[2][.//span[text()="{name}"]]]/td[2]'
@@ -1226,8 +1230,7 @@ class TestItemPage:
         item = ItemPage(driver)  # 用 driver 初始化 ItemPage
         item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
         ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
-        ele1 = item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
-            "innerText")
+
         item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         message = item.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
         item.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')

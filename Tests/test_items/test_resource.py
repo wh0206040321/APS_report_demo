@@ -990,7 +990,6 @@ class TestResourcePage:
         ]
         box_list = [
             '//label[text()="资源组"]/following-sibling::div//i',
-            '//label[text()="后资源"]/following-sibling::div//i',
         ]
         box_list.extend(spe_xpath_list)
         adds.batch_modify_dialog_box(box_list, value_bos)
@@ -1081,6 +1080,16 @@ class TestResourcePage:
         if checked.get_attribute("class") == "ivu-checkbox":
             checked.click()
         before_checked = resource.get_find_element_xpath('//label[text()="无效资源"]/following-sibling::div//label/span').get_attribute("class")
+
+        resource.click_button('//label[text()="后资源"]/following-sibling::div//i')
+        resource.click_button(
+            '(//div[@class="vxe-modal--body"]//table[@class="vxe-table--body"]//tr[1]/td[2])[2]/div/span')
+        resource.click_button(
+            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[2]//span[text()="确定"]')
+        sleep(1)
+        before_value = resource.get_find_element_xpath(
+            '//label[text()="后资源"]/following-sibling::div//input').get_attribute("value")
+
         all_value = text_list + box_input_list + code_input_list + select_input_list + num_list + time_xpath_list
         len_num = len(all_value)
         before_all_value = adds.batch_acquisition_input(all_value)
@@ -1107,6 +1116,8 @@ class TestResourcePage:
             '//label[text()="更新时间"]/following-sibling::div//input').get_attribute("value")
         after_checked = resource.get_find_element_xpath(
             '//label[text()="无效资源"]/following-sibling::div//label/span').get_attribute("class")
+        after_value = resource.get_find_element_xpath(
+            '//label[text()="后资源"]/following-sibling::div//input').get_attribute("value")
         today_str = date.today().strftime('%Y/%m/%d')
         resource.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         ele = resource.finds_elements(By.XPATH,
@@ -1120,7 +1131,7 @@ class TestResourcePage:
             resource.right_refresh('资源')
         logging.info(f"before_all_value: {before_all_value}, after_all_value: {after_all_value}")
         assert before_all_value == after_all_value and username == DateDriver().username and today_str in updatatime and int(
-            num) == (int(len_num) + 3) and before_checked == after_checked
+            num) == (int(len_num) + 4) and before_checked == after_checked and before_value == after_value
         assert all(before_all_value), "列表中存在为空或为假值的元素！"
         assert not resource.has_fail_message()
 

@@ -63,18 +63,27 @@ class PsiPage(BasePage):
 
     def enter_group_setting(self, name):
         self.click_button('//div[p[text()=" 标签: "]]//i')
-        ele = self.get_find_element_xpath('//span[text()="该分类的名字"]')
+        sleep(3)
+        self.click_button('//div[text()=" 高级 "]')
+        ele = self.get_find_element_xpath('//span[text()="绝对值函数"]')
         ActionChains(self.driver).double_click(ele).perform()
         self.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]//span[text()="确定"]')
 
         self.click_button('//div[p[text()=" 组化键: "]]//i')
-        ele = self.get_find_element_xpath('//span[text()="按品目归结"]')
+        sleep(3)
+        self.click_button('//div[text()=" 高级 "]')
+        ele = self.get_find_element_xpath('//span[text()="绝对值函数"]')
         ActionChains(self.driver).double_click(ele).perform()
         self.click_button(
             '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]//span[text()="确定"]')
 
-        self.click_button('//div[p[text()=" 显示空数据: "]]//i')
-        self.click_button('//li[text()="是"]')
+        self.click_button('//div[p[text()=" 排序式: "]]//i')
+        sleep(3)
+        self.click_button('//div[text()=" 高级 "]')
+        ele = self.get_find_element_xpath('//span[text()="绝对值函数"]')
+        ActionChains(self.driver).double_click(ele).perform()
+        self.click_button(
+            '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]//span[text()="确定"]')
 
         self.click_button('//div[@class="vxe-modal--box"]//i[@class="ivu-icon ivu-icon-md-add"]')
         self.enter_texts('//div[@class="vxe-modal--box"]//table[@class="vxe-table--body"]//tr/td[2]//input', name)
@@ -87,12 +96,14 @@ class PsiPage(BasePage):
         self.enter_texts('//div[label[text()="初始值"]]//input', name)
 
         self.click_button('//div[label[text()="文字颜色表达式"]]//i')
-        ele = self.get_find_element_xpath('//span[text()="第二个值比第一个值大的话就显示绿色，其它的话就显示红色"]')
+        sleep(3)
+        ele = self.get_find_element_xpath('//span[text()="绝对值函数"]')
         ActionChains(self.driver).double_click(ele).perform()
         self.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]//span[text()="确定"]')
 
         self.click_button('//div[label[text()="背景颜色表达式"]]//i')
-        ele = self.get_find_element_xpath('//span[text()="第一个值为0以上的话就显示绿色，其他的话就显示灰色"]')
+        sleep(3)
+        ele = self.get_find_element_xpath('//span[text()="绝对值函数"]')
         ActionChains(self.driver).double_click(ele).perform()
         self.click_button(
             '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]//span[text()="确定"]')
@@ -136,6 +147,10 @@ class PsiPage(BasePage):
 
     # 等待加载遮罩消失
     def wait_for_loading_to_disappear(self, timeout=10):
+        WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
+        )
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,

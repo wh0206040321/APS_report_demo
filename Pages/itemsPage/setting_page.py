@@ -65,6 +65,10 @@ class SettingPage(BasePage):
         sleep(1)
         try:
             WebDriverWait(self.driver, timeout).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
+            )
+            WebDriverWait(self.driver, timeout).until(
                 EC.invisibility_of_element_located(
                     (By.XPATH,
                      "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
@@ -275,7 +279,7 @@ class SettingPage(BasePage):
         sleep(3)
         ActionChains(self.driver).move_to_element(container).perform()
         # 2️⃣ 等待图标可见
-        delete_icon = WebDriverWait(self.driver, 5).until(
+        delete_icon = WebDriverWait(self.driver, 10).until(
             EC.visibility_of_element_located((
                 By.XPATH,
                 f'//div[@id="container"]//span[text()="{name}"]/ancestor::div[1]/div'

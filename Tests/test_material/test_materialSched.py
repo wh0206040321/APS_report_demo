@@ -68,10 +68,10 @@ class TestMaterialSchedPage:
         sched.click_add_schedbutton()  # 点击添加方案
 
         sched.click_name_ok()  # 点击确定
-        message = sched.get_error_message()
+        message = sched.get_error_messagetext()
         sched.click_button('(//button[span[text()="取消"]])[2]')
         # 检查元素是否包含子节点
-        assert message == "请输入"
+        assert message == "名称不能为空"
         assert not sched.has_fail_message()
 
     @allure.story("添加物控方案管理信息 只填写复制方案 不允许提交")
@@ -87,10 +87,10 @@ class TestMaterialSchedPage:
         sched.click_button('//div[label[text()="选择复制的方案"]]//ul[@class="ivu-select-dropdown-list"]/li[1]')
 
         sched.click_name_ok()  # 点击确定
-        message = sched.get_error_message()
+        message = sched.get_error_messagetext()
         sched.click_button('(//button[span[text()="取消"]])[2]')
         # 检查元素是否包含子节点
-        assert message == "请输入"
+        assert message == "名称不能为空"
         assert not sched.has_fail_message()
 
     @allure.story("添加物控方案管理信息 添加重复 不允许提交")

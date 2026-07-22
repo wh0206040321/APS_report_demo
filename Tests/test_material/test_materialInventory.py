@@ -425,7 +425,6 @@ class TestItemPage:
     @allure.story("新增多条数据")
     # @pytest.mark.run(order=1)
     def test_materialInventory_adds(self, login_to_item):
-        self.item.click_add_button()  # 检查点击添加
         # 输入框要修改的值
         text_str = "1测试数据1"
         date_str = "2025/07/25 00:00:00"
@@ -444,7 +443,6 @@ class TestItemPage:
                                        f'//table[@class="vxe-table--body"]//tr/td[7]//span[text()="{text_str}"]')
         assert len(ele) == 1
         sleep(2)
-        self.item.click_add_button()  # 检查点击添加
         # 输入框要修改的值
         text_str = "1测试数据2"
         date_str = "2025/07/23 00:00:00"

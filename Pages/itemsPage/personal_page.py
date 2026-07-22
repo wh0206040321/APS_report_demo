@@ -87,7 +87,7 @@ class PersonalPage(BasePage):
         # 确认密码修改
         self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
 
-    def wait_for_el_loading_mask(self, timeout=10):
+    def wait_for_el_loading_mask(self, timeout=60):
         sleep(1)
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located((By.CLASS_NAME, "el-loading-mask"))

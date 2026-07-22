@@ -63,6 +63,8 @@ class TestItemPage:
             '//div[span[text()=" 订单代码 "]]/following-sibling::div//input',
             '//div[span[text()=" 需求日期 "]]/following-sibling::div//input',
             '//div[span[text()=" 需求数量 "]]/following-sibling::div//input',
+            '//div[span[text()=" 未领料数量 "]]/following-sibling::div//input',
+            '//div[span[text()=" 已发料数量 "]]/following-sibling::div//input',
             '//div[span[text()=" 父项料号 "]]/following-sibling::div//i',
             '//div[span[text()=" 子项料号 "]]/following-sibling::div//i',
         ]
@@ -163,7 +165,7 @@ class TestItemPage:
                                            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:2], text_str)
         self.item.batch_modify_inputs([self.req_input_xpath_list[2]], date_str)
-        self.item.batch_modify_inputs([self.req_input_xpath_list[3]], '100')
+        self.item.batch_modify_inputs(self.req_input_xpath_list[3:6], '100')
 
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         self.item.get_find_message()
@@ -185,7 +187,7 @@ class TestItemPage:
                                            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:2], text_str)
         self.item.batch_modify_inputs([self.req_input_xpath_list[2]], date_str)
-        self.item.batch_modify_inputs([self.req_input_xpath_list[3]], '100')
+        self.item.batch_modify_inputs(self.req_input_xpath_list[3:6], '100')
         # 点击确定
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
@@ -230,7 +232,7 @@ class TestItemPage:
                                            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:2], text_str)
         self.item.batch_modify_inputs([self.req_input_xpath_list[2]], date_str)
-        self.item.batch_modify_inputs([self.req_input_xpath_list[3]], '100')
+        self.item.batch_modify_inputs(self.req_input_xpath_list[3:6], '100')
 
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         self.item.get_find_message()
@@ -442,7 +444,7 @@ class TestItemPage:
                                            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:2], text_str)
         self.item.batch_modify_inputs([self.req_input_xpath_list[2]], date_str)
-        self.item.batch_modify_inputs([self.req_input_xpath_list[3]], '100')
+        self.item.batch_modify_inputs(self.req_input_xpath_list[3:6], '100')
 
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         self.item.get_find_message()
@@ -462,7 +464,7 @@ class TestItemPage:
                                            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:2], text_str)
         self.item.batch_modify_inputs([self.req_input_xpath_list[2]], date_str)
-        self.item.batch_modify_inputs([self.req_input_xpath_list[3]], '100')
+        self.item.batch_modify_inputs(self.req_input_xpath_list[3:6], '100')
 
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         self.item.get_find_message()

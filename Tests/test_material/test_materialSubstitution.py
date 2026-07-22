@@ -117,6 +117,20 @@ class TestSMaterialSubstitutionPage:
         assert message == "新增成功！"
         assert not material.has_fail_message()
 
+    @allure.story("添加重复")
+    # @pytest.mark.run(order=1)
+    def test_materialsubstitution_addrepeat(self, login_to_materialsubstitution):
+        driver = login_to_materialsubstitution  # WebDriver 实例
+        material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
+        material.wait_for_loading_to_disappear()
+        material.add_material_substitution(num=1)
+        material.click_confirm()
+        message = material.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
+        material.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        material.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+        assert message == "记录已存在,请检查！"
+        assert not material.has_fail_message()
+
     @allure.story("添加成组替代成功")
     # @pytest.mark.run(order=1)
     def test_materialsubstitution_addgroup(self, login_to_materialsubstitution):
@@ -448,7 +462,7 @@ class TestSMaterialSubstitutionPage:
         material.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
         ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
         material.wait_for_loading_to_disappear()
-        sleep(1)
+        sleep(2)
         material.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
         material.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[8])[2]//input', '64')
         sleep(1)

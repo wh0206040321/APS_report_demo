@@ -66,6 +66,10 @@ class RolePage(BasePage):
         sleep(1)
 
     def wait_for_loading_to_disappear(self, timeout=30):
+        WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
+        )
         sleep(1)
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(

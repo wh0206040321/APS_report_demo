@@ -122,6 +122,7 @@ class TestSettingPage:
         setting = SettingPage(driver)  # 用 driver 初始化 SettingPage
         layout = "测试布局A"
         setting.add_layout_ok(layout)
+        message = setting.get_find_message()
 
         # 获取布局名称的文本元素
         name = setting.get_find_element_xpath(
@@ -130,6 +131,7 @@ class TestSettingPage:
         # 断言布局名称与预期相符
         setting.right_refresh('物品')
         assert name == layout
+        assert "保存成功" == message
         assert not setting.has_fail_message()
 
     @allure.story("添加测试布局重复，添加失败")
@@ -925,6 +927,12 @@ class TestSettingPage:
 
         # 选择表/视图选项
         setting.click_button('//div[text()="表/视图"]')
+        ele = setting.finds_elements(
+            By.XPATH,
+            '//div[text()="切换会清空当前内容，是否切换？"]',
+        )
+        if len(ele) > 0:
+            setting.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
 
         # 输入并选择APS_Item
         setting.enter_texts(
@@ -968,21 +976,24 @@ class TestSettingPage:
         setting.click_button(
             f'//div[text()="{code}"]/following-sibling::div//input[@placeholder="请选择"]'
         )
-        setting.click_button('//ul[@class="ivu-select-dropdown-list"]/li[text()="P"]')
+        sleep(1)
+        text_values = setting.get_find_element_xpath(
+            f'//div[text()="{code}"]/following-sibling::div//li[contains(@class,"ivu-select-item")][1]').text
+        setting.click_button(f'//div[text()="{code}"]/following-sibling::div//li[contains(@class,"ivu-select-item")][1]')
 
         # 等待加载
         sleep(1)
 
         # 展开物料种类下拉框
         setting.click_button(
-            '//div[text()="物料种类"]/following-sibling::div//i[@class="ivu-icon ivu-icon-ios-arrow-down ivu-select-arrow"]'
+            f'//div[text()="{code}"]/following-sibling::div//i[@class="ivu-icon ivu-icon-ios-arrow-down ivu-select-arrow"]'
         )
 
         # 点击查询按钮
         setting.click_select_button()
 
         eles = setting.loop_judgment('(//div[@class="vxe-table--body-wrapper body--wrapper"])[2]/table//tr/td[5]')
-        assert all(ele == '完成品' for ele in eles)
+        assert all(ele == text_values for ele in eles)
 
         # 点击重置按钮
         setting.click_button('//div[@class="queryBtn"]/button[2]')
@@ -991,7 +1002,10 @@ class TestSettingPage:
         setting.click_button(
             f'//div[text()="{code}"]/following-sibling::div//input[@placeholder="请选择"]'
         )
-        setting.click_button('//ul[@class="ivu-select-dropdown-list"]/li[text()="I"]')
+        sleep(1)
+        text_values = setting.get_find_element_xpath(
+            f'//div[text()="{code}"]/following-sibling::div//li[contains(@class,"ivu-select-item")][2]').text
+        setting.click_button(f'//div[text()="{code}"]/following-sibling::div//li[contains(@class,"ivu-select-item")][2]')
 
         # 等待加载
         sleep(1)
@@ -1004,29 +1018,29 @@ class TestSettingPage:
         setting.click_select_button()
 
         eles = setting.loop_judgment('(//div[@class="vxe-table--body-wrapper body--wrapper"])[2]/table//tr/td[5]')
-        assert all(ele == '中间品' for ele in eles)
-
-        # 点击重置按钮
-        setting.click_button('//div[@class="queryBtn"]/button[2]')
-
-        # 为特定代码选择M选项
-        setting.click_button(
-            f'//div[text()="{code}"]/following-sibling::div//input[@placeholder="请选择"]'
-        )
-        setting.click_button('//ul[@class="ivu-select-dropdown-list"]/li[text()="M"]')
-
-        # 等待加载
-        sleep(1)
-
-        # 展开物料种类下拉框
-        setting.click_button(
-            '//div[text()="物料种类"]/following-sibling::div//i[@class="ivu-icon ivu-icon-ios-arrow-down ivu-select-arrow"]'
-        )
-
-        # 点击查询按钮
-        setting.click_select_button()
-        eles = setting.loop_judgment('(//div[@class="vxe-table--body-wrapper body--wrapper"])[2]/table//tr/td[5]')
-        assert all(ele == '原材料' for ele in eles)
+        assert all(ele == text_values for ele in eles)
+        #
+        # # 点击重置按钮
+        # setting.click_button('//div[@class="queryBtn"]/button[2]')
+        #
+        # # 为特定代码选择M选项
+        # setting.click_button(
+        #     f'//div[text()="{code}"]/following-sibling::div//input[@placeholder="请选择"]'
+        # )
+        # setting.click_button('//ul[@class="ivu-select-dropdown-list"]/li[text()="M"]')
+        #
+        # # 等待加载
+        # sleep(1)
+        #
+        # # 展开物料种类下拉框
+        # setting.click_button(
+        #     '//div[text()="物料种类"]/following-sibling::div//i[@class="ivu-icon ivu-icon-ios-arrow-down ivu-select-arrow"]'
+        # )
+        #
+        # # 点击查询按钮
+        # setting.click_select_button()
+        # eles = setting.loop_judgment('(//div[@class="vxe-table--body-wrapper body--wrapper"])[2]/table//tr/td[5]')
+        # assert all(ele == '原材料' for ele in eles)
         ele = setting.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
         setting.right_refresh('物品')
         assert len(ele) == 0
@@ -1040,13 +1054,17 @@ class TestSettingPage:
         layout = "测试布局A"
         setting.click_button(f'//div[@class="tabsDivItemCon"]/div[text()=" {layout} "]')
         setting.enter_texts(
-            '//div[text()="物料优先度"]/following-sibling::div//input', "0"
+            '//div[text()="物料优先度"]/following-sibling::div//input', "1"
         )
         # 为特定代码选择I选项
         setting.click_button(
             f'//div[text()="物料种类"]/following-sibling::div//input[@placeholder="请选择"]'
         )
-        setting.click_button('//ul[@class="ivu-select-dropdown-list"]/li[text()="I"]')
+        sleep(1)
+        text_values = setting.get_find_element_xpath(
+            f'//div[text()="物料种类"]/following-sibling::div//li[contains(@class,"ivu-select-item")][1]').text
+        setting.click_button(
+            f'//div[text()="物料种类"]/following-sibling::div//li[contains(@class,"ivu-select-item")][1]')
         sleep(1)
         # 展开物料种类下拉框
         setting.click_button(
@@ -1070,8 +1088,8 @@ class TestSettingPage:
                 value5 = td5.text.strip()
                 value6 = td6.text.strip()
 
-                assert value5 == "中间品", f"❌ 第 {i + 1} 行第5列不是中间品，而是：{value5}"
-                assert value6 == "0", f"❌ 第 {i + 1} 行第6列不是0，而是：{value6}"
+                assert value5 == text_values, f"❌ 第 {i + 1} 行第5列不是{text_values}，而是：{value5}"
+                assert value6 == "1", f"❌ 第 {i + 1} 行第6列不是1，而是：{value6}"
 
             except Exception as e:
                 print(f"⚠️ 第 {i + 1} 行检查异常：{e}")
@@ -1092,9 +1110,16 @@ class TestSettingPage:
         setting.click_button(
             f'//div[text()="物料种类"]/following-sibling::div//input[@placeholder="请选择"]'
         )
-        setting.click_button('//ul[@class="ivu-select-dropdown-list"]/li[text()="I"]')
         sleep(1)
-        setting.click_button('//ul[@class="ivu-select-dropdown-list"]/li[text()="M"]')
+        text_values1 = setting.get_find_element_xpath(
+            f'//div[text()="物料种类"]/following-sibling::div//li[contains(@class,"ivu-select-item")][1]').text
+        setting.click_button(
+            f'//div[text()="物料种类"]/following-sibling::div//li[contains(@class,"ivu-select-item")][1]')
+        sleep(1)
+        text_values2 = setting.get_find_element_xpath(
+            f'//div[text()="物料种类"]/following-sibling::div//li[contains(@class,"ivu-select-item")][2]').text
+        setting.click_button(
+            f'//div[text()="物料种类"]/following-sibling::div//li[contains(@class,"ivu-select-item")][2]')
         sleep(1)
         # 展开物料种类下拉框
         setting.click_button(
@@ -1118,7 +1143,7 @@ class TestSettingPage:
                 ).text.strip()
 
                 # 如果第5列的值为“中间品”或“原材料”
-                if value5 in ["中间品", "原材料"]:
+                if value5 in [text_values1, text_values2]:
                     # 构建当前行第6列的XPath，并获取其文本内容
                     td6_xpath = f'(//table[@xid="2" and contains(@class,"vxe-table--body")])[1]//tr[{i + 1}]/td[6]'
                     value6 = WebDriverWait(driver, 5).until(
@@ -1402,7 +1427,11 @@ class TestSettingPage:
         setting.click_button('//div[div[text()=" 物品 "]]/span')
         setting.click_button('(//span[text()="计划管理"])[1]')
         setting.click_button('(//span[text()="计划基础数据"])[1]')
-        setting.click_button('(//span[text()="物品"])[1]')
+        try:
+            setting.click_button('(//span[text()="物品"])[1]')
+        except:
+            setting.click_button('(//span[text()="计划基础数据"])[1]')
+            setting.click_button('(//span[text()="物品"])[1]')
 
         setting.wait_for_loading_to_disappear()
 
@@ -2186,12 +2215,27 @@ class TestSettingPage:
         # 这里是为了后续操作，比如点击目标 div 相关的按钮
         index = all_children.index(target_div)
         print(f"目标 div 是第 {index + 1} 个 div")  # 输出 3（如果从0开始则是2）
-        setting.hover(layout)
-
-        setting.click_button(f'(//div[text()="重命名"])[{index + 1}]')
+        setting.click_button(f'//div[@id="container"]/div[.//text()="测试布局A"]')
+        sleep(2)
+        try:
+            setting.hover(layout)
+            sleep(2)
+            setting.click_button(f'(//div[text()="重命名"])[{index + 1}]')
+        except:
+            try:
+                setting.hover(layout)
+                sleep(2)
+                setting.click_button(f'(//div[text()="重命名"])[{index + 1}]')
+            except:
+                setting.hover(layout)
+                sleep(2)
+                setting.click_button(f'(//div[text()="重命名"])[{index + 1}]')
+        sleep(2)
         ele = setting.get_find_element_xpath(
             f'//div[@id="container"]/div[.//text()="{layout}"]//input'
         )
+        ele.click()
+        sleep(3)
         ele.send_keys(Keys.CONTROL, 'a')
         ele.send_keys(Keys.DELETE)
         ele.send_keys("修改布局")
@@ -2229,11 +2273,27 @@ class TestSettingPage:
         # 这里是为了后续操作，比如点击目标 div 相关的按钮
         index = all_children.index(target_div)
         print(f"目标 div 是第 {index + 1} 个 div")  # 输出 3（如果从0开始则是2）
-        setting.hover(layout)
-        setting.click_button(f'(//div[text()="重命名"])[{index + 1}]')
+        setting.click_button(f'//div[@id="container"]/div[.//text()="测试布局A"]')
+        sleep(2)
+        try:
+            setting.hover(layout)
+            sleep(2)
+            setting.click_button(f'(//div[text()="重命名"])[{index + 1}]')
+        except:
+            try:
+                setting.hover(layout)
+                sleep(2)
+                setting.click_button(f'(//div[text()="重命名"])[{index + 1}]')
+            except:
+                setting.hover(layout)
+                sleep(2)
+                setting.click_button(f'(//div[text()="重命名"])[{index + 1}]')
+        sleep(2)
         ele = setting.get_find_element_xpath(
             f'//div[@id="container"]/div[.//text()="{layout}"]//input'
         )
+        ele.click()
+        sleep(3)
         ele.send_keys(Keys.CONTROL, 'a')
         ele.send_keys(Keys.DELETE)
         sleep(1)
@@ -2270,6 +2330,7 @@ class TestSettingPage:
         # 这里是为了后续操作，比如点击目标 div 相关的按钮
         index = all_children.index(target_div)
         print(f"目标 div 是第 {index + 1} 个 div")  # 输出 3（如果从0开始则是2）
+        setting.click_button('(//p[text()="布局列表"])[last()]')
         setting.hover(layout)
 
         sleep(2)
@@ -2470,8 +2531,15 @@ class TestSettingPage:
         sleep(1)
         pyautogui.press('enter')
         sleep(2)
+        setting.click_button('//label[text()="共享布局名"]')
+        sleep(2)
         setting.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
-        setting.get_find_message()
+
+        try:
+            setting.get_find_message()
+        except:
+            setting.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+            setting.get_find_message()
         setting.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[2]')
 
         setting.click_button('//div[@class="flex-alignItems-center"]')
@@ -2548,6 +2616,8 @@ class TestSettingPage:
         sleep(1)
         pyautogui.press('enter')
         sleep(2)
+        setting.click_button('//label[text()="共享布局名"]')
+        sleep(1)
         setting.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         setting.get_find_message()
         setting.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[2]')

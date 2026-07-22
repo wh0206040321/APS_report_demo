@@ -196,7 +196,7 @@ class TestCalendarPage:
         message = calendar.get_error_message()
         calendar.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         calendar.right_refresh('生产日历')
-        assert message == "请先填写表单"
+        assert message == "请选择日期或者星期"
         assert not calendar.has_fail_message()
 
     @allure.story("数字文本框 只允许填写数字")
@@ -651,9 +651,9 @@ class TestCalendarPage:
 
         # 勾选框
         random_int = random.randint(1, 2)
-        sleep(1)
+        calendar.wait_for_loading_to_disappear()
         calendar.click_button(
-            '//span[@class="vxe-checkbox--icon iconfont icon-fuxuankuangdaiding"]'
+            '//table[@class="vxe-table--header"]//tr/th[2]//span[contains(@class,"vxe-cell--checkbox")]'
         )
         sleep(1)
         calendar.click_button(
@@ -802,6 +802,13 @@ class TestCalendarPage:
         name = calendar.get_find_element_xpath(
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
         ).get_attribute('innerText')
+        if name == '*':
+            for i in range(1, 10):
+                name = calendar.get_find_element_xpath(
+                    f'//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[{i}]//td[2]').get_attribute(
+                    'innerText')
+                if name != '*':
+                    break
         first_char = name[:1] if name else ""
         calendar.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//i')
         calendar.hover("符合开头")
@@ -823,6 +830,13 @@ class TestCalendarPage:
         name = calendar.get_find_element_xpath(
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
         ).get_attribute('innerText')
+        if name == '*':
+            for i in range(1, 10):
+                name = calendar.get_find_element_xpath(
+                    f'//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[{i}]//td[2]').get_attribute(
+                    'innerText')
+                if name != '*':
+                    break
         last_char = name[-1:] if name else ""
         calendar.click_button('//p[text()="资源"]/ancestor::div[2]/div[3]//i')
         calendar.hover("符合结尾")
@@ -987,6 +1001,7 @@ class TestCalendarPage:
     def test_calendar_ctrls(self, login_to_calendar):
         driver = login_to_calendar  # WebDriver 实例
         calendar = Calendar(driver)  # 用 driver 初始化 Calendar
+        calendar.click_flagdata()
         elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
                     '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]']
         calendar.click_button(elements[0])

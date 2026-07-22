@@ -82,6 +82,7 @@ class ChartPage(BasePage):
         """点击关闭页面."""
         self.click_button(f'//div[text()=" {before_name} "]')
         self.click_button(f'//div[div[text()=" {before_name} "]]/span')
+        sleep(1)
         self.click_button(f'(//span[text()="{name }"])[1]')
         self.wait_for_el_loading_mask()
         sleep(2)

@@ -111,6 +111,10 @@ class ChangeR(BasePage):
 
     def wait_for_loading_to_disappear(self, timeout=10):
         WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
+        )
+        WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(
                 (By.XPATH,
                  "(//div[contains(@class, 'vxe-loading') and contains(@class, 'vxe-table--loading') and contains(@class, 'is--visible')])[2]")
@@ -143,7 +147,7 @@ class ChangeR(BasePage):
         self.click_button('//div[@class="toolTabsDiv"]/div[2]/div[2]//i')
         self.click_button('//li[text()="添加新布局"]')
         self.wait_for_el_loading_mask()
-        sleep(2)
+        sleep(4)
         self.enter_texts(
             '//div[text()="当前布局:"]/following-sibling::div//input', f"{layout}"
         )
