@@ -1,8 +1,0 @@
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //table[@class="vxe-table--body"]//tr[1]/td[2]//span[text()="分批齐套"]
-[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[div[div[text()="订单齐套结果-分批齐套"]]]//button[span[text()="刷新"]]
-[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
-[32mINFO    [0m root:base_page.py:48 点击元素：By = xpath, Value = //div[div[text()="订单齐套结果-分批齐套"]]//i[@title="关闭"]
-[32mINFO    [0m root:base_page.py:57 ✅ 点击成功
-[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //i[@class="ivu-icon ivu-icon-ios-close-circle"]
-[32mINFO    [0m root:base_page.py:37 查找元素：xpath = //div[@class="ivu-modal-content"]//div[text()=" 对不起,在处理您的请求期间,产生了一个服务器内部错误! "]
