@@ -7,6 +7,7 @@ from datetime import datetime
 import cv2
 import numpy as np
 import mss
+import subprocess
 
 
 class VideoRecorder:
@@ -14,8 +15,8 @@ class VideoRecorder:
         self.recording = False
         self.thread = None
         self.output_path = None
-        self.frames = []
-        self.fps = 10  # 10帧/秒，足够看清操作过程
+        self.video_writer = None
+        self.fps = 10
         self.video_dir = os.path.abspath("report/videos")
         self.lock = threading.Lock()  # 添加线程锁，保证线程安全
 
@@ -43,64 +44,107 @@ class VideoRecorder:
         self.output_path = os.path.join(self.video_dir, f"{clean_name}_{timestamp}_{random_suffix}.mp4")
 
         self.recording = True
-        self.frames = []
-        self.thread = threading.Thread(target=self._record, daemon=True)
+        self.thread = threading.Thread(
+            target=self._record,
+            daemon=True
+        )
         self.thread.start()
         print(f"🎥 录屏已启动: {self.output_path}")
 
     def _record(self):
-        """录制循环 - 使用 MSS 高性能截图"""
-        max_duration = 120  # 最多录制120秒
+        """
+        录制循环 - MSS截图直接写入视频
+        """
+
+        max_duration = 120
         start_time = time.time()
         frame_interval = 1.0 / self.fps
 
         with mss.mss() as sct:
-            # 获取主显示器
+
             monitor = sct.monitors[1]
 
-            while self.recording and (time.time() - start_time) < max_duration:
-                try:
-                    # MSS 截图（比 PyAutoGUI 快 10 倍）
-                    screenshot = sct.grab(monitor)
-                    # 转换为 OpenCV 格式
-                    frame = np.array(screenshot)
-                    frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
+            # 获取第一帧，确定尺寸
+            screenshot = sct.grab(monitor)
 
-                    # 使用线程锁保证线程安全
+            frame = np.array(screenshot)
+
+            frame = cv2.cvtColor(
+                frame,
+                cv2.COLOR_BGRA2BGR
+            )
+
+            height, width = frame.shape[:2]
+
+            fourcc = cv2.VideoWriter_fourcc(
+                *'avc1'
+            )
+
+            self.video_writer = cv2.VideoWriter(
+                self.output_path,
+                fourcc,
+                self.fps,
+                (width, height)
+            )
+
+            frame_count = 0
+
+            while self.recording and (
+                    time.time() - start_time
+            ) < max_duration:
+
+                try:
+
+                    screenshot = sct.grab(monitor)
+
+                    frame = np.array(
+                        screenshot
+                    )
+
+                    frame = cv2.cvtColor(
+                        frame,
+                        cv2.COLOR_BGRA2BGR
+                    )
+
+                    # 直接写入视频
                     with self.lock:
-                        self.frames.append(frame)
+                        self.video_writer.write(frame)
+
+                    frame_count += 1
 
                     time.sleep(frame_interval)
+
+
                 except Exception as e:
-                    print(f"录制异常: {e}")
+                    print(
+                        f"录制异常: {e}"
+                    )
                     break
 
-        if len(self.frames) >= 5:
-            self._save_as_mp4()
-        else:
-            print(f"⚠️ 帧数不足 ({len(self.frames)} 帧)，放弃保存")
+            # 释放视频
+            if self.video_writer:
+                self.video_writer.release()
+                self.video_writer = None
 
-    def _save_as_mp4(self):
-        """将帧序列保存为 MP4"""
-        try:
-            height, width = self.frames[0].shape[:2]
+            file_size = (
+                    os.path.getsize(self.output_path)
+                    /
+                    1024
+                    /
+                    1024
+            )
 
-            fourcc = cv2.VideoWriter_fourcc(*'avc1')
-            video_writer = cv2.VideoWriter(self.output_path, fourcc, self.fps, (width, height))
+            print(
+                f"✅ 录屏完成: {self.output_path}"
+            )
 
-            # 写入视频时使用线程锁，确保没有并发问题
-            with self.lock:
-                for frame in self.frames:
-                    video_writer.write(frame)
+            print(
+                f"   帧数:{frame_count}"
+                f" 大小:{file_size:.2f}MB"
+            )
 
-            video_writer.release()
-
-            file_size = os.path.getsize(self.output_path) / (1024 * 1024)
-            print(f"✅ 录屏已保存: {self.output_path}")
-            print(f"   帧数: {len(self.frames)}, 时长: {len(self.frames) / self.fps:.1f}秒, 大小: {file_size:.2f}MB")
-
-        except Exception as e:
-            print(f"❌ 保存失败: {e}")
+            # 压缩
+            self._compress_video()
 
     def stop(self):
         """停止录屏"""
@@ -117,6 +161,68 @@ class VideoRecorder:
 
         # 返回视频路径
         return self.output_path
+
+    def _compress_video(self):
+        """
+        使用 ffmpeg 压缩视频
+        """
+
+        if not os.path.exists(self.output_path):
+            return
+
+        compress_path = self.output_path.replace(
+            ".mp4",
+            "_compress.mp4"
+        )
+
+        ffmpeg_path = r"D:\ffmpeg-8.1.2-essentials_build\bin\ffmpeg.exe"
+
+        command = [
+            ffmpeg_path,
+            "-i",
+            self.output_path,
+
+            # 视频编码
+            "-c:v",
+            "libx264",
+
+            # 压缩比例
+            "-crf",
+            "28",
+
+            # 编码速度
+            "-preset",
+            "fast",
+
+            compress_path,
+
+            "-y"
+        ]
+
+        try:
+            subprocess.run(
+                command,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
+
+            if os.path.exists(compress_path):
+                old_size = os.path.getsize(self.output_path) / 1024 / 1024
+                new_size = os.path.getsize(compress_path) / 1024 / 1024
+
+                print(
+                    f"🎬 视频压缩完成: {old_size:.2f}MB → {new_size:.2f}MB"
+                )
+
+                # 删除原视频
+                os.remove(self.output_path)
+
+                # 新视频替换旧路径
+                self.output_path = compress_path
+
+
+        except Exception as e:
+            print(f"❌ 视频压缩失败: {e}")
 
 
 video_recorder = VideoRecorder()

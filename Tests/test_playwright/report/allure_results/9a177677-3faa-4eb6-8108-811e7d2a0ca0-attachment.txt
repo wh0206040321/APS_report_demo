@@ -1,3 +1,0 @@
-[32mINFO    [0m httpx:_client.py:1025 HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
-[32mINFO    [0m root:driver_manager.py:56 🛑 已从实例池移除并关闭 driver：2385033547104
-[32mINFO    [0m root:driver_manager.py:56 🛑 已从实例池移除并关闭 driver：2385598197152

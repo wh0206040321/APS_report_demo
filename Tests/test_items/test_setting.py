@@ -2465,7 +2465,7 @@ class TestSettingPage:
         assert after_layout == []
         assert not setting.has_fail_message()
 
-    @allure.story("分享布局成功-分享范围用户组")
+    @allure.story("分享布局成功-分享范围角色组")
     # @pytest.mark.run(order=1)
     def test_setting_share_layout1(self, login_to_setting):
         driver = login_to_setting  # WebDriver 实例
@@ -2571,7 +2571,7 @@ class TestSettingPage:
         assert message == "新增成功！" and len(ele) == 1
         assert not setting.has_fail_message()
 
-    @allure.story("分享布局成功-分享范围角色")
+    @allure.story("分享布局成功-分享范围指定用户")
     # @pytest.mark.run(order=1)
     def test_setting_share_layout2(self, login_to_setting):
         driver = login_to_setting  # WebDriver 实例

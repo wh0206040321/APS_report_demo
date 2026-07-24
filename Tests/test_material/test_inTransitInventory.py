@@ -150,7 +150,7 @@ class TestItemPage:
             '//div[span[text()=" 物料编码 "]]/following-sibling::div//i',
             '//div[span[text()=" 供应商编号 "]]/following-sibling::div//i',
         ]
-        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:3], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
 
@@ -174,7 +174,7 @@ class TestItemPage:
             '//div[span[text()=" 物料编码 "]]/following-sibling::div//i',
             '//div[span[text()=" 供应商编号 "]]/following-sibling::div//i',
         ]
-        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:3], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
 
@@ -219,7 +219,7 @@ class TestItemPage:
             '//div[span[text()=" 物料编码 "]]/following-sibling::div//i',
             '//div[span[text()=" 供应商编号 "]]/following-sibling::div//i',
         ]
-        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:3], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
 
@@ -434,7 +434,7 @@ class TestItemPage:
             '//div[span[text()=" 物料编码 "]]/following-sibling::div//i',
             '//div[span[text()=" 供应商编号 "]]/following-sibling::div//i',
         ]
-        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:3], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
 
@@ -454,7 +454,7 @@ class TestItemPage:
             '//div[span[text()=" 物料编码 "]]/following-sibling::div//i',
             '//div[span[text()=" 供应商编号 "]]/following-sibling::div//i',
         ]
-        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:3], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
 
@@ -657,8 +657,6 @@ class TestItemPage:
     def test_inTransitInventory_ctrlIrepeat(self, login_to_item):
         self.item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
         ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
-        ele1 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
-            "innerText")
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         message = self.item.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText").strip()
         self.item.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')

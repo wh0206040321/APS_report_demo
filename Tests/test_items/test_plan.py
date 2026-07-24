@@ -360,12 +360,12 @@ class TestPlanPage:
         plan.click_button('//p[text()="消息内容"]/ancestor::div[2]/div[3]//i')
         plan.hover("包含")
         sleep(1)
-        plan.select_input('使用指令')
+        plan.select_input('分派')
         sleep(1)
         eles = plan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
         sleep(1)
         list_ = [ele.text for ele in eles]
-        assert all('使用指令' in text for text in list_)
+        assert all('分派' in text for text in list_)
 
         # 过滤条件查询，设置符合开头查询成功
         name = plan.get_find_element_xpath(

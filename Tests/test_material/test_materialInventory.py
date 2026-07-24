@@ -157,7 +157,7 @@ class TestItemPage:
         date_str = "2025/07/23 00:00:00"
         self.item.click_add_button()  # 检查点击添加
         sleep(1)
-        self.item.batch_modify_dialog_boxs(self.req_input_xpath_list[:3], '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+        self.item.batch_modify_dialog_boxs(self.req_input_xpath_list[:3], '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs([self.req_input_xpath_list[3]], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
 
@@ -178,7 +178,7 @@ class TestItemPage:
         self.item.click_add_button()  # 检查点击添加
         sleep(1)
         self.item.batch_modify_dialog_boxs(self.req_input_xpath_list[:3],
-                                           '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+                                           '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs([self.req_input_xpath_list[3]], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
 
@@ -221,7 +221,7 @@ class TestItemPage:
         self.item.click_add_button()  # 检查点击添加
         sleep(1)
         self.item.batch_modify_dialog_boxs(self.req_input_xpath_list[:3],
-                                           '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+                                           '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
         self.item.batch_modify_inputs([self.req_input_xpath_list[3]], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
 
@@ -270,7 +270,7 @@ class TestItemPage:
         # 点击修改按钮
         self.item.click_edi_button()
         self.item.batch_modify_dialog_boxs(self.req_input_xpath_list[:3],
-                                           '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+                                           '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
         self.item.batch_modify_inputs([self.req_input_xpath_list[3]], '1测试数据B')
         # 点击确定
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
@@ -432,7 +432,7 @@ class TestItemPage:
         self.item.click_add_button()  # 检查点击添加
         sleep(1)
         self.item.batch_modify_dialog_boxs(self.req_input_xpath_list[:3],
-                                           '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+                                           '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs([self.req_input_xpath_list[3]], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
 
@@ -450,7 +450,7 @@ class TestItemPage:
         self.item.click_add_button()  # 检查点击添加
         sleep(1)
         self.item.batch_modify_dialog_boxs(self.req_input_xpath_list[:3],
-                                           '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
+                                           '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
         self.item.batch_modify_inputs([self.req_input_xpath_list[3]], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
 
@@ -652,7 +652,7 @@ class TestItemPage:
     def test_materialInventory_ctrlIrepeat(self, login_to_item):
         self.item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
         ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
-        ele1 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
+        ele1 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]').get_attribute(
             "innerText")
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         message = self.item.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
@@ -666,11 +666,11 @@ class TestItemPage:
     def test_materialInventory_ctrlI(self, login_to_item):
         self.item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
         ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
-        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
-        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据添加')
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]//input', '1没有数据添加')
         sleep(1)
         ele1 = self.item.get_find_element_xpath(
-            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]//input').get_attribute(
             "value")
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         self.item.get_find_message()
@@ -685,10 +685,10 @@ class TestItemPage:
     def test_materialInventory_ctrlM(self, login_to_item):
         self.item.click_button('//table[@class="vxe-table--body"]//tr[1]//td[2]')
         ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('m').key_up(Keys.CONTROL).perform()
-        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
-        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改')
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]//input', '1没有数据修改')
         ele1 = self.item.get_find_element_xpath(
-            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input').get_attribute(
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]//input').get_attribute(
             "value")
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         self.item.get_find_message()
@@ -710,15 +710,15 @@ class TestItemPage:
         ActionChains(self.driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
         sleep(1)
         ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
-        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
-        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]//input', '1没有数据修改1')
-        self.item.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]')
-        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input', '1没有数据修改12')
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]//input', '1没有数据修改1')
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
+        self.item.enter_texts('(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]//input', '1没有数据修改12')
         sleep(1)
         ele1 = self.item.get_find_element_xpath(
-            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').text
+            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]').text
         ele2 = self.item.get_find_element_xpath(
-            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input').get_attribute("value")
+            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]//input').get_attribute("value")
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         self.item.get_find_message()
         self.item.select_input('物料代码', '1没有数据修改1')

@@ -89,7 +89,7 @@ class TestItemPage:
         self.item.click_add_button()
         self.item.click_button("//div[@id='rpfclioo-7p50']//i")
         sleep(2)
-        self.item.click_button('(//span[text()="钟锦鹏"])[1]')
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         sleep(1)
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
@@ -116,12 +116,12 @@ class TestItemPage:
         )
         self.item.click_button("//div[@id='rpfclioo-7p50']//i")
         sleep(2)
-        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1])[2]/td[2]')
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
 
         self.item.click_button("//div[@id='04m2qyfz-z28h']//i")
         sleep(2)
-        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1])[2]/td[2]')
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         ele1 = self.item.get_find_element_xpath(
             "//div[@id='rpfclioo-7p50']//input"
@@ -159,12 +159,12 @@ class TestItemPage:
         )
         self.item.click_button("//div[@id='rpfclioo-7p50']//i")
         sleep(2)
-        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1])[2]/td[2]')
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
 
         self.item.click_button("//div[@id='04m2qyfz-z28h']//i")
         sleep(2)
-        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1])[2]/td[2]')
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(3)
@@ -235,12 +235,12 @@ class TestItemPage:
         # 用户弹窗
         self.item.click_button("//div[@id='2pj1qda7-bju3']//i")
         self.item.wait_for_loading_to_disappear()
-        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1])[2]/td[2]')
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(2)
         self.item.click_button("//div[@id='kwy45no3-x5iq']//i")
         self.item.wait_for_loading_to_disappear()
-        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1])[2]/td[2]')
+        self.item.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         # 物料员弹窗
         # self.item.click_button("//div[@id='kwy45no3-x5iq']//i")
         # sleep(2)

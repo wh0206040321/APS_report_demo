@@ -162,7 +162,7 @@ class TestItemPage:
         self.item.click_add_button()  # 检查点击添加
         sleep(1)
         self.item.batch_modify_dialog_boxs(self.req_input_xpath_list[-2:],
-                                           '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+                                           '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:2], text_str)
         self.item.batch_modify_inputs([self.req_input_xpath_list[2]], date_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[3:6], '100')
@@ -184,7 +184,7 @@ class TestItemPage:
         self.item.click_add_button()  # 检查点击添加
         sleep(1)
         self.item.batch_modify_dialog_boxs(self.req_input_xpath_list[-2:],
-                                           '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+                                           '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:2], text_str)
         self.item.batch_modify_inputs([self.req_input_xpath_list[2]], date_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[3:6], '100')
@@ -229,7 +229,7 @@ class TestItemPage:
         self.item.click_add_button()  # 检查点击添加
         sleep(1)
         self.item.batch_modify_dialog_boxs(self.req_input_xpath_list[-2:],
-                                           '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+                                           '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:2], text_str)
         self.item.batch_modify_inputs([self.req_input_xpath_list[2]], date_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[3:6], '100')
@@ -433,7 +433,6 @@ class TestItemPage:
     @allure.story("新增多条数据")
     # @pytest.mark.run(order=1)
     def test_unpickedMaterialDetails_adds(self, login_to_item):
-        self.item.click_add_button()  # 检查点击添加
         # 输入框要修改的值
         text_str = "1测试数据1"
         date_str = "2025/07/25 00:00:00"
@@ -441,7 +440,7 @@ class TestItemPage:
         self.item.click_add_button()  # 检查点击添加
         sleep(1)
         self.item.batch_modify_dialog_boxs(self.req_input_xpath_list[-2:],
-                                           '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+                                           '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:2], text_str)
         self.item.batch_modify_inputs([self.req_input_xpath_list[2]], date_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[3:6], '100')
@@ -453,7 +452,6 @@ class TestItemPage:
                                        f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{text_str}"]')
         assert len(ele) == 1
         sleep(2)
-        self.item.click_add_button()  # 检查点击添加
         # 输入框要修改的值
         text_str = "1测试数据2"
         date_str = "2025/07/23 00:00:00"
@@ -461,7 +459,7 @@ class TestItemPage:
         self.item.click_add_button()  # 检查点击添加
         sleep(1)
         self.item.batch_modify_dialog_boxs(self.req_input_xpath_list[-2:],
-                                           '(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]')
+                                           '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:2], text_str)
         self.item.batch_modify_inputs([self.req_input_xpath_list[2]], date_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[3:6], '100')
@@ -665,8 +663,6 @@ class TestItemPage:
     def test_unpickedMaterialDetails_ctrlIrepeat(self, login_to_item):
         self.item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
         ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
-        ele1 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
-            "innerText")
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         message = self.item.get_find_element_xpath('//div[text()=" 记录已存在,请检查！ "]').get_attribute("innerText")
         self.item.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')

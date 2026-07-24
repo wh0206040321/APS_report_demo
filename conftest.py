@@ -309,7 +309,7 @@ def pytest_sessionfinish(session, exitstatus):
 
     allure_output_dir = Path("report/allure_report")
     docs_dir = Path("docs")
-    report_link = "https://wh0206040321.github.io/APS_report/"
+    report_link = "https://wh0206040321.github.io/APS_report_demo/"
 
     # 生成 Allure 静态报告
     os.system(f"allure generate report/allure_results -o {str(allure_output_dir)} --clean")
@@ -390,13 +390,12 @@ def pytest_sessionfinish(session, exitstatus):
         subprocess.run(["git", "commit", "-m", "自动更新 Allure 报告"], check=False)
         subprocess.run(["git", "commit", "--allow-empty", "-m", "强制触发 GitHub Pages 构建"], check=False)
 
-        result = subprocess.run(["git", "push", "origin", "main"], capture_output=True, text=True)
+        result = subprocess.run(["git", "push", "demo", "main"], capture_output=True, text=True)
         if result.returncode != 0:
             logging.warning(f"🚨 Git push 失败：{result.stderr}")
         else:
             logging.info("✅ Git push 成功")
-
-        logging.info("✅ Allure 报告已自动部署到 GitHub Pages")
+            logging.info("✅ Allure 报告已自动部署到 GitHub Pages")
 
     except Exception as e:
         logging.warning(f"🚨 GitHub Pages 部署失败：{e}")
