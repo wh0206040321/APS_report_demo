@@ -1,0 +1,4 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","7815","test_login_success","Tests.test_items","Mon Aug 10 17:26:48 SGT 2026","passed","Mon Aug 10 17:26:56 SGT 2026","TestLoginPage","test_login","",""
+"","13769","test_login_pafail","Tests.test_items","Mon Aug 10 17:26:28 SGT 2026","broken","Mon Aug 10 17:26:42 SGT 2026","TestLoginPage","test_login","",""
+"","3018","test_login_acfail","Tests.test_items","Mon Aug 10 17:26:00 SGT 2026","passed","Mon Aug 10 17:26:03 SGT 2026","TestLoginPage","test_login","",""
