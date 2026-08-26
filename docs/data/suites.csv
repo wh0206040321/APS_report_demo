@@ -1,4 +1,5 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","0","test_login_success","Tests.test_items","Wed Aug 26 09:28:08 SGT 2026","broken","Wed Aug 26 09:28:08 SGT 2026","TestLoginPage","test_login","",""
 "","0","test_login_pafail","Tests.test_items","Wed Aug 26 09:27:59 SGT 2026","broken","Wed Aug 26 09:27:59 SGT 2026","TestLoginPage","test_login","",""
-"","0","test_login_acfail","Tests.test_items","Wed Aug 26 09:27:49 SGT 2026","broken","Wed Aug 26 09:27:49 SGT 2026","TestLoginPage","test_login","",""
+"","0","test_login_success","Tests.test_items","Wed Aug 26 09:28:08 SGT 2026","broken","Wed Aug 26 09:28:08 SGT 2026","TestLoginPage","test_login","",""
+"","0","test_login_acfail","Tests.test_items","Wed Aug 26 09:29:46 SGT 2026","broken","Wed Aug 26 09:29:46 SGT 2026","TestLoginPage","test_login","",""
+"","0","test_login_pafail","","Wed Aug 26 09:29:55 SGT 2026","skipped","Wed Aug 26 09:29:55 SGT 2026","","","",""
