@@ -150,7 +150,7 @@ class TestItemPage:
             '//div[span[text()=" 物料编码 "]]/following-sibling::div//i',
             '//div[span[text()=" 供应商编号 "]]/following-sibling::div//i',
         ]
-        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
+        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:3], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
 
@@ -174,7 +174,7 @@ class TestItemPage:
             '//div[span[text()=" 物料编码 "]]/following-sibling::div//i',
             '//div[span[text()=" 供应商编号 "]]/following-sibling::div//i',
         ]
-        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
+        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:3], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
 
@@ -219,7 +219,7 @@ class TestItemPage:
             '//div[span[text()=" 物料编码 "]]/following-sibling::div//i',
             '//div[span[text()=" 供应商编号 "]]/following-sibling::div//i',
         ]
-        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
+        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:3], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
 
@@ -434,7 +434,7 @@ class TestItemPage:
             '//div[span[text()=" 物料编码 "]]/following-sibling::div//i',
             '//div[span[text()=" 供应商编号 "]]/following-sibling::div//i',
         ]
-        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
+        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:3], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
 
@@ -454,7 +454,7 @@ class TestItemPage:
             '//div[span[text()=" 物料编码 "]]/following-sibling::div//i',
             '//div[span[text()=" 供应商编号 "]]/following-sibling::div//i',
         ]
-        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
+        self.item.batch_modify_dialog_boxs(input_icon_list, '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs(self.req_input_xpath_list[:3], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
 

@@ -303,7 +303,7 @@ class TestSPlanDataPage:
         name = material.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]/td[6]').text
         material.click_button('//div[span[text()="产品编码:"]]//input[@placeholder="请选择"]')
         sleep(1)
-        material.click_button(f'//ul[@class="el-scrollbar__view el-select-dropdown__list"]//span[text()="{name}"]')
+        material.click_button(f'(//ul[@class="el-scrollbar__view el-select-dropdown__list"]//span[text()="{name}"])[last()]')
         material.click_select_button()
         eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[6]')
         sleep(1)
@@ -563,13 +563,13 @@ class TestSPlanDataPage:
         driver = login_to_materialplandata  # WebDriver 实例
         material = MaterialPlanData(driver)  # 用 driver 初始化 MaterialPlanData
         material.click_button('(//span[text()="订单分批齐套"])[1]')
-        name = material.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]/td[3]').text
+        name = material.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]/td[3]').get_attribute('innerText')
         material.click_button('//div[span[text()="需求来源:"]]//input[@placeholder="请选择"]')
-        material.click_button(f'//ul[@class="el-scrollbar__view el-select-dropdown__list"]//span[text()="{name}"]')
+        material.click_button(f'(//ul[@class="el-scrollbar__view el-select-dropdown__list"]//span[text()="{name}"])[last()]')
         material.click_select_button()
         eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
         sleep(1)
-        list_ = [ele.text for ele in eles]
+        list_ = [ele.get_attribute('innerText') for ele in eles]
         material.right_refresh('订单分批齐套')
         assert all(name == text for text in list_)
         assert not material.has_fail_message()
@@ -588,7 +588,7 @@ class TestSPlanDataPage:
             '//div[span[text()="订单列表:"]]//input[@placeholder="请选择"]').get_attribute("value")
         eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
-        list_ = [ele.text for ele in eles]
+        list_ = [ele.get_attribute('innerText') for ele in eles]
         material.right_refresh('订单分批齐套')
         assert all(name == text for text in list_)
         assert not material.has_fail_message()
@@ -628,7 +628,7 @@ class TestSPlanDataPage:
         sleep(1)
         eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
-        list_ = [ele.text for ele in eles]
+        list_ = [ele.get_attribute('innerText') for ele in eles]
         material.right_refresh('订单分批齐套')
         assert all(first_char in text for text in list_)
         assert not material.has_fail_message()
@@ -649,7 +649,7 @@ class TestSPlanDataPage:
         sleep(1)
         eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
-        list_ = [ele.text for ele in eles]
+        list_ = [ele.get_attribute('innerText') for ele in eles]
         material.right_refresh('订单分批齐套')
         assert all(str(item).startswith(first_char) for item in list_)
         assert not material.has_fail_message()
@@ -670,7 +670,7 @@ class TestSPlanDataPage:
         sleep(1)
         eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
-        list_ = [ele.text for ele in eles]
+        list_ = [ele.get_attribute('innerText') for ele in eles]
         material.right_refresh('订单分批齐套')
         assert all(str(item).endswith(last_char) for item in list_)
         assert not material.has_fail_message()
@@ -709,7 +709,7 @@ class TestSPlanDataPage:
         material.click_select_button()
         eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[3]')
         sleep(1)
-        list_ = [ele.text for ele in eles]
+        list_ = [ele.get_attribute('innerText') for ele in eles]
         material.right_refresh('物料供应明细')
         assert all(name == text for text in list_)
         assert not material.has_fail_message()
@@ -806,7 +806,7 @@ class TestSPlanDataPage:
         sleep(1)
         eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[4]')
         sleep(1)
-        list_ = [ele.text for ele in eles]
+        list_ = [ele.get_attribute('innerText') for ele in eles]
         material.right_refresh('物料供应明细')
         assert all(first_char in text for text in list_)
         assert not material.has_fail_message()
@@ -827,7 +827,7 @@ class TestSPlanDataPage:
         sleep(1)
         eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[4]')
         sleep(1)
-        list_ = [ele.text for ele in eles]
+        list_ = [ele.get_attribute('innerText') for ele in eles]
         material.right_refresh('物料供应明细')
         assert all(str(item).startswith(first_char) for item in list_)
         assert not material.has_fail_message()
@@ -848,7 +848,7 @@ class TestSPlanDataPage:
         sleep(1)
         eles = material.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[4]')
         sleep(1)
-        list_ = [ele.text for ele in eles]
+        list_ = [ele.get_attribute('innerText') for ele in eles]
         material.right_refresh('物料供应明细')
         assert all(str(item).endswith(last_char) for item in list_)
         assert not material.has_fail_message()

@@ -924,7 +924,9 @@ class TestCoveragePage:
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
         ).get_attribute('innerText')
         first_char = name[:1] if name else ""
+        sleep(2)
         coverage.click_button('//div[div[span[text()=" 资源代码"]]]/div[3]//i')
+        sleep(2)
         coverage.hover("包含")
         sleep(1)
         coverage.select_input(first_char)
@@ -945,7 +947,9 @@ class TestCoveragePage:
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
         ).get_attribute('innerText')
         first_char = name[:1] if name else ""
+        sleep(2)
         coverage.click_button('//div[div[span[text()=" 资源代码"]]]/div[3]//i')
+        sleep(2)
         coverage.hover("符合开头")
         sleep(1)
         coverage.select_input(first_char)
@@ -966,7 +970,9 @@ class TestCoveragePage:
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
         ).get_attribute('innerText')
         last_char = name[-1:] if name else ""
+        sleep(2)
         coverage.click_button('//div[div[span[text()=" 资源代码"]]]/div[3]//i')
+        sleep(2)
         coverage.hover("符合结尾")
         sleep(1)
         coverage.select_input(last_char)
@@ -986,11 +992,13 @@ class TestCoveragePage:
         name = "3"
         sleep(1)
         coverage.click_button('//div[div[span[text()=" 资源代码"]]]/div[3]//i')
+        sleep(2)
         coverage.hover("包含")
         sleep(1)
         coverage.select_input(name)
         sleep(1)
         coverage.click_button('//div[div[span[text()=" 资源代码"]]]/div[3]//i')
+        sleep(2)
         coverage.hover("清除所有筛选条件")
         sleep(1)
         ele = coverage.get_find_element_xpath('//div[div[span[text()=" 资源代码"]]]/div[3]//i').get_attribute(

@@ -121,6 +121,9 @@ class TestSInterfaceConfigurationPage:
         interfaceconfiguration.click_button('//div[label[text()="授权计划单元:"]]//input[@type="text"]')
         select_list = [{"select": '//div[label[text()="接口环境:"]]//span', "value": f'(//li[text()="测试"])[last()]'}]
         adds.batch_modify_select_input(select_list)
+        interfaceconfiguration.enter_texts('//table[.//div[text()="获取字段列表"]]//tr[1]/td[1]//input', '11')
+        interfaceconfiguration.enter_texts('//table[.//div[text()="获取字段列表"]]//tr[1]/td[2]//input', '11')
+        interfaceconfiguration.enter_texts('//table[.//div[text()="获取字段列表"]]//tr[1]/td[3]//input', '11')
 
         interfaceconfiguration.click_confirm()
         message = interfaceconfiguration.get_find_message()

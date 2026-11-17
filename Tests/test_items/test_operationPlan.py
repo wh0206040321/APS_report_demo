@@ -194,7 +194,7 @@ class TestOperationPlanPage:
         message = operationPlan.get_error_message()
         operationPlan.right_refresh('工作指示发布')
         # 检查元素是否包含子节点
-        assert message == "请选择时间段和资源"
+        assert message == "请选择时间段"
         assert not operationPlan.has_fail_message()
 
     @allure.story("不勾选资源选择时间段，点击查询 不允许查询")

@@ -289,7 +289,7 @@ def compare_file_counts(src: Path, dst: Path):
 
 
 def pytest_sessionfinish(session, exitstatus):
-    """pytest 会话结束时自动发送邮件报告，同时自动部署到 GitHub Pages"""
+    """pytest 会话结束时生成报告、发送邮件；有 Git 时再尝试部署 GitHub Pages"""
 
     # 处理最终失败列表：只包含那些重试后仍然失败的用例
     final_failures = []
@@ -302,17 +302,20 @@ def pytest_sessionfinish(session, exitstatus):
     global test_failures
     test_failures = final_failures
 
-    # 判断当前是否为 Git 仓库
-    if not Path(".git").exists():
-        logging.warning("⚠️ 当前目录不是 Git 仓库，跳过自动部署")
-        return
-
     allure_output_dir = Path("report/allure_report")
     docs_dir = Path("docs")
     report_link = "https://wh0206040321.github.io/APS_report_demo/"
 
-    # 生成 Allure 静态报告
-    os.system(f"allure generate report/allure_results -o {str(allure_output_dir)} --clean")
+    # 生成 Allure 静态报告（不依赖 Git）
+    allure_cmd = shutil.which("allure")
+    if allure_cmd:
+        ret = os.system(f'"{allure_cmd}" generate report/allure_results -o {str(allure_output_dir)} --clean')
+        if ret == 0:
+            logging.info(f"✅ Allure 报告已生成：{allure_output_dir.resolve()}")
+        else:
+            logging.warning("⚠️ Allure 报告生成失败，请检查 Java / Allure 是否安装正确")
+    else:
+        logging.warning("⚠️ 未找到 allure 命令，跳过报告生成。可手动执行: allure serve report/allure_results")
 
     # 构造 HTML 邮件内容
     if test_failures:
@@ -320,7 +323,7 @@ def pytest_sessionfinish(session, exitstatus):
         failure_count = len(test_failures)
         total_count = session.testscollected
         pass_count = total_count - failure_count
-        pass_rate = round((pass_count / total_count) * 100, 2)
+        pass_rate = round((pass_count / total_count) * 100, 2) if total_count else 0
         failure_items = "".join(f"<li>{name}</li>" for name in unique_failures)
         body = f"""
         <html>
@@ -353,20 +356,32 @@ def pytest_sessionfinish(session, exitstatus):
         """
         subject = "自动化测试测试环境全部通过"
 
-    # 发送 HTML 邮件
-    send_test_failure_email(
-        subject=subject,
-        body=body,
-        to_emails=["1121470915@qq.com"],
-        html=True
-    )
+    # 发送 HTML 邮件（不依赖 Git）
+    try:
+        send_test_failure_email(
+            subject=subject,
+            body=body,
+            to_emails=["1121470915@qq.com"],
+            html=True
+        )
+    except Exception as e:
+        logging.warning(f"⚠️ 发送邮件失败：{e}")
 
     # 清理残留浏览器实例
     cleanup_all_drivers()
     logging.info("✅ 所有残留浏览器已关闭")
 
+    # 没有 Git 仓库时，跳过 GitHub Pages 部署
+    if not Path(".git").exists():
+        logging.warning("⚠️ 当前目录不是 Git 仓库，跳过 GitHub Pages 自动部署")
+        return
+
     # 部署报告到 GitHub Pages
     try:
+        if not allure_output_dir.exists():
+            logging.warning("⚠️ Allure 报告目录不存在，跳过部署")
+            return
+
         if docs_dir.exists():
             shutil.rmtree(docs_dir)
             logging.info("🧹 已清空旧的 docs/ 目录")

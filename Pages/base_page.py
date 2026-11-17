@@ -191,6 +191,9 @@ class BasePage:
                 pass
 
             # AI 修复定位器
+            if not os.getenv("DEEPSEEK_API_KEY"):
+                logging.warning("未配置 DEEPSEEK_API_KEY，跳过 AI 修复")
+                raise e
             try:
                 logging.info("[AI Agent] find_element 失败 → AI 修复中…")
 
@@ -221,7 +224,7 @@ class BasePage:
             except Exception as ai_error:
                 logging.error(f"AI 修复失败：{ai_error}")
                 self._record_ai_event("fix", value, None, False, f"find_fix_fail: {ai_error}")
-                raise TimeoutException(f"定位失败（AI 也无法修复）：{value}")
+                raise e
 
     def finds_elements(self, by, value):
         """查找多个元素，并返回这些元素."""
@@ -237,6 +240,7 @@ class BasePage:
         最后兜底：视觉识别 + AI 修复定位器
         """
         element = None  # 初始化，供后续异常处理使用
+        last_error = None  # 保存最后一次 Selenium 异常
 
         for attempt in range(retries):
             try:
@@ -254,7 +258,8 @@ class BasePage:
                 logging.info("✅ 点击成功")
                 return
 
-            except ElementClickInterceptedException:
+            except ElementClickInterceptedException as e:
+                last_error = e
                 logging.warning("⚠️ 原生点击被拦截，尝试使用 JS 点击")
                 try:
                     self.driver.execute_script("arguments[0].click();", element)
@@ -265,17 +270,20 @@ class BasePage:
                     sleep(1)
                     continue
 
-            except StaleElementReferenceException:
+            except StaleElementReferenceException as e:
+                last_error = e
                 logging.warning(f"⚠️ 第 {attempt + 1} 次点击失败：元素过期，尝试重新定位")
                 sleep(1)
                 continue
 
-            except TimeoutException:
+            except TimeoutException as e:
+                last_error = e
                 logging.error(f"❌ 元素未在 {wait_time} 秒内变为可点击")
                 # 不立即抛出，先尝试兜底方案
                 break
 
             except Exception as e:
+                last_error = e
                 logging.warning(f"点击失败：{e}")
                 if attempt == retries - 1:
                     # 重试用完，准备进入兜底方案
@@ -295,6 +303,14 @@ class BasePage:
             pass
 
         # 第三层：AI 生成新定位器并再次点击
+        # 没有配置 API Key，跳过 AI
+        if not os.getenv("DEEPSEEK_API_KEY"):
+            logging.warning("未配置 DEEPSEEK_API_KEY，跳过 AI 修复")
+
+            if last_error is not None:
+                raise last_error
+
+            raise RuntimeError("点击失败，且未配置 AI 修复")
         try:
             print("[AI Agent] click 失败，交给 AI 修复定位器…")
 
@@ -363,6 +379,10 @@ class BasePage:
                     continue
 
                 # 第二阶段：重试失败后，交给 AI 修复定位器。
+                # 没有配置 API Key，跳过 AI，抛出原始输入异常
+                if not os.getenv("DEEPSEEK_API_KEY"):
+                    logging.warning("未配置 DEEPSEEK_API_KEY，跳过 AI 修复")
+                    raise e
                 print("[AI Agent] 输入失败，交给 AI 修复定位器…")
                 try:
                     failed_locator = value
@@ -395,7 +415,7 @@ class BasePage:
 
                 except Exception as ai_error:
                     self._record_ai_event("fix", value, None, False, f"input_fix_fail: {ai_error}")
-                    raise RuntimeError(f"输入失败（AI 也无法修复）：{ai_error}")
+                    raise e
 
         raise RuntimeError(f"输入失败：{by}={value} 多次尝试仍失败")
 

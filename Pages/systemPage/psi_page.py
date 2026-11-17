@@ -42,12 +42,18 @@ class PsiPage(BasePage):
             ele = self.get_find_element_xpath('//span[text()="工作输入指令或工作输出指令"]')
             ActionChains(self.driver).double_click(ele).perform()
             self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+            ele = self.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+            if len(ele) == 1:
+                self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         if method:
             self.click_button('(//div[p[text()="筛选方法: "]]//i)[2]')
             self.click_button('//div[text()=" 标准登录 "]')
             ele = self.get_find_element_xpath('//span[text()="分派结束"]')
             ActionChains(self.driver).double_click(ele).perform()
             self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+            ele = self.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+            if len(ele) == 1:
+                self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
 
     def click_data(self, num="", name=""):
         if num == 1:
@@ -68,7 +74,9 @@ class PsiPage(BasePage):
         ele = self.get_find_element_xpath('//span[text()="绝对值函数"]')
         ActionChains(self.driver).double_click(ele).perform()
         self.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]//span[text()="确定"]')
-
+        ele = self.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        if len(ele) == 1:
+            self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         self.click_button('//div[p[text()=" 组化键: "]]//i')
         sleep(3)
         self.click_button('//div[text()=" 高级 "]')
@@ -76,7 +84,9 @@ class PsiPage(BasePage):
         ActionChains(self.driver).double_click(ele).perform()
         self.click_button(
             '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]//span[text()="确定"]')
-
+        ele = self.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        if len(ele) == 1:
+            self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         self.click_button('//div[p[text()=" 排序式: "]]//i')
         sleep(3)
         self.click_button('//div[text()=" 高级 "]')
@@ -84,6 +94,9 @@ class PsiPage(BasePage):
         ActionChains(self.driver).double_click(ele).perform()
         self.click_button(
             '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]//span[text()="确定"]')
+        ele = self.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        if len(ele) == 1:
+            self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
 
         self.click_button('//div[@class="vxe-modal--box"]//i[@class="ivu-icon ivu-icon-md-add"]')
         self.enter_texts('//div[@class="vxe-modal--box"]//table[@class="vxe-table--body"]//tr/td[2]//input', name)
@@ -100,14 +113,18 @@ class PsiPage(BasePage):
         ele = self.get_find_element_xpath('//span[text()="绝对值函数"]')
         ActionChains(self.driver).double_click(ele).perform()
         self.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]//span[text()="确定"]')
-
+        ele = self.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        if len(ele) == 1:
+            self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         self.click_button('//div[label[text()="背景颜色表达式"]]//i')
         sleep(3)
         ele = self.get_find_element_xpath('//span[text()="绝对值函数"]')
         ActionChains(self.driver).double_click(ele).perform()
         self.click_button(
             '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]//span[text()="确定"]')
-
+        ele = self.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        if len(ele) == 1:
+            self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         self.click_button('//div[label[text()="限制0的数值"]]//i')
         self.click_button('//div[label[text()="限制0的数值"]]//ul/li[text()="是"]')
 
@@ -146,7 +163,7 @@ class PsiPage(BasePage):
         self.wait_for_loading_to_disappear()
 
     # 等待加载遮罩消失
-    def wait_for_loading_to_disappear(self, timeout=10):
+    def wait_for_loading_to_disappear(self, timeout=60):
         WebDriverWait(self.driver, timeout).until(
             EC.presence_of_element_located(
                 (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))

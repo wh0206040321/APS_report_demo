@@ -134,7 +134,7 @@ class TestImpPage:
         assert message == "请选择导入节点"
         assert not imp.has_fail_message()
 
-    @allure.story("设置导入方案勾选工序成功")
+    @allure.story("设置导入方案勾选客户成功")
     # @pytest.mark.run(order=1)
     def test_imp_ticksuccess1(self, login_to_imp):
         driver = login_to_imp  # WebDriver 实例
@@ -236,9 +236,9 @@ class TestImpPage:
         imp.get_find_message()
         imp.wait_for_el_loading_mask()
         eles1 = imp.finds_elements(By.XPATH,
-                                   f'//ul[@class="ivu-tree-children"]//span[@class="valueSpan" and text()="{kh}"]')
+                                   f'//span[text()="计划基础数据"]/ancestor::ul[@class="ivu-tree-children"][1]//span[@class="valueSpan" and text()="{kh}"]')
         eles2 = imp.finds_elements(By.XPATH,
-                                   f'//ul[@class="ivu-tree-children"]//span[@class="valueSpan" and text()="{gx}"]')
+                                   f'//span[text()="计划基础数据"]/ancestor::ul[@class="ivu-tree-children"][1]//span[@class="valueSpan" and text()="{gx}"]')
         eles = imp.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
         assert len(eles) == 0
         assert message == "保存成功" and len(eles1) == 0 and len(eles2) == 1
@@ -314,9 +314,9 @@ class TestImpPage:
         name = "1导入设置方案"
         copyname = '1同步导入1'
         imp.copy_(name=name, copy_name=copyname)
-        message = imp.get_find_message()
+        imp.get_find_message()
         imp.copy_(name=name, copy_name='1同步导入2')
-        message = imp.get_find_message()
+        imp.get_find_message()
         imp.copy_(name=name, copy_name='1同步导入3')
         message = imp.get_find_message()
         imp.click_button(
@@ -325,6 +325,23 @@ class TestImpPage:
         imp.click_button(
             '//div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//input[@class="ivu-select-input"]')
         assert message == '复制成功' and len(ele) == 2
+        assert not imp.has_fail_message()
+
+    @allure.story("点击导出模版不报错")
+    # @pytest.mark.run(order=1)
+    def test_imp_export(self, login_to_imp):
+        driver = login_to_imp  # WebDriver 实例
+        imp = ImpPage(driver)  # 用 driver 初始化 ImpPage
+        name = "1导入设置方案"
+        gx = "工序"
+        imp.click_button(
+            '//div[@class="flex-alignItems-center background-ffffff h-36px w-b-100 m-l-12 toolbar-container"]//input[@class="ivu-select-input"]')
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, f'//ul/li[text()="{name}"]'))).click()
+        sleep(1)
+        imp.click_button(f'//span[text()="计划基础数据"]/ancestor::ul[@class="ivu-tree-children"][1]//span[@class="valueSpan" and text()="{gx}"]')
+        imp.click_button('//button//span[text()="导出模板"]')
+        eles = imp.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
+        assert len(eles) == 0
         assert not imp.has_fail_message()
 
     @allure.story("删除方案成功")

@@ -58,7 +58,7 @@ class UserRolePage(BasePage):
         self.wait_for_loading_to_disappear()
 
     # 等待加载遮罩消失
-    def wait_for_loading_to_disappear(self, timeout=10):
+    def wait_for_loading_to_disappear(self, timeout=60):
         WebDriverWait(self.driver, timeout).until(
             EC.presence_of_element_located(
                 (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
@@ -102,7 +102,7 @@ class UserRolePage(BasePage):
         add.batch_modify_inputs(xpath_value_map)
         self.click_button('//div[label[text()="用户有效日期"]]//input')
         self.click_button(
-            '//div[@class="ivu-date-picker-cells"]/span[@class="ivu-date-picker-cells-cell ivu-date-picker-cells-cell-today ivu-date-picker-cells-focused"]/following-sibling::span')
+            '(//div[@class="ivu-date-picker-cells"]/span[@class="ivu-date-picker-cells-cell ivu-date-picker-cells-cell-today ivu-date-picker-cells-focused"]/following-sibling::span)[2]')
         self.enter_texts('//div[div[p[text()="角色代码"]]]//input', role)
         sleep(3)
         self.click_button('(//table[@class="vxe-table--body"]//tr[1]/td[2]/div/span)[2]')

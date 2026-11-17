@@ -3,7 +3,7 @@ from time import sleep
 
 import allure
 import pytest
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import WebDriverException, StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -12,6 +12,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from Pages.itemsPage.login_page import LoginPage
 from Pages.itemsPage.sched_page import SchedPage
+from Pages.systemPage.expression_page import ExpressionPage
 from Utils.data_driven import DateDriver
 from Utils.driver_manager import create_driver, safe_quit, capture_screenshot
 
@@ -82,9 +83,11 @@ class TestSchedPage:
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
 
         sched.click_add_schedbutton()  # 点击添加方案
+        sched.click_button('//div[label[text()="创建方式"]]//label[text()="复制方案"]')
         sched.click_button(
             '//label[text()="选择复制的方案"]/following-sibling::div/div'
         )  # 点击下拉框
+        sleep(1)
         sched.click_button('//li[text()="排产方案（工序级）"]')
 
         sched.click_name_ok()  # 点击确定
@@ -123,10 +126,12 @@ class TestSchedPage:
         sched.enter_texts(
             '//label[text()="名称"]/following-sibling::div//input', f"{name}"
         )
+        sched.click_button('//div[label[text()="创建方式"]]//label[text()="复制方案"]')
 
         sched.click_button(
             '//label[text()="选择复制的方案"]/following-sibling::div/div'
         )  # 点击下拉框
+        sleep(1)
         sched.click_button('//li[text()="排产方案（工序级）"]')
         sched.click_name_ok()  # 点击确定
         sched.click_save_button()  # 点击保存
@@ -142,11 +147,11 @@ class TestSchedPage:
         sel = sched.get_find_element_xpath(
             f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span'
         )
-        if "ivu-tree-arrow" in sel.get_attribute("class"):
+        if "ivu-tree-arrow-open" not in sel.get_attribute("class"):
             sched.click_button(f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span')
 
         addtext = sched.get_find_element_xpath(
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[last()]'
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]'
         ).get_attribute('innerText')
         addtext1 = sched.get_find_element_xpath(
             '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/span[2]'
@@ -164,8 +169,9 @@ class TestSchedPage:
         driver = login_to_sched  # WebDriver 实例
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
         # 选中为22的方案
+        name = '22'
         sched.click_button(
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="22"]'
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]'
         )
         sched.click_del_schedbutton()  # 点击删除
         sched.click_button('//div[@class="ivu-modal-confirm"]//span[text()="确定"]')
@@ -174,7 +180,7 @@ class TestSchedPage:
         sched.click_save_button()
         ele = driver.find_elements(
             By.XPATH,
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="22"]',
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]',
         )
         assert len(ele) == 0
         assert not sched.has_fail_message()
@@ -184,14 +190,14 @@ class TestSchedPage:
     def test_sched_addsuccess(self, login_to_sched):
         driver = login_to_sched  # WebDriver 实例
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
-
+        name = '33'
         sched.click_add_schedbutton()  # 点击添加方案
-        sched.enter_texts('//label[text()="名称"]/following-sibling::div//input', "33")
+        sched.enter_texts('//label[text()="名称"]/following-sibling::div//input', name)
         sched.click_name_ok()  # 点击确定
         sched.click_save_button()  # 点击保存
         sleep(1)
         addtext = sched.get_find_element_xpath(
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[last()]'
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]'
         ).get_attribute('innerText')
         addtext1 = sched.get_find_element_xpath(
             '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/span[2]'
@@ -211,7 +217,7 @@ class TestSchedPage:
 
         # 选中命令点击添加
         sched.click_button(
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[1]'
+            '//div[@class="command-select-list"]/div[1]'
         )
         sched.click_add_commandbutton()
         message = sched.get_error_message()
@@ -232,7 +238,7 @@ class TestSchedPage:
             '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/ul',
         )
         # 第一个命令 xpth
-        command = '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[1]'
+        command = '//div[@class="command-select-list"]/div[1]//span[last()]'
         sched.click_button(command)
         command_text = sched.get_find_element_xpath(command)
 
@@ -307,7 +313,7 @@ class TestSchedPage:
             '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/ul',
         )
         # 第一个命令 xpth
-        command = '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label'
+        command = '//div[@class="command-select-list"]/div/span[last()]'
         command_text = driver.find_elements(By.XPATH, command)
         command_text[0].click()
 
@@ -413,9 +419,10 @@ class TestSchedPage:
     def test_sched_delsched2(self, login_to_sched):
         driver = login_to_sched  # WebDriver 实例
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        name = '33'
         # 选中为33的方案
         sched.click_button(
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="33"]'
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]'
         )
         sched.click_del_schedbutton()  # 点击删除
         sched.click_button('//div[@class="ivu-modal-confirm"]//span[text()="确定"]')
@@ -424,9 +431,121 @@ class TestSchedPage:
         sched.click_save_button()
         ele = driver.find_elements(
             By.XPATH,
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="22"]',
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]',
         )
         assert len(ele) == 0
+        assert not sched.has_fail_message()
+
+    @allure.story("shift多选命令成功")
+    # @pytest.mark.run(order=1)
+    def test_sched_addshiftCommand(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        sched.click_add_schedbutton()  # 点击添加方案
+        name = "shiftCommand"
+        sched.enter_texts(
+            '//label[text()="名称"]/following-sibling::div//input', f"{name}"
+        )
+        sleep(1)
+        sched.click_name_ok()  # 点击确定
+        sleep(1)
+        sched.click_save_button()  # 点击保存
+        sleep(1)
+
+        element = driver.find_element(
+            By.XPATH, f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span'
+        )
+        driver.execute_script("arguments[0].scrollIntoView();", element)
+        sleep(2)
+        sched.click_button(
+            f'//span[text()="{name}"]/ancestor::span'
+        )
+        elements = ['//div[@class="command-select-list"]/div[1]//span[last()]',
+                    '//div[@class="command-select-list"]/div[6]//span[last()]']
+        sched.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = sched.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        sched.click_add_commandbutton()
+        sched.click_save_button()
+        sched.right_refresh_1('计划方案管理')
+
+        # 判断下拉框为打开还是关闭
+        sleep(1)
+        sel = sched.get_find_element_xpath(
+            f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span'
+        )
+        if "ivu-tree-arrow-open" not in sel.get_attribute("class"):
+            sched.click_button(f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span')
+
+        addtext = sched.get_find_element_xpath(
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]'
+        )
+        addtext1 = sched.get_find_element_xpath(
+            '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/span[2]'
+        )
+        addul = driver.find_elements(
+            By.XPATH,
+            '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/ul',
+        )
+        assert addtext.text == name and addtext1.text == name and len(addul) == 6
+        assert not sched.has_fail_message()
+
+    @allure.story("ctrl多选命令成功")
+    # @pytest.mark.run(order=1)
+    def test_sched_addctrlCommand(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        sched.click_add_schedbutton()  # 点击添加方案
+        name = "ctrlCommand"
+        sched.enter_texts(
+            '//label[text()="名称"]/following-sibling::div//input', f"{name}"
+        )
+        sleep(1)
+        sched.click_name_ok()  # 点击确定
+        sleep(1)
+        sched.click_save_button()  # 点击保存
+        sleep(1)
+
+        element = driver.find_element(
+            By.XPATH, f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span'
+        )
+        driver.execute_script("arguments[0].scrollIntoView();", element)
+        sleep(2)
+        sched.click_button(
+            f'//span[text()="{name}"]/ancestor::span'
+        )
+        elements = ['//div[@class="command-select-list"]/div[1]//span[last()]',
+                    '//div[@class="command-select-list"]/div[6]//span[last()]']
+        sched.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = sched.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        sched.click_add_commandbutton()
+        sched.click_save_button()
+        sched.right_refresh_1('计划方案管理')
+
+        # 判断下拉框为打开还是关闭
+        sleep(1)
+        sel = sched.get_find_element_xpath(
+            f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span'
+        )
+        if "ivu-tree-arrow-open" not in sel.get_attribute("class"):
+            sched.click_button(f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span')
+
+        addtext = sched.get_find_element_xpath(
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]'
+        )
+        addtext1 = sched.get_find_element_xpath(
+            '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/span[2]'
+        )
+        addul = driver.find_elements(
+            By.XPATH,
+            '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/ul',
+        )
+        assert addtext.text == name and addtext1.text == name and len(addul) == 2
         assert not sched.has_fail_message()
 
     @allure.story("添加复制测试方案成功")
@@ -440,11 +559,7 @@ class TestSchedPage:
         sched.enter_texts(
             '//label[text()="名称"]/following-sibling::div//input', f"{name}"
         )
-
-        sched.click_button(
-            '//label[text()="选择复制的方案"]/following-sibling::div/div'
-        )  # 点击下拉框
-        sched.click_button('//li[text()="排产方案(订单级)"]')
+        sched.click_button('//div[label[text()="创建方式"]]//label[text()="预设标准命令"]')
         sleep(1)
         sched.click_name_ok()  # 点击确定
         sleep(1)
@@ -461,11 +576,11 @@ class TestSchedPage:
         sel = sched.get_find_element_xpath(
             f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span'
         )
-        if "ivu-tree-arrow" in sel.get_attribute("class"):
+        if "ivu-tree-arrow-open" not in sel.get_attribute("class"):
             sched.click_button(f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span')
 
         addtext = sched.get_find_element_xpath(
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[last()]'
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]'
         )
         addtext1 = sched.get_find_element_xpath(
             '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/span[2]'
@@ -488,17 +603,17 @@ class TestSchedPage:
         sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
         sched.click_attribute_button()
         # 点击下拉框
-        sched.click_button('//div[text()="按分派规则顺序排列"]/following-sibling::div')
+        sched.click_button('//div[span[text()="按分派规则顺序排列"]]/following-sibling::div')
         sched.click_button(
-            '//div[text()="按分派规则顺序排列"]/following-sibling::div//ul[2]/li[2]'
+            '//div[span[text()="按分派规则顺序排列"]]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
         before_input = sched.get_find_element_xpath(
-            '//div[text()="按分派规则顺序排列"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="按分派规则顺序排列"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="按分派规则顺序排列"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="按分派规则顺序排列"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
         assert before_input == after_input == "是"
@@ -514,17 +629,17 @@ class TestSchedPage:
         sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
         sched.click_attribute_button()
         # 点击下拉框
-        sched.click_button('//div[text()="分割工作靠拢在一起"]/following-sibling::div')
+        sched.click_button('//div[span[text()="分割工作靠拢在一起"]]/following-sibling::div')
         sched.click_button(
-            '//div[text()="分割工作靠拢在一起"]/following-sibling::div//ul[2]/li[1]'
+            '//div[span[text()="分割工作靠拢在一起"]]/following-sibling::div//ul[2]/li[1]'
         )
         sleep(1)
         before_input = sched.get_find_element_xpath(
-            '//div[text()="分割工作靠拢在一起"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="分割工作靠拢在一起"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="分割工作靠拢在一起"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="分割工作靠拢在一起"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
         assert before_input == after_input == "是"
@@ -540,17 +655,17 @@ class TestSchedPage:
         sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
         sched.click_attribute_button()
         # 点击下拉框
-        sched.click_button('//div[text()="分派方法"]/following-sibling::div')
+        sched.click_button('//div[span[text()="分派方法"]]/following-sibling::div')
         sched.click_button(
-            '//div[text()="分派方法"]/following-sibling::div//ul[2]/li[2]'
+            '//div[span[text()="分派方法"]]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
         before_input = sched.get_find_element_xpath(
-            '//div[text()="分派方法"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="分派方法"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="分派方法"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="分派方法"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
         assert before_input == after_input == "无限能力"
@@ -566,17 +681,17 @@ class TestSchedPage:
         sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
         sched.click_attribute_button()
         # 点击下拉框
-        sched.click_button('//div[text()="分派方向"]/following-sibling::div')
+        sched.click_button('//div[span[text()="分派方向"]]/following-sibling::div')
         sched.click_button(
-            '//div[text()="分派方向"]/following-sibling::div//ul[2]/li[3]'
+            '//div[span[text()="分派方向"]]/following-sibling::div//ul[2]/li[3]'
         )
         sleep(1)
         before_input = sched.get_find_element_xpath(
-            '//div[text()="分派方向"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="分派方向"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="分派方向"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="分派方向"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
         assert before_input == after_input == "逆方向"
@@ -593,17 +708,20 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击对话框
         sched.click_button(
-            '//div[text()="分派规则"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+            '//div[span[text()="分派规则"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
         )
+        sleep(2)
+        sched.click_button('(//i[@class="ivu-icon ivu-icon-md-add"])[last()]')
+        sleep(2)
         ele = sched.get_find_element_xpath(
-            '((//div[text()="分派规则"])[3]/ancestor::div[1]/following-sibling::div[1]//input[@class="ivu-select-input"])[1]'
+            '(//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"])[1]'
         )
         ele.send_keys(Keys.CONTROL, "a")
         ele.send_keys(Keys.DELETE)
 
         ele = driver.find_elements(
             By.XPATH,
-            '(//div[text()="分派规则"])[3]/ancestor::div[1]/following-sibling::div[1]//input[@class="ivu-select-input"]',
+            '//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"]',
         )
         ele[0].click()
         sched.click_button('//li[text()="订单优先度"]')
@@ -615,11 +733,11 @@ class TestSchedPage:
         sleep(2)
         # 获取输入框数据
         before_input = sched.get_find_element_xpath(
-            '//div[text()="分派规则"]/following-sibling::div//p'
+            '//div[span[text()="分派规则"]]/following-sibling::div//p'
         ).text
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="分派规则"]/following-sibling::div//p'
+            '//div[span[text()="分派规则"]]/following-sibling::div//p'
         ).text
         sched.right_refresh('计划方案管理')
         assert (
@@ -640,17 +758,17 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击对话框
         sched.click_button(
-            '//div[text()="分派规则"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+            '//div[span[text()="分派规则"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
         )
         ele = sched.get_find_element_xpath(
-            '((//div[text()="分派规则"])[3]/ancestor::div[1]/following-sibling::div[1]//input[@class="ivu-select-input"])[1]'
+            '(//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"])[1]'
         )
         ele.send_keys(Keys.CONTROL, "a")
         ele.send_keys(Keys.DELETE)
 
         ele = driver.find_elements(
             By.XPATH,
-            '(//div[text()="分派规则"])[3]/ancestor::div[1]/following-sibling::div[1]//input[@class="ivu-select-input"]',
+            '//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"]',
         )
         ele[0].click()
         sched.click_button('//li[text()="订单优先度"]')
@@ -662,11 +780,11 @@ class TestSchedPage:
         sleep(2)
         # 获取输入框数据
         before_input = sched.get_find_element_xpath(
-            '//div[text()="分派规则"]/following-sibling::div//p'
+            '//div[span[text()="分派规则"]]/following-sibling::div//p'
         ).text
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="分派规则"]/following-sibling::div//p'
+            '//div[span[text()="分派规则"]]/following-sibling::div//p'
         ).text
         sched.right_refresh('计划方案管理')
         assert (
@@ -687,7 +805,7 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击对话框
         sched.click_button(
-            '//div[text()="分派规则"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+            '//div[span[text()="分派规则"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
         )
 
         # 点击添加
@@ -714,18 +832,18 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击下拉框
         sched.click_button(
-            '//div[text()="分派失败时(资源锁定制约)"]/following-sibling::div'
+            '//div[span[text()="分派失败时(资源锁定制约)"]]/following-sibling::div'
         )
         sched.click_button(
-            '//div[text()="分派失败时(资源锁定制约)"]/following-sibling::div//ul[2]/li[2]'
+            '//div[span[text()="分派失败时(资源锁定制约)"]]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
         before_input = sched.get_find_element_xpath(
-            '//div[text()="分派失败时(资源锁定制约)"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="分派失败时(资源锁定制约)"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="分派失败时(资源锁定制约)"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="分派失败时(资源锁定制约)"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
         assert before_input == after_input == '忽视制约'
@@ -742,18 +860,18 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击下拉框
         sched.click_button(
-            '//div[text()="分派失败时(最大移动时间制约)"]/following-sibling::div'
+            '//div[span[text()="分派失败时(最大移动时间制约)"]]/following-sibling::div'
         )
         sched.click_button(
-            '//div[text()="分派失败时(最大移动时间制约)"]/following-sibling::div//ul[2]/li[2]'
+            '//div[span[text()="分派失败时(最大移动时间制约)"]]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
         before_input = sched.get_find_element_xpath(
-            '//div[text()="分派失败时(最大移动时间制约)"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="分派失败时(最大移动时间制约)"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="分派失败时(最大移动时间制约)"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="分派失败时(最大移动时间制约)"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
         assert before_input == after_input == '忽视制约'
@@ -770,7 +888,7 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击对话框
         sched.click_button(
-            '//div[text()="分派停止条件式"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+            '//div[span[text()="分派停止条件式"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
         )
 
         # 点击添加
@@ -783,14 +901,17 @@ class TestSchedPage:
         actions.double_click(element).perform()
 
         sched.click_ok_button()
+        ele = sched.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        if len(ele) == 1:
+            sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         sleep(2)
         # 获取输入框数据
         before_input = sched.get_find_element_xpath(
-            '//div[text()="分派停止条件式"]/following-sibling::div//p'
+            '//div[span[text()="分派停止条件式"]]/following-sibling::div//p'
         ).text
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="分派停止条件式"]/following-sibling::div//p'
+            '//div[span[text()="分派停止条件式"]]/following-sibling::div//p'
         ).text
         sched.right_refresh('计划方案管理')
         assert "ME.PrevOperation[1].PrevOperation[1].IsAssigned!='0'&&ME.PrevOperation[1].PrevOperation[1].OperationMainRes=='A'" in before_input == after_input
@@ -806,17 +927,17 @@ class TestSchedPage:
         sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
         sched.click_attribute_button()
         # 点击下拉框
-        sched.click_button('//div[text()="分派资源"]/following-sibling::div')
+        sched.click_button('//div[span[text()="分派资源"]]/following-sibling::div')
         sched.click_button(
-            '//div[text()="分派资源"]/following-sibling::div//ul[2]/li[2]'
+            '//div[span[text()="分派资源"]]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
         before_input = sched.get_find_element_xpath(
-            '//div[text()="分派资源"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="分派资源"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="分派资源"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="分派资源"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
         assert before_input == after_input == '优先资源'
@@ -832,17 +953,17 @@ class TestSchedPage:
         sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
         sched.click_attribute_button()
         # 点击下拉框
-        sched.click_button('//div[text()="更新关联/补充订单"]/following-sibling::div')
+        sched.click_button('//div[span[text()="更新关联/补充订单"]]/following-sibling::div')
         sched.click_button(
-            '//div[text()="更新关联/补充订单"]/following-sibling::div//ul[2]/li[2]'
+            '//div[span[text()="更新关联/补充订单"]]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
         before_input = sched.get_find_element_xpath(
-            '//div[text()="更新关联/补充订单"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="更新关联/补充订单"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="更新关联/补充订单"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="更新关联/补充订单"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
         assert before_input == after_input == '是'
@@ -858,17 +979,17 @@ class TestSchedPage:
         sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
         sched.click_attribute_button()
         # 点击下拉框
-        sched.click_button('//div[text()="工作临时固定"]/following-sibling::div')
+        sched.click_button('//div[span[text()="工作临时固定"]]/following-sibling::div')
         sched.click_button(
-            '//div[text()="工作临时固定"]/following-sibling::div//ul[2]/li[2]'
+            '//div[span[text()="工作临时固定"]]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
         before_input = sched.get_find_element_xpath(
-            '//div[text()="工作临时固定"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="工作临时固定"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="工作临时固定"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="工作临时固定"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
         assert before_input == after_input == '分派结束工作'
@@ -885,18 +1006,18 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击下拉框
         sched.click_button(
-            '//div[text()="忽视未分派的前后工序的工作"]/following-sibling::div'
+            '//div[span[text()="忽视未分派的前后工序的工作"]]/following-sibling::div'
         )
         sched.click_button(
-            '//div[text()="忽视未分派的前后工序的工作"]/following-sibling::div//ul[2]/li[2]'
+            '//div[span[text()="忽视未分派的前后工序的工作"]]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
         before_input = sched.get_find_element_xpath(
-            '//div[text()="忽视未分派的前后工序的工作"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="忽视未分派的前后工序的工作"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="忽视未分派的前后工序的工作"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="忽视未分派的前后工序的工作"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
         assert before_input == after_input == '是'
@@ -912,17 +1033,17 @@ class TestSchedPage:
         sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
         sched.click_attribute_button()
         # 点击下拉框
-        sched.click_button('//div[text()="启用原料库存制约"]/following-sibling::div')
+        sched.click_button('//div[span[text()="启用原料库存制约"]]/following-sibling::div')
         sched.click_button(
-            '//div[text()="启用原料库存制约"]/following-sibling::div//ul[2]/li[2]'
+            '//div[span[text()="启用原料库存制约"]]/following-sibling::div//ul[2]/li[2]'
         )
         sleep(1)
         before_input = sched.get_find_element_xpath(
-            '//div[text()="启用原料库存制约"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="启用原料库存制约"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="启用原料库存制约"]/following-sibling::div//input/following-sibling::div/input'
+            '//div[span[text()="启用原料库存制约"]]/following-sibling::div//input/following-sibling::div/input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
         assert before_input == after_input == '是'
@@ -939,7 +1060,7 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击对话框
         sched.click_button(
-            '//div[text()="筛选工作"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+            '//div[span[text()="筛选工作"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
         )
 
         # 点击添加
@@ -951,14 +1072,17 @@ class TestSchedPage:
         actions.double_click(element).perform()
 
         sched.click_ok_button()
+        ele = sched.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        if len(ele) == 1:
+            sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         sleep(2)
         # 获取输入框数据
         before_input = sched.get_find_element_xpath(
-            '//div[text()="筛选工作"]/following-sibling::div//p'
+            '//div[span[text()="筛选工作"]]/following-sibling::div//p'
         ).text
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="筛选工作"]/following-sibling::div//p'
+            '//div[span[text()="筛选工作"]]/following-sibling::div//p'
         ).text
         sched.right_refresh('计划方案管理')
         assert before_input == after_input
@@ -976,7 +1100,7 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击对话框
         sched.click_button(
-            '//div[text()="筛选订单"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+            '//div[span[text()="筛选订单"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
         )
 
         # 点击添加
@@ -991,11 +1115,11 @@ class TestSchedPage:
         sleep(2)
         # 获取输入框数据
         before_input = sched.get_find_element_xpath(
-            '//div[text()="筛选订单"]/following-sibling::div//p'
+            '//div[span[text()="筛选订单"]]/following-sibling::div//p'
         ).text
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="筛选订单"]/following-sibling::div//p'
+            '//div[span[text()="筛选订单"]]/following-sibling::div//p'
         ).text
         sched.right_refresh('计划方案管理')
         assert before_input == after_input
@@ -1013,20 +1137,20 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击开关
         ele = sched.get_find_element_xpath(
-            '//div[text()="严格遵守后资源制约"]/following-sibling::div//span[1]'
+            '//div[span[text()="严格遵守后资源制约"]]/following-sibling::div//span[1]'
         )
         if ele.get_attribute("class") == "ivu-switch ivu-switch-default":
             sched.click_button(
-                '//div[text()="严格遵守后资源制约"]/following-sibling::div//span[1]'
+                '//div[span[text()="严格遵守后资源制约"]]/following-sibling::div//span[1]'
             )
         sleep(1)
         # 获取输入框数据
         before_class = sched.get_find_element_xpath(
-            '//div[text()="严格遵守后资源制约"]/following-sibling::div//span[1]'
+            '//div[span[text()="严格遵守后资源制约"]]/following-sibling::div//span[1]'
         ).get_attribute("class")
         sched.get_after_value(name)
         after_class = sched.get_find_element_xpath(
-            '//div[text()="严格遵守后资源制约"]/following-sibling::div//span[1]'
+            '//div[span[text()="严格遵守后资源制约"]]/following-sibling::div//span[1]'
         ).get_attribute("class")
         sched.right_refresh('计划方案管理')
         assert before_class == after_class
@@ -1047,23 +1171,23 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击开关
         ele = sched.get_find_element_xpath(
-            '//div[text()="严格遵守后资源制约"]/following-sibling::div//span[1]'
+            '//div[span[text()="严格遵守后资源制约"]]/following-sibling::div//span[1]'
         )
         if (
             ele.get_attribute("class")
             == "ivu-switch ivu-switch-checked ivu-switch-default"
         ):
             sched.click_button(
-                '//div[text()="严格遵守后资源制约"]/following-sibling::div//span[1]'
+                '//div[span[text()="严格遵守后资源制约"]]/following-sibling::div//span[1]'
             )
 
         # 获取输入框数据
         before_class = sched.get_find_element_xpath(
-            '//div[text()="严格遵守后资源制约"]/following-sibling::div//span[1]'
+            '//div[span[text()="严格遵守后资源制约"]]/following-sibling::div//span[1]'
         ).get_attribute("class")
         sched.get_after_value(name)
         after_class = sched.get_find_element_xpath(
-            '//div[text()="严格遵守后资源制约"]/following-sibling::div//span[1]'
+            '//div[span[text()="严格遵守后资源制约"]]/following-sibling::div//span[1]'
         ).get_attribute("class")
         sched.right_refresh('计划方案管理')
         assert before_class == after_class
@@ -1081,20 +1205,20 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击数字框
         ele = sched.get_find_element_xpath(
-            '//div[text()="制造效率"]/following-sibling::div//input'
+            '//div[span[text()="制造效率"]]/following-sibling::div//input'
         )
         ele.send_keys(Keys.CONTROL, "a")
         ele.send_keys(Keys.BACK_SPACE)
         sched.enter_texts(
-            '//div[text()="制造效率"]/following-sibling::div//input', "1aQ!~_-1+=0.8"
+            '//div[span[text()="制造效率"]]/following-sibling::div//input', "1aQ!~_-1+=0.8"
         )
         sleep(1)
         before_input = sched.get_find_element_xpath(
-            '//div[text()="制造效率"]/following-sibling::div//input'
+            '//div[span[text()="制造效率"]]/following-sibling::div//input'
         ).get_attribute("value")
         sched.get_after_value(name)
         after_input = sched.get_find_element_xpath(
-            '//div[text()="制造效率"]/following-sibling::div//input'
+            '//div[span[text()="制造效率"]]/following-sibling::div//input'
         ).get_attribute("value")
         sched.right_refresh('计划方案管理')
         assert before_input == after_input
@@ -1112,7 +1236,7 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击对话框
         sched.click_button(
-            '//div[text()="资源选择策略"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+            '//div[span[text()="资源选择策略"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
         )
 
         # 点击策略
@@ -1145,7 +1269,7 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击对话框
         sched.click_button(
-            '//div[text()="资源选择策略"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+            '//div[span[text()="资源选择策略"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
         )
 
         # 点击策略
@@ -1153,8 +1277,24 @@ class TestSchedPage:
         # 填写策略名称
         sleep(1)
         sched.enter_texts(
-            '(//p[text()=" 策略名称 "])[2]/following-sibling::div//input', "策略名称111"
+            '(//p[text()=" 策略名称 "])[1]/following-sibling::div//input', "策略名称111"
         )
+        sched.click_button('//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请选择"]')
+        sched.click_button('(//div[@class="flex-1 overflow-hidden"]//li[text()="负荷均衡化"])[last()]')
+        sched.enter_texts('(//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请输入数字"])[last()]', '100')
+        sched.click_button('(//div[@class="flex-1 overflow-hidden"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-add"])[last()]')
+        sleep(2)
+        sched.click_button('//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请选择"]')
+        sched.click_button('(//div[@class="flex-1 overflow-hidden"]//li[text()="后资源制约优先"])[last()]')
+        sched.enter_texts('(//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请输入数字"])[last()]', '200')
+
+        sched.click_button('(//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请输入数字"])[1]')
+        sched.click_button('(//div[@class="flex-1 overflow-hidden"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-close"])[last()]')
+        sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+
+        num = sched.get_find_element_xpath('(//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请输入数字"])[last()]').get_attribute("value")
+        assert num == "200"
+
         # 点击确认
         sched.click_button(
             '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[3]/button[1]'
@@ -1168,7 +1308,7 @@ class TestSchedPage:
         sleep(1)
         # 点击对话框
         sched.click_button(
-            '(//div[text()="资源选择策略"]/following-sibling::div)[2]//i'
+            '//div[span[text()="资源选择策略"]]/following-sibling::div//i'
         )
 
         after_text = sched.get_find_element_xpath(
@@ -1191,7 +1331,7 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击对话框
         sched.click_button(
-            '//div[text()="资源选择策略"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+            '//div[span[text()="资源选择策略"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
         )
 
         # 点击策略
@@ -1209,35 +1349,69 @@ class TestSchedPage:
         sched.click_button('//div[text()=" 策略名称222 "]')
 
         sched.click_button(
-            '(//input[@class="ivu-select-input" and @placeholder="请选择"])[1]'
+            '(//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请选择"])[1]'
         )
         sched.click_button('//li[text()="负荷均衡化"]')
-        sched.click_button('(//input[@placeholder="请输入数字"])[2]')
-        sched.enter_texts('(//input[@placeholder="请输入数字"])[2]', "1aQ!~_-1+=0.8")
+        sched.click_button('(//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请输入数字"])[1]')
+        sched.enter_texts('(//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请输入数字"])[1]', "1aQ!~_-1+=0.8")
 
         before_input_text = sched.get_find_element_xpath(
             '//div[@class="flex-1"]//input[@class="ivu-select-input"]'
         ).get_attribute("value")
         before_input_num = sched.get_find_element_xpath(
-            '(//input[@placeholder="请输入数字"])[2]'
+            '(//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请输入数字"])[1]'
         ).get_attribute("value")
+
+        sched.click_button(
+            '//div[@class="flex-1 overflow-hidden"]/following-sibling::div//button[@title="编辑"]')
+        message = sched.get_error_message()
+        assert message == "内部命令不允许修改"
+
+        sched.click_button(
+            '//div[@class="flex-1 overflow-hidden"]/following-sibling::div//button[@title="添加"]')
+        sched.wait_for_loading_to_disappear()
+        sched.click_button('(//div[text()=" 高级 "])[1]')
+        # 首先，定位到你想要双击的元素
+        element_to_double_click = driver.find_element(
+            By.XPATH, '//span[text()="绝对值函数"]'
+        )
+        # 创建一个 ActionChains 对象
+        actions = ActionChains(driver)
+        # 双击命令
+        actions.double_click(element_to_double_click).perform()
+        sched.click_button('//div[@class="vxe-modal--box" and .//div[text()="代码设计器"]]//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        sched.enter_texts('//div[@class="ivu-form-item" and  ./label[text()="名称"]]//input', '策略方案自定义11')
+        sched.click_button('//div[@class="vxe-modal--box" and  .//label[text()="名称"]]//span[text()="确定"]')
+        message = sched.get_find_message()
+        assert message == "保存成功"
+
+        sched.click_button(
+            '//div[@class="flex-1 overflow-hidden"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-add"]')
+        sched.click_button('//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请选择"]')
+        sched.click_button('(//div[@class="flex-1 overflow-hidden"]//li[text()="策略方案自定义11"])[2]')
+        sched.enter_texts('(//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请输入数字"])[2]', '200')
+
+        sched.click_button('(//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请输入数字"])[2]')
+        sched.click_button(
+            '//div[@class="flex-1 overflow-hidden"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-close"]')
+        sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
 
         sched.click_ok_button()
 
         input_after = sched.get_find_element_xpath(
-            '//div[text()="资源选择策略"]/following-sibling::div//p'
+            '//div[span[text()="资源选择策略"]]/following-sibling::div//p'
         ).text
         sched.get_after_value(name)
         # 点击对话框
         sched.click_button(
-            '(//div[text()="资源选择策略"]/following-sibling::div)[2]//i'
+            '//div[span[text()="资源选择策略"]]/following-sibling::div//i'
         )
         sched.click_button('//div[text()=" 策略名称222 "]')
         after_input_text = sched.get_find_element_xpath(
             '//div[@class="flex-1"]//input[@class="ivu-select-input"]'
         ).get_attribute("value")
         after_input_num = sched.get_find_element_xpath(
-            '(//input[@placeholder="请输入数字"])[2]'
+            '(//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请输入数字"])[1]'
         ).get_attribute("value")
         sched.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="取消"])[2]')
@@ -1261,7 +1435,7 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击对话框
         sched.click_button(
-            '//div[text()="资源选择策略"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+            '//div[span[text()="资源选择策略"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
         )
 
         # 点击策略
@@ -1275,7 +1449,7 @@ class TestSchedPage:
         sched.click_button(
             '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[3]/button[1]'
         )
-        message = sched.get_find_element_xpath('//div[@class="el-message el-message--error"]//p').get_attribute("innerText")
+        message = sched.get_error_message()
         sched.click_button(
             '(//div[@class="vxe-modal--footer"]//span[text()="取消"])[3]')
         sleep(1)
@@ -1283,6 +1457,40 @@ class TestSchedPage:
             '(//div[@class="vxe-modal--footer"]//span[text()="取消"])[2]')
         sched.right_refresh('计划方案管理')
         assert message == "不允许新增相同名称的策略"
+        assert not sched.has_fail_message()
+
+    @allure.story("属性设置-删除资源选择策略方案")
+    # @pytest.mark.run(order=1)
+    def test_sched_add_resourcedel(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        name = "排产方案(订单级)复制"
+        # 选择排产方案(订单级)复制方案
+        sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
+        sched.click_attribute_button()
+        # 点击对话框
+        sched.click_button(
+            '//div[span[text()="资源选择策略"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+        )
+        sched.click_button('//div[text()=" 策略名称222 "]')
+
+        # 点击策略
+        sched.click_button('(//i[@class="ivu-icon ivu-icon-md-close"])[2]')
+        sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        # 点击确认
+        sched.click_button(
+            '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
+        sleep(1)
+        sched.get_after_value(name)
+        sched.click_button(
+            '//div[span[text()="资源选择策略"]]/following-sibling::div//i'
+        )
+        v = sched.finds_elements(By.XPATH, '//div[text()=" 策略名称222 "]')
+        sched.click_button(
+            '(//div[@class="vxe-modal--footer"]//span[text()="取消"])[2]')
+        sleep(1)
+        sched.right_refresh('计划方案管理')
+        assert len(v) == 0
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-启用资源区间控制-关闭，制造时间调整控制-开启，启用事件控制为工作前")
@@ -1296,51 +1504,41 @@ class TestSchedPage:
         sched.click_attribute_button()
         # 点击开关
         ele1 = sched.get_find_element_xpath(
-            '//div[text()="启用资源区间控制"]/following-sibling::div//span[1]'
+            '//div[span[text()="启用资源区间控制"]]/following-sibling::div//span[1]'
         )
         ele2 = sched.get_find_element_xpath(
-            '//div[text()="制造时间调整控制"]/following-sibling::div//span[1]'
+            '//div[span[text()="制造时间调整控制"]]/following-sibling::div//span[1]'
         )
         if ele1.get_attribute("class") != "ivu-switch ivu-switch-default":
             sched.click_button(
-                '//div[text()="启用资源区间控制"]/following-sibling::div//span[1]'
+                '//div[span[text()="启用资源区间控制"]]/following-sibling::div//span[1]'
             )
         if ele2.get_attribute("class") == "ivu-switch ivu-switch-default":
             sched.click_button(
-                '//div[text()="制造时间调整控制"]/following-sibling::div//span[1]'
+                '//div[span[text()="制造时间调整控制"]]/following-sibling::div//span[1]'
             )
-        sched.click_button('//div[text()="启用事件控制"]/following-sibling::div')
-        sched.click_button(
-            '//div[text()="启用事件控制"]/following-sibling::div//ul[2]/li[2]'
-        )
+
         sleep(1)
         # 获取输入框数据
         before_class1 = sched.get_find_element_xpath(
-            '//div[text()="启用资源区间控制"]/following-sibling::div//span[1]'
+            '//div[span[text()="启用资源区间控制"]]/following-sibling::div//span[1]'
         ).get_attribute("class")
         before_class2 = sched.get_find_element_xpath(
-            '//div[text()="制造时间调整控制"]/following-sibling::div//span[1]'
+            '//div[span[text()="制造时间调整控制"]]/following-sibling::div//span[1]'
         ).get_attribute("class")
-        before_input = sched.get_find_element_xpath(
-            '//div[text()="启用事件控制"]/following-sibling::div//input/following-sibling::div/input'
-        ).get_attribute("value")
         sched.get_after_value(name)
         after_class1 = sched.get_find_element_xpath(
-            '//div[text()="启用资源区间控制"]/following-sibling::div//span[1]'
+            '//div[span[text()="启用资源区间控制"]]/following-sibling::div//span[1]'
         ).get_attribute("class")
         after_class2 = sched.get_find_element_xpath(
-            '//div[text()="制造时间调整控制"]/following-sibling::div//span[1]'
+            '//div[span[text()="制造时间调整控制"]]/following-sibling::div//span[1]'
         ).get_attribute("class")
-        after_input = sched.get_find_element_xpath(
-            '//div[text()="启用事件控制"]/following-sibling::div//input/following-sibling::div/input'
-        ).get_attribute("value")
         sched.right_refresh('计划方案管理')
-        assert before_class1 == after_class1 and before_class2 == after_class2 and before_input == after_input
+        assert before_class1 == after_class1 and before_class2 == after_class2
         assert (
                 before_class1
                 == "ivu-switch ivu-switch-default" and before_class2
                 == "ivu-switch ivu-switch-checked ivu-switch-default"
-                and before_input == "工作前"
         )
         assert not sched.has_fail_message()
 
@@ -1358,10 +1556,10 @@ class TestSchedPage:
         sched.click_property_editing('分派后工作属性编辑')
         sched.get_after_value(name)
         after_input1 = sched.get_find_element_xpath(
-            '//div[text()="分派前工作属性编辑"]/following-sibling::div//p'
+            '//div[span[text()="分派前工作属性编辑"]]/following-sibling::div//p'
         ).text
         after_input2 = sched.get_find_element_xpath(
-            '//div[text()="分派前工作属性编辑"]/following-sibling::div//p'
+            '//div[span[text()="分派后工作属性编辑"]]/following-sibling::div//p'
         ).text
 
         sched.right_refresh('计划方案管理')
@@ -1380,7 +1578,7 @@ class TestSchedPage:
         sched.click_time_sched()
         # 点击分派开始时间对话框
         sched.click_button(
-            '//div[text()="分派开始时间"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
+            '//div[span[text()="分派开始时间"]]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
         )
         sched.click_button('//div[text()=" 标准登录 "]')
         ele = sched.get_find_element_xpath(
@@ -1390,14 +1588,17 @@ class TestSchedPage:
         action.double_click(ele).perform()
         sleep(1)
         sched.click_ok_button()
+        ele = sched.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        if len(ele) == 1:
+            sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         sleep(2)
         before_div_text = sched.get_find_element_xpath(
-            '//div[text()="分派开始时间"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
+            '//div[span[text()="分派开始时间"]]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
         ).text
         sched.get_after_value(name)
         sched.click_time_sched()
         after_div_text = sched.get_find_element_xpath(
-            '//div[text()="分派开始时间"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
+            '//div[span[text()="分派开始时间"]]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
         ).get_attribute("innerText")
         sched.right_refresh('计划方案管理')
         assert "Min(ME.Command_OperationList,TARGET.Work_StartTime)" in before_div_text == after_div_text
@@ -1415,7 +1616,7 @@ class TestSchedPage:
         sched.click_time_sched()
         # 点击分派开始时间对话框
         sched.click_button(
-            '//div[text()="分派结束时间"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
+            '//div[span[text()="分派结束时间"]]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
         )
         sched.click_button('//div[text()=" 标准登录 "]')
         ele = sched.get_find_element_xpath(
@@ -1425,14 +1626,17 @@ class TestSchedPage:
         action.double_click(ele).perform()
 
         sched.click_ok_button()
+        ele = sched.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        if len(ele) == 1:
+            sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         sleep(2)
         before_div_text = sched.get_find_element_xpath(
-            '//div[text()="分派结束时间"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
+            '//div[span[text()="分派结束时间"]]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
         ).text
         sched.get_after_value(name)
         sched.click_time_sched()
         after_div_text = sched.get_find_element_xpath(
-            '//div[text()="分派结束时间"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
+            '//div[span[text()="分派结束时间"]]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
         ).get_attribute("innerText")
         sched.right_refresh('计划方案管理')
         assert "Max(ME.Command_OperationList,TARGET.Work_EndTime)+1d" in before_div_text == after_div_text
@@ -1450,7 +1654,7 @@ class TestSchedPage:
         sched.click_time_sched()
         # 点击分派开始时间对话框
         sched.click_button(
-            '//div[text()="用户指定最早开始时刻"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
+            '//div[span[text()="用户指定最早开始时刻"]]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
         )
         sched.click_button('//div[text()=" 标准登录 "]')
         ele = sched.get_find_element_xpath(
@@ -1460,14 +1664,17 @@ class TestSchedPage:
         action.double_click(ele).perform()
 
         sched.click_ok_button()
+        ele = sched.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        if len(ele) == 1:
+            sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         sleep(2)
         before_div_text = sched.get_find_element_xpath(
-            '//div[text()="用户指定最早开始时刻"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
+            '//div[span[text()="用户指定最早开始时刻"]]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
         ).text
         sched.get_after_value(name)
         sched.click_time_sched()
         after_div_text = sched.get_find_element_xpath(
-            '//div[text()="用户指定最早开始时刻"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
+            '//div[span[text()="用户指定最早开始时刻"]]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
         ).get_attribute("innerText")
         sched.right_refresh('计划方案管理')
         assert "ME.Parent.Work_StartTime+5h" in before_div_text == after_div_text
@@ -1485,7 +1692,7 @@ class TestSchedPage:
         sched.click_time_sched()
         # 点击分派开始时间对话框
         sched.click_button(
-            '//div[text()="用户指定最迟结束时刻"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
+            '//div[span[text()="用户指定最迟结束时刻"]]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
         )
         sched.click_button('//div[text()=" 标准登录 "]')
         ele = sched.get_find_element_xpath(
@@ -1495,14 +1702,17 @@ class TestSchedPage:
         action.double_click(ele).perform()
 
         sched.click_ok_button()
+        ele = sched.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        if len(ele) == 1:
+            sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         sleep(2)
         before_div_text = sched.get_find_element_xpath(
-            '//div[text()="用户指定最迟结束时刻"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
+            '//div[span[text()="用户指定最迟结束时刻"]]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
         ).text
         sched.get_after_value(name)
         sched.click_time_sched()
         after_div_text = sched.get_find_element_xpath(
-            '//div[text()="用户指定最迟结束时刻"]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
+            '//div[span[text()="用户指定最迟结束时刻"]]/following-sibling::div//div[@class="w-b-100 h-100 flex-alignItems-center cursor-pointer"]'
         ).get_attribute("innerText")
         sched.right_refresh('计划方案管理')
         assert "ME.Parent.Work_StartTime+5h" in before_div_text == after_div_text
@@ -1535,7 +1745,12 @@ class TestSchedPage:
         ]
         ele = sched.finds_elements(By.XPATH, f'//label[text()="{name[0]}"]')
         if len(ele) == 0:
-            sched.add_copy_sched(name)
+            sched.click_add_schedbutton()
+            sched.enter_texts('//label[text()="名称"]/following-sibling::div//input', name[0])
+            sched.click_button('//div[label[text()="创建方式"]]//label[text()="预设标准命令"]')
+            sleep(1)
+            sched.click_name_ok()  # 点击确定
+            sched.click_save_button()  # 点击保存
         sched.right_refresh_1('计划方案管理')
         ele = sched.get_find_element_xpath(
             '//span[text()="计划方案库"]/ancestor::span/preceding-sibling::span'
@@ -1546,8 +1761,9 @@ class TestSchedPage:
             )
         sleep(1)
         sched.click_button(f'//span[@class="ivu-tree-title"][span[text()="{name[0]}"]]')
-        sched.click_button('//div[p[text()=" 内部命令 "]]/div//label[text()="属性编辑"]')
+        sched.click_button('//div[@class="command-select-list"]/div/span[text()="属性编辑"]')
         sched.click_add_commandbutton()
+        sleep(2)
 
         ele = sched.get_find_element_xpath(
             f'//span[text()="{name[0]}"]/ancestor::span/preceding-sibling::span'
@@ -1560,16 +1776,38 @@ class TestSchedPage:
         sched.click_attribute_button()
         tabs = ['订单属性  ', '工作属性  ', '资源属性  ', '品目属性  ']  # None表示当前页
 
-        for tab in tabs:
+        for index, tab in enumerate(tabs, start=1):
+            logging.info(f"\n========== 第 {index} 次：{tab.strip()} ==========")
             sched.click_button(f'//li[text()="{tab}"]')
+            sleep(3)
             # 执行添加日历操作
             sched.click_button('//div[p[text()="对象属性设置"]]//i[@class="ivu-icon ivu-icon-md-add"]')
             sched.click_button('//div[p[text()="对象属性设置"]]//i[contains(@class,"ivu-input-icon")]')
             sched.wait_for_loading_to_disappear()
-            element = sched.get_find_element_xpath('//span[text()="添加覆盖日历。"]')
-            ActionChains(driver).double_click(element).perform()
+            xpath = '//span[normalize-space(.)="添加覆盖日历。"]'
+
+            elements = driver.find_elements(By.XPATH, xpath)
+            logging.info(f"目标元素数量：{len(elements)}")
+
+            try:
+                sleep(2)
+                element = sched.get_find_element_xpath(xpath)
+                logging.info("元素查找成功")
+
+                # 在双击前检查元素是否已经失效
+                logging.info(f"元素文本：{element.text}")
+                logging.info(f"元素是否可见：{element.is_displayed()}")
+
+                ActionChains(driver).double_click(element).perform()
+                logging.info("双击成功")
+            except StaleElementReferenceException:
+                logging.info(f"第 {index} 次在双击前后出现元素失效")
+                raise
             sleep(1)
             sched.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
+            ele = sched.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+            if len(ele) == 1:
+                sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
 
         sched.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sched.click_save_button()
@@ -1598,9 +1836,9 @@ class TestSchedPage:
         if len(ele) == 0:
             sched.add_copy_sched(name)
         sched.click_button(f'//span[@class="ivu-tree-title"][span[text()="{name[0]}"]]')
-        sched.click_button('//div[p[text()=" 内部命令 "]]/div//label[text()="删除数据"]')
+        sched.click_button('//div[@class="command-select-list"]/div/span[text()="删除数据"]')
         sched.click_add_commandbutton()
-
+        sleep(2)
         ele = sched.get_find_element_xpath(
             f'//span[text()="{name[0]}"]/ancestor::span/preceding-sibling::span'
         ).get_attribute('class')
@@ -1610,6 +1848,7 @@ class TestSchedPage:
             )
         sched.click_button(f'//span[span[text()="{name[0]}"]]/parent::li//ul//span[text()="删除数据"]')
         sched.click_attribute_button()
+        sleep(2)
         sched.click_button('(//i[@class="ivu-icon ivu-icon-md-add"])[last()]')
 
         sched.click_button('//div[@class="flex-1 overflow-hidden"]//input[@class="ivu-select-input"]')
@@ -1621,6 +1860,9 @@ class TestSchedPage:
         ActionChains(driver).double_click(element).perform()
         sleep(1)
         sched.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
+        ele = sched.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        if len(ele) == 1:
+            sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         sleep(2)
         input_value = sched.get_find_element_xpath('//div[@class="flex-1 overflow-hidden"]//input[@placeholder="请输入"]').get_attribute("value")
 
@@ -1652,8 +1894,9 @@ class TestSchedPage:
         if len(ele) == 0:
             sched.add_copy_sched(name)
         sched.click_button(f'//span[@class="ivu-tree-title"][span[text()="{name[0]}"]]')
-        sched.click_button('//div[p[text()=" 内部命令 "]]/div//label[text()="执行存储过程"]')
+        sched.click_button('//div[@class="command-select-list"]/div/span[text()="执行存储过程"]')
         sched.click_add_commandbutton()
+        sleep(2)
 
         ele = sched.get_find_element_xpath(
             f'//span[text()="{name[0]}"]/ancestor::span/preceding-sibling::span'
@@ -1688,10 +1931,15 @@ class TestSchedPage:
         for i in range(7, 10):
             sched.click_button(f'//table[@class="vxe-table--body"]//tr[{i}]/td[3]//i')
             sched.wait_for_loading_to_disappear()
+            sleep(1)
             element = sched.get_find_element_xpath('//span[text()="添加覆盖日历。"]')
             ActionChains(driver).double_click(element).perform()
             sleep(1)
             sched.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
+            ele = sched.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+            sleep(1)
+            if len(ele) == 1:
+                sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         sched.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sched.click_save_button()
         ele = sched.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
@@ -1703,11 +1951,32 @@ class TestSchedPage:
     def test_sched_delsched3(self, login_to_sched):
         driver = login_to_sched  # WebDriver 实例
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
-        name = ["排产方案(订单级)复制", '方案属性设置点击不报错']
-        sched.del_all_sched(name)
-        ele = driver.find_elements(
-            By.XPATH,
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="22"]',
-        )
-        assert len(ele) == 0
+        names = ["排产方案(订单级)复制", "方案属性设置点击不报错", "shiftCommand", "ctrlCommand"]
+        sched.del_all_sched(names)
+
+        xpath = '(//div[contains(@class,"ivu-radio-group-button")])[1]/label'
+        remaining = driver.find_elements(By.XPATH, xpath)
+
+        assert not any(ele.text in names for ele in remaining), "测试方案未删除成功"
         assert not sched.has_fail_message()
+
+    @allure.story("删除表达式方案")
+    # @pytest.mark.run(order=1)
+    def test_sched_delsched4(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        expression = ExpressionPage(driver)
+        list_ = ["系统管理", "系统设置", "表达式管理"]
+        for v in list_:
+            expression.click_button(f'(//span[text()="{v}"])[1]')
+
+        value = ['策略方案自定义11']
+        expression.del_all(xpath='//div[div[p[text()="名称"]]]//input', value=value)
+        ele = expression.get_find_element_xpath('//div[div[p[text()="名称"]]]//input')
+        ele.send_keys(Keys.CONTROL, "a")
+        ele.send_keys(Keys.DELETE)
+        itemdata = [
+            driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
+            for v in value[:1]
+        ]
+        assert all(len(elements) == 0 for elements in itemdata)
+        assert not expression.has_fail_message()

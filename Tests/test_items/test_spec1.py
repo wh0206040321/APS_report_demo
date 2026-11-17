@@ -180,7 +180,11 @@ class TestSpecPage:
         driver = login_to_spec1  # WebDriver 实例
         spec = Spec1Page(driver)  # 用 driver 初始化 Spec1Page
         name = "111"
-        spec.add_spec_data(name)
+        spec.click_add_button()  # 检查点击添加
+        # 输入代码
+        spec.enter_texts('(//label[text()="代码"])[1]/parent::div//input', name)
+        spec.enter_texts('(//label[text()="名称"])[1]/parent::div//input', name)
+        spec.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         # 获取重复弹窗文字
         error_popup = spec.get_find_element_xpath(
             '//div[text()=" 记录已存在,请检查！ "]'

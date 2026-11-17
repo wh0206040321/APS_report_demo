@@ -72,7 +72,7 @@ class ResourcePage(BasePage):
         )
         return message.text
 
-    def wait_for_loading_to_disappear(self, timeout=10):
+    def wait_for_loading_to_disappear(self, timeout=60):
         sleep(1)
         WebDriverWait(self.driver, timeout).until(
             EC.presence_of_element_located(

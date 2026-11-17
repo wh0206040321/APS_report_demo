@@ -81,10 +81,11 @@ class TestMaterialSchedPage:
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
 
         sched.click_add_schedbutton()  # 点击添加方案
+        sched.click_button('//div[label[text()="创建方式"]]//label[text()="复制方案"]')
         sched.click_button(
             '//label[text()="选择复制的方案"]/following-sibling::div/div'
         )  # 点击下拉框
-        sched.click_button('//div[label[text()="选择复制的方案"]]//ul[@class="ivu-select-dropdown-list"]/li[1]')
+        sched.click_button('//div[@class="ivu-select-dropdown ivu-select-dropdown-transfer"]/ul[2]/li[1]')
 
         sched.click_name_ok()  # 点击确定
         message = sched.get_error_messagetext()
@@ -130,7 +131,7 @@ class TestMaterialSchedPage:
         sched.enter_texts(
             '//label[text()="名称"]/following-sibling::div//input', f"{name}"
         )
-
+        sched.click_button('//div[label[text()="创建方式"]]//label[text()="复制方案"]')
         sched.click_button(
             '//label[text()="选择复制的方案"]/following-sibling::div/div'
         )  # 点击下拉框
@@ -153,7 +154,7 @@ class TestMaterialSchedPage:
             sched.click_button(f'//span[span[text()="{name}"]]/preceding-sibling::span')
 
         addtext = sched.get_find_element_xpath(
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[last()]'
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]'
         )
         addtext1 = sched.get_find_element_xpath(
             '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/span[2]'
@@ -171,8 +172,9 @@ class TestMaterialSchedPage:
         driver = login_to_materialSched  # WebDriver 实例
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
         # 选中为22的方案
+        name = '22'
         sched.click_button(
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="22"]'
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]'
         )
         sched.click_del_schedbutton()  # 点击删除
         sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
@@ -181,7 +183,7 @@ class TestMaterialSchedPage:
         sched.click_save_button()
         ele = sched.finds_elements(
             By.XPATH,
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="22"]',
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]',
         )
         assert len(ele) == 0
         assert not sched.has_fail_message()
@@ -191,14 +193,14 @@ class TestMaterialSchedPage:
     def test_materialsched_addsuccess(self, login_to_materialSched):
         driver = login_to_materialSched  # WebDriver 实例
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
-
+        name = "33"
         sched.click_add_schedbutton()  # 点击添加方案
-        sched.enter_texts('//label[text()="名称"]/following-sibling::div//input', "33")
+        sched.enter_texts('//label[text()="名称"]/following-sibling::div//input', name)
         sched.click_name_ok()  # 点击确定
         sched.click_save_button()  # 点击保存
         sleep(1)
         addtext = sched.get_find_element_xpath(
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[last()]'
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]'
         ).get_attribute('innerText')
         addtext1 = sched.get_find_element_xpath(
             '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/span[2]'
@@ -219,7 +221,7 @@ class TestMaterialSchedPage:
 
         # 选中命令点击添加
         sched.click_button(
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[1]'
+            '//div[@class="command-select-list"]/div[1]'
         )
         ele = sched.get_find_element_xpath('//button[i[@class="ivu-icon ivu-icon-md-add"]]')
         sleep(1)
@@ -238,7 +240,7 @@ class TestMaterialSchedPage:
             '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/ul',
         )
         # 第一个命令 xpth
-        command = '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[1]'
+        command = '//div[@class="command-select-list"]/div[1]//span[last()]'
         sched.click_button(command)
         command_text = sched.get_find_element_xpath(command)
 
@@ -313,7 +315,7 @@ class TestMaterialSchedPage:
             '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/ul',
         )
         # 第一个命令 xpth
-        command = '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label'
+        command = '//div[@class="command-select-list"]/div/span[last()]'
         command_text = driver.find_elements(By.XPATH, command)
         command_text[0].click()
 
@@ -419,10 +421,10 @@ class TestMaterialSchedPage:
     def test_materialsched_delsched2(self, login_to_materialSched):
         driver = login_to_materialSched  # WebDriver 实例
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
-
+        name = '33'
         # 选中为33的方案
         sched.click_button(
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="33"]'
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]'
         )
         sched.click_del_schedbutton()  # 点击删除
         sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
@@ -431,10 +433,122 @@ class TestMaterialSchedPage:
         sched.click_save_button()
         ele = driver.find_elements(
             By.XPATH,
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="22"]',
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]',
         )
         sched.right_refresh_1('物控方案管理')
         assert len(ele) == 0
+        assert not sched.has_fail_message()
+
+    @allure.story("shift多选命令成功")
+    # @pytest.mark.run(order=1)
+    def test_materialsched_addshiftCommand(self, login_to_materialSched):
+        driver = login_to_materialSched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        sched.click_add_schedbutton()  # 点击添加方案
+        name = "shiftCommand"
+        sched.enter_texts(
+            '//label[text()="名称"]/following-sibling::div//input', f"{name}"
+        )
+        sleep(1)
+        sched.click_name_ok()  # 点击确定
+        sleep(1)
+        sched.click_save_button()  # 点击保存
+        sleep(1)
+
+        element = driver.find_element(
+            By.XPATH, f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span'
+        )
+        driver.execute_script("arguments[0].scrollIntoView();", element)
+        sleep(2)
+        sched.click_button(
+            f'//span[text()="{name}"]/ancestor::span'
+        )
+        elements = ['//div[@class="command-select-list"]/div[1]//span[last()]',
+                    '//div[@class="command-select-list"]/div[6]//span[last()]']
+        sched.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = sched.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.SHIFT).click(cell2).key_up(Keys.SHIFT).perform()
+        sleep(1)
+        sched.click_add_commandbutton()
+        sched.click_save_button()
+        sched.right_refresh_1('物控方案管理')
+
+        # 判断下拉框为打开还是关闭
+        sleep(1)
+        sel = sched.get_find_element_xpath(
+            f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span'
+        )
+        if "ivu-tree-arrow-open" not in sel.get_attribute("class"):
+            sched.click_button(f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span')
+
+        addtext = sched.get_find_element_xpath(
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]'
+        )
+        addtext1 = sched.get_find_element_xpath(
+            '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/span[2]'
+        )
+        addul = driver.find_elements(
+            By.XPATH,
+            '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/ul',
+        )
+        assert addtext.text == name and addtext1.text == name and len(addul) == 6
+        assert not sched.has_fail_message()
+
+    @allure.story("ctrl多选命令成功")
+    # @pytest.mark.run(order=1)
+    def test_materialsched_addctrlCommand(self, login_to_materialSched):
+        driver = login_to_materialSched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        sched.click_add_schedbutton()  # 点击添加方案
+        name = "ctrlCommand"
+        sched.enter_texts(
+            '//label[text()="名称"]/following-sibling::div//input', f"{name}"
+        )
+        sleep(1)
+        sched.click_name_ok()  # 点击确定
+        sleep(1)
+        sched.click_save_button()  # 点击保存
+        sleep(1)
+
+        element = driver.find_element(
+            By.XPATH, f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span'
+        )
+        driver.execute_script("arguments[0].scrollIntoView();", element)
+        sleep(2)
+        sched.click_button(
+            f'//span[text()="{name}"]/ancestor::span'
+        )
+        elements = ['//div[@class="command-select-list"]/div[1]//span[last()]',
+                    '//div[@class="command-select-list"]/div[6]//span[last()]']
+        sched.click_button(elements[0])
+        # 第二个单元格 Shift+点击（选择范围）
+        cell2 = sched.get_find_element_xpath(elements[1])
+        ActionChains(driver).key_down(Keys.CONTROL).click(cell2).key_up(Keys.CONTROL).perform()
+        sleep(1)
+        sched.click_add_commandbutton()
+        sched.click_save_button()
+        sched.right_refresh_1('物控方案管理')
+
+        # 判断下拉框为打开还是关闭
+        sleep(1)
+        sel = sched.get_find_element_xpath(
+            f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span'
+        )
+        if "ivu-tree-arrow-open" not in sel.get_attribute("class"):
+            sched.click_button(f'//span[text()="{name}"]/ancestor::span/preceding-sibling::span')
+
+        addtext = sched.get_find_element_xpath(
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]'
+        )
+        addtext1 = sched.get_find_element_xpath(
+            '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/span[2]'
+        )
+        addul = driver.find_elements(
+            By.XPATH,
+            '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/ul',
+        )
+        assert addtext.text == name and addtext1.text == name and len(addul) == 2
         assert not sched.has_fail_message()
 
     @allure.story("添加复制测试方案成功")
@@ -450,7 +564,7 @@ class TestMaterialSchedPage:
         sched.enter_texts(
             '//label[text()="名称"]/following-sibling::div//input', f"{name}"
         )
-
+        sched.click_button('//div[label[text()="创建方式"]]//label[text()="复制方案"]')
         sched.click_button(
             '//label[text()="选择复制的方案"]/following-sibling::div/div'
         )  # 点击下拉框
@@ -473,7 +587,7 @@ class TestMaterialSchedPage:
             sched.click_button(f'//span[span[text()="{name}"]]/preceding-sibling::span')
 
         addtext = sched.get_find_element_xpath(
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[last()]'
+            f'(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[1]/label[text()="{name}"]'
         )
         addtext1 = sched.get_find_element_xpath(
             '//ul[@class="ivu-tree-children" and @visible="visible"]/li/ul[last()]/li/span[2]'
@@ -564,7 +678,7 @@ class TestMaterialSchedPage:
         )
         driver.execute_script("arguments[0].scrollIntoView();", element)
         sched.click_button(f'//span[@class="ivu-tree-title"]/span[text()="{name[0]}"]')
-        sched.click_button('//div[p[text()=" 内部命令 "]]/div//label[text()="执行存储过程"]')
+        sched.click_button('//div[@class="command-select-list"]/div/span[text()="执行存储过程"]')
         sched.click_add_commandbutton()
 
         ele = sched.get_find_element_xpath(
@@ -623,7 +737,7 @@ class TestMaterialSchedPage:
         )
         driver.execute_script("arguments[0].scrollIntoView();", element)
         sched.click_button(f'//span[@class="ivu-tree-title"]/span[text()="{name[0]}"]')
-        sched.click_button('//div[p[text()=" 内部命令 "]]/div//label[text()="运行接口"]')
+        sched.click_button('//div[@class="command-select-list"]/div/span[text()="运行接口"]')
         sched.click_add_commandbutton()
 
         ele = sched.get_find_element_xpath(
@@ -659,13 +773,13 @@ class TestMaterialSchedPage:
     def test_materialsched_delsched3(self, login_to_materialSched):
         driver = login_to_materialSched  # WebDriver 实例
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
-        name = ["排产方案(订单级)复制", '方案属性设置点击不报错']
-        sched.del_all_sched(name)
-        ele = driver.find_elements(
-            By.XPATH,
-            '(//div[@class="ivu-radio-group ivu-radio-group-small ivu-radio-small ivu-radio-group-button"])[2]/label[text()="22"]',
-        )
-        assert len(ele) == 0
+        names = ["排产方案(订单级)复制", "方案属性设置点击不报错", "shiftCommand", "ctrlCommand"]
+        sched.del_all_sched(names)
+
+        xpath = '(//div[contains(@class,"ivu-radio-group-button")])[1]/label'
+        remaining = driver.find_elements(By.XPATH, xpath)
+
+        assert not any(ele.text in names for ele in remaining), "测试方案未删除成功"
         assert not sched.has_fail_message()
 
     @allure.story("添加复制测试方案，配置同步使用")

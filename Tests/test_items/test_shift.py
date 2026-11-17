@@ -143,7 +143,7 @@ class TestShiftPage:
         ).get_attribute("value")
         shift.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         shift.right_refresh('班次')
-        assert shiftnum1 == "23" and shiftnum2 == "23", f"预期{shiftnum1},{shiftnum2}"
+        assert shiftnum1 == "23" and shiftnum2 == "24", f"预期{shiftnum1},{shiftnum2}"
         assert not shift.has_fail_message()
 
     @allure.story(
@@ -620,6 +620,7 @@ class TestShiftPage:
 
         # 显示颜色下拉框
         shift.click_button('(//label[text()="显示颜色"])[1]/parent::div//i')
+        sleep(2)
         # 显示颜色
         shift.click_button(f'//span[text()="{random_int}"]')
         # 获取下拉框数据

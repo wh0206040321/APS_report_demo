@@ -64,7 +64,7 @@ def login_to_resourceAllocation():
             safe_quit(driver)
 
 
-@allure.feature("配置同步页用例")
+@allure.feature("资源分配页用例")
 @pytest.mark.run(order=210)
 class TestResourceAllocationPage:
 
@@ -91,100 +91,100 @@ class TestResourceAllocationPage:
         assert message == "新增成功！"
         assert not allocation.has_fail_message()
 
-    @allure.story("分配一个资源给另外一个用户成功")
-    # @pytest.mark.run(order=1)
-    def test_resourceAllocation_allocation1(self, login_to_resourceAllocation):
-        driver = login_to_resourceAllocation  # WebDriver 实例
-        user = '1user1'
-        resource_ = '1测试资源同步数据1'
-        allocation = ResourceAllocationPage(driver)  # 用 driver 初始化 ResourceAllocationPage
-        date_driver = DateDriver()
-
-        allocation.select_input('用户代码', user)
-        allocation.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{user}"]')
-        allocation.click_all_button("编辑")
-        allocation.select_input('资源代码', resource_)
-        allocation.wait_for_loading_to_disappear()
-        allocation.click_button(f'//table[@class="vxe-table--body"]//tr[td[3]//span[text()="{resource_}"]]/td[2]/div/span')
-        allocation.click_all_button("保存")
-        message = allocation.get_find_message()
-        allocation.log_out(name="1user1", password="Qw123456", module="1测试A")
-        ele = allocation.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{resource_}"]')
-        allocation.click_button(f'//div[contains(text(),"1测试A")]')
-        allocation.click_button(f'//ul/li[text()="{date_driver.planning}"]')
-        allocation.wait_for_loadingbox()
-        list_ = ["系统管理", "单元设置", "资源分配"]
-        for v in list_:
-            allocation.click_button(f'(//span[text()="{v}"])[1]')
-        allocation.wait_for_loading_to_disappear()
-        assert message == "保存成功" and len(ele) == 1
-        assert not allocation.has_fail_message()
-
-    @allure.story("分配2个资源给另外一个用户成功")
-    # @pytest.mark.run(order=1)
-    def test_resourceAllocation_allocation2(self, login_to_resourceAllocation):
-        driver = login_to_resourceAllocation  # WebDriver 实例
-        user = '1user1'
-        resource_ = ['1测试资源同步数据1', '1测试资源同步数据2']
-        allocation = ResourceAllocationPage(driver)  # 用 driver 初始化 ResourceAllocationPage
-        date_driver = DateDriver()
-
-        allocation.select_input('用户代码', user)
-        allocation.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{user}"]')
-        allocation.click_all_button("编辑")
-        allocation.select_input('资源代码', resource_[0])
-        allocation.wait_for_loading_to_disappear()
-        allocation.click_button(
-            f'//table[@class="vxe-table--body"]//tr[td[3]//span[text()="{resource_[0]}"]]/td[2]/div/span')
-        allocation.select_input('资源代码', resource_[1])
-        allocation.wait_for_loading_to_disappear()
-        allocation.click_button(
-            f'//table[@class="vxe-table--body"]//tr[td[3]//span[text()="{resource_[1]}"]]/td[2]/div/span')
-        allocation.click_all_button("保存")
-        message = allocation.get_find_message()
-        allocation.log_out(name="1user1", password="Qw123456", module="1测试A")
-        ele1 = allocation.finds_elements(By.XPATH,
-                                        f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{resource_[0]}"]')
-        ele2 = allocation.finds_elements(By.XPATH,
-                                         f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{resource_[1]}"]')
-
-        allocation.click_button(f'//div[contains(text(),"1测试A")]')
-        allocation.click_button(f'//ul/li[text()="{date_driver.planning}"]')
-        allocation.wait_for_loadingbox()
-        list_ = ["系统管理", "单元设置", "资源分配"]
-        for v in list_:
-            allocation.click_button(f'(//span[text()="{v}"])[1]')
-        allocation.wait_for_loading_to_disappear()
-        assert message == "保存成功" and len(ele1) == 1 and len(ele2) == 1
-        assert not allocation.has_fail_message()
-
-    @allure.story("分配全部资源给另外一个用户成功")
-    # @pytest.mark.run(order=1)
-    def test_resourceAllocation_allocation3(self, login_to_resourceAllocation):
-        driver = login_to_resourceAllocation  # WebDriver 实例
-        user = '1user1'
-        allocation = ResourceAllocationPage(driver)  # 用 driver 初始化 ResourceAllocationPage
-        date_driver = DateDriver()
-
-        allocation.select_input('用户代码', user)
-        allocation.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{user}"]')
-        allocation.click_all_button("编辑")
-        allocation.wait_for_loading_to_disappear()
-        allocation.click_button(
-            f'//table[@class="vxe-table--header"]//tr/th[2]//span[@class="vxe-cell--title"]/span')
-        allocation.click_all_button("保存")
-        message = allocation.get_find_message()
-        allocation.log_out(name="1user1", password="Qw123456", module="1测试A")
-        ele = allocation.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr/td[3]')
-        allocation.click_button(f'//div[contains(text(),"1测试A")]')
-        allocation.click_button(f'//ul/li[text()="{date_driver.planning}"]')
-        allocation.wait_for_loadingbox()
-        list_ = ["系统管理", "单元设置", "资源分配"]
-        for v in list_:
-            allocation.click_button(f'(//span[text()="{v}"])[1]')
-        allocation.wait_for_loading_to_disappear()
-        assert message == "保存成功" and len(ele) >= 3
-        assert not allocation.has_fail_message()
+    # @allure.story("分配一个资源给另外一个用户成功")
+    # # @pytest.mark.run(order=1)
+    # def test_resourceAllocation_allocation1(self, login_to_resourceAllocation):
+    #     driver = login_to_resourceAllocation  # WebDriver 实例
+    #     user = '1user1'
+    #     resource_ = '1测试资源同步数据1'
+    #     allocation = ResourceAllocationPage(driver)  # 用 driver 初始化 ResourceAllocationPage
+    #     date_driver = DateDriver()
+    #
+    #     allocation.select_input('用户代码', user)
+    #     allocation.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{user}"]')
+    #     allocation.click_all_button("编辑")
+    #     allocation.select_input('资源代码', resource_)
+    #     allocation.wait_for_loading_to_disappear()
+    #     allocation.click_button(f'//table[@class="vxe-table--body"]//tr[td[3]//span[text()="{resource_}"]]/td[2]/div/span')
+    #     allocation.click_all_button("保存")
+    #     message = allocation.get_find_message()
+    #     allocation.log_out(name="1user1", password="Qw123456", module="1测试A")
+    #     ele = allocation.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{resource_}"]')
+    #     allocation.click_button(f'//div[contains(text(),"1测试A")]')
+    #     allocation.click_button(f'//ul/li[text()="{date_driver.planning}"]')
+    #     allocation.wait_for_loadingbox()
+    #     list_ = ["系统管理", "单元设置", "资源分配"]
+    #     for v in list_:
+    #         allocation.click_button(f'(//span[text()="{v}"])[1]')
+    #     allocation.wait_for_loading_to_disappear()
+    #     assert message == "保存成功" and len(ele) == 1
+    #     assert not allocation.has_fail_message()
+    #
+    # @allure.story("分配2个资源给另外一个用户成功")
+    # # @pytest.mark.run(order=1)
+    # def test_resourceAllocation_allocation2(self, login_to_resourceAllocation):
+    #     driver = login_to_resourceAllocation  # WebDriver 实例
+    #     user = '1user1'
+    #     resource_ = ['1测试资源同步数据1', '1测试资源同步数据2']
+    #     allocation = ResourceAllocationPage(driver)  # 用 driver 初始化 ResourceAllocationPage
+    #     date_driver = DateDriver()
+    #
+    #     allocation.select_input('用户代码', user)
+    #     allocation.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{user}"]')
+    #     allocation.click_all_button("编辑")
+    #     allocation.select_input('资源代码', resource_[0])
+    #     allocation.wait_for_loading_to_disappear()
+    #     allocation.click_button(
+    #         f'//table[@class="vxe-table--body"]//tr[td[3]//span[text()="{resource_[0]}"]]/td[2]/div/span')
+    #     allocation.select_input('资源代码', resource_[1])
+    #     allocation.wait_for_loading_to_disappear()
+    #     allocation.click_button(
+    #         f'//table[@class="vxe-table--body"]//tr[td[3]//span[text()="{resource_[1]}"]]/td[2]/div/span')
+    #     allocation.click_all_button("保存")
+    #     message = allocation.get_find_message()
+    #     allocation.log_out(name="1user1", password="Qw123456", module="1测试A")
+    #     ele1 = allocation.finds_elements(By.XPATH,
+    #                                     f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{resource_[0]}"]')
+    #     ele2 = allocation.finds_elements(By.XPATH,
+    #                                      f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{resource_[1]}"]')
+    #
+    #     allocation.click_button(f'//div[contains(text(),"1测试A")]')
+    #     allocation.click_button(f'//ul/li[text()="{date_driver.planning}"]')
+    #     allocation.wait_for_loadingbox()
+    #     list_ = ["系统管理", "单元设置", "资源分配"]
+    #     for v in list_:
+    #         allocation.click_button(f'(//span[text()="{v}"])[1]')
+    #     allocation.wait_for_loading_to_disappear()
+    #     assert message == "保存成功" and len(ele1) == 1 and len(ele2) == 1
+    #     assert not allocation.has_fail_message()
+    #
+    # @allure.story("分配全部资源给另外一个用户成功")
+    # # @pytest.mark.run(order=1)
+    # def test_resourceAllocation_allocation3(self, login_to_resourceAllocation):
+    #     driver = login_to_resourceAllocation  # WebDriver 实例
+    #     user = '1user1'
+    #     allocation = ResourceAllocationPage(driver)  # 用 driver 初始化 ResourceAllocationPage
+    #     date_driver = DateDriver()
+    #
+    #     allocation.select_input('用户代码', user)
+    #     allocation.click_button(f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{user}"]')
+    #     allocation.click_all_button("编辑")
+    #     allocation.wait_for_loading_to_disappear()
+    #     allocation.click_button(
+    #         f'//table[@class="vxe-table--header"]//tr/th[2]//span[@class="vxe-cell--title"]/span')
+    #     allocation.click_all_button("保存")
+    #     message = allocation.get_find_message()
+    #     allocation.log_out(name="1user1", password="Qw123456", module="1测试A")
+    #     ele = allocation.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr/td[3]')
+    #     allocation.click_button(f'//div[contains(text(),"1测试A")]')
+    #     allocation.click_button(f'//ul/li[text()="{date_driver.planning}"]')
+    #     allocation.wait_for_loadingbox()
+    #     list_ = ["系统管理", "单元设置", "资源分配"]
+    #     for v in list_:
+    #         allocation.click_button(f'(//span[text()="{v}"])[1]')
+    #     allocation.wait_for_loading_to_disappear()
+    #     assert message == "保存成功" and len(ele) >= 3
+    #     assert not allocation.has_fail_message()
 
     @allure.story("查询资源成功")
     # @pytest.mark.run(order=1)

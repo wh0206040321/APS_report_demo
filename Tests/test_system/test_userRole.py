@@ -575,7 +575,7 @@ class TestUserRolePage:
 
         user.wait_for_loadingbox()
         profile_icon = user.get_find_element_xpath(
-            f'//div[text()=" 1测试计划单元小日程 "]'
+            f'//span[@title="1测试计划单元小日程"]'
         )
         assert profile_icon.is_displayed()
         user.click_button('//div[@class="flex-alignItems-center"]')
@@ -727,7 +727,7 @@ class TestUserRolePage:
 
         user.wait_for_loadingbox()
         num_ = len(user.finds_elements(By.XPATH, f'//div[@class="listDivCon"]/div'))
-        swich_name = user.get_find_element_xpath(f'//div[@class="ivu-dropdown-rel"]/div').text
+        swich_name = user.get_find_element_xpath(f'(//div[@class="ivu-dropdown-rel"]//span)[1]').text
         user.click_button('//div[@class="flex-alignItems-center"]')
         user.click_button('//ul/li/div[text()=" 注销 "]')
         page.login(date_driver.username, date_driver.password, date_driver.planning)

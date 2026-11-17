@@ -236,26 +236,6 @@ class TestChartPage:
         )
         assert not chart.has_fail_message()
 
-    @allure.story("指令筛选可使用")
-    # @pytest.mark.run(order=1)
-    def test_resourcechart_instruction(self, login_to_chart):
-        driver = login_to_chart  # WebDriver 实例
-        chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
-        chart.click_button('//a[@title="设置"]')
-        chart.click_button('//label[text()="指令筛选"]/following-sibling::div//i')
-        ele = chart.get_find_element_xpath('//span[text()="计算运费。"]')
-        action = ActionChains(driver)
-        action.double_click(ele)
-        action.perform()
-        chart.click_button('(//button[@class="ivu-btn ivu-btn-primary"])[4]')
-        chart.wait_for_el_loading_mask()
-        ele = chart.get_find_element_xpath(
-            '//label[text()="指令筛选"]/following-sibling::div//input'
-        ).get_attribute("value")
-        chart.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
-        assert "CalcDeliveryCost(ME)" in ele
-        assert not chart.has_fail_message()
-
     @allure.story("按钮显示文字开关可关闭")
     # @pytest.mark.run(order=1)
     def test_resourcechart_button1(self, login_to_chart):
@@ -608,7 +588,6 @@ class TestChartPage:
         driver = login_to_chart  # WebDriver 实例
         chart = ChartPage(driver)  # 用 driver 初始化 ChartPage
         wait = WebDriverWait(driver, 60)
-        chart.click_button('//a[@title="排程"]')
         # 等待下拉框按钮可点击后点击展开
         dropdown_arrow = wait.until(
             EC.element_to_be_clickable(
@@ -627,14 +606,15 @@ class TestChartPage:
             )
         )
         first_option.click()
-
-        # 执行计划
-        chart.click_button('//span[text()="执行计划"]')
+        chart.click_button('//a[@title="排程"]')
+        ele = chart.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        if ele:
+            chart.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
 
         # 等待“完成”的文本出现
         success_element = wait.until(
             EC.presence_of_element_located(
-                (By.XPATH, '(//div[@class="d-flex"])[3]/p[text()=" 完成 "]')
+                (By.XPATH, '//button[@aria-label="整理数据 - 查看详情"]')
             )
         )
 

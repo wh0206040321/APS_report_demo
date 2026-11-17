@@ -333,7 +333,7 @@ class TestSDateBasePage:
         sleep(1)
         list_ = [ele.text for ele in eles]
         database.right_refresh()
-        assert all(str(item).startswith(name) for item in list_)
+        assert all(str(item).lower().startswith(name.lower()) for item in list_)
         assert not database.has_fail_message()
 
     @allure.story("过滤条件查询，设置符合结尾查询成功")

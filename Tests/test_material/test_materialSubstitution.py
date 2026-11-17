@@ -58,7 +58,7 @@ def login_to_materialsubstitution():
 
 
 @allure.feature("物料替代页用例")
-@pytest.mark.run(order=103)
+@pytest.mark.run(order=106)
 class TestSMaterialSubstitutionPage:
 
     @allure.story("新增直接点击保存不允许添加")
@@ -129,6 +129,38 @@ class TestSMaterialSubstitutionPage:
         material.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
         material.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
         assert message == "记录已存在,请检查！"
+        assert not material.has_fail_message()
+
+    @allure.story("编辑重复")
+    # @pytest.mark.run(order=1)
+    def test_materialsubstitution_updaterepeat(self, login_to_materialsubstitution):
+        driver = login_to_materialsubstitution  # WebDriver 实例
+        material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
+        material.wait_for_loading_to_disappear()
+        before_data = material.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        before_count = int(re.search(r'\d+', before_data).group())
+        material.add_material_substitution(num=1)
+        material.enter_texts('//div[span[text()=" BOM版本 "]]/following-sibling::div//input', '6')
+        material.click_confirm()
+        material.wait_for_loading_to_disappear()
+        after_data = material.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
+        after_count = int(re.search(r'\d+', after_data).group())
+
+        material.click_update()
+        material.enter_texts('//div[span[text()=" BOM版本 "]]/following-sibling::div//input', '1')
+        material.click_confirm()
+        message = material.finds_elements(By.XPATH,'//div[text()=" 记录已存在,请检查！ "]')
+        material.click_button('//div[@class="ivu-modal-footer"]//span[text()="关闭"]')
+        material.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
+
+        material.click_flagdata()
+        material.click_button('//table[@class="vxe-table--body"]//tr[1]/td[2]')
+        sleep(1)
+        material.click_all_button("删除")
+        material.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        material.get_find_message()
+        assert after_count - before_count == 1, f"新增失败: 新增前 {before_count}, 新增后 {after_count}"
+        assert len(message) == 1
         assert not material.has_fail_message()
 
     @allure.story("添加成组替代成功")
@@ -445,6 +477,7 @@ class TestSMaterialSubstitutionPage:
         material = MaterialSubstitutionPage(driver)  # 用 driver 初始化 MaterialSubstitutionPage
         material.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
         ActionChains(driver).key_down(Keys.CONTROL).send_keys('i').key_up(Keys.CONTROL).perform()
+        sleep(3)
         ele1 = material.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[2]').get_attribute(
             "innerText")
         material.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')

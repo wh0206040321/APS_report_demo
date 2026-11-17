@@ -224,6 +224,11 @@ class TestStartPage:
                     master.click_button(backup_xpath)
                 else:
                     raise Exception("主按钮和备用按钮都不可点击，请检查页面状态")
+                value1 = driver.find_elements(
+                    By.XPATH,
+                    '//tr[.//td[2]//span[text()="1测试C"] and .//td[9]//div[text()=" 使用指令 "]]//td[11]',
+                )
+                assert len(value1) == 2
 
             else:
                 eles = driver.find_elements(
@@ -247,6 +252,7 @@ class TestStartPage:
                 order.add_order("1测试C订单", "1测试C")
             else:
                 print("制造订单 1测试C订单 已存在，跳过创建")
+            assert order.check_order_exists("1测试C订单")
 
             plan = PlanPage(driver)
             wait = WebDriverWait(driver, 300)

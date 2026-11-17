@@ -343,6 +343,7 @@ class TestCalendarPage:
 
         # 点击添加按钮
         calendar.click_button('(//span[text()="添加"])[1]')
+        table_data = calendar.get_find_element_xpath("//table[@class='vxe-table--body' and .//td[3]//button]//tr[1]/td[2]").text
 
         calendar.click_confirm_button()
 
@@ -359,7 +360,10 @@ class TestCalendarPage:
         addshift = calendar.get_find_element_xpath(
             f'(//span[text()="{resource}"])[1]/ancestor::tr[1]/td[4]'
         ).text
-        assert adddata == resource and addshift == resource1
+        addtable_data = calendar.get_find_element_xpath(
+            f'(//span[text()="{resource}"])[1]/ancestor::tr[1]/td[3]'
+        ).text
+        assert adddata == resource and addshift == resource1 and table_data == addtable_data
         assert not calendar.has_fail_message()
 
     @allure.story("校验数字文本框和文本框成功")
@@ -493,7 +497,7 @@ class TestCalendarPage:
                 columns_text.append(text)
 
         print(columns_text)
-        bef_text = [f'{resource}', '*', f'{shift}', f'{data_list}', f'{data_list}', f'{data_list}', f'{DateDriver.username}', date.today().strftime("%Y/%m/%d")]
+        bef_text = [f'{resource}', '星期一;星期二;星期三;星期四;星期五;星期六', f'{shift}', f'{data_list}', f'{data_list}', f'{data_list}', f'{DateDriver.username}', date.today().strftime("%Y/%m/%d")]
         assert len(columns_text) == len(bef_text), f"长度不一致：actual={len(columns_text)}, expected={len(bef_text)}"
         for i, (a, e) in enumerate(zip(columns_text, bef_text), start=1):
             if i == 8:
@@ -548,7 +552,7 @@ class TestCalendarPage:
                 columns_text.append(text)
 
         print(columns_text)
-        bef_text = [f'{resource}', '*', f'{shift}', f'{data_list}', f'{data_list}', f'{data_list}', f'{DateDriver.username}', date.today().strftime("%Y/%m/%d")]
+        bef_text = [f'{resource}', '星期一;星期二;星期三;星期四;星期五;星期六', f'{shift}', f'{data_list}', f'{data_list}', f'{data_list}', f'{DateDriver.username}', date.today().strftime("%Y/%m/%d")]
         assert len(columns_text) == len(bef_text), f"长度不一致：actual={len(columns_text)}, expected={len(bef_text)}"
         for i, (a, e) in enumerate(zip(columns_text, bef_text), start=1):
             if i == 8:
@@ -972,6 +976,7 @@ class TestCalendarPage:
         calendar.click_button('//p[text()="资源"]/ancestor::div[2]//input')
         sleep(1)
         ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        sleep(1)
         eles = calendar.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
         eles = [ele.text for ele in eles]
         calendar.right_refresh('生产日历')

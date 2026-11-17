@@ -256,10 +256,10 @@ class TestSAcceptDataPage:
         acceptdata = ImpPage(driver)  # 用 driver 初始化 ImpPage
         acceptdata.click_button('//table[@class="vxe-table--body"]//tr[td[3]//span[text()="测试数据22"]]/td[12]//button')
         acceptdata.click_button('//span[text()="查询"]')
-        acceptdata.click_button('//span[text()="导出"]')
+        status = acceptdata.get_find_element_xpath('//button[span[text()="导出"]]').get_attribute('disabled')
         ele = acceptdata.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
-        acceptdata.click_button('//div[div[text()="系统提示"]]//i[@title="关闭"]')
-        assert len(ele) == 0
+        acceptdata.click_button('(//div[div[text()="接口数据"]]//i[@title="关闭"])[last()]')
+        assert len(ele) == 0 and status
         assert not acceptdata.has_fail_message()
 
     @allure.story("过滤条件查询，一个不选，显示正常")

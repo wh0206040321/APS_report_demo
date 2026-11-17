@@ -67,13 +67,13 @@ class TestEnvironmentPage:
         driver = login_to_environment  # WebDriver 实例
         environment = EnvironmentPage(driver)  # 用 driver 初始化 EnvironmentPage
         xpth_list = [
-            '//div[label[text()="品目资源时序:"]]/div//input',
             '//div[label[text()="物料同步检查:"]]/div//input',
             '//div[label[text()="资源同步检查:"]]/div//input',
             '//div[label[text()="订单同步检查:"]]/div//input',
             '//div[label[text()="变更使用时间:"]]/div//input',
             '//div[label[text()="内部函数基于日期和日境界时刻进行计算:"]]/div//input',
             '//div[label[text()="工作表移动后全固定:"]]/div//input',
+            '//div[label[text()="甘特图排程二次确认:"]]/div//input',
         ]
         environment.update_checkbox(xpth_list, new_value=False)
         before_value = environment.get_checkbox_value(xpth_list)
@@ -91,13 +91,13 @@ class TestEnvironmentPage:
         driver = login_to_environment  # WebDriver 实例
         environment = EnvironmentPage(driver)  # 用 driver 初始化 EnvironmentPage
         xpth_list = [
-            '//div[label[text()="品目资源时序:"]]/div//input',
             '//div[label[text()="物料同步检查:"]]/div//input',
             '//div[label[text()="资源同步检查:"]]/div//input',
             '//div[label[text()="订单同步检查:"]]/div//input',
             '//div[label[text()="变更使用时间:"]]/div//input',
             '//div[label[text()="内部函数基于日期和日境界时刻进行计算:"]]/div//input',
             '//div[label[text()="工作表移动后全固定:"]]/div//input',
+            '//div[label[text()="甘特图排程二次确认:"]]/div//input',
         ]
         environment.update_checkbox(xpth_list, new_value=True)
         before_value = environment.get_checkbox_value(xpth_list)
@@ -607,9 +607,9 @@ class TestEnvironmentPage:
         }
         environment.batch_modify_inputs(xpath_value_map1)
 
-        check2 = environment.get_find_element_xpath('//div[label[text()="启用资源锁定:"]]/div//input').get_attribute("class")
+        check2 = environment.get_find_element_xpath('//div[label[text()="启用资源锁定:"]]/div//label/span').get_attribute("class")
         if check2 == "ivu-checkbox ivu-checkbox-checked":
-            environment.click_button('//div[label[text()="变更使用时间:"]]/div//span')
+            environment.click_button('//div[label[text()="启用资源锁定:"]]/div//label/span')
 
         sleep(2)
         environment.click_save_button()

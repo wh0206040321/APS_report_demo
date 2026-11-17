@@ -194,64 +194,6 @@ class WarehouseLocationPage(BasePage):
             except Exception as e:
                 print(f"操作 {xpath} 时出错: {str(e)}")
 
-    def get_demo_num1(self):
-        num = 0
-        sleep(1)
-        num = 1
-        return num
-
-    def batch_acquisition_text(self, xpath_list=[], val_list=[]):
-        """批量获取文本"""
-        values = []
-        for index, xpath in enumerate(xpath_list, 1):
-            try:
-                # 显式等待元素可见（最多等待10秒）
-                value = self.get_find_element_xpath(xpath).text
-                # 获取输入框的值
-                print("text", value)
-                print("index", index-1)
-                if value == val_list[index-1]:
-                    values.append(value)
-
-            except TimeoutException:
-                raise NoSuchElementException(
-                    f"元素未找到（XPath列表第{index}个）: {xpath}"
-                )
-            except Exception as e:
-                raise Exception(
-                    f"获取输入框值时发生错误（XPath列表第{index}个）: {str(e)}"
-                )
-
-        return values
-
-    def batch_acquisition_input_list(self, xpath_list=[], val_list=[]):
-        """批量获取输入框"""
-        values = []
-        for index, xpath in enumerate(xpath_list, 1):
-            try:
-                # 显式等待元素可见（最多等待10秒）
-                element = WebDriverWait(self.driver, 10).until(
-                    EC.visibility_of_element_located(("xpath", xpath))
-                )
-
-                # 获取输入框的值
-                value = element.get_attribute("value")
-                print("value", value)
-                print("index", index - 1)
-                if value == val_list[index - 1]:
-                    values.append(value)
-
-            except TimeoutException:
-                raise NoSuchElementException(
-                    f"元素未找到（XPath列表第{index}个）: {xpath}"
-                )
-            except Exception as e:
-                raise Exception(
-                    f"获取输入框值时发生错误（XPath列表第{index}个）: {str(e)}"
-                )
-
-        return values
-
     def batch_acquisition_input(self, xpath_list=[], text_value=""):
         """批量获取输入框"""
         values = []
@@ -277,59 +219,6 @@ class WarehouseLocationPage(BasePage):
                 )
 
         return values
-
-    def acquisition_input(self, xpath):
-        """获取输入框值"""
-        # 显式等待元素可见（最多等待10秒）
-        element = WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located(("xpath", xpath))
-        )
-        # 获取输入框的值
-        value = element.get_attribute("value")
-        return value
-
-    def go_item(self):
-        """前往物料页面"""
-        self.click_button('(//span[text()="物控管理"])[1]')  # 点击物控管理
-        self.click_button('(//span[text()="物控基础数据"])[1]')  # 点击物控基础数据
-        self.click_button('(//span[text()="仓库库位"])[1]')  # 点击仓库库位
-
-    def add_item(self, material_code, material_name):
-        """添加物料信息."""
-        self.click_add_button()
-        self.enter_texts(
-            '(//label[text()="物料代码"])[1]/parent::div//input', material_code
-        )
-        self.enter_texts(
-            '(//label[text()="物料名称"])[1]/parent::div//input', material_name
-        )
-        self.click_button('(//button[@type="button"]/span[text()="确定"])[4]')
-
-    def delete_item(self, material_code):
-        """删除物料信息."""
-        # 定位内容为‘1测试A’的行
-        self.click_button(
-            f'(//span[text()="{material_code}"])[1]/ancestor::tr[1]/td[2]'
-        )
-        self.click_del_button()  # 点击删除
-        # 点击确定
-        # 找到共同的父元素
-        parent = self.get_find_element_class("ivu-modal-confirm-footer")
-
-        # 获取所有button子元素
-        all_buttons = parent.find_elements(By.TAG_NAME, "button")
-
-        # 选择需要的button 第二个确定按钮
-        second_button = all_buttons[1]
-        second_button.click()
-
-    def check_item_exists(self, item_name):
-        """检查物料是否存在."""
-        try:
-            self.get_find_element_xpath(f'//span[text()="{item_name}"]')
-            return True
-        except:
-            return False
 
     def get_find_element_xpath(self, xpath):
         """获取用户头像元素，返回该元素。如果元素未找到，返回None。"""
@@ -386,28 +275,6 @@ class WarehouseLocationPage(BasePage):
                 )
         return True
 
-    def add_one(self, xpath_list=[], color_value=""):
-        """新增弹窗(有必填项)多项必填只填写一项不允许提交方法，不允许提交公共方法."""
-        for index, xpath in enumerate(xpath_list, 1):
-            try:
-                element = self.get_find_element_xpath(xpath)
-                # 获取输入框的值
-                if color_value != element.value_of_css_property("border-color"):
-                    raise NoSuchElementException(
-                        f"边框颜色不对（XPath列表第{index}个）: {xpath}"
-                    )
-                    return False
-
-            except TimeoutException:
-                raise NoSuchElementException(
-                    f"元素未找到（XPath列表第{index}个）: {xpath}"
-                )
-            except Exception as e:
-                raise Exception(
-                    f"获取输入框值时发生错误（XPath列表第{index}个）: {str(e)}"
-                )
-        return True
-
     def click_select_button(self):
         """点击查询确定按钮."""
         self.click_button('(//button[@class="ivu-btn ivu-btn-primary"]/span[text()="确定"])[2]')
@@ -416,22 +283,47 @@ class WarehouseLocationPage(BasePage):
 
     def batch_modify_dialog_box(self, xpath_list=[], new_value=""):
         """批量修改对话框"""
-        values = []
         for xpath in xpath_list:
             try:
                 self.click_button(xpath)
                 self.wait_for_loading_to_disappear()
+                sleep(0.5)
                 self.click_button(new_value)
-                values.append(self.get_find_element_xpath(new_value).text)
-                sleep(0.2)
+                sleep(0.5)
                 self.click_button(
-                    '(//div[@class="h-40px flex-justify-end vxe-modal-footer1 flex-align-items-end b-t-s-d9e3f3"])[last()]//span[text()="确定"]')
+                    '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
             except NoSuchElementException:
                 print(f"未找到元素: {xpath}")
             except Exception as e:
                 print(f"操作 {xpath} 时出错: {str(e)}")
 
-        return values
+    def batch_modify_dialog_box1(self, xpath_list=[], new_value=""):
+        """批量修改对话框"""
+        for xpath in xpath_list:
+            try:
+                self.click_button(xpath)
+                self.wait_for_loading_to_disappear()
+                sleep(0.5)
+                self.click_button(new_value)
+                sleep(0.5)
+                self.click_button(
+                    '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[1]')
+            except NoSuchElementException:
+                print(f"未找到元素: {xpath}")
+            except Exception as e:
+                print(f"操作 {xpath} 时出错: {str(e)}")
+
+    def batch_num_box(self, xpath_list, new_value):
+        for xpath in xpath_list:
+            try:
+                self.click_button(xpath)
+                self.enter_texts("//div[span[text()=' 期间长度 ']]/following-sibling::div//input", new_value)
+                self.click_button(
+                    '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
+            except NoSuchElementException:
+                print(f"未找到元素: {xpath}")
+            except Exception as e:
+                print(f"操作 {xpath} 时出错: {str(e)}")
 
     def del_all(self, value=[], xpath=""):
         for index, v in enumerate(value, start=1):
@@ -455,6 +347,53 @@ class WarehouseLocationPage(BasePage):
                 ele = self.get_find_element_xpath(xpath)
                 ele.send_keys(Keys.CONTROL, "a")
                 ele.send_keys(Keys.DELETE)
+
+    def acquisition_input(self, xpath):
+        """获取输入框值"""
+        # 显式等待元素可见（最多等待10秒）
+        element = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(("xpath", xpath))
+        )
+        # 获取输入框的值
+        value = element.get_attribute("value")
+        return value
+
+    def get_workCalendar_month(self):
+        value = self.get_find_element_xpath('//div[span[text()=" 年月 "]]/following-sibling::div//input').get_attribute("value")
+        return value
+
+    def get_workCalendar_dayclass(self, day_list=[]):
+        values = []
+        for index, num in enumerate(day_list, start=1):
+            xpath = f'//div[@class="ivu-checkbox-group ivu-checkbox-default"]//input[@value="{num}"]'
+            try:
+                is_checked = self.get_find_element_xpath(xpath).is_selected()
+                values.append(is_checked)
+            except NoSuchElementException:
+                print(f"未找到元素: {xpath}")
+            except Exception as e:
+                print(f"操作 {xpath} 时出错: {str(e)}")
+        return values
+
+    def add_workCalendar(self, code="", month="", day_list=[]):
+        """添加工作日历"""
+        if code != "":
+            self.enter_texts("//div[span[text()=' 日历类别 ']]/following-sibling::div//input", code)
+        if month != "":
+            self.click_button("//div[span[text()=' 年月 ']]/following-sibling::div//input")
+            sleep(1)
+            self.click_button(f"//em[text()='{month}']")
+        if day_list != []:
+            for index, num in enumerate(day_list, start=1):
+                xpath = f'//div[@class="ivu-checkbox-group ivu-checkbox-default"]//span[input[@value="{num}"]]'
+                try:
+                    self.click_button(xpath)
+                    sleep(0.5)
+                except NoSuchElementException:
+                    print(f"未找到元素: {xpath}")
+                except Exception as e:
+                    print(f"操作 {xpath} 时出错: {str(e)}")
+        self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
 
     def batch_modify_inputs(self, xpath_list=[], new_value=""):
         """批量修改输入框"""
@@ -494,7 +433,11 @@ class WarehouseLocationPage(BasePage):
                 self.wait_for_loading_to_disappear()
                 ActionChains(self.driver).double_click(self.get_find_element_xpath(new_value)).perform()
                 sleep(1)
-                self.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[last()]//span[text()="确定"]')
+                self.click_button(
+                    '(//div[@class="vxe-modal--footer"]//span[text()="确定"])[last()]')
+                ele = self.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+                if len(ele) == 1:
+                    self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
             except NoSuchElementException:
                 print(f"未找到元素: {xpath}")
             except Exception as e:
@@ -506,24 +449,23 @@ class WarehouseLocationPage(BasePage):
             self.click_button(d['select'])
             self.click_button(d['value'])
 
-    def batch_click_input(self, xpath_list=[]):
-        """批量点击"""
+    def batch_modify_select_input_(self, xpath_list, new_value):
+        """批量修改下拉框"""
         for index, xpath in enumerate(xpath_list, start=1):
             try:
                 self.click_button(xpath)
+                self.click_button(new_value)
                 sleep(0.5)
             except NoSuchElementException:
                 print(f"未找到元素: {xpath}")
             except Exception as e:
                 print(f"操作 {xpath} 时出错: {str(e)}")
 
-    def batch_modify_time_input(self, xpath_list=[]):
-        """批量修改时间"""
+    def batch_click_input(self, xpath_list=[]):
+        """批量点击"""
         for index, xpath in enumerate(xpath_list, start=1):
             try:
                 self.click_button(xpath)
-                self.click_button(f'(//span[@class="ivu-date-picker-cells-cell ivu-date-picker-cells-cell-today ivu-date-picker-cells-focused"])[1]')
-                self.click_button(f'(//div[@class="ivu-picker-confirm"])[{index}]/button[3]')
                 sleep(0.5)
             except NoSuchElementException:
                 print(f"未找到元素: {xpath}")
@@ -546,26 +488,6 @@ class WarehouseLocationPage(BasePage):
                 raise Exception(
                     f"获取输入框值时发生错误（XPath列表第{index}个）: {str(e)}"
                 )
-
-        return values
-
-    def batch_acquisition_texts(self, xpath_list=[], text_value=""):
-        """批量获取输入框"""
-        values = []
-        for index, xpath in enumerate(xpath_list, 1):
-            try:
-                value = self.get_find_element_xpath(xpath).text
-                values.append(value)
-
-            except TimeoutException:
-                raise NoSuchElementException(
-                    f"元素未找到（XPath列表第{index}个）: {xpath}"
-                )
-            except Exception as e:
-                raise Exception(
-                    f"获取输入框值时发生错误（XPath列表第{index}个）: {str(e)}"
-                )
-
         return values
 
     def get_checkbox_value(self, xpath_list=[]):
@@ -586,25 +508,6 @@ class WarehouseLocationPage(BasePage):
                 raise Exception(
                     f"获取复选框值时发生错误（XPath列表第{index}个）: {str(e)}"
                 )
-        return values
-
-    def get_border_color(self, xpath_list=[], text_value=""):
-        """获取边框颜色"""
-        values = []
-        for index, xpath in enumerate(xpath_list, 1):
-            try:
-                value = self.get_find_element_xpath(xpath).value_of_css_property("border-color")
-                values.append(value)
-
-            except TimeoutException:
-                raise NoSuchElementException(
-                    f"元素未找到（XPath列表第{index}个）: {xpath}"
-                )
-            except Exception as e:
-                raise Exception(
-                    f"获取输入框值时发生错误（XPath列表第{index}个）: {str(e)}"
-                )
-
         return values
 
     def batch_modify_map_inputs(self, xpath_value_map: dict):

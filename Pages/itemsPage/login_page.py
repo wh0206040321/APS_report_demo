@@ -72,7 +72,7 @@ class LoginPage(BasePage):
         except NoSuchElementException:
             return None
 
-    def wait_for_loading_to_disappear(self, timeout=10):
+    def wait_for_loading_to_disappear(self, timeout=60):
         WebDriverWait(self.driver, timeout).until(
             EC.presence_of_element_located(
                 (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))

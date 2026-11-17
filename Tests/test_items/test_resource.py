@@ -217,6 +217,9 @@ class TestResourcePage:
         actions.double_click(element_to_double_click).perform()
         # 点击确认
         resource.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[last()]//span[text()="确定"]')
+        ele = resource.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        if len(ele) == 1:
+            resource.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         # 获取分割条件式代码设计器文本框
         sleep(1)
         resourcecode = resource.get_find_element_xpath(

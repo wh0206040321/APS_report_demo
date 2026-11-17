@@ -82,7 +82,7 @@ class Coverage(BasePage):
         )
         return message.text
 
-    def wait_for_loading_to_disappear(self, timeout=10):
+    def wait_for_loading_to_disappear(self, timeout=60):
         WebDriverWait(self.driver, timeout).until(
             EC.presence_of_element_located(
                 (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
@@ -162,7 +162,7 @@ class Coverage(BasePage):
         sleep(1)
 
         self.click_button('(//div[text()=" 显示设置 "])[1]')
-        sleep(1)
+        sleep(3)
         # 获取是否可见选项的复选框元素
         checkbox2 = self.get_find_element_xpath(
             '(//div[./div[text()="是否可见:"]])[1]/label/span'

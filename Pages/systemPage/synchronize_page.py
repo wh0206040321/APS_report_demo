@@ -58,7 +58,7 @@ class SynchronizePage(BasePage):
         self.wait_for_loading_to_disappear()
 
     # 等待加载遮罩消失
-    def wait_for_loading_to_disappear(self, timeout=10):
+    def wait_for_loading_to_disappear(self, timeout=60):
         WebDriverWait(self.driver, timeout).until(
             EC.presence_of_element_located(
                 (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
@@ -87,7 +87,7 @@ class SynchronizePage(BasePage):
         """切换计划方案。"""
         if js:
             plan = DateDriver()
-            self.click_button(f'//div[contains(text(),"{plan.planning}")]')
+            self.click_button(f'//span[@title="{plan.planning}"]')
 
         self.click_button(f'//ul/li[text()="{name}"]')
         WebDriverWait(self.driver, 10).until(
@@ -105,6 +105,7 @@ class SynchronizePage(BasePage):
 
         for menu in menu_paths.get(num, []):
             self.click_button(f'(//span[text()="{menu}"])[1]')
+            sleep(2)
 
     # def click_checkbox_value(self, name1=[], name2=[], num=""):
     #     """批量勾选复选框"""

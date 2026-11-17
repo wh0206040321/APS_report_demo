@@ -1039,7 +1039,7 @@ class TestPlanUnitPage:
 
         # 2. 定位上传控件并执行上传
         unit.upload_file(upload_file)
-        unit.click_button('//div[@class="el-message-box__btns"]/button[2]')
+        unit.click_button('//div[@class="ivu-modal-body"]//span[text()="确定"]')
         message = unit.get_find_message()
         # 3. 等待上传完成并断言结果
         assert message == "上传成功", "上传失败或未显示成功提示"

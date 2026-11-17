@@ -76,7 +76,7 @@ class TestItemPage:
             '//div[span[text()=" 工厂代码 "]]/following-sibling::div//input',
             '//div[span[text()=" 订单代码 "]]/following-sibling::div//input',
             '//div[span[text()=" 备注 "]]/following-sibling::div//input',
-            '//div[span[text()=" 批次号 "]]/following-sibling::div//input',
+            # '//div[span[text()=" 批次号 "]]/following-sibling::div//input',
         ]
         self.all_input_xpath_list += self.custom_xpath_list
 
@@ -825,15 +825,13 @@ class TestItemPage:
     def test_qtProgrammeMan_delsuccess3(self, login_to_item):
         layout_name = "测试布局A"
         sleep(2)
-        layout = self.driver.find_elements(By.CLASS_NAME, "tabsDivItem")
-        print('layout', len(layout))
-        if len(layout) > 1:
-            self.item.del_layout(layout_name)
-        # 定位内容为‘111’的行
-        itemdata = self.driver.find_elements(
-            By.XPATH, '//tr[./td[2][.//span[text()="111"]]]/td[2]'
+        self.item.del_layout(layout_name)
+        sleep(1)
+        # 再次查找页面上是否有目标 div，以验证是否删除成功
+        after_layout = self.driver.find_elements(
+            By.XPATH, f'//div[@class="tabsDivItemCon"]/div[text()=" {layout_name} "]'
         )
-        assert len(itemdata) == 0
+        assert 0 == len(after_layout)
         assert not self.item.has_fail_message()
 
     @allure.story("删除测试数据成功，删除布局成功")

@@ -978,16 +978,16 @@ class TestSettingPage:
         )
         sleep(1)
         text_values = setting.get_find_element_xpath(
-            f'//div[text()="{code}"]/following-sibling::div//li[contains(@class,"ivu-select-item")][1]').text
-        setting.click_button(f'//div[text()="{code}"]/following-sibling::div//li[contains(@class,"ivu-select-item")][1]')
+            f'//div[@class="el-scrollbar"]//div[@class="quick-query-virtual-item"][1]').text
+        setting.click_button(f'//div[@class="el-scrollbar"]//div[@class="quick-query-virtual-item"][1]')
 
         # 等待加载
         sleep(1)
 
         # 展开物料种类下拉框
-        setting.click_button(
-            f'//div[text()="{code}"]/following-sibling::div//i[@class="ivu-icon ivu-icon-ios-arrow-down ivu-select-arrow"]'
-        )
+        # setting.click_button(
+        #     f'(//div[text()="物料种类"]/following-sibling::div//i)[last()]'
+        # )
 
         # 点击查询按钮
         setting.click_select_button()
@@ -1004,16 +1004,16 @@ class TestSettingPage:
         )
         sleep(1)
         text_values = setting.get_find_element_xpath(
-            f'//div[text()="{code}"]/following-sibling::div//li[contains(@class,"ivu-select-item")][2]').text
-        setting.click_button(f'//div[text()="{code}"]/following-sibling::div//li[contains(@class,"ivu-select-item")][2]')
+            f'//div[@class="el-scrollbar"]//div[@class="quick-query-virtual-item"][2]').text
+        setting.click_button(f'//div[@class="el-scrollbar"]//div[@class="quick-query-virtual-item"][2]')
 
         # 等待加载
         sleep(1)
 
         # 展开物料种类下拉框
-        setting.click_button(
-            '//div[text()="物料种类"]/following-sibling::div//i[@class="ivu-icon ivu-icon-ios-arrow-down ivu-select-arrow"]'
-        )
+        # setting.click_button(
+        #     '(//div[text()="物料种类"]/following-sibling::div//i)[last()]'
+        # )
         # 点击查询按钮
         setting.click_select_button()
 
@@ -1034,7 +1034,7 @@ class TestSettingPage:
         #
         # # 展开物料种类下拉框
         # setting.click_button(
-        #     '//div[text()="物料种类"]/following-sibling::div//i[@class="ivu-icon ivu-icon-ios-arrow-down ivu-select-arrow"]'
+        #     '(//div[text()="物料种类"]/following-sibling::div//i)[last()]'
         # )
         #
         # # 点击查询按钮
@@ -1062,14 +1062,14 @@ class TestSettingPage:
         )
         sleep(1)
         text_values = setting.get_find_element_xpath(
-            f'//div[text()="物料种类"]/following-sibling::div//li[contains(@class,"ivu-select-item")][1]').text
+            f'//div[@class="el-scrollbar"]//div[@class="quick-query-virtual-item"][1]').text
         setting.click_button(
-            f'//div[text()="物料种类"]/following-sibling::div//li[contains(@class,"ivu-select-item")][1]')
+            f'//div[@class="el-scrollbar"]//div[@class="quick-query-virtual-item"][1]')
         sleep(1)
         # 展开物料种类下拉框
-        setting.click_button(
-            '//div[text()="物料种类"]/following-sibling::div//i[@class="ivu-icon ivu-icon-ios-arrow-down ivu-select-arrow"]'
-        )
+        # setting.click_button(
+        #     '(//div[text()="物料种类"]/following-sibling::div//i)[last()]'
+        # )
         # 点击查询按钮
         setting.click_select_button()
         # 获取所有行
@@ -1112,19 +1112,19 @@ class TestSettingPage:
         )
         sleep(1)
         text_values1 = setting.get_find_element_xpath(
-            f'//div[text()="物料种类"]/following-sibling::div//li[contains(@class,"ivu-select-item")][1]').text
+            f'//div[@class="el-scrollbar"]//div[@class="quick-query-virtual-item"][1]').text
         setting.click_button(
-            f'//div[text()="物料种类"]/following-sibling::div//li[contains(@class,"ivu-select-item")][1]')
+            f'//div[@class="el-scrollbar"]//div[@class="quick-query-virtual-item"][1]')
         sleep(1)
         text_values2 = setting.get_find_element_xpath(
-            f'//div[text()="物料种类"]/following-sibling::div//li[contains(@class,"ivu-select-item")][2]').text
+            f'//div[@class="el-scrollbar"]//div[@class="quick-query-virtual-item"][2]').text
         setting.click_button(
-            f'//div[text()="物料种类"]/following-sibling::div//li[contains(@class,"ivu-select-item")][2]')
+            f'//div[@class="el-scrollbar"]//div[@class="quick-query-virtual-item"][2]')
         sleep(1)
         # 展开物料种类下拉框
-        setting.click_button(
-            '//div[text()="物料种类"]/following-sibling::div//i[@class="ivu-icon ivu-icon-ios-arrow-down ivu-select-arrow"]'
-        )
+        # setting.click_button(
+        #     '(//div[text()="物料种类"]/following-sibling::div//i)[last()]'
+        # )
         # 点击查询按钮
         setting.click_select_button()
 
@@ -2740,7 +2740,7 @@ class TestSettingPage:
             By.XPATH, f'//div[@class="tabsDivItemCon"]/div[text()=" {layout2} "]'
         )
         assert len(after_layout1) == 0 and len(after_layout2) == 0
-        list_ = ["系统管理", "系统设置", "用户权限管理"]
+        list_ = ["系统管理", "用户权限管理"]
         for v in list_:
             setting.click_button(f'(//span[text()="{v}"])[1]')
 

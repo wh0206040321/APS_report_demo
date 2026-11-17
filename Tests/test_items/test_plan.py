@@ -93,7 +93,7 @@ class TestPlanPage:
         for v in list_:
             plan.click_button(f'(//span[text()="{v}"])[1]')
         sleep(2)
-        text = plan.get_find_element_xpath('//span[text()=" 引擎启动方式:本地 "]').text
+        text = plan.get_find_element_xpath('//span[text()="引擎启动方式:本地"]').text
         # 检查元素是否包含子节点
         assert text == "引擎启动方式:本地"
         assert not plan.has_fail_message()
@@ -137,16 +137,17 @@ class TestPlanPage:
         ).text
         sched.click_button('(//div[@class="ivu-tree"]//li/ul[1])[1]/li/span[2]')
         sched.click_attribute_button()
+        sched.click_button('//div[@class="ivu-tabs-nav"]//div[text()=" 通用属性 "]')
         # 点击开关 如果为开 则关闭
         ele = sched.get_find_element_xpath(
-            '//div[text()="计划方案组合框显示"]/following-sibling::div//span[1]'
+            '(//div[span[text()="计划方案组合框显示"]]/following-sibling::div//span)[1]'
         )
         if (
             ele.get_attribute("class")
             == "ivu-switch ivu-switch-checked ivu-switch-default"
         ):
             sched.click_button(
-                '//div[text()="计划方案组合框显示"]/following-sibling::div//span[1]'
+                '(//div[span[text()="计划方案组合框显示"]]/following-sibling::div//span)[1]'
             )
 
         sched.click_ok_button()
@@ -172,12 +173,11 @@ class TestPlanPage:
         )
         sleep(3)
         target.click()
-        ele_input = plan.get_find_element_xpath(
-            '//div[@class="vue-treeselect__list"]/div[1]//label'
-        )
-        sleep(1)
-        print(ele_input.text)
-        assert ele_input.text != sched_text
+        ele_input = plan.finds_elements(By.XPATH,
+                                        '//div[@class="vue-treeselect__list"]/div//label'
+                                        )
+        list_ = [ele.get_attribute('innerText') for ele in ele_input]
+        assert sched_text not in list_
         assert not plan.has_fail_message()
 
     @allure.story("方案管理中计划方案组合框显示开启，显示该方案")
@@ -199,13 +199,14 @@ class TestPlanPage:
         ).text
         sched.click_button('(//div[@class="ivu-tree"]//li/ul[1])[1]/li/span[2]')
         sched.click_attribute_button()
+        sched.click_button('//div[@class="ivu-tabs-nav"]//div[text()=" 通用属性 "]')
         # 点击开关 如果为关则打开
         ele = sched.get_find_element_xpath(
-            '//div[text()="计划方案组合框显示"]/following-sibling::div//span[1]'
+            '(//div[span[text()="计划方案组合框显示"]]/following-sibling::div//span)[1]'
         )
         if ele.get_attribute("class") == "ivu-switch ivu-switch-default":
             sched.click_button(
-                '//div[text()="计划方案组合框显示"]/following-sibling::div//span[1]'
+                '(//div[span[text()="计划方案组合框显示"]]/following-sibling::div//span)[1]'
             )
 
         sched.click_ok_button()
@@ -231,10 +232,11 @@ class TestPlanPage:
         )
         sleep(3)
         target.click()
-        ele_input = plan.get_find_element_xpath(
-            '//div[@class="vue-treeselect__list"]/div[1]//label'
-        ).text
-        assert ele_input == sched_text
+        ele_input = plan.finds_elements(By.XPATH,
+            '//div[@class="vue-treeselect__list"]/div//label'
+        )
+        list_ = [ele.get_attribute('innerText') for ele in ele_input]
+        assert sched_text in list_
         assert not plan.has_fail_message()
 
     @allure.story("执行成功")
@@ -406,12 +408,15 @@ class TestPlanPage:
         assert ele == "vxe-icon-funnel suffixIcon"
 
         # 更新者为自己
-        eles = plan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[6]')
+        eles = plan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[8]')
         assert all(date_driver.username == ele.text for ele in eles)
 
         # 更新时间为今天
+        element = plan.get_find_element_xpath('//div[@class="vxe-table--body-wrapper body--wrapper"]')
+        driver.execute_script("arguments[0].scrollLeft = arguments[0].scrollWidth;", element)
+        sleep(2)
         today = datetime.now().strftime('%Y/%m/%d')
-        eles = plan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[7]')
+        eles = plan.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[8]')
         assert all(today in ele.text for ele in eles)
 
         assert not plan.has_fail_message()

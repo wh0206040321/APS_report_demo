@@ -169,6 +169,34 @@ class TestItemPage:
         ), f"预期数据是记录已存在,请检查，实际得到{error_popup}"
         assert not self.item.has_fail_message()
 
+    @allure.story("添加测试数据成功")
+    # @pytest.mark.run(order=1)
+    def test_materialBuyer_addtest(self, login_to_item):
+        test_data = ["测试数据A", "测试数据B"]
+        for supplier_code in test_data:
+            # 检查数据是否已经存在
+            rows = self.item.finds_elements(
+                By.XPATH,
+                f'//tr[./td[2][.//span[text()="{supplier_code}"]]]/td[2]'
+            )
+            # 不存在才新增
+            if len(rows) == 0:
+                self.item.click_add_button()
+                self.item.enter_texts("//div[@id='gd8ku89o-3d7y']//input", supplier_code)
+                self.item.enter_texts("//div[@id='skmun9z1-nw6o']//input", supplier_code)
+                self.item.enter_texts("//div[@id='kzar0tht-6si6']//input", supplier_code)
+
+                # 点击确定
+                self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+                self.item.wait_for_loading_to_disappear()
+                adddata = self.item.get_find_element_xpath(
+                    f'//tr[./td[2][.//span[text()="{supplier_code}"]]]/td[2]'
+                ).text
+                assert adddata == supplier_code, f"预期数据是111，实际得到{adddata}"
+
+        # 检查页面是否出现失败提示
+        assert not self.item.has_fail_message()
+
     @allure.story("取消删除数据")
     # @pytest.mark.run(order=1)
     def test_materialBuyer_delcancel(self, login_to_item):

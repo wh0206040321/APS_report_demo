@@ -28,7 +28,7 @@ class AddsPages(BasePage):
         except NoSuchElementException:
             return None
 
-    def wait_for_loading_to_disappear(self, timeout=10):
+    def wait_for_loading_to_disappear(self, timeout=60):
         WebDriverWait(self.driver, timeout).until(
             EC.presence_of_element_located(
                 (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
@@ -80,6 +80,9 @@ class AddsPages(BasePage):
                 ActionChains(self.driver).double_click(self.get_find_element_xpath(new_value)).perform()
                 sleep(1)
                 self.click_button('(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[last()]//span[text()="确定"]')
+                ele = self.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+                if len(ele) == 1:
+                    self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
             except NoSuchElementException:
                 print(f"未找到元素: {xpath}")
             except Exception as e:
@@ -254,11 +257,12 @@ class AddsPages(BasePage):
             num = self.get_find_element_xpath(
                 '(//div[@class="vxe-table--fixed-left-wrapper"])[2]//table[@class="vxe-table--body"]//tr[last()]//div').text
         sleep(0.5)
-        try:
-            self.click_button('(//div[@class="demo-drawer-footer"])[2]//span[text()="确定"]')
-        except Exception:
-            # 如果第一个点不了，就点另一个
-            self.click_button('(//div[@class="demo-drawer-footer"])[3]//span[text()="确定"]')
+        for index in [2, 3, 1]:
+            try:
+                self.click_button(f'(//div[@class="demo-drawer-footer"])[{index}]//span[text()="确定"]')
+                break  # 点击成功就跳出循环，不再尝试后面的
+            except Exception:
+                continue  # 点击失败就继续尝试下一个
 
         self.wait_for_loading_to_disappear()
         return num

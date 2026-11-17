@@ -83,7 +83,7 @@ class OrderPage(BasePage):
         self.click_button('//li[text()=" 刷新"]')
         self.wait_for_loading_to_disappear()
 
-    def wait_for_loading_to_disappear(self, timeout=10):
+    def wait_for_loading_to_disappear(self, timeout=60):
         """
         显式等待加载遮罩元素消失。
 

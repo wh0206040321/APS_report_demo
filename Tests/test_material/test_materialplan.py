@@ -83,7 +83,7 @@ class TestMaterialPlanPage:
     def test_materialplan_success(self, login_to_materialplan):
         driver = login_to_materialplan
         plan = PlanPage(driver)
-        wait = WebDriverWait(driver, 60)
+        wait = WebDriverWait(driver, 600)
 
         # 等待 el-loading-spinner 消失
         WebDriverWait(driver, 10).until(
@@ -131,8 +131,6 @@ class TestMaterialPlanPage:
     def test_plan_select_materialplan(self, login_to_materialplan):
         driver = login_to_materialplan
         plan = PlanPage(driver)
-        wait = WebDriverWait(driver, 60)
-        date_driver = DateDriver()
 
         plan.click_button('(//div[@class="d-flex"])[2]/p[text()=" 完成 "]')
         plan.wait_for_loading_to_disappear()

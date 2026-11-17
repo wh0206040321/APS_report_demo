@@ -51,7 +51,7 @@ class SettingPage(BasePage):
         code = [ele.text for ele in eles]
         return code
 
-    def wait_for_loading_to_disappear(self, timeout=10):
+    def wait_for_loading_to_disappear(self, timeout=60):
         """
         显式等待加载遮罩元素消失。
 

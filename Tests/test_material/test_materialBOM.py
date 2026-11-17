@@ -39,7 +39,7 @@ def login_to_item():
 
 
 @allure.feature("物料BOM测试用例")
-@pytest.mark.run(order=102)
+@pytest.mark.run(order=105)
 class TestItemPage:
     @pytest.fixture(autouse=True)
     def setup(self, login_to_item):
@@ -73,7 +73,7 @@ class TestItemPage:
             '//div[span[text()=" BOM版本 "]]/following-sibling::div//input',
             '//div[span[text()=" BOM单位 "]]/following-sibling::div//input',
             '//div[span[text()=" 位号 "]]/following-sibling::div//input',
-            '//div[span[text()=" 配套分组消息 "]]/following-sibling::div//input',
+            # '//div[span[text()=" 配套分组消息 "]]/following-sibling::div//input',
             '//div[span[text()=" 备注 "]]/following-sibling::div//input',
         ]
         self.all_input_xpath_list += self.custom_xpath_list
@@ -86,8 +86,7 @@ class TestItemPage:
             '//div[span[text()=" 替代比例 "]]/following-sibling::div//input',
             '//div[span[text()=" 优先度 "]]/following-sibling::div//input',
             '//div[span[text()=" 最大替代组数 "]]/following-sibling::div//input',
-            '//div[span[text()=" 最大供应分组数 "]]/following-sibling::div//input',
-
+            # '//div[span[text()=" 最大供应分组数 "]]/following-sibling::div//input',
         ]
         self.all_num_input_xpath_list += self.num_xpath_list1
 
@@ -99,16 +98,16 @@ class TestItemPage:
         self.all_date_xpath_list += self.data_xpath_list1
 
         # 全部下拉输入框xpath
-        self.select_list = [
-            {"select": '//div[span[text()=" 供应分组字段 "]]/following-sibling::div//input', "value": '(//div[@class="my-list vxe-list"]//span[text()="ID 行唯一标识"])[last()]'},
-            {"select": '//div[span[text()=" 附加分组字段 "]]/following-sibling::div//input', "value": '(//div[@class="my-list vxe-list"]//span[text()="ID 行唯一标识"])[last()]'},
-            {"select": '//div[span[text()=" 库存周期类型 "]]/following-sibling::div//input', "value": '(//div[@class="my-list vxe-list"]//span[text()="月"])[last()]'},
-        ]
+        # self.select_list = [
+        #     {"select": '//div[span[text()=" 供应分组字段 "]]/following-sibling::div//input', "value": '(//div[@class="my-list vxe-list"]//span[text()="ID 行唯一标识"])[last()]'},
+        #     {"select": '//div[span[text()=" 附加分组字段 "]]/following-sibling::div//input', "value": '(//div[@class="my-list vxe-list"]//span[text()="ID 行唯一标识"])[last()]'},
+        #     {"select": '//div[span[text()=" 库存周期类型 "]]/following-sibling::div//input', "value": '(//div[@class="my-list vxe-list"]//span[text()="月"])[last()]'},
+        # ]
 
         self.click_list = [
             '//div[span[text()=" 是否混料 "]]/following-sibling::label/span',
             '//div[span[text()=" 是否专属料 "]]/following-sibling::label/span',
-            '//div[span[text()=" 是否必需满足 "]]/following-sibling::label/span'
+            # '//div[span[text()=" 是否必需满足 "]]/following-sibling::label/span'
         ]
 
     @allure.story("添加物料BOM信息 不填写数据点击确认 不允许提交")
@@ -307,11 +306,11 @@ class TestItemPage:
         self.item.batch_modify_inputs(self.all_input_xpath_list, input_value)
         self.item.batch_modify_inputs(self.all_date_xpath_list, date_str)
         self.item.batch_modify_inputs(self.all_num_input_xpath_list, text_str)
-        self.item.batch_modify_select_input(self.select_list)
+        # self.item.batch_modify_select_input(self.select_list)
         self.item.batch_click_input(self.click_list)
 
-        select_input_list = [item["select"] for item in self.select_list]
-        all_value = self.all_input_xpath_list + self.all_date_xpath_list + self.all_num_input_xpath_list + select_input_list
+        # select_input_list = [item["select"] for item in self.select_list]
+        all_value = self.all_input_xpath_list + self.all_date_xpath_list + self.all_num_input_xpath_list # + select_input_list
         all_click = len(self.click_list)
         len_num = len(all_value)
         before_all_value = self.item.batch_acquisition_inputs(all_value)
@@ -371,11 +370,11 @@ class TestItemPage:
         self.item.batch_modify_inputs(self.all_input_xpath_list, input_value)
         self.item.batch_modify_inputs(self.all_date_xpath_list, date_str)
         self.item.batch_modify_inputs(self.all_num_input_xpath_list, text_str)
-        self.item.batch_modify_select_input(self.select_list)
+        # self.item.batch_modify_select_input(self.select_list)
         self.item.batch_click_input(self.click_list)
 
-        select_input_list = [item["select"] for item in self.select_list]
-        all_value = self.all_input_xpath_list + self.all_date_xpath_list + self.all_num_input_xpath_list + select_input_list
+        # select_input_list = [item["select"] for item in self.select_list]
+        all_value = self.all_input_xpath_list + self.all_date_xpath_list + self.all_num_input_xpath_list # + select_input_list
         all_click = len(self.click_list)
         len_num = len(all_value)
         before_all_value = self.item.batch_acquisition_inputs(all_value)

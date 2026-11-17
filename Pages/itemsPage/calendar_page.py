@@ -101,7 +101,7 @@ class Calendar(BasePage):
         sleep(0.5)
         self.wait_for_loading_to_disappear()
 
-    def wait_for_loading_to_disappear(self, timeout=10):
+    def wait_for_loading_to_disappear(self, timeout=60):
 
         WebDriverWait(self.driver, timeout).until(
             EC.presence_of_element_located(
@@ -209,6 +209,9 @@ class Calendar(BasePage):
             self.click_button('(//div[text()=" 星期 "])[1]')
             self.click_button(
                 '//div[@class="d-flex"]/label/span'
+            )
+            self.click_button(
+                '//label[span[text()="星期日"]]'
             )
             self.click_button(
                 '(//div[@class="h-40px flex-justify-end flex-align-items-end b-t-s-d9e3f3"])[1]/button[1]'

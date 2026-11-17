@@ -32,6 +32,7 @@ class MaterialCalendar(BasePage):
     def click_ref_button(self):
         """点击刷新按钮."""
         self.click(By.XPATH, '//p[text()="刷新"]')
+        self.wait_for_loading_to_disappear()
 
     def enter_texts(self, xpath, text):
         """输入文字."""
@@ -66,7 +67,7 @@ class MaterialCalendar(BasePage):
 
     def click_select_button(self):
         """点击查询确定按钮."""
-        self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[3]')
+        self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[2]')
         sleep(0.5)
         self.wait_for_loading_to_disappear()
 
@@ -101,7 +102,7 @@ class MaterialCalendar(BasePage):
         self.click_button('//li[text()=" 刷新"]')
         self.wait_for_loading_to_disappear()
 
-    def wait_for_loading_to_disappear(self, timeout=10):
+    def wait_for_loading_to_disappear(self, timeout=60):
         WebDriverWait(self.driver, timeout).until(
             EC.presence_of_element_located(
                 (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
@@ -160,10 +161,10 @@ class MaterialCalendar(BasePage):
             # 如果未选中，则点击复选框进行选中
             self.click_button('(//div[./div[text()="是否可见:"]])[1]/label/span')
             # 点击确定按钮保存设置
-            self.click_button('(//div[@class="demo-drawer-footer"])[3]/button[2]')
+            self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[2]')
         else:
             # 如果已选中，直接点击确定按钮保存设置
-            self.click_button('(//div[@class="demo-drawer-footer"])[3]/button[2]')
+            self.click_button('(//div[@class="demo-drawer-footer"]//span[text()="确定"])[2]')
 
     def add_input_all(self, num):
         """输入框全部输入保存"""
@@ -275,3 +276,100 @@ class MaterialCalendar(BasePage):
         # 3️⃣ 再点击图标
         delete_icon.click()
 
+    def select_input(self, xpath_name, name):
+        """选择输入框."""
+        xpath = f'//div[div[span[text()=" {xpath_name}"]]]//input'
+        ele = self.get_find_element_xpath(xpath)
+        ele.send_keys(Keys.CONTROL + "a")
+        ele.send_keys(Keys.DELETE)
+        self.enter_texts(xpath, name)
+        sleep(1)
+
+    def receiving_calendar(self, date, value=None):
+        """
+        设置收货日历模式
+
+        :param date: 日历模式，可选：按天、按周、按月
+        :param value:
+            按天：["2028/09/15", "2028/09/25"]
+            按周：["星期一", "星期三", "星期五"]
+            按月：["21", "24", "26"]
+        """
+
+        # 打开收货日历模式下拉框
+        self.click_button(
+            '//div[span[text()=" 收货日历模式 "]]/following-sibling::div//input'
+        )
+
+        # 选择日历模式
+        self.click_button(
+            f'//div[@class="my-list vxe-list"]//span[text()="{date}"]'
+        )
+
+        # =========================
+        # 按天
+        # =========================
+        if date == "按天":
+
+            # 没有传日期，使用默认日期
+            if value is None:
+                value = ["2028/09/15", "2028/09/25"]
+            self.enter_texts(
+                f'(//div[@value="{date}"]//input[@placeholder="请输入"])[1]',
+                value[0]
+            )
+            self.enter_texts(
+                f'(//div[@value="{date}"]//input[@placeholder="请输入"])[2]',
+                value[1]
+            )
+            return
+
+        # =========================
+        # 按周
+        # =========================
+        if date == "按周":
+
+            if value is None:
+                value = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"]
+
+        # =========================
+        # 按月
+        # =========================
+        elif date == "按月":
+
+            if value is None:
+                value = ["21", "24", "26"]
+
+        # =========================
+        # 勾选复选框
+        # =========================
+        for item in value:
+
+            checkbox = self.driver.find_element(
+                By.XPATH,
+                f'//input[@type="checkbox" and @value="{item}"]'
+            )
+
+            # 未勾选才点击
+            if not checkbox.is_selected():
+                checkbox.click()
+
+    def addtime(self, time):
+        self.click_button('//label[text()=" 时间点"]')
+        self.click_button('//i[contains(@class, "icon-shijianxuanzeqi")]')
+
+        for start_time, end_time in time:
+            # 开始时间
+            self.enter_texts(
+                '(//div[@id="canvasGird0"]//input)[1]',
+                start_time
+            )
+            # 结束时间
+            self.enter_texts(
+                '(//div[@id="canvasGird0"]//input)[2]',
+                end_time
+            )
+            # 添加
+            self.click_button(
+                '//div[@id="canvasGird0"]//span[text()="添加"]'
+            )

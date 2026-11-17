@@ -37,7 +37,7 @@ def login_to_item():
 
 
 @allure.feature("供应商信息测试用例")
-@pytest.mark.run(order=104)
+@pytest.mark.run(order=101)
 class TestItemPage:
     @pytest.fixture(autouse=True)
     def setup(self, login_to_item):
@@ -54,51 +54,11 @@ class TestItemPage:
         #     layout = "测试布局A"
         #     self.item.add_layout(layout)
         self.item.click_add_button()
-        # 供应商代码xpath
+        # 供应商编号xpath
         input_box = self.item.get_find_element_xpath(
-            "//div[@id='tx0gv6lt-z2dv']//input"
-        )
-        # 联系人xpath
-        inputname_box = self.item.get_find_element_xpath(
-            "//div[@id='e4589osf-fgn3']//input"
-        )
-        # 电话xpath
-        whs_code_box = self.item.get_find_element_xpath(
-            "//div[@id='tnkc4719-huz5']//input"
+            "//div[span[text()=' 供应商编号 ']]/following-sibling::div//input"
         )
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
-        # 断言边框颜色是否为红色（可以根据实际RGB值调整）
-        sleep(1)
-        border_color = input_box.value_of_css_property("border-color")
-        bordername_color = inputname_box.value_of_css_property("border-color")
-        whs_code_color = whs_code_box.value_of_css_property("border-color")
-        expected_color = "rgb(255, 0, 0)"  # 红色的 rgb 值
-        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="取消"]')
-        assert (
-            border_color == expected_color
-        ), f"预期边框颜色为{expected_color}, 但得到{border_color}"
-        assert (
-            bordername_color == expected_color
-        ), f"预期边框颜色为{expected_color}, 但得到{bordername_color}"
-        assert (
-                whs_code_color == expected_color
-        ), f"预期边框颜色为{expected_color}, 但得到{whs_code_color}"
-        assert not self.item.has_fail_message()
-
-    @allure.story("添加供应商信息信息，只填写供应商代码，不填写联系人，不允许提交")
-    # @pytest.mark.run(order=2)
-    def test_materialVendors_addcodefail(self, login_to_item):
-        # driver = login_to_item  # WebDriver 实例
-        # item = WarehouseLocationPage(driver)  # 用 driver 初始化 ItemPage
-
-        self.item.click_add_button()
-        self.item.enter_texts(
-            "//div[@id='tx0gv6lt-z2dv']//input", "text1231"
-        )
-        self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
-        input_box = self.item.get_find_element_xpath(
-            "//div[@id='e4589osf-fgn3']//input"
-        )
         # 断言边框颜色是否为红色（可以根据实际RGB值调整）
         sleep(1)
         border_color = input_box.value_of_css_property("border-color")
@@ -114,10 +74,8 @@ class TestItemPage:
     def test_materialVendors_addsuccess(self, login_to_item):
 
         self.item.click_add_button()  # 检查点击添加
-        # 输入供应商代码
-        self.item.enter_texts("//div[@id='tx0gv6lt-z2dv']//input", "111")
-        self.item.enter_texts("//div[@id='e4589osf-fgn3']//input", "111")
-        self.item.enter_texts("//div[@id='tnkc4719-huz5']//input", "111")
+        # 输入供应商编号
+        self.item.enter_texts("//div[span[text()=' 供应商编号 ']]/following-sibling::div//input", "111")
 
         # 点击确定
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
@@ -128,15 +86,47 @@ class TestItemPage:
         assert adddata == "111", f"预期数据是111，实际得到{adddata}"
         assert not self.item.has_fail_message()
 
+    @allure.story("添加测试数据成功")
+    # @pytest.mark.run(order=1)
+    def test_materialVendors_addtest(self, login_to_item):
+        test_data = ["测试数据A", "测试数据B"]
+        for supplier_code in test_data:
+            # 检查数据是否已经存在
+            rows = self.item.finds_elements(
+                By.XPATH,
+                f'//tr[./td[2][.//span[text()="{supplier_code}"]]]/td[2]'
+            )
+            # 不存在才新增
+            if len(rows) == 0:
+                self.item.click_add_button()
+                # 输入供应商编号
+                self.item.enter_texts(
+                    "//div[span[text()=' 供应商编号 ']]/following-sibling::div//input",
+                    supplier_code
+                )
+                # 点击确定
+                self.item.click_button(
+                    '//div[@class="vxe-modal--footer"]//span[text()="确定"]'
+                )
+                sleep(1)
+                # 校验新增结果
+                adddata = self.item.get_find_element_xpath(
+                    f'//tr[./td[2][.//span[text()="{supplier_code}"]]]/td[2]'
+                ).text
+                assert adddata == supplier_code, (
+                    f"预期数据是{supplier_code}，实际得到{adddata}"
+                )
+
+        # 检查页面是否出现失败提示
+        assert not self.item.has_fail_message()
+
     @allure.story("添加数据重复")
     # @pytest.mark.run(order=1)
     def test_materialVendors_addrepeat(self, login_to_item):
 
         self.item.click_add_button()  # 检查点击添加
-        # 输入供应商代码
-        self.item.enter_texts("//div[@id='tx0gv6lt-z2dv']//input", "111")
-        self.item.enter_texts("//div[@id='e4589osf-fgn3']//input", "111")
-        self.item.enter_texts("//div[@id='tnkc4719-huz5']//input", "111")
+        # 输入供应商编号
+        self.item.enter_texts("//div[span[text()=' 供应商编号 ']]/following-sibling::div//input", "111")
         # 点击确定
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
@@ -174,10 +164,8 @@ class TestItemPage:
     def test_materialVendors_addsuccess1(self, login_to_item):
 
         self.item.click_add_button()  # 检查点击添加
-        # 输入供应商代码
-        self.item.enter_texts("//div[@id='tx0gv6lt-z2dv']//input", "1测试A")
-        self.item.enter_texts("//div[@id='e4589osf-fgn3']//input", "1测试A")
-        self.item.enter_texts("//div[@id='tnkc4719-huz5']//input", "1测试A")
+        # 输入供应商编号
+        self.item.enter_texts("//div[span[text()=' 供应商编号 ']]/following-sibling::div//input", "1测试A")
         # 点击确定
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
@@ -187,7 +175,7 @@ class TestItemPage:
         assert adddata == "1测试A", f"预期数据是1测试A，实际得到{adddata}"
         assert not self.item.has_fail_message()
 
-    @allure.story("修改供应商代码重复")
+    @allure.story("修改供应商编号重复")
     # @pytest.mark.run(order=1)
     def test_materialVendors_editrepeat(self, login_to_item):
 
@@ -195,8 +183,8 @@ class TestItemPage:
         self.item.click_button('//tr[./td[2][.//span[text()="1测试A"]]]/td[2]')
         # 点击修改按钮
         self.item.click_edi_button()
-        # 供应商代码输入111
-        self.item.enter_texts("//div[@id='wxryw4ea-71oi']//input", "111")
+        # 供应商编号输入111
+        self.item.enter_texts("//div[span[text()=' 供应商编号 ']]/following-sibling::div//input", "111")
         # 点击确定
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
@@ -209,7 +197,7 @@ class TestItemPage:
         assert error_popup == "记录已存在,请检查！", f"预期数据{error_popup}"
         assert not self.item.has_fail_message()
 
-    @allure.story("修改供应商代码成功")
+    @allure.story("修改供应商编号成功")
     # @pytest.mark.run(order=1)
     def test_materialVendors_editcodesuccess(self, login_to_item):
         # 选中1测试A物料代码
@@ -219,9 +207,9 @@ class TestItemPage:
         sleep(1)
 
         text = "1测试A5"
-        # 供应商代码输入
+        # 供应商编号输入
         self.item.enter_texts(
-            "//div[@id='wxryw4ea-71oi']//input", f"{text}"
+            "//div[span[text()=' 供应商编号 ']]/following-sibling::div//input", f"{text}"
         )
         # 点击确定
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
@@ -233,7 +221,7 @@ class TestItemPage:
         assert itemdata == text, f"预期{itemdata}"
         assert not self.item.has_fail_message()
 
-    @allure.story("把修改后的供应商代码改回来")
+    @allure.story("把修改后的供应商编号改回来")
     # @pytest.mark.run(order=1)
     def test_materialVendors_editcodesuccess2(self, login_to_item):
 
@@ -241,8 +229,8 @@ class TestItemPage:
         self.item.click_button('//tr[./td[2][.//span[contains(text(),"1测试A")]]]/td[2]')
         # 点击修改按钮
         self.item.click_edi_button()
-        # 供应商代码输入
-        self.item.enter_texts("//div[@id='wxryw4ea-71oi']//input", "1测试A")
+        # 供应商编号输入
+        self.item.enter_texts("//div[span[text()=' 供应商编号 ']]/following-sibling::div//input", "1测试A")
         # 点击确定
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
@@ -289,32 +277,32 @@ class TestItemPage:
         date_str = "2025/07/17 00:00:00"
         # 输入框的xpath
         input_xpath_list = [
-            "//div[@id='wxryw4ea-71oi']//input",
-            "//div[@id='z99bga8f-59um']//input",
-            "//div[@id='b3dmq4at-505f']//input",
-            "//div[@id='lpuajgnl-w4bn']//input",
-            "//div[@id='tfcztwig-bpyz']//input",
-            "//div[@id='pwjnm6g5-r3wi']//input",
-            "//div[@id='g05o5ikv-h98g']//input",
-            "//div[@id='r05l4zyh-0mkg']//input",
-            "//div[@id='vht0i4qg-tohl']//input",
-            "//div[@id='q7vbvbvr-m50y']//input",
-            "//div[@id='9nja3beq-3vul']//input",
-            "//div[@id='qnla7m1x-jp14']//input",
-            "//div[@id='98nsjrto-f7v5']//input",
-            "//div[@id='muzdhwzt-zk46']//input",
-            "//div[@id='h511lvst-ymil']//input",
-            "//div[@id='mnr6qddb-byo9']//input",
-            "//div[@id='o5t54uds-wpe1']//input",
-            "//div[@id='nlaxbubj-sgw3']//input",
+            "//div[span[text()=' 供应商编号 ']]/following-sibling::div//input",
+            "//div[span[text()=' 供应商简称 ']]/following-sibling::div//input",
+            "//div[span[text()=' 供应商全称 ']]/following-sibling::div//input",
+            "//div[span[text()=' 供应商地址 ']]/following-sibling::div//input",
+            "//div[span[text()=' 联系人 ']]/following-sibling::div//input",
+            "//div[span[text()=' 联系电话 ']]/following-sibling::div//input",
+            "//div[span[text()=' 电子邮件 ']]/following-sibling::div//input",
+            "//div[span[text()=' 备注 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义字符1 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义字符2 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义字符3 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义字符4 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义字符5 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义数值1 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义数值2 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义数值3 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义数值4 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义数值5 ']]/following-sibling::div//input",
         ]
         # 日期的xpath
         date_xpath_list = [
-            "//div[@id='mcdabmzy-zwt7']//input",
-            "//div[@id='9ypxww95-ui8k']//input",
-            "//div[@id='3ilkuaeu-5qs1']//input",
-            "//div[@id='a46z78ba-g1le']//input",
-            "//div[@id='jwpjthep-ld2y']//input"
+            "//div[span[text()=' 自定义日期1 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义日期2 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义日期3 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义日期4 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义日期5 ']]/following-sibling::div//input",
         ]
 
         # 选中工厂代码
@@ -332,7 +320,7 @@ class TestItemPage:
         # 点击确定
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
-        # 选中供应商代码
+        # 选中供应商编号
         self.item.click_button('//tr[./td[2][.//span[text()="111"]]]/td[2]')
         # 点击编辑按钮
         self.item.click_edi_button()
@@ -355,19 +343,19 @@ class TestItemPage:
     # @pytest.mark.run(order=1)
     def test_materialVendors_refreshsuccess(self, login_to_item):
 
-        # 供应商代码筛选框输入111
+        # 供应商编号筛选框输入111
         self.item.enter_texts(
-            '//span[text()=" 供应商代码"]/ancestor::div[2]//input', "111"
+            '//span[text()=" 供应商编号"]/ancestor::div[2]//input', "111"
         )
         itemtext = self.item.get_find_element_xpath(
-            '//span[text()=" 供应商代码"]/ancestor::div[2]//input'
+            '//span[text()=" 供应商编号"]/ancestor::div[2]//input'
         ).text
         sleep(2)
         self.item.click_ref_button()
         assert itemtext == "", f"预期{itemtext}"
         assert not self.item.has_fail_message()
 
-    @allure.story("查询工厂代码成功")
+    @allure.story("查询供应商编号成功")
     # @pytest.mark.run(order=1)
     def test_materialVendors_selectcodesuccess(self, login_to_item):
         driver = login_to_item  # WebDriver 实例
@@ -387,7 +375,7 @@ class TestItemPage:
         actions.double_click(element_to_double_click).perform()
         sleep(1)
         # 点击工厂代码
-        item.click_button('//div[text()="供应商代码" and contains(@optid,"opt_")]')
+        item.click_button('//div[text()="供应商编号" and contains(@optid,"opt_")]')
         sleep(1)
         # 点击比较关系框
         item.click_button(
@@ -438,7 +426,7 @@ class TestItemPage:
         actions.double_click(element_to_double_click).perform()
         sleep(1)
         # 点击物料代码
-        self.item.click_button('//div[text()="供应商代码" and contains(@optid,"opt_")]')
+        self.item.click_button('//div[text()="供应商编号" and contains(@optid,"opt_")]')
         sleep(1)
         # 点击比较关系框
         self.item.click_button(
@@ -502,62 +490,32 @@ class TestItemPage:
         date_str = "2025/07/17 00:00:00"
         # 输入框的xpath
         input_xpath_list = [
-            "//div[@id='tx0gv6lt-z2dv']//input",
-            "//div[@id='576xc9w1-puug']//input",
-            "//div[@id='b44la7cy-s934']//input",
-            "//div[@id='tep1a5t0-szkc']//input",
-            "//div[@id='e4589osf-fgn3']//input",
-            "//div[@id='tnkc4719-huz5']//input",
-            "//div[@id='7y24t1kd-a7wp']//input",
-            "//div[@id='wge1mzjn-0ygn']//input",
-            "//div[@id='xzv28jlv-t3ly']//input",
-            "//div[@id='hvaaakjv-13it']//input",
-            "//div[@id='da2kcz0f-x4kg']//input",
-            "//div[@id='ct8gwmqk-2rkm']//input",
-            "//div[@id='x0wyflt4-b0ii']//input",
-            "//div[@id='ilss8dt1-p0zs']//input",
-            "//div[@id='yo2m7t94-bhfz']//input",
-            "//div[@id='zvb3rv6p-b27n']//input",
-            "//div[@id='cnpm0qat-paig']//input",
-            "//div[@id='vzaoizo2-m1sp']//input"
+            "//div[span[text()=' 供应商编号 ']]/following-sibling::div//input",
+            "//div[span[text()=' 供应商简称 ']]/following-sibling::div//input",
+            "//div[span[text()=' 供应商全称 ']]/following-sibling::div//input",
+            "//div[span[text()=' 供应商地址 ']]/following-sibling::div//input",
+            "//div[span[text()=' 联系人 ']]/following-sibling::div//input",
+            "//div[span[text()=' 联系电话 ']]/following-sibling::div//input",
+            "//div[span[text()=' 电子邮件 ']]/following-sibling::div//input",
+            "//div[span[text()=' 备注 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义字符1 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义字符2 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义字符3 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义字符4 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义字符5 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义数值1 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义数值2 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义数值3 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义数值4 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义数值5 ']]/following-sibling::div//input",
         ]
         # 日期的xpath
         date_xpath_list = [
-            "//div[@id='hdr7gdia-n70t']//input",
-            "//div[@id='zd8khtqf-czzy']//input",
-            "//div[@id='kghz1un0-ldz9']//input",
-            "//div[@id='bhl7i8jc-lh1o']//input",
-            "//div[@id='oee9947k-z6o1']//input"
-        ]
-
-        # 编辑输入框的xpath
-        input_xpath_list2 = [
-            "//div[@id='wxryw4ea-71oi']//input",
-            "//div[@id='z99bga8f-59um']//input",
-            "//div[@id='b3dmq4at-505f']//input",
-            "//div[@id='lpuajgnl-w4bn']//input",
-            "//div[@id='tfcztwig-bpyz']//input",
-            "//div[@id='pwjnm6g5-r3wi']//input",
-            "//div[@id='g05o5ikv-h98g']//input",
-            "//div[@id='r05l4zyh-0mkg']//input",
-            "//div[@id='vht0i4qg-tohl']//input",
-            "//div[@id='q7vbvbvr-m50y']//input",
-            "//div[@id='9nja3beq-3vul']//input",
-            "//div[@id='qnla7m1x-jp14']//input",
-            "//div[@id='98nsjrto-f7v5']//input",
-            "//div[@id='muzdhwzt-zk46']//input",
-            "//div[@id='h511lvst-ymil']//input",
-            "//div[@id='mnr6qddb-byo9']//input",
-            "//div[@id='o5t54uds-wpe1']//input",
-            "//div[@id='nlaxbubj-sgw3']//input",
-        ]
-        # 编辑日期的xpath
-        date_xpath_list2 = [
-            "//div[@id='mcdabmzy-zwt7']//input",
-            "//div[@id='9ypxww95-ui8k']//input",
-            "//div[@id='3ilkuaeu-5qs1']//input",
-            "//div[@id='a46z78ba-g1le']//input",
-            "//div[@id='jwpjthep-ld2y']//input"
+            "//div[span[text()=' 自定义日期1 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义日期2 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义日期3 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义日期4 ']]/following-sibling::div//input",
+            "//div[span[text()=' 自定义日期5 ']]/following-sibling::div//input",
         ]
 
         self.item.click_add_button()  # 点击添加
@@ -579,9 +537,9 @@ class TestItemPage:
         self.item.click_edi_button()
         sleep(1)
         # 批量获取输入框的value
-        input_values = self.item.batch_acquisition_input(input_xpath_list2, text_str)
+        input_values = self.item.batch_acquisition_input(input_xpath_list, text_str)
         # 批量获取日期的value
-        date_values = self.item.batch_acquisition_input(date_xpath_list2, date_str)
+        date_values = self.item.batch_acquisition_input(date_xpath_list, date_str)
         print('input_values', input_values)
         print('date_values', date_values)
         sleep(1)
@@ -595,7 +553,7 @@ class TestItemPage:
     @allure.story("过滤条件查询，一个不选，显示正常")
     # @pytest.mark.run(order=1)
     def test_materialVendors_select2(self, login_to_item):
-        self.item.click_button('//div[div[span[text()=" 供应商代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.click_button('//div[div[span[text()=" 供应商编号"]]]//i[contains(@class,"suffixIcon")]')
         sleep(1)
         eles = self.item.get_find_element_xpath(
             '(//div[@class="vxe-pulldown--panel-wrapper"])//label/span').get_attribute(
@@ -604,7 +562,7 @@ class TestItemPage:
             self.item.click_button('(//div[@class="vxe-pulldown--panel-wrapper"])//label/span')
             self.item.click_button('//div[@class="filter-btn-bar"]/button')
         sleep(1)
-        self.item.click_button('//div[div[span[text()=" 供应商代码"]]]//input')
+        self.item.click_button('//div[div[span[text()=" 供应商编号"]]]//input')
         eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         self.item.right_refresh('供应商信息')
         assert len(eles) == 0
@@ -617,10 +575,10 @@ class TestItemPage:
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
         ).get_attribute('innerText')
         first_char = name[:1] if name else ""
-        self.item.click_button('//div[div[span[text()=" 供应商代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.click_button('//div[div[span[text()=" 供应商编号"]]]//i[contains(@class,"suffixIcon")]')
         self.item.hover("包含")
         sleep(1)
-        self.item.select_input('供应商代码', first_char)
+        self.item.select_input('供应商编号', first_char)
         sleep(1)
         eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
@@ -636,10 +594,10 @@ class TestItemPage:
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
         ).get_attribute('innerText')
         first_char = name[:1] if name else ""
-        self.item.click_button('//div[div[span[text()=" 供应商代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.click_button('//div[div[span[text()=" 供应商编号"]]]//i[contains(@class,"suffixIcon")]')
         self.item.hover("符合开头")
         sleep(1)
-        self.item.select_input('供应商代码', first_char)
+        self.item.select_input('供应商编号', first_char)
         sleep(1)
         eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
@@ -655,10 +613,10 @@ class TestItemPage:
             '//div[@class="vxe-table--body-wrapper body--wrapper"]/table[@class="vxe-table--body"]//tr[2]//td[2]'
         ).get_attribute('innerText')
         last_char = name[-1:] if name else ""
-        self.item.click_button('//div[div[span[text()=" 供应商代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.click_button('//div[div[span[text()=" 供应商编号"]]]//i[contains(@class,"suffixIcon")]')
         self.item.hover("符合结尾")
         sleep(1)
-        self.item.select_input('供应商代码', last_char)
+        self.item.select_input('供应商编号', last_char)
         sleep(1)
         eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
@@ -672,16 +630,16 @@ class TestItemPage:
     def test_materialVendors_clear(self, login_to_item):
         name = "3"
         sleep(1)
-        self.item.click_button('//div[div[span[text()=" 供应商代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.click_button('//div[div[span[text()=" 供应商编号"]]]//i[contains(@class,"suffixIcon")]')
         self.item.hover("包含")
         sleep(1)
-        self.item.select_input('供应商代码', name)
+        self.item.select_input('供应商编号', name)
         sleep(1)
-        self.item.click_button('//div[div[span[text()=" 供应商代码"]]]//i[contains(@class,"suffixIcon")]')
+        self.item.click_button('//div[div[span[text()=" 供应商编号"]]]//i[contains(@class,"suffixIcon")]')
         self.item.hover("清除所有筛选条件")
         sleep(1)
         ele = self.item.get_find_element_xpath(
-            '//div[div[span[text()=" 供应商代码"]]]//i[contains(@class,"suffixIcon")]').get_attribute(
+            '//div[div[span[text()=" 供应商编号"]]]//i[contains(@class,"suffixIcon")]').get_attribute(
             "class")
         self.item.right_refresh('供应商信息')
         assert ele == "vxe-icon-funnel suffixIcon"
@@ -714,7 +672,7 @@ class TestItemPage:
             "value")
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         self.item.get_find_message()
-        self.item.select_input('供应商代码', '1没有数据添加')
+        self.item.select_input('供应商编号', '1没有数据添加')
         ele2 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
             "innerText")
         assert ele1 == ele2 == '1没有数据添加'
@@ -732,7 +690,7 @@ class TestItemPage:
             "value")
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         self.item.get_find_message()
-        self.item.select_input('供应商代码', '1没有数据修改')
+        self.item.select_input('供应商编号', '1没有数据修改')
         ele2 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
             "innerText")
         assert ele1 == ele2
@@ -762,14 +720,14 @@ class TestItemPage:
             '(//table[@class="vxe-table--body"]//tr[2]/td[2])[2]//input').get_attribute("value")
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         self.item.get_find_message()
-        self.item.select_input('供应商代码', '1没有数据修改1')
+        self.item.select_input('供应商编号', '1没有数据修改1')
         ele11 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[1]/td[2])[1]').get_attribute(
             "innerText")
         ele22 = self.item.get_find_element_xpath('(//table[@class="vxe-table--body"]//tr[2]/td[2])[1]').get_attribute(
             "innerText")
         assert ele1 == ele11 and ele2 == ele22
         assert not self.item.has_fail_message()
-        self.item.select_input('供应商代码', '1没有数据修改')
+        self.item.select_input('供应商编号', '1没有数据修改')
         before_data = self.item.get_find_element_xpath('(//span[contains(text(),"条记录")])[1]').text
         before_count = int(re.search(r'\d+', before_data).group())
         elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[2]',
@@ -798,7 +756,7 @@ class TestItemPage:
         before_data = self.item.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
         sleep(1)
         ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
-        self.item.click_button('//div[div[span[text()=" 供应商代码"]]]//input')
+        self.item.click_button('//div[div[span[text()=" 供应商编号"]]]//input')
         sleep(1)
         ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
         eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')

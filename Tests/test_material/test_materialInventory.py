@@ -73,8 +73,8 @@ class TestItemPage:
             '//div[span[text()=" 库位编码 "]]/following-sibling::div//input',
             '//div[span[text()=" 工厂代码 "]]/following-sibling::div//input',
             '//div[span[text()=" 批次号 "]]/following-sibling::div//input',
-            '//div[span[text()=" 供应商编号 "]]/following-sibling::div//input',
-            '//div[span[text()=" 供应商名称 "]]/following-sibling::div//input',
+            # '//div[span[text()=" 供应商编号 "]]/following-sibling::div//input',
+            # '//div[span[text()=" 供应商名称 "]]/following-sibling::div//input',
             '//div[span[text()=" 备注 "]]/following-sibling::div//input',
         ]
         self.all_input_xpath_list += self.custom_xpath_list
@@ -160,6 +160,7 @@ class TestItemPage:
         self.item.batch_modify_dialog_boxs(self.req_input_xpath_list[:3], '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs([self.req_input_xpath_list[3]], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
+        self.item.batch_modify_inputs(self.all_num_input_xpath_list, '100')
 
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         self.item.get_find_message()
@@ -181,6 +182,7 @@ class TestItemPage:
                                            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs([self.req_input_xpath_list[3]], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
+        self.item.batch_modify_inputs(self.all_num_input_xpath_list, '100')
 
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         sleep(1)
@@ -224,6 +226,7 @@ class TestItemPage:
                                            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
         self.item.batch_modify_inputs([self.req_input_xpath_list[3]], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
+        self.item.batch_modify_inputs(self.all_num_input_xpath_list, '100')
 
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         self.item.get_find_message()
@@ -233,10 +236,43 @@ class TestItemPage:
         assert len(ele) == 1
         assert not self.item.has_fail_message()
 
+    @allure.story("添加测试数据成功")
+    # @pytest.mark.run(order=1)
+    def test_materialInventory_addtest(self, login_to_item):
+        test_data = ["批次号数据A", "批次号数据B"]
+        date_str = "2025/07/23 00:00:00"
+        for supplier_code in test_data:
+            self.item.select_input('批次号', supplier_code)
+            # 检查数据是否已经存在
+            rows = self.item.finds_elements(
+                By.XPATH,
+                f'//tr[./td[7][.//span[text()="{supplier_code}"]]]/td[7]'
+            )
+            # 不存在才新增
+            if len(rows) == 0:
+                self.item.click_add_button()
+                sleep(1)
+                self.item.batch_modify_dialog_boxs(self.req_input_xpath_list[:3],
+                                                   '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
+                self.item.batch_modify_inputs([self.req_input_xpath_list[3]], supplier_code)
+                self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
+                self.item.batch_modify_inputs(self.all_num_input_xpath_list, '100')
+
+                self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+                self.item.get_find_message()
+                self.item.wait_for_loading_to_disappear()
+                ele = self.item.finds_elements(By.XPATH,
+                                               f'//table[@class="vxe-table--body"]//tr/td[7]//span[text()="{supplier_code}"]')
+                assert len(ele) == 1
+
+        # 检查页面是否出现失败提示
+        assert not self.item.has_fail_message()
+
     @allure.story("修改成功")
     # @pytest.mark.run(order=1)
     def test_materialInventory_editcodesuccess(self, login_to_item):
         text_str = "1测试数据B"
+        self.item.select_input('批次号', text_str)
         # 选中1测试A物料代码
         self.item.click_button(f'//tr[./td[7][.//span[text()="1测试数据BB"]]]/td[2]')
         # 点击修改按钮
@@ -435,6 +471,7 @@ class TestItemPage:
                                            '(//table[@class="vxe-table--body"]//tr[1]/td[2])[last()]')
         self.item.batch_modify_inputs([self.req_input_xpath_list[3]], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
+        self.item.batch_modify_inputs(self.all_num_input_xpath_list, '100')
 
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         self.item.get_find_message()
@@ -453,6 +490,7 @@ class TestItemPage:
                                            '(//table[@class="vxe-table--body"]//tr[2]/td[2])[last()]')
         self.item.batch_modify_inputs([self.req_input_xpath_list[3]], text_str)
         self.item.batch_modify_inputs(self.req_input_xpath_list[-1:], date_str)
+        self.item.batch_modify_inputs(self.all_num_input_xpath_list, '100')
 
         self.item.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
         self.item.get_find_message()

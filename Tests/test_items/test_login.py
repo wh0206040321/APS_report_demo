@@ -66,7 +66,7 @@ class TestLoginPage:
 
         # 断言登录成功，检查排产单元是否存在
         profile_icon = login_pa.get_find_element(
-            f'//div[text()=" {DateDriver().planning} "]'
+            f'//span[@title="{DateDriver().planning}"]'
         )
         assert profile_icon.is_displayed()  # 断言用户头像可见，表明登录成功
         assert not login_pa.has_fail_message()

@@ -125,25 +125,66 @@ class AffairsPage(BasePage):
         删除指定名称的流程记录
 
         :param name: 要删除的流程记录名称
-        :param edi: 删除按钮的文本内容，默认为"删除"
-        :return: 无返回值
+        :param edi: 删除按钮文本，默认为"删除"
         """
+
         while True:
-            # 查找当前页面中符合条件的删除按钮
-            eles = self.finds_elements(By.XPATH,
-                                       f'//table[@class="el-table__body"]//tr[td[3][div[contains(text(),"{name}")]]]/td[last()]//span[text()="{edi}"]')
+
+            # 查找指定名称对应的删除按钮
+            xpath = (
+                f'//table[@class="el-table__body"]'
+                f'//tr[td[3][div[contains(normalize-space(),"{name}")]]]'
+                f'/td[last()]//span[normalize-space()="{edi}"]'
+            )
+
+            eles = self.finds_elements(By.XPATH, xpath)
 
             if not eles:
-                print("所有目标项已删除完毕")
-                break  # 没有匹配项，退出循环
+                print(f"【{name}】所有目标项已删除完毕")
+                break
 
-            # 删除第一个匹配项
-            ele = eles[0]
-            sleep(2)
+            print(f"【{name}】找到删除按钮数量：{len(eles)}")
+
+            # 找到真正可见、可操作的按钮
+            ele = None
+
+            for e in eles:
+                print(
+                    "按钮：",
+                    repr(e.text),
+                    "显示：",
+                    e.is_displayed(),
+                    "启用：",
+                    e.is_enabled()
+                )
+
+                if e.is_displayed() and e.is_enabled():
+                    ele = e
+                    break
+
+            if ele is None:
+                raise Exception(
+                    f"【{name}】找到了删除按钮，但是没有可操作的按钮"
+                )
+
+            # 滚动到元素位置
+            self.driver.execute_script(
+                "arguments[0].scrollIntoView({block:'center'});",
+                ele
+            )
+
+            sleep(0.5)
+            # 点击删除
             ele.click()
-            sleep(1)
-            self.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+            # 点击确认
+            self.click_button(
+                '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]'
+            )
+            self.get_find_message()
+            # 等待 loading
             self.wait_for_el_loading_mask()
+
+            sleep(0.5)
 
     def hover(self, name="", edi=""):
         # 悬停模版容器触发图标显示
@@ -183,7 +224,7 @@ class AffairsPage(BasePage):
 
     def click_process_update(self, name):
         """点击编辑流程"""
-        self.click_button(f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]/td[last()]//span[text()="编辑"]')
+        self.click_button(f'(//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]])[2]/td[last()]//span[text()="编辑"]')
         sleep(1)
         WebDriverWait(self.driver, 20).until(
             lambda driver: len(driver.find_elements(By.XPATH,
@@ -371,17 +412,17 @@ class AffairsPage(BasePage):
         self.click_button(f'//ul[@class="el-scrollbar__view el-select-dropdown__list"]//span[text()="{num}条/页"]')
         self.wait_for_el_loading_mask()
 
-    def get_log_time(self):
-        """获取日志时间."""
-        time1 = self.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[6]').text
-        time2 = self.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[4]/td[6]').text
-        # 解析原始字符串
-        dt1 = datetime.strptime(time1, "%Y/%m/%d %H:%M:%S")
-        dt2 = datetime.strptime(time2, "%Y/%m/%d %H:%M:%S")
-        # 格式化为新字符串
-        formatted_date1 = dt1.strftime("%Y-%m-%d")
-        formatted_date2 = dt2.strftime("%Y-%m-%d")
-        return formatted_date1, formatted_date2
+    # def get_log_time(self):
+    #     """获取日志时间."""
+    #     time1 = self.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[6]').text
+    #     time2 = self.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[4]/td[6]').text
+    #     # 解析原始字符串
+    #     dt1 = datetime.strptime(time1, "%Y/%m/%d %H:%M:%S")
+    #     dt2 = datetime.strptime(time2, "%Y/%m/%d %H:%M:%S")
+    #     # 格式化为新字符串
+    #     formatted_date1 = dt1.strftime("%Y-%m-%d")
+    #     formatted_date2 = dt2.strftime("%Y-%m-%d")
+    #     return formatted_date1, formatted_date2
 
     def sel_log_all(self, time1="", time2="", ptype="", pid="", pname="", affairs_name="", button: bool = True):
         """查询所有."""

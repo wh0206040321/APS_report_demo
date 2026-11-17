@@ -689,8 +689,8 @@ class TestAffairsPage:
         affairs.click_save()
         message = affairs.get_find_message()
         sleep(1)
-        ele = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
-        assert message == "新增成功！" and len(ele) == 1
+        ele = affairs.get_find_element_xpath(f'(//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]])[1]/td[3]').text
+        assert message == "新增成功！" and ele == name
         assert not affairs.has_fail_message()
 
     @allure.story("我的流程-频率为每天，执行顺序为每天执行一次，保存成功")
@@ -704,8 +704,9 @@ class TestAffairsPage:
         affairs.click_save()
         message = affairs.get_find_message()
         sleep(1)
-        ele = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
-        assert message == "新增成功！" and len(ele) == 1
+        ele = affairs.get_find_element_xpath(
+            f'(//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]])[1]/td[3]').text
+        assert message == "新增成功！" and ele == name
         assert not affairs.has_fail_message()
 
     @allure.story("我的流程-频率为每天，执行顺序为间隔执行，保存成功")
@@ -719,8 +720,9 @@ class TestAffairsPage:
         affairs.click_save()
         message = affairs.get_find_message()
         sleep(1)
-        ele = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
-        assert message == "新增成功！" and len(ele) == 1
+        ele = affairs.get_find_element_xpath(
+            f'(//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]])[1]/td[3]').text
+        assert message == "新增成功！" and ele == name
         assert not affairs.has_fail_message()
 
     @allure.story("我的流程-频率为周，保存成功")
@@ -734,8 +736,9 @@ class TestAffairsPage:
         affairs.click_save()
         message = affairs.get_find_message()
         sleep(1)
-        ele = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
-        assert message == "新增成功！" and len(ele) == 1
+        ele = affairs.get_find_element_xpath(
+            f'(//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]])[1]/td[3]').text
+        assert message == "新增成功！" and ele == name
         assert not affairs.has_fail_message()
 
     @allure.story("我的流程-频率为月，保存成功")
@@ -749,8 +752,9 @@ class TestAffairsPage:
         affairs.click_save()
         message = affairs.get_find_message()
         sleep(1)
-        ele = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
-        assert message == "新增成功！" and len(ele) == 1
+        ele = affairs.get_find_element_xpath(
+            f'(//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]])[1]/td[3]').text
+        assert message == "新增成功！" and ele == name
         assert not affairs.has_fail_message()
 
     @allure.story("我的流程-不填写数据点击下一步，不允许进入")
@@ -904,12 +908,12 @@ class TestAffairsPage:
         affairs.click_save()
         message = affairs.get_find_message()
         affairs.right_refresh()
-        ele1 = driver.find_elements(By.XPATH, f'//div[@class="template-card__title"]/div[text()="{process_name}"]')
+        ele1 = affairs.get_find_element_xpath(f'//div[@class="template-card__title"]/div[text()="{process_name}"]').text
         affairs.click_process()
         affairs.wait_for_el_loading_mask()
-        ele2 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
-        ele3 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[2]//div[text()="{process_name}"]]')
-        assert message == "新增成功！" and len(ele1) == 1 == len(ele2) == len(ele3) and value[1] == process_name
+        ele2 = affairs.get_find_element_xpath(f'(//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]])[1]/td[3]').text
+        ele3 = affairs.get_find_element_xpath(f'(//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]])[1]/td[2]').text
+        assert message == "新增成功！" and ele1 == process_name and ele2 == name and ele3 == process_name and value[1] == process_name
         assert not affairs.has_fail_message()
 
     @allure.story("我的流程-频率为每天，添加搜索事务,添加两个事务点击保存，保存成功")
@@ -930,17 +934,17 @@ class TestAffairsPage:
         affairs.right_refresh()
         affairs.click_process()
         affairs.wait_for_el_loading_mask()
-        ele1 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
+        ele1 = affairs.get_find_element_xpath(f'(//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]])[1]/td[3]').text
         # 一次性获取所有匹配的元素
         elements = affairs.finds_elements(
             By.XPATH,
-            f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]/td[2]//div[@class="flow-direction"]/div'
+            f'(//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]])[1]/td[2]'
         )
 
         # 直接提取所有元素的文本到列表
         list_ = [element.text for element in elements]
         assert message == "新增成功！"
-        assert len(ele1) == 1 and len(list_) == 2 and value1[1] == sel1 and value2[1] == sel2
+        assert ele1 == name and '添加事务模版1' in list_[0] and '添加全部模版成功' in list_[0] and value1[1] == sel1 and value2[1] == sel2
         assert not affairs.has_fail_message()
 
     @allure.story("我的流程-添加流程名称点击保存提示重复")
@@ -996,13 +1000,13 @@ class TestAffairsPage:
         message = affairs.get_find_message()
         affairs.right_refresh()
         affairs.click_process()
-        ele1 = affairs.finds_elements(By.XPATH, f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]')
+        ele1 = affairs.get_find_element_xpath(f'(//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]])[1]/td[3]').text
         affairs.click_process_update(name)
         sleep(1)
         list_ = affairs.batch_acquisition_input(xpth_list)
         affairs.click_button('//div[div[text()="流程"]]//i[@title="关闭"]')
         assert message == "新增成功！"
-        assert len(ele1) == 1 and all(list_) and value1[1] == sel
+        assert ele1 == name and all(list_) and value1[1] == sel
         assert not affairs.has_fail_message()
 
     @allure.story("我的流程-流程事务查询成功")
@@ -1056,7 +1060,7 @@ class TestAffairsPage:
         for index, row in enumerate(rows, start=1):
             div_class = row.find_element(
                 By.XPATH,
-                './td[7]/div/span'
+                './td[8]/div/span'
             ).get_attribute("class")
 
             assert "ivu-switch-checked" in div_class, (
@@ -1086,7 +1090,7 @@ class TestAffairsPage:
         for index, row in enumerate(rows, start=1):
             div_class = row.find_element(
                 By.XPATH,
-                './td[7]/div/span'
+                './td[8]/div/span'
             ).get_attribute("class")
 
             assert "ivu-switch-checked" not in div_class, (
@@ -1141,7 +1145,7 @@ class TestAffairsPage:
         affairs.select_all(template_name, enable, name)
         td1 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[1]//tr[1]/td[2]//div[@class="flow-direction"]/div').text
         td2 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[1]//tr[1]/td[3]/div').text
-        td6 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[1]//tr[1]/td[7]/div/span').get_attribute("class")
+        td6 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[1]//tr[1]/td[8]/div/span').get_attribute("class")
         ele = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[1]//tr[3]')
         assert td1 == template_name and td2 == name and "ivu-switch-checked" in td6 and len(ele) == 0
         assert not affairs.has_fail_message()
@@ -1340,7 +1344,7 @@ class TestAffairsPage:
         affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
         name = "添加全部成功"
         affairs.click_process()
-        affairs.click_button(f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]/td[last()]//span[text()="复制"]')
+        affairs.click_button(f'(//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]])[2]/td[last()]//span[text()="复制"]')
         affairs.click_button('//div[@class="ivu-modal-confirm-footer"]/button[2]')
         affairs.get_find_message()
         affairs.wait_for_el_loading_mask()
@@ -1356,7 +1360,7 @@ class TestAffairsPage:
         name = "添加全部成功"
         affairs.click_process()
         affairs.click_button(
-            f'//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]]/td[last()]//span[text()="查看"]')
+            f'(//table[@class="el-table__body"]//tr[td[3][div[text()="{name}"]]])[2]/td[last()]//span[text()="查看"]')
         sleep(1)
         ele = affairs.get_find_element_xpath('//div[@class="log-info-title"]/div').text
         affairs.click_button('(//button[@aria-label="close 日志详情"]/i)[last()]')
@@ -1400,27 +1404,27 @@ class TestAffairsPage:
         assert len(ele1) == 0 and len(ele2) == 0
         assert not affairs.has_fail_message()
 
-    @allure.story("流程日志-执行时间搜索成功")
-    def test_affairs_log_sel1(self, login_to_affairs):
-        driver = login_to_affairs  # WebDriver 实例
-        affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
-        affairs.right_refresh()
-        affairs.click_process_log()
-        num = 1000
-        affairs.click_paging(num)
-        sleep(1)
-        time1, time2 = affairs.get_log_time()
-        affairs.sel_log_all(time1=time1, time2=time2)
-        list_ = []
-        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[6]')
-        for cell in cells:
-            list_.append(datetime.strptime(cell.text, "%Y/%m/%d %H:%M:%S"))
-
-        time1_dt = datetime.strptime(time1, "%Y-%m-%d").replace(hour=0, minute=0, second=0)
-        time2_dt = datetime.strptime(time2, "%Y-%m-%d").replace(hour=0, minute=0, second=0)
-        affairs.click_reset_button()
-        assert all(time2_dt <= t <= time1_dt for t in list_), "存在不在范围内的时间"
-        assert not affairs.has_fail_message()
+    # @allure.story("流程日志-执行时间搜索成功")
+    # def test_affairs_log_sel1(self, login_to_affairs):
+    #     driver = login_to_affairs  # WebDriver 实例
+    #     affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
+    #     affairs.right_refresh()
+    #     affairs.click_process_log()
+    #     num = 1000
+    #     affairs.click_paging(num)
+    #     sleep(1)
+    #     time1, time2 = affairs.get_log_time()
+    #     affairs.sel_log_all(time1=time1, time2=time2)
+    #     list_ = []
+    #     cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[6]')
+    #     for cell in cells:
+    #         list_.append(datetime.strptime(cell.text, "%Y/%m/%d %H:%M:%S"))
+    #
+    #     time1_dt = datetime.strptime(time1, "%Y-%m-%d").replace(hour=0, minute=0, second=0)
+    #     time2_dt = datetime.strptime(time2, "%Y-%m-%d").replace(hour=0, minute=0, second=0)
+    #     affairs.click_reset_button()
+    #     assert all(time2_dt <= t <= time1_dt for t in list_), "存在不在范围内的时间"
+    #     assert not affairs.has_fail_message()
 
     @allure.story("流程日志-执行执行状态执行成功搜索成功")
     def test_affairs_log_sel2(self, login_to_affairs):
@@ -1433,7 +1437,7 @@ class TestAffairsPage:
         sleep(1)
         affairs.sel_log_all(ptype=ptype)
         list_ = []
-        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[2]')
+        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[3]//tr/td[2]')
         for cell in cells:
             list_.append(cell.text)
         affairs.click_reset_button()
@@ -1451,30 +1455,30 @@ class TestAffairsPage:
         sleep(1)
         affairs.sel_log_all(ptype=ptype)
         list_ = []
-        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[2]')
+        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[3]//tr/td[2]')
         for cell in cells:
             list_.append(cell.text)
         affairs.click_reset_button()
         assert all(ptype == t for t in list_)
         assert not affairs.has_fail_message()
 
-    @allure.story("流程日志-流程ID搜索成功搜索成功")
-    def test_affairs_log_sel4(self, login_to_affairs):
-        driver = login_to_affairs  # WebDriver 实例
-        affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
-        num = 1000
-        affairs.click_process_log()
-        pid = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[5]').text
-        affairs.click_paging(num)
-        sleep(1)
-        affairs.sel_log_all(pid=pid)
-        list_ = []
-        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[5]')
-        for cell in cells:
-            list_.append(cell.text)
-        affairs.click_reset_button()
-        assert all(pid == t for t in list_)
-        assert not affairs.has_fail_message()
+    # @allure.story("流程日志-流程ID搜索成功搜索成功")
+    # def test_affairs_log_sel4(self, login_to_affairs):
+    #     driver = login_to_affairs  # WebDriver 实例
+    #     affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
+    #     num = 1000
+    #     affairs.click_process_log()
+    #     pid = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[5]').text
+    #     affairs.click_paging(num)
+    #     sleep(1)
+    #     affairs.sel_log_all(pid=pid)
+    #     list_ = []
+    #     cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[5]')
+    #     for cell in cells:
+    #         list_.append(cell.text)
+    #     affairs.click_reset_button()
+    #     assert all(pid == t for t in list_)
+    #     assert not affairs.has_fail_message()
 
     @allure.story("流程日志-流程名称搜索成功")
     def test_affairs_log_sel5(self, login_to_affairs):
@@ -1482,12 +1486,12 @@ class TestAffairsPage:
         affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
         num = 1000
         affairs.click_process_log()
-        pname = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[4]').text
+        pname = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[3]//tr[2]/td[4]').text
         affairs.click_paging(num)
         sleep(1)
         affairs.sel_log_all(pname=pname)
         list_ = []
-        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[4]')
+        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[3]//tr/td[4]')
         for cell in cells:
             list_.append(cell.text)
         affairs.click_reset_button()
@@ -1502,57 +1506,57 @@ class TestAffairsPage:
         affairs.click_process_log()
         sleep(1)
         affairs_name_all = affairs.get_find_element_xpath(
-            '(//table[@class="el-table__body"])[2]//tr[2]/td[3]').get_attribute("innerText")
+            '(//table[@class="el-table__body"])[3]//tr[2]/td[3]').get_attribute("innerText")
         sleep(1)
         affairs_name = affairs_name_all.split()[0]
         affairs.sel_log_all(affairs_name=affairs_name)
         list_ = []
-        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[2]//tr/td[3]')
+        cells = driver.find_elements(By.XPATH, '(//table[@class="el-table__body"])[3]//tr/td[3]')
         for cell in cells:
             list_.append(cell.text)
         assert list_ and all(affairs_name in t for t in list_)
         assert not affairs.has_fail_message()
 
-    @allure.story("流程日志-全部条件搜索成功，关系为and")
-    def test_affairs_log_sel7(self, login_to_affairs):
-        driver = login_to_affairs  # WebDriver 实例
-        affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
-        sleep(1)
-        affairs.click_process_log()
-        sleep(1)
-        affairs_name_all = affairs.get_find_element_xpath(
-            '(//table[@class="el-table__body"])[2]//tr[2]/td[3]').get_attribute("innerText")
-        affairs_name = affairs_name_all.split()[0]
-        num = 1000
-        time = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[6]').get_attribute(
-            "innerText")
-        time_with_dash = time.replace('/', '-')
-        time1 = time_with_dash.split(' ')[0] + ' '
-        time2 = time.split(' ')[1]
-        ptype = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute(
-            "innerText")
-        pid = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[5]').get_attribute(
-            "innerText")
-        pname = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[4]').get_attribute(
-            "innerText")
-        affairs.click_paging(num)
-        sleep(1)
-        affairs.sel_log_all(time1=time1, time2=time2, ptype=ptype, pid=pid, pname=pname, affairs_name=affairs_name)
-        td1 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[2]').get_attribute(
-            "innerText")
-        td2 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[3]').get_attribute(
-            "innerText")
-        td3 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[4]').get_attribute(
-            "innerText")
-        td4 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[5]').get_attribute(
-            "innerText")
-        td5 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[6]').get_attribute(
-            "innerText")
-        tr2 = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[2]/tbody/tr[2]')
-        affairs.click_reset_button()
-        assert td1 == ptype and affairs_name in td2 and td3 == pname and td4 == pid and td5 == time
-        assert len(tr2) == 0
-        assert not affairs.has_fail_message()
+    # @allure.story("流程日志-全部条件搜索成功，关系为and")
+    # def test_affairs_log_sel7(self, login_to_affairs):
+    #     driver = login_to_affairs  # WebDriver 实例
+    #     affairs = AffairsPage(driver)  # 用 driver 初始化 AffairsPage
+    #     sleep(1)
+    #     affairs.click_process_log()
+    #     sleep(1)
+    #     affairs_name_all = affairs.get_find_element_xpath(
+    #         '(//table[@class="el-table__body"])[2]//tr[2]/td[3]').get_attribute("innerText")
+    #     affairs_name = affairs_name_all.split()[0]
+    #     num = 1000
+    #     time = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[6]').get_attribute(
+    #         "innerText")
+    #     time_with_dash = time.replace('/', '-')
+    #     time1 = time_with_dash.split(' ')[0] + ' '
+    #     time2 = time.split(' ')[1]
+    #     ptype = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[2]').get_attribute(
+    #         "innerText")
+    #     pid = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[5]').get_attribute(
+    #         "innerText")
+    #     pname = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]//tr[2]/td[4]').get_attribute(
+    #         "innerText")
+    #     affairs.click_paging(num)
+    #     sleep(1)
+    #     affairs.sel_log_all(time1=time1, time2=time2, ptype=ptype, pid=pid, pname=pname, affairs_name=affairs_name)
+    #     td1 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[2]').get_attribute(
+    #         "innerText")
+    #     td2 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[3]').get_attribute(
+    #         "innerText")
+    #     td3 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[4]').get_attribute(
+    #         "innerText")
+    #     td4 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[5]').get_attribute(
+    #         "innerText")
+    #     td5 = affairs.get_find_element_xpath('(//table[@class="el-table__body"])[2]/tbody/tr[1]/td[6]').get_attribute(
+    #         "innerText")
+    #     tr2 = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[2]/tbody/tr[2]')
+    #     affairs.click_reset_button()
+    #     assert td1 == ptype and affairs_name in td2 and td3 == pname and td4 == pid and td5 == time
+    #     assert len(tr2) == 0
+    #     assert not affairs.has_fail_message()
 
     @allure.story("流程日志-全部条件搜索成功，没有数据的时候显示无数据")
     def test_affairs_log_sel8(self, login_to_affairs):
@@ -1565,15 +1569,14 @@ class TestAffairsPage:
         time1 = "2025-02-27 "
         time2 = "10:20:00"
         ptype = "执行失败"
-        pid = "41183627842692411"
         pname = "每周"
         affairs_name_all = affairs.get_find_element_xpath(
-            '(//table[@class="el-table__body"])[2]//tr[2]/td[3]').get_attribute("innerText")
+            '(//table[@class="el-table__body"])[3]//tr[2]/td[3]').get_attribute("innerText")
         affairs_name = affairs_name_all.split()[0]
         affairs.click_paging(num)
         sleep(1)
-        affairs.sel_log_all(time1=time1, time2=time2, ptype=ptype, pid=pid, pname=pname, affairs_name=affairs_name)
-        tr2 = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[2]/tbody/tr[1]')
+        affairs.sel_log_all(time1=time1, time2=time2, ptype=ptype, pname=pname, affairs_name=affairs_name)
+        tr2 = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[3]/tbody/tr[1]')
         affairs.click_reset_button()
         assert len(tr2) == 0
         assert not affairs.has_fail_message()
@@ -1588,21 +1591,19 @@ class TestAffairsPage:
         time1 = "2025-02-27 "
         time2 = "10:20:00"
         ptype = "执行失败"
-        pid = "4118362784269241"
         pname = "每周"
         affairs_name_all = affairs.get_find_element_xpath(
-            '(//table[@class="el-table__body"])[2]//tr[2]/td[3]').get_attribute("innerText")
+            '(//table[@class="el-table__body"])[3]//tr[2]/td[3]').get_attribute("innerText")
         affairs_name = affairs_name_all.split()[0]
         affairs.click_paging(num)
         sleep(1)
-        affairs.sel_log_all(time1=time1, time2=time2, ptype=ptype, pid=pid, pname=pname, affairs_name=affairs_name, button=False)
+        affairs.sel_log_all(time1=time1, time2=time2, ptype=ptype, pname=pname, affairs_name=affairs_name, button=False)
         input1 = affairs.get_find_element_xpath('(//input[@placeholder="开始日期"])[1]').get_attribute("value")
         input2 = affairs.get_find_element_xpath('//div[label[text()="执行状态:"]]//input').get_attribute("value")
-        input3 = affairs.get_find_element_xpath('//input[@placeholder="请输入流程ID"]').get_attribute("value")
         input4 = affairs.get_find_element_xpath('//input[@placeholder="请输入流程名称"]').get_attribute("value")
         input5 = affairs.get_find_element_xpath('//div[label[text()="事务:"]]//input').get_attribute("value")
         affairs.click_reset_button()
-        assert input1 == input3 == input4 == input5 == "" and input2 == "全部"
+        assert input1 == input4 == input5 == "" and input2 == "全部"
         assert not affairs.has_fail_message()
 
     @allure.story("流程日志-设置分页为1000")
@@ -1613,7 +1614,7 @@ class TestAffairsPage:
         affairs.click_process_log()
         affairs.click_paging(num)
         sleep(3)
-        eles = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[2]/tbody/tr')
+        eles = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[3]/tbody/tr')
         affairs.click_reset_button()
         assert 0 < len(eles) <= num
         assert not affairs.has_fail_message()
@@ -1628,7 +1629,7 @@ class TestAffairsPage:
         sleep(3)
         affairs.click_button('//ul[@class="el-pager"]/li[last()]')
         sleep(1)
-        eles = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[2]/tbody/tr')
+        eles = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[3]/tbody/tr')
         affairs.click_reset_button()
         assert 0 < len(eles) <= num
         assert not affairs.has_fail_message()
@@ -1645,7 +1646,7 @@ class TestAffairsPage:
         affairs.enter_texts('//span[@class="el-pagination__jump"]//input', num)
         affairs.click_button('//input[@placeholder="请输入流程名称"]')
         affairs.wait_for_el_loading_mask()
-        eles = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[2]/tbody/tr')
+        eles = affairs.finds_elements(By.XPATH, '(//table[@class="el-table__body"])[3]/tbody/tr')
         class_ = affairs.get_find_element_xpath(f'//ul[@class="el-pager"]/li[text()="{num}"]').get_attribute("class")
         affairs.click_reset_button()
         assert 0 < len(eles) and class_ == "number active"

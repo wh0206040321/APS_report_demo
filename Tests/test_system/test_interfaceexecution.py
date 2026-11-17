@@ -77,7 +77,7 @@ class TestsInterfaceExecutionPage:
     def test_interfaceexecution_addsuccess(self, login_to_interfaceexecution):
         driver = login_to_interfaceexecution  # WebDriver 实例
         interface = ImpPage(driver)  # 用 driver 初始化 ImpPage
-        wait = WebDriverWait(driver, 120)  # 最长等待 120 秒
+        wait = WebDriverWait(driver, 600)  # 最长等待 600 秒
         interface.wait_for_loading_to_disappear()
         interface.click_button('//table[@class="vxe-table--header"]//th[2]/div/span[@class="vxe-cell--title"]')
         sleep(1)
@@ -121,9 +121,15 @@ class TestsInterfaceExecutionPage:
     def test_interfaceexecution_data(self, login_to_interfaceexecution):
         driver = login_to_interfaceexecution  # WebDriver 实例
         interface = ImpPage(driver)  # 用 driver 初始化 ImpPage
+        interface.right_refresh("接口执行")
         interface.wait_for_loading_to_disappear()
+        interface.enter_texts(
+            '//p[text()="接口名称"]/ancestor::div[2]//input', '11测试全部数据'
+        )
+        sleep(1)
         interface.mover_right()
         interface.click_button('//button[span[text()="接口数据"]]')
+        sleep(2)
         interface.click_button('//button[span[text()="查询"]]')
         interface.wait_for_loading_to_disappear()
         ele = interface.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
@@ -139,6 +145,7 @@ class TestsInterfaceExecutionPage:
         interface.wait_for_loading_to_disappear()
         interface.mover_right()
         interface.click_button('//button[span[text()="运行日志"]]')
+        sleep(2)
         interface.click_button('(//button[span[text()="查询"]])[2]')
         interface.wait_for_loading_to_disappear()
         ele = interface.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')

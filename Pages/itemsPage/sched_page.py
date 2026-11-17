@@ -162,10 +162,12 @@ class SchedPage(BasePage):
         for v in name:
             self.click_add_schedbutton()
             self.enter_texts('//label[text()="名称"]/following-sibling::div//input', v)
+            self.click_button('//div[label[text()="创建方式"]]//label[text()="复制方案"]')
             self.click_button(
                 '//label[text()="选择复制的方案"]/following-sibling::div/div'
             )  # 点击下拉框
-            self.click_button('//div[label[text()="选择复制的方案"]]//ul[@class="ivu-select-dropdown-list"]/li[1]')
+            sleep(1)
+            self.click_button('//div[@data-transfer="true"]/ul[@class="ivu-select-dropdown-list"]/li[1]')
             self.click_name_ok()  # 点击确定
             self.click_save_button()  # 点击保存
 
@@ -177,9 +179,11 @@ class SchedPage(BasePage):
         for v in name:
             self.click_add_schedbutton()
             self.enter_texts('//label[text()="名称"]/following-sibling::div//input', v)
+            self.click_button('//div[label[text()="创建方式"]]//label[text()="复制方案"]')
             self.click_button(
                 '//label[text()="选择复制的方案"]/following-sibling::div/div'
             )  # 点击下拉框
+            sleep(1)
             self.click_button(f'//li[text()="{ele}"]')
             self.click_name_ok()  # 点击确定
             self.click_save_button()  # 点击保存
@@ -213,7 +217,7 @@ class SchedPage(BasePage):
 
     def click_property_editing(self, name):
         self.click_button(
-            f'//div[text()="{name}"]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+            f'//div[span[text()="{name}"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
         )
         self.click_button('//div[@class="vxe-modal--body"]//i[@class="ivu-icon ivu-icon-md-add"]')
         self.click_button('(//i[@class="ivu-icon ivu-icon-md-albums"])[last()]')
@@ -228,7 +232,7 @@ class SchedPage(BasePage):
         self.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         sleep(1)
 
-    def wait_for_loading_to_disappear(self, timeout=10):
+    def wait_for_loading_to_disappear(self, timeout=60):
         WebDriverWait(self.driver, timeout).until(
             EC.presence_of_element_located(
                 (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))

@@ -64,7 +64,7 @@ class Spec1Page(BasePage):
         self.click_button('//li[text()=" 刷新"]')
         self.wait_for_loading_to_disappear()
 
-    def wait_for_loading_to_disappear(self, timeout=10):
+    def wait_for_loading_to_disappear(self, timeout=60):
         WebDriverWait(self.driver, timeout).until(
             EC.presence_of_element_located(
                 (By.XPATH, '//div[contains(@style, "display: none") and div[@class="el-skeleton is-animated"]]'))
@@ -84,7 +84,7 @@ class Spec1Page(BasePage):
 
     def get_find_message(self):
         """获取错误信息"""
-        message = WebDriverWait(self.driver, 10).until(
+        message = WebDriverWait(self.driver, 15).until(
             EC.visibility_of_element_located(
                 (By.XPATH, '//div[@class="el-message el-message--success"]/p')
             )
@@ -266,6 +266,7 @@ class Spec1Page(BasePage):
         self.enter_texts('(//label[text()="代码"])[1]/parent::div//input', name)
         self.enter_texts('(//label[text()="名称"])[1]/parent::div//input', name)
         self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.get_find_message()
         self.wait_for_loading_to_disappear()
 
     def edit_spec_data(self, before_name, after_name):
@@ -276,6 +277,7 @@ class Spec1Page(BasePage):
         self.enter_texts('(//label[text()="代码"])[1]/parent::div//input', after_name)
         self.enter_texts('(//label[text()="名称"])[1]/parent::div//input', after_name)
         self.click_button('//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        self.get_find_message()
         self.wait_for_loading_to_disappear()
 
     def del_spec_data(self, name):

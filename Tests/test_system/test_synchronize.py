@@ -100,7 +100,7 @@ class TestSynchronizePage:
                 f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{psi_name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个 PSI：{psi_name}"
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -134,7 +134,7 @@ class TestSynchronizePage:
                 f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{psi_name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个 PSI：{psi_name}"
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -170,7 +170,7 @@ class TestSynchronizePage:
                 f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{psi_name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个 PSI：{psi_name}"
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -205,7 +205,7 @@ class TestSynchronizePage:
                 f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{psi_name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个 PSI：{psi_name}"
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.switch_plane(plan_names[1], 1, js=False)
         for psi_name in psi_names:
             elements = synchronize.finds_elements(
@@ -214,7 +214,7 @@ class TestSynchronizePage:
             )
             assert len(elements) == 1, f"未找到或找到多个 PSI：{psi_name}"
 
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[1]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[1]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -251,7 +251,7 @@ class TestSynchronizePage:
                 f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{psi_name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个 PSI：{psi_name}"
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.switch_plane(plan_names[1], 1, js=False)
         for psi_name in psi_names:
             elements = synchronize.finds_elements(
@@ -259,7 +259,7 @@ class TestSynchronizePage:
                 f'//table[@class="vxe-table--body"]//tr/td[2]//span[text()="{psi_name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个 PSI：{psi_name}"
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[1]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[1]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -293,7 +293,7 @@ class TestSynchronizePage:
                 f'//span[@class="ivu-tree-title"]/span[text()="{name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -328,7 +328,7 @@ class TestSynchronizePage:
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
 
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -365,7 +365,7 @@ class TestSynchronizePage:
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
 
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -400,7 +400,7 @@ class TestSynchronizePage:
                 f'//span[@class="ivu-tree-title"]/span[text()="{name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.switch_plane(plan_names[1], 2, js=False)
         for name in plan_name:
             elements = synchronize.finds_elements(
@@ -409,7 +409,7 @@ class TestSynchronizePage:
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
 
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[1]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[1]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -446,7 +446,7 @@ class TestSynchronizePage:
                 f'//span[@class="ivu-tree-title"]/span[text()="{name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.switch_plane(plan_names[1], 2, js=False)
         for name in plan_name:
             elements = synchronize.finds_elements(
@@ -455,7 +455,7 @@ class TestSynchronizePage:
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
 
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[1]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[1]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -488,7 +488,7 @@ class TestSynchronizePage:
                 f'//label[text()="{name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -522,7 +522,7 @@ class TestSynchronizePage:
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
 
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -558,7 +558,7 @@ class TestSynchronizePage:
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
 
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -592,7 +592,7 @@ class TestSynchronizePage:
                 f'//label[text()="{name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.switch_plane(plan_names[1], 3, js=False)
         for name in plan_name:
             elements = synchronize.finds_elements(
@@ -601,7 +601,7 @@ class TestSynchronizePage:
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
 
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[1]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[1]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -637,7 +637,7 @@ class TestSynchronizePage:
                 f'//label[text()="{name}"]'
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.switch_plane(plan_names[1], 3, js=False)
         for name in plan_name:
             elements = synchronize.finds_elements(
@@ -646,7 +646,7 @@ class TestSynchronizePage:
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
 
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[1]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[1]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -682,7 +682,7 @@ class TestSynchronizePage:
             assert len(elements) == 1, f"未找到或找到多个{name}"
         synchronize.click_button('//input[@class="ivu-select-input" and @placeholder="请选择"]')
 
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -718,7 +718,7 @@ class TestSynchronizePage:
             assert len(elements) == 1, f"未找到或找到多个{name}"
         synchronize.click_button('//input[@class="ivu-select-input" and @placeholder="请选择"]')
 
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -755,7 +755,7 @@ class TestSynchronizePage:
             assert len(elements) == 1, f"未找到或找到多个{name}"
         synchronize.click_button('//input[@class="ivu-select-input" and @placeholder="请选择"]')
         sleep(1)
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         synchronize.wait_for_loadingbox()
         list_ = ["系统管理", "单元设置", "配置同步"]
@@ -791,7 +791,7 @@ class TestSynchronizePage:
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
         synchronize.click_button('//input[@class="ivu-select-input" and @placeholder="请选择"]')
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.switch_plane(plan_names[1], 4, js=False)
         synchronize.click_button('//input[@class="ivu-select-input" and @placeholder="请选择"]')
         for name in import_name:
@@ -802,7 +802,7 @@ class TestSynchronizePage:
             assert len(elements) == 1, f"未找到或找到多个{name}"
         synchronize.click_button('//input[@class="ivu-select-input" and @placeholder="请选择"]')
 
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[1]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[1]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         sleep(1)
         synchronize.wait_for_loadingbox()
@@ -841,7 +841,7 @@ class TestSynchronizePage:
             )
             assert len(elements) == 1, f"未找到或找到多个{name}"
         synchronize.click_button('//input[@class="ivu-select-input" and @placeholder="请选择"]')
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[0]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[0]}"]')
         synchronize.switch_plane(plan_names[1], 4, js=False)
         synchronize.click_button('//input[@class="ivu-select-input" and @placeholder="请选择"]')
         for name in import_name:
@@ -852,7 +852,7 @@ class TestSynchronizePage:
             assert len(elements) == 1, f"未找到或找到多个{name}"
         synchronize.click_button('//input[@class="ivu-select-input" and @placeholder="请选择"]')
 
-        synchronize.click_button(f'//div[contains(text(),"{plan_names[1]}")]')
+        synchronize.click_button(f'//span[@title="{plan_names[1]}"]')
         synchronize.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         sleep(1)
         synchronize.wait_for_loadingbox()

@@ -60,7 +60,7 @@ class VideoRecorder:
         start_time = time.time()
         frame_interval = 1.0 / self.fps
 
-        with mss.mss() as sct:
+        with mss.MSS() as sct:
 
             monitor = sct.monitors[1]
 

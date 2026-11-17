@@ -156,10 +156,10 @@ class TestRolePage:
         name = "1测试角色代码1"
         module = "1测试A"
         role.add_role(name, module)
-        num = len(role.finds_elements(By.XPATH, '//div[@class="ivu-tree"]//li/label/span'))
+        num = len(role.finds_elements(By.XPATH, '//div[@class="role-permission-tree ivu-tree"]//li/label/span'))
         for i in range(1, num+1):
             sleep(0.1)
-            role.click_button(f'(//div[@class="ivu-tree"]//li/label/span)[{i}]')
+            role.click_button(f'(//div[@class="role-permission-tree ivu-tree"]//li/label/span)[{i}]')
         role.click_all_button("保存")
         role.get_find_message()
         role.right_refresh()
@@ -211,13 +211,13 @@ class TestRolePage:
         role.select_input(name)
         sleep(1)
         role.click_button(f'(//table[@class="vxe-table--body"]//span[text()="{date_driver.username}"])[1]')
-        role.click_button(f'//div[contains(text(),"{date_driver.planning}")]')
+        role.click_button(f'//span[@title="{DateDriver().planning}"]')
         sleep(1)
         role.click_button(f'//ul/li[text()="{module}"]')
         role.wait_for_loadingbox()
         num_ = len(role.finds_elements(By.XPATH, f'//div[@class="listDivCon"]/div'))
-        swich_name = role.get_find_element_xpath(f'//div[@class="ivu-dropdown-rel"]/div').text
-        role.click_button(f'//div[contains(text(),"{module}")]')
+        swich_name = role.get_find_element_xpath(f'(//div[@class="ivu-dropdown-rel"]//span)[1]').text
+        role.click_button(f'//span[@title="{module}"]')
         role.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         role.wait_for_loadingbox()
         list_ = ["系统管理", "系统设置", "角色管理"]
@@ -239,8 +239,8 @@ class TestRolePage:
         role.add_role(name, module)
 
         role.enter_texts('//input[@placeholder="请输入关键字筛选"]', '需求管理')
-        role.click_button('//div[@class="ivu-tree"]/ul[1]//label/span')
-        te = role.get_find_element_xpath('//div[@class="ivu-tree"]/ul[1]//span[@class="font14"]').text
+        role.click_button('//div[@class="role-permission-tree ivu-tree"]/ul[1]//label/span')
+        te = role.get_find_element_xpath('//div[@class="role-permission-tree ivu-tree"]/ul[1]//span[@class="font14"]').text
         role.click_all_button("保存")
         role.get_find_message()
         role.right_refresh()
@@ -261,13 +261,13 @@ class TestRolePage:
         message = role.get_find_message()
 
         driver.refresh()
-        role.click_button(f'//div[contains(text(),"{date_driver.planning}")]')
+        role.click_button(f'//span[@title="{DateDriver().planning}"]')
 
         role.click_button(f'//ul/li[text()="{module}"]')
         role.wait_for_loadingbox()
         num_ = len(role.finds_elements(By.XPATH, f'//div[@class="listDivCon"]/div'))
-        swich_name = role.get_find_element_xpath(f'//div[@class="ivu-dropdown-rel"]/div').text
-        role.click_button(f'//div[contains(text(),"{module}")]')
+        swich_name = role.get_find_element_xpath(f'(//div[@class="ivu-dropdown-rel"]//span)[1]').text
+        role.click_button(f'//span[@title="{module}"]')
         role.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         role.wait_for_loadingbox()
         list_ = ["系统管理", "系统设置", "角色管理"]
@@ -287,7 +287,7 @@ class TestRolePage:
         role.add_role(name, module)
 
         role.enter_texts('//input[@placeholder="请输入关键字筛选"]', '需求管理')
-        role.click_button('//div[@class="ivu-tree"]/ul[1]//label/span')
+        role.click_button('//div[@class="role-permission-tree ivu-tree"]/ul[1]//label/span')
         role.click_all_button("保存")
         role.wait_for_el_loading_mask()
         ele = role.finds_elements(By.XPATH, '//div[text()=" 记录已存在,请检查！ "]')
@@ -308,9 +308,9 @@ class TestRolePage:
         name = "1测试角色代码3"
         module = "1测试计划单元CTB"
         role.add_role(name, module)
-        num = len(role.finds_elements(By.XPATH, '//div[@class="ivu-tree"]//li/label/span'))
+        num = len(role.finds_elements(By.XPATH, '//div[@class="role-permission-tree ivu-tree"]//li/label/span'))
         for i in range(1, num+1):
-            role.click_button(f'(//div[@class="ivu-tree"]//li/label/span)[{i}]')
+            role.click_button(f'(//div[@class="role-permission-tree ivu-tree"]//li/label/span)[{i}]')
         role.click_all_button("保存")
         role.get_find_message()
         role.right_refresh()
@@ -331,13 +331,13 @@ class TestRolePage:
         message = role.get_find_message()
 
         driver.refresh()
-        role.click_button(f'//div[contains(text(),"{date_driver.planning}")]')
+        role.click_button(f'//span[@title="{DateDriver().planning}"]')
 
         role.click_button(f'//ul/li[text()="{module}"]')
         role.wait_for_loadingbox()
         num_ = len(role.finds_elements(By.XPATH, f'//div[@class="listDivCon"]/div'))
-        swich_name = role.get_find_element_xpath(f'//div[@class="ivu-dropdown-rel"]/div').text
-        role.click_button(f'//div[contains(text(),"{module}")]')
+        swich_name = role.get_find_element_xpath(f'(//div[@class="ivu-dropdown-rel"]//span)[1]').text
+        role.click_button(f'//span[@title="{module}"]')
         role.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         role.wait_for_loadingbox()
         list_ = ["系统管理", "系统设置", "角色管理"]
@@ -357,9 +357,9 @@ class TestRolePage:
         name = "1测试角色代码4"
         module = "1测试计划单元CTB"
         role.add_role(name, module)
-        num = len(role.finds_elements(By.XPATH, '//div[@class="ivu-tree"]//li/label/span'))
+        num = len(role.finds_elements(By.XPATH, '//div[@class="role-permission-tree ivu-tree"]//li/label/span'))
         for i in range(1, num + 1):
-            role.click_button(f'(//div[@class="ivu-tree"]//li/label/span)[{i}]')
+            role.click_button(f'(//div[@class="role-permission-tree ivu-tree"]//li/label/span)[{i}]')
         role.click_all_button("保存")
         role.get_find_message()
         role.right_refresh()
@@ -380,13 +380,13 @@ class TestRolePage:
         message = role.get_find_message()
 
         driver.refresh()
-        role.click_button(f'//div[contains(text(),"{date_driver.planning}")]')
+        role.click_button(f'//span[@title="{DateDriver().planning}"]')
 
         role.click_button(f'//ul/li[text()="{module}"]')
         role.wait_for_loadingbox()
         num_ = len(role.finds_elements(By.XPATH, f'//div[@class="listDivCon"]/div'))
-        swich_name = role.get_find_element_xpath(f'//div[@class="ivu-dropdown-rel"]/div').text
-        role.click_button(f'//div[contains(text(),"{module}")]')
+        swich_name = role.get_find_element_xpath(f'(//div[@class="ivu-dropdown-rel"]//span)[1]').text
+        role.click_button(f'//span[@title="{module}"]')
         role.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         role.wait_for_loadingbox()
         list_ = ["系统管理", "系统设置", "角色管理"]
@@ -417,13 +417,13 @@ class TestRolePage:
         ele = role.finds_elements(By.XPATH, f'//table[@class="vxe-table--body"]//tr/td[3]//span[text()="{after_name}"]')
 
         driver.refresh()
-        role.click_button(f'//div[contains(text(),"{date_driver.planning}")]')
+        role.click_button(f'//span[@title="{DateDriver().planning}"]')
 
         role.click_button(f'//ul/li[text()="{module}"]')
         role.wait_for_loadingbox()
         num_ = len(role.finds_elements(By.XPATH, f'//div[@class="listDivCon"]/div'))
-        swich_name = role.get_find_element_xpath(f'//div[@class="ivu-dropdown-rel"]/div').text
-        role.click_button(f'//div[contains(text(),"{module}")]')
+        swich_name = role.get_find_element_xpath(f'(//div[@class="ivu-dropdown-rel"]//span)[1]').text
+        role.click_button(f'//span[@title="{module}"]')
         role.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         role.wait_for_loadingbox()
         list_ = ["系统管理", "系统设置", "角色管理"]
@@ -449,28 +449,28 @@ class TestRolePage:
         sleep(2)
         role.click_all_button("编辑")
         sleep(2)
-        num = len(role.finds_elements(By.XPATH, '//div[@class="ivu-tree"]//li/label/span'))
+        num = len(role.finds_elements(By.XPATH, '//div[@class="role-permission-tree ivu-tree"]//li/label/span'))
         for i in range(1, num+1):
-            role.click_button(f'(//div[@class="ivu-tree"]//li/label/span)[{i}]')
+            role.click_button(f'(//div[@class="role-permission-tree ivu-tree"]//li/label/span)[{i}]')
         sleep(1)
         role.enter_texts('//input[@placeholder="请输入关键字筛选"]', '需求管理')
         sleep(2)
-        role.click_button('//div[@class="ivu-tree"]/ul[1]//label/span')
-        te = role.get_find_element_xpath('//div[@class="ivu-tree"]/ul[1]//span[@class="font14"]').get_attribute(
+        role.click_button('//div[@class="role-permission-tree ivu-tree"]/ul[1]//label/span')
+        te = role.get_find_element_xpath('//div[@class="role-permission-tree ivu-tree"]/ul[1]//span[@class="font14"]').get_attribute(
             'innerText')
         role.click_all_button("保存")
         message = role.get_find_message()
         driver.refresh()
-        role.click_button(f'//div[contains(text(),"{date_driver.planning}")]')
+        role.click_button(f'//span[@title="{DateDriver().planning}"]')
 
         role.click_button(f'//ul/li[text()="{module}"]')
         role.wait_for_loadingbox()
         sleep(2)
         num_ = len(role.finds_elements(By.XPATH, f'//div[@class="listDivCon"]/div'))
-        swich_name = role.get_find_element_xpath(f'//div[@class="ivu-dropdown-rel"]/div').get_attribute(
+        swich_name = role.get_find_element_xpath(f'(//div[@class="ivu-dropdown-rel"]//span)[1]').get_attribute(
             'innerText')
         swich_name = swich_name.strip()
-        role.click_button(f'//div[contains(text(),"{module}")]')
+        role.click_button(f'//span[@title="{module}"]')
         role.click_button(f'//ul/li[text()="{date_driver.planning}"]')
         role.wait_for_loadingbox()
         list_ = ["系统管理", "系统设置", "角色管理"]

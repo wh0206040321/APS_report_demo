@@ -928,15 +928,15 @@ class TestCustomerPage:
     def test_customer_addall(self, login_to_customer):
         driver = login_to_customer  # WebDriver 实例
         customer = CustomerPage(driver)  # 用 driver 初始化 CustomerPage
-        data_list = ["全部数据", "20"]
+        data_list = ["11全部数据", "20"]
         customer.click_add_button()  # 检查点击添加
         customer.add_input_all(data_list[0], data_list[1])
         sleep(1)
         customer.enter_texts(
             '//p[text()="客户代码"]/ancestor::div[2]//input', data_list[0]
         )
-        # 缩放到最小（例如 25%）
-        driver.execute_script("document.body.style.zoom='0.25'")
+        # 缩放到最小（例如 50%）
+        driver.execute_script("document.body.style.zoom='0.5'")
         sleep(1)
 
         row_xpath = f'//tr[./td[2][.//span[text()="{data_list[0]}"]]]'
@@ -982,7 +982,7 @@ class TestCustomerPage:
         customer = CustomerPage(driver)  # 用 driver 初始化 CustomerPage
         driver.refresh()
         customer.wait_for_loading_to_disappear()
-        data_list = ["全部数据", "20"]
+        data_list = ["11全部数据", "20"]
         customer.enter_texts(
             '//p[text()="客户代码"]/ancestor::div[2]//input', data_list[0]
         )
@@ -1311,7 +1311,7 @@ class TestCustomerPage:
         customer.right_refresh('客户')
         layout = "测试布局A"
 
-        value = ['全部数据', '111', '1测试A','111111111111111133331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111']
+        value = ['11全部数据', '111', '1测试A','111111111111111133331122221111222221111111113333111111144444111111111111111111111111111111111111111111111111']
         customer.del_all(value, '//p[text()="客户代码"]/ancestor::div[2]//input')
         data = [
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')

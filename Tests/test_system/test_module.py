@@ -189,6 +189,7 @@ class TestSModulePage:
         module.click_button('//table[@class="vxe-table--body"]//tr[1]/td[2]')
         sleep(1)
         module.click_all_button("编辑")
+        sleep(1)
         xpath_list = [
             '//div[span[text()=" 模块名称 "]]/following-sibling::div//input',
             '//div[span[text()=" 排序 "]]/following-sibling::div//input',
@@ -210,6 +211,7 @@ class TestSModulePage:
         module.click_button('//table[@class="vxe-table--body"]//tr[1]/td[2]')
         sleep(1)
         module.click_all_button("编辑")
+        sleep(1)
         xpath_list = [
             '//div[span[text()=" 模块名称 "]]/following-sibling::div//input',
             '//div[span[text()=" 排序 "]]/following-sibling::div//input',
@@ -940,7 +942,7 @@ class TestSModulePage:
         role.click_all_button("编辑")
         sleep(1)
         role.enter_texts('//input[@placeholder="请输入关键字筛选"]', 'ABCDAA')
-        element = role.get_find_element_xpath('//div[@class="ivu-tree"]//li[1]/label')
+        element = role.get_find_element_xpath('//div[@class="role-permission-tree ivu-tree"]//li[1]/label')
         # 检查是否包含指定类
         if 'ivu-checkbox-wrapper-checked' not in element.get_attribute("class"):
             element.click()
@@ -1061,7 +1063,7 @@ class TestSModulePage:
         role.click_all_button("编辑")
         sleep(1)
         role.enter_texts('//input[@placeholder="请输入关键字筛选"]', 'ACBDDD')
-        element = role.get_find_element_xpath('//div[@class="ivu-tree"]//li[1]/label')
+        element = role.get_find_element_xpath('//div[@class="role-permission-tree ivu-tree"]//li[1]/label')
         # 检查是否包含指定类
         if 'ivu-checkbox-wrapper-checked' not in element.get_attribute("class"):
             element.click()

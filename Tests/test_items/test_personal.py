@@ -465,7 +465,7 @@ class TestPersonalPage:
         personal.get_find_message()
 
         sleep(1)
-        ele = driver.find_elements(By.XPATH, '//span[text()=" 引擎启动方式:本地 "]')
+        ele = driver.find_elements(By.XPATH, '//span[text()="引擎启动方式:本地"]')
         personal.click_button('//button[@class="m-l-10 ivu-btn ivu-btn-primary"]')
         # 等待“完成”的文本出现
         success_element = wait.until(
@@ -499,7 +499,7 @@ class TestPersonalPage:
         personal.click_button('//li[text()="IP"]')
         personal.click_button('//div[@class="demo-drawer-footer"]//span[text()="确定"]')
         personal.get_find_message()
-        ele = driver.find_elements(By.XPATH, '//span[text()=" 引擎启动方式:本地 "]')
+        ele = driver.find_elements(By.XPATH, '//span[text()="引擎启动方式:本地"]')
         sleep(1)
         personal.click_button('//button[@class="m-l-10 ivu-btn ivu-btn-primary"]')
         # 等待“完成”的文本出现
@@ -535,7 +535,7 @@ class TestPersonalPage:
         personal.click_button('//div[@class="demo-drawer-footer"]//span[text()="确定"]')
         personal.get_find_message()
         personal.go_engine_page(name='system_webip')
-        ele = driver.find_elements(By.XPATH, '//span[text()=" 引擎启动方式:本地 "]')
+        ele = driver.find_elements(By.XPATH, '//span[text()="引擎启动方式:本地"]')
         sleep(2)
         personal.click_button('//button[@class="m-l-10 ivu-btn ivu-btn-primary"]')
         # 等待“完成”的文本出现
@@ -571,7 +571,7 @@ class TestPersonalPage:
         personal.click_button('//div[@class="demo-drawer-footer"]//span[text()="确定"]')
         personal.get_find_message()
         personal.go_engine_page(name='system_ip')
-        ele = driver.find_elements(By.XPATH, '//span[text()=" 引擎启动方式:本地 "]')
+        ele = driver.find_elements(By.XPATH, '//span[text()="引擎启动方式:本地"]')
         sleep(2)
         personal.click_button('//button[@class="m-l-10 ivu-btn ivu-btn-primary"]')
         # 等待“完成”的文本出现
