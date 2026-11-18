@@ -124,6 +124,9 @@ class TestSPlanDataPage:
         material = MaterialMRPAndList(driver)  # 用 driver 初始化 MaterialMRPAndList
         material.click_button('(//span[text()="请购单生成"])[1]')
         material.click_button('//button//span[text()="创建请购"]')
+        ele = material.finds_elements(By.XPATH, '//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        if len(ele) == 1:
+            material.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
         ele = material.finds_elements(By.XPATH, '//i[@class="ivu-icon ivu-icon-ios-close-circle"]')
         assert len(ele) == 0
         assert not material.has_fail_message()

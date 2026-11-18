@@ -219,7 +219,7 @@ class SchedPage(BasePage):
         self.click_button(
             f'//div[span[text()="{name}"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
         )
-        self.click_button('//div[@class="vxe-modal--body"]//i[@class="ivu-icon ivu-icon-md-add"]')
+        self.click_button('//div[text()="表达式列表"]/ancestor::div[@class="vxe-modal--box"]//i[@class="ivu-icon ivu-icon-md-add"]')
         self.click_button('(//i[@class="ivu-icon ivu-icon-md-albums"])[last()]')
         sleep(2)
         ele = self.get_find_element_xpath(
@@ -229,6 +229,14 @@ class SchedPage(BasePage):
         ActionChains(self.driver).double_click(ele).perform()
         sleep(1)
         self.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[3]')
+        self.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
+        sleep(1)
+
+    def del_property_editing(self, name):
+        self.click_button(
+            f'//div[span[text()="{name}"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+        )
+        self.click_button('//div[text()="表达式列表"]/ancestor::div[@class="vxe-modal--box"]//i[contains(@class,"ivu-icon-md-close")]')
         self.click_button('(//div[@class="vxe-modal--footer"]//span[text()="确定"])[2]')
         sleep(1)
 

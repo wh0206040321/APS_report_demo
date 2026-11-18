@@ -711,7 +711,7 @@ class TestSchedPage:
             '//div[span[text()="分派规则"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
         )
         sleep(2)
-        sched.click_button('(//i[@class="ivu-icon ivu-icon-md-add"])[last()]')
+        sched.click_button('//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//i[@class="ivu-icon ivu-icon-md-add"]')
         sleep(2)
         ele = sched.get_find_element_xpath(
             '(//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"])[1]'
@@ -794,9 +794,245 @@ class TestSchedPage:
         )
         assert not sched.has_fail_message()
 
-    @allure.story("属性设置-不填写数据不允许提交")
+    @allure.story("属性设置-分派规则-添加分派规则表达式")
     # @pytest.mark.run(order=1)
     def test_sched_rule3(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        name = "排产方案(订单级)复制"
+        # 选择排产方案(订单级)复制方案
+        sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
+        sched.click_attribute_button()
+        # 点击对话框
+        sched.click_button(
+            '//div[span[text()="分派规则"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+        )
+        sched.click_button('//button[@title="添加"]')
+        sched.wait_for_loading_to_disappear()
+        sched.click_button('(//div[text()=" 高级 "])[1]')
+        # 首先，定位到你想要双击的元素
+        element_to_double_click = driver.find_element(
+            By.XPATH, '//span[text()="绝对值函数"]'
+        )
+        # 创建一个 ActionChains 对象
+        actions = ActionChains(driver)
+        # 双击命令
+        actions.double_click(element_to_double_click).perform()
+        sched.click_button(
+            '//div[@class="vxe-modal--box" and .//div[text()="代码设计器"]]//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        sched.enter_texts('//div[@class="ivu-form-item" and  ./label[text()="名称"]]//input', '策略方案自定义123')
+        sched.click_button('//div[@class="vxe-modal--box" and  .//label[text()="名称"]]//span[text()="确定"]')
+        message = sched.get_find_message()
+        assert message == "保存成功"
+        sched.click_button('//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//i[@class="ivu-icon ivu-icon-md-add"]')
+
+        ele = driver.find_elements(
+            By.XPATH,
+            '//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"]',
+        )
+        ele[2].click()
+        sched.click_button('(//li[text()="策略方案自定义123"])[last()]')
+        sele_text1 = ele[2].get_attribute("value")
+        ele[3].click()
+        sched.click_button('(//li[text()="升序"])[last()]')
+        sele_text2 = ele[3].get_attribute("value")
+        sched.click_ok_button()
+        sleep(2)
+        # 获取输入框数据
+        before_input = sched.get_find_element_xpath(
+            '//div[span[text()="分派规则"]]/following-sibling::div//p'
+        ).text
+        sched.get_after_value(name)
+        after_input = sched.get_find_element_xpath(
+            '//div[span[text()="分派规则"]]/following-sibling::div//p'
+        ).text
+        sched.right_refresh('计划方案管理')
+        assert (
+                before_input == after_input and 'Abs(-1),a' in before_input
+                and sele_text1 == "策略方案自定义123"
+                and sele_text2 == "升序"
+        )
+        assert not sched.has_fail_message()
+
+    @allure.story("属性设置-分派规则-修改分派规则表达式")
+    # @pytest.mark.run(order=1)
+    def test_sched_rule4(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        name = "排产方案(订单级)复制"
+        # 选择排产方案(订单级)复制方案
+        sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
+        sched.click_attribute_button()
+        # 点击对话框
+        sched.click_button(
+            '//div[span[text()="分派规则"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+        )
+        sched.click_button('(//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"])[3]')
+        sleep(0.5)
+        sched.click_button('(//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"])[3]')
+        sched.click_button('//button[@title="编辑"]')
+        sched.wait_for_loading_to_disappear()
+        sched.click_button('(//div[text()=" 高级 "])[1]')
+        # 首先，定位到你想要双击的元素
+        element_to_double_click = driver.find_element(
+            By.XPATH, '//span[text()="绝对值函数"]'
+        )
+        # 创建一个 ActionChains 对象
+        actions = ActionChains(driver)
+        # 双击命令
+        actions.double_click(element_to_double_click).perform()
+        sched.click_button(
+            '//div[@class="vxe-modal--box" and .//div[text()="代码设计器"]]//div[@class="vxe-modal--footer"]//span[text()="确定"]')
+        message = sched.get_find_message()
+        assert message == "保存成功"
+        ele = driver.find_elements(
+            By.XPATH,
+            '//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"]',
+        )
+        sele_text1 = ele[2].get_attribute("value")
+        sele_text2 = ele[3].get_attribute("value")
+        sched.click_ok_button()
+        sleep(2)
+        # 获取输入框数据
+        before_input = sched.get_find_element_xpath(
+            '//div[span[text()="分派规则"]]/following-sibling::div//p'
+        ).text
+        assert (
+                before_input and 'Abs(-1)Abs(-1),a' in before_input
+                and sele_text1 == "策略方案自定义123"
+                and sele_text2 == "升序"
+        )
+        assert not sched.has_fail_message()
+
+    @allure.story("属性设置-分派规则-往上移动表达式")
+    # @pytest.mark.run(order=1)
+    def test_sched_rule5(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        name = "排产方案(订单级)复制"
+        # 点击对话框
+        sched.click_button(
+            '//div[span[text()="分派规则"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+        )
+        sched.click_button(
+            '(//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"])[3]')
+        sleep(0.5)
+        sched.click_button(
+            '(//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"])[3]')
+        sched.click_button('//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//i[@class="ivu-icon ivu-icon-md-arrow-up"]')
+
+        ele = driver.find_elements(
+            By.XPATH,
+            '//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"]',
+        )
+        sele_text1 = ele[0].get_attribute("value")
+        sele_text2 = ele[1].get_attribute("value")
+        sched.click_ok_button()
+        sleep(2)
+        # 获取输入框数据
+        before_input = sched.get_find_element_xpath(
+            '//div[span[text()="分派规则"]]/following-sibling::div//p'
+        ).text
+        sched.get_after_value(name)
+        after_input = sched.get_find_element_xpath(
+            '//div[span[text()="分派规则"]]/following-sibling::div//p'
+        ).text
+        sched.right_refresh('计划方案管理')
+        assert (
+                before_input == after_input and 'Abs(-1)Abs(-1),a;ME.Order.Priority,a' in before_input
+                and sele_text1 == "策略方案自定义123"
+                and sele_text2 == "升序"
+        )
+        assert not sched.has_fail_message()
+
+    @allure.story("属性设置-分派规则-往下移动表达式")
+    # @pytest.mark.run(order=1)
+    def test_sched_rule6(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        name = "排产方案(订单级)复制"
+        # 选择排产方案(订单级)复制方案
+        sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
+        sched.click_attribute_button()
+        # 点击对话框
+        sched.click_button(
+            '//div[span[text()="分派规则"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+        )
+        sched.click_button(
+            '(//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"])[1]')
+        sleep(0.5)
+        sched.click_button(
+            '(//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"])[1]')
+        sched.click_button(
+            '//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//i[@class="ivu-icon ivu-icon-md-arrow-down"]')
+
+        ele = driver.find_elements(
+            By.XPATH,
+            '//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"]',
+        )
+        sele_text1 = ele[2].get_attribute("value")
+        sele_text2 = ele[3].get_attribute("value")
+        sched.click_ok_button()
+        sleep(2)
+        # 获取输入框数据
+        before_input = sched.get_find_element_xpath(
+            '//div[span[text()="分派规则"]]/following-sibling::div//p'
+        ).text
+        assert (
+                before_input and 'ME.Order.Priority,a;Abs(-1)Abs(-1),a' in before_input
+                and sele_text1 == "策略方案自定义123"
+                and sele_text2 == "升序"
+        )
+        assert not sched.has_fail_message()
+
+    @allure.story("属性设置-分派规则-删除表达式成功")
+    # @pytest.mark.run(order=1)
+    def test_sched_rule7(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        name = "排产方案(订单级)复制"
+        # 点击对话框
+        sched.click_button(
+            '//div[span[text()="分派规则"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]'
+        )
+        sched.click_button(
+            '(//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"])[1]')
+        sleep(0.5)
+        sched.click_button(
+            '(//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"])[1]')
+        sched.click_button(
+            '//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//i[@class="ivu-icon ivu-icon-md-close"]')
+        sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        sleep(1)
+        sched.click_button(
+            '(//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"])[1]')
+        sleep(0.5)
+        sched.click_button(
+            '(//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"])[1]')
+        sched.click_button(
+            '//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//i[@class="ivu-icon ivu-icon-md-close"]')
+        sched.click_button('//div[@class="ivu-modal-confirm-footer"]//span[text()="确定"]')
+        sleep(1)
+        sched.click_ok_button()
+        sleep(2)
+        # 获取输入框数据
+        before_input = sched.get_find_element_xpath(
+            '//div[span[text()="分派规则"]]/following-sibling::div//p'
+        ).text
+        sched.get_after_value(name)
+        after_input = sched.get_find_element_xpath(
+            '//div[span[text()="分派规则"]]/following-sibling::div//p'
+        ).text
+        sched.right_refresh('计划方案管理')
+        assert (
+                'ME.Order.Priority,a' not in before_input and ';Abs(-1)Abs(-1),a' not in before_input
+                and before_input == after_input
+        )
+        assert not sched.has_fail_message()
+
+    @allure.story("属性设置-不填写数据不允许提交")
+    # @pytest.mark.run(order=1)
+    def test_sched_rule8(self, login_to_sched):
         driver = login_to_sched  # WebDriver 实例
         sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
         name = "排产方案(订单级)复制"
@@ -1542,7 +1778,7 @@ class TestSchedPage:
         )
         assert not sched.has_fail_message()
 
-    @allure.story("分派前工作属性编辑和分派后工作属性编辑")
+    @allure.story("添加分派前工作属性编辑和分派后工作属性编辑表达式")
     # @pytest.mark.run(order=1)
     def test_sched_property_editing(self, login_to_sched):
         driver = login_to_sched  # WebDriver 实例
@@ -1564,6 +1800,30 @@ class TestSchedPage:
 
         sched.right_refresh('计划方案管理')
         assert "Abs(-1)" in after_input1 and "Abs(-1)" in after_input2
+        assert not sched.has_fail_message()
+
+    @allure.story("删除分派前工作属性编辑和分派后工作属性编辑表达式")
+    # @pytest.mark.run(order=1)
+    def test_sched_property_editing(self, login_to_sched):
+        driver = login_to_sched  # WebDriver 实例
+        sched = SchedPage(driver)  # 用 driver 初始化 SchedPage
+        name = "排产方案(订单级)复制"
+        # 选择排产方案(订单级)复制方案
+        sched.click_button(f'//ul[@visible="visible"]//ul//span[text()="{name}"]')
+        sched.click_attribute_button()
+        # 点击开关
+        sched.del_property_editing('分派前工作属性编辑')
+        sched.del_property_editing('分派后工作属性编辑')
+        sched.get_after_value(name)
+        after_input1 = sched.get_find_element_xpath(
+            '//div[span[text()="分派前工作属性编辑"]]/following-sibling::div//p'
+        ).text
+        after_input2 = sched.get_find_element_xpath(
+            '//div[span[text()="分派后工作属性编辑"]]/following-sibling::div//p'
+        ).text
+
+        sched.right_refresh('计划方案管理')
+        assert after_input1 == after_input2 == ''
         assert not sched.has_fail_message()
 
     @allure.story("属性设置-时间属性-分派开始时间")
@@ -1969,14 +2229,14 @@ class TestSchedPage:
         for v in list_:
             expression.click_button(f'(//span[text()="{v}"])[1]')
 
-        value = ['策略方案自定义11']
+        value = ['策略方案自定义11', '策略方案自定义123']
         expression.del_all(xpath='//div[div[p[text()="名称"]]]//input', value=value)
         ele = expression.get_find_element_xpath('//div[div[p[text()="名称"]]]//input')
         ele.send_keys(Keys.CONTROL, "a")
         ele.send_keys(Keys.DELETE)
         itemdata = [
             driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
-            for v in value[:1]
+            for v in value[:2]
         ]
         assert all(len(elements) == 0 for elements in itemdata)
         assert not expression.has_fail_message()

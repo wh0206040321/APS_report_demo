@@ -1117,9 +1117,9 @@ class TestSettingPage:
             f'//div[@class="el-scrollbar"]//div[@class="quick-query-virtual-item"][1]')
         sleep(1)
         text_values2 = setting.get_find_element_xpath(
-            f'//div[@class="el-scrollbar"]//div[@class="quick-query-virtual-item"][2]').text
+            f'//div[@class="el-scrollbar"]//div[@class="quick-query-virtual-item"][1]').text
         setting.click_button(
-            f'//div[@class="el-scrollbar"]//div[@class="quick-query-virtual-item"][2]')
+            f'//div[@class="el-scrollbar"]//div[@class="quick-query-virtual-item"][1]')
         sleep(1)
         # 展开物料种类下拉框
         # setting.click_button(

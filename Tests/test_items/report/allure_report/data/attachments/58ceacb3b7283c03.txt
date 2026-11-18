@@ -1,0 +1,47 @@
+[32mINFO    [0m root:base_page.py:372 ✅ 输入成功：hongaoqing
+[32mINFO    [0m root:base_page.py:372 ✅ 输入成功：1234qweR
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //div[@class="ivu-select-head-flex"]/input
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //li[text()="金属（演示）"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //button[contains(@class, "ivu-btn-primary")]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = (//span[text()="计划运行"])[1]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = (//span[text()="方案管理"])[1]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = (//span[text()="计划方案管理"])[1]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m conftest:conftest.py:113 🎬 测试开始，启动录屏: test_sched_rule1
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //ul[@visible="visible"]//ul//span[text()="排产方案(订单级)复制"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //span[text()="属性设置"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //div[span[text()="分派规则"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//i[@class="ivu-icon ivu-icon-md-add"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:175 查找元素：xpath = (//div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//input[@class="ivu-select-input"])[1]
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //li[text()="订单优先度"]
+[33mWARNING [0m root:base_page.py:263 ⚠️ 原生点击被拦截，尝试使用 JS 点击
+[32mINFO    [0m root:base_page.py:266 ✅ JS 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //li[text()="降序"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = (//button[@class="ivu-btn ivu-btn-primary"])[3]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:175 查找元素：xpath = //div[span[text()="分派规则"]]/following-sibling::div//p
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = (//div[@class="vxe-modal--footer"]//span[text()="确定"])[1]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //button[./span[text()="保存设置"]]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //ul[@visible="visible"]//ul//span[text()="排产方案(订单级)复制"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //span[text()="属性设置"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:175 查找元素：xpath = //div[span[text()="分派规则"]]/following-sibling::div//p
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = (//div[@class="vxe-modal--footer"]//span[text()="取消"])[1]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:175 查找元素：xpath = //div[@class="scroll-body"]/div[.//div[text()=" 计划方案管理 "]]
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //li[text()=" 刷新"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:231 查找元素：xpath = //div[@class="ivu-modal-content"]//div[text()=" 对不起,在处理您的请求期间,产生了一个服务器内部错误! "]

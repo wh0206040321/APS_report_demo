@@ -32,12 +32,12 @@ def login_to_item():
     page.login(DateDriver().username, DateDriver().password, DateDriver().planning)
     page.click_button('(//span[text()="物控管理"])[1]')
     page.click_button('(//span[text()="物控基础数据"])[1]')
-    page.click_button('(//span[text()="物控工作日历"])[1]')  # 点击物控工作日历
+    page.click_button('(//span[text()="物料工作日历"])[1]')  # 点击物料工作日历
     yield driver  # 提供给测试用例使用
     safe_quit(driver)
 
 
-@allure.feature("物控工作日历测试用例")
+@allure.feature("物料工作日历测试用例")
 @pytest.mark.run(order=108)
 class TestItemPage:
     @pytest.fixture(autouse=True)
@@ -338,7 +338,7 @@ class TestItemPage:
         sleep(1)
         self.item.click_button('//div[div[span[text()=" 日历类别"]]]//input')
         eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
-        self.item.right_refresh('物控工作日历')
+        self.item.right_refresh('物料工作日历')
         assert len(eles) == 0
         assert not self.item.has_fail_message()
 
@@ -357,7 +357,7 @@ class TestItemPage:
         eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.get_attribute('innerText') for ele in eles]
-        self.item.right_refresh('物控工作日历')
+        self.item.right_refresh('物料工作日历')
         assert all(first_char.lower() in text.lower() for text in list_)
         assert not self.item.has_fail_message()
 
@@ -376,7 +376,7 @@ class TestItemPage:
         eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.get_attribute('innerText') for ele in eles]
-        self.item.right_refresh('物控工作日历')
+        self.item.right_refresh('物料工作日历')
         assert all(str(item).lower().startswith(first_char.lower()) for item in list_)
         assert not self.item.has_fail_message()
 
@@ -395,7 +395,7 @@ class TestItemPage:
         eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr//td[2]')
         sleep(1)
         list_ = [ele.get_attribute('innerText') for ele in eles]
-        self.item.right_refresh('物控工作日历')
+        self.item.right_refresh('物料工作日历')
         assert all(str(item).lower().endswith(last_char.lower()) for item in list_)
         assert not self.item.has_fail_message()
 
@@ -415,7 +415,7 @@ class TestItemPage:
         ele = self.item.get_find_element_xpath(
             '//div[div[span[text()=" 日历类别"]]]//i[contains(@class,"suffixIcon")]').get_attribute(
             "class")
-        self.item.right_refresh('物控工作日历')
+        self.item.right_refresh('物料工作日历')
         assert ele == "vxe-icon-funnel suffixIcon"
         assert not self.item.has_fail_message()
 
@@ -473,7 +473,7 @@ class TestItemPage:
     # @allure.story("模拟多选删除")
     # # @pytest.mark.run(order=1)
     # def test_WorkCalendar_shiftdel(self, login_to_item):
-    #     self.item.right_refresh('物控工作日历')
+    #     self.item.right_refresh('物料工作日历')
     #     elements = ['(//table[@class="vxe-table--body"]//tr[1]//td[1])[1]',
     #                 '(//table[@class="vxe-table--body"]//tr[2]//td[1])[1]']
     #     self.item.click_button(elements[0])
@@ -526,7 +526,7 @@ class TestItemPage:
     # @allure.story("模拟ctrl+c复制可查询")
     # # @pytest.mark.run(order=1)
     # def test_WorkCalendar_ctrlC(self, login_to_item):
-    #     self.item.right_refresh('物控工作日历')
+    #     self.item.right_refresh('物料工作日历')
     #     self.item.click_button('//table[@class="vxe-table--body"]//tr[2]//td[2]')
     #     before_data = self.item.get_find_element_xpath('//table[@class="vxe-table--body"]//tr[2]//td[2]').text
     #     sleep(1)
@@ -536,7 +536,7 @@ class TestItemPage:
     #     ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
     #     eles = self.item.finds_elements(By.XPATH, '//table[@class="vxe-table--body"]//tr[2]//td[2]')
     #     eles = [ele.get_attribute('innerText') for ele in eles]
-    #     self.item.right_refresh('物控工作日历')
+    #     self.item.right_refresh('物料工作日历')
     #     assert all(before_data in ele for ele in eles)
     #     assert not self.item.has_fail_message()
     #
@@ -579,7 +579,7 @@ class TestItemPage:
         value = ['1测试日历A', '1测试日历B']
         self.item.del_all(value, xpath='//div[div[span[text()=" 日历类别"]]]//input')
 
-        self.item.right_refresh('物控工作日历')
+        self.item.right_refresh('物料工作日历')
         itemdata = [
             self.driver.find_elements(By.XPATH, f'//tr[./td[2][.//span[text()="{v}"]]]/td[2]')
             for v in value[:2]

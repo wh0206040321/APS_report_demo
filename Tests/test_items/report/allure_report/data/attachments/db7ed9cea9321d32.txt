@@ -1,0 +1,21 @@
+[32mINFO    [0m conftest:conftest.py:113 🎬 测试开始，启动录屏: test_sched_rule3
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //ul[@visible="visible"]//ul//span[text()="排产方案(订单级)复制"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //span[text()="属性设置"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //div[span[text()="分派规则"]]/following-sibling::div//i[@class="ivu-icon ivu-icon-md-albums"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //button[@title="添加"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = (//div[text()=" 高级 "])[1]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //div[@class="vxe-modal--box" and .//div[text()="代码设计器"]]//div[@class="vxe-modal--footer"]//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:372 ✅ 输入成功：策略方案自定义123
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //div[@class="vxe-modal--box" and  .//label[text()="名称"]]//span[text()="确定"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //div[text()="分派规则"]/ancestor::div[@class="vxe-modal--box"]//i[@class="ivu-icon ivu-icon-md-add"]
+[32mINFO    [0m root:base_page.py:258 ✅ 点击成功
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = //li[text()="策略方案自定义123"]
+[1m[31mERROR   [0m root:base_page.py:281 ❌ 元素未在 10 秒内变为可点击
+[33mWARNING [0m root:base_page.py:308 未配置 DEEPSEEK_API_KEY，跳过 AI 修复

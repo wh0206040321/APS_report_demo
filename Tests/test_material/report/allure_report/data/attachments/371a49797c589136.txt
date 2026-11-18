@@ -1,0 +1,9 @@
+[32mINFO    [0m conftest:conftest.py:113 🎬 测试开始，启动录屏: test_material_TicketList_select
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = (//span[text()="工单列表"])[1]
+[1m[31mERROR   [0m root:base_page.py:281 ❌ 元素未在 10 秒内变为可点击
+[33mWARNING [0m root:base_page.py:308 未配置 DEEPSEEK_API_KEY，跳过 AI 修复
+[32mINFO    [0m conftest:conftest.py:117 🎬 录屏已在进行中，跳过启动: test_material_TicketList_select
+[32mINFO    [0m root:base_page.py:249 点击元素：By = xpath, Value = (//span[text()="工单列表"])[1]
+[1m[31mERROR   [0m root:base_page.py:281 ❌ 元素未在 10 秒内变为可点击
+[33mWARNING [0m root:base_page.py:308 未配置 DEEPSEEK_API_KEY，跳过 AI 修复
+[32mINFO    [0m root:driver_manager.py:56 🛑 已从实例池移除并关闭 driver：1689619349664
